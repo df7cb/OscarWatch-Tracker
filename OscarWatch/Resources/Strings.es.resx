@@ -4653,6 +4653,9 @@ Está utilizando la versión {0}.
   <data name="Ft4.Status.Answering">
     <value>Respondiendo a {0}</value>
   </data>
+  <data name="Ft4.Status.HashedCallUnknown">
+    <value>Indicativo aún desconocido. Aparecerá cuando la estación envíe su indicativo completo.</value>
+  </data>
   <data name="Ft4.Waterfall">
     <value>Cascada</value>
   </data>

@@ -694,6 +694,33 @@ public sealed class QsoLogbookRepository : IQsoLogbookRepository, IDisposable
         return (calls, grids);
     }
 
+    public async Task<IReadOnlyList<string>> ListRecentNonStandardCallsAsync(
+        int limit,
+        CancellationToken cancellationToken = default)
+    {
+        if (limit <= 0)
+            return [];
+
+        await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
+        await using var connection = OpenConnection();
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT upper(trim(call)) AS c
+            FROM qsos
+            WHERE instr(call, '/') > 0 OR length(trim(call)) > 6
+            GROUP BY c
+            ORDER BY max(datetime(qso_utc)) DESC
+            LIMIT $limit
+            """;
+        command.Parameters.AddWithValue("$limit", limit);
+
+        var calls = new List<string>();
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+        while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+            calls.Add(reader.GetString(0));
+        return calls;
+    }
+
     public void Dispose()
     {
         _getOrCreateGate.Dispose();

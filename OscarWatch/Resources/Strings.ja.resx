@@ -4653,6 +4653,9 @@
   <data name="Ft4.Status.Answering">
     <value>{0} に応答中</value>
   </data>
+  <data name="Ft4.Status.HashedCallUnknown">
+    <value>コールサインはまだ不明です。相手局が完全なコールサインを送信すると表示されます。</value>
+  </data>
   <data name="Ft4.Waterfall">
     <value>ウォーターフォール</value>
   </data>

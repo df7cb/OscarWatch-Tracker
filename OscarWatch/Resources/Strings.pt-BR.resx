@@ -4653,6 +4653,9 @@ Mais recente: {1} ({2})</value>
   <data name="Ft4.Status.Answering">
     <value>Respondendo a {0}</value>
   </data>
+  <data name="Ft4.Status.HashedCallUnknown">
+    <value>Indicativo ainda desconhecido. Ele aparece quando a estação envia o indicativo completo.</value>
+  </data>
   <data name="Ft4.Waterfall">
     <value>Cascata</value>
   </data>

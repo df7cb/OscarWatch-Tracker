@@ -4653,6 +4653,9 @@
   <data name="Ft4.Status.Answering">
     <value>正在应答 {0}</value>
   </data>
+  <data name="Ft4.Status.HashedCallUnknown">
+    <value>呼号尚未知晓。对方电台发送完整呼号后即会显示。</value>
+  </data>
   <data name="Ft4.Waterfall">
     <value>瀑布图</value>
   </data>

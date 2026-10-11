@@ -4657,6 +4657,9 @@ LOS: {2}
   <data name="Ft4.Status.Answering">
     <value>กำลังตอบ {0}</value>
   </data>
+  <data name="Ft4.Status.HashedCallUnknown">
+    <value>ยังไม่ทราบสัญญาณเรียกขาน จะแสดงเมื่อสถานีส่งสัญญาณเรียกขานแบบเต็ม</value>
+  </data>
   <data name="Ft4.Waterfall">
     <value>วอเตอร์ฟอล</value>
   </data>

@@ -4657,6 +4657,9 @@ Aktuell: {1} ({2})</value>
   <data name="Ft4.Status.Answering">
     <value>Antworte auf {0}</value>
   </data>
+  <data name="Ft4.Status.HashedCallUnknown">
+    <value>Rufzeichen noch unbekannt. Es erscheint, sobald die Station ihr vollständiges Rufzeichen sendet.</value>
+  </data>
   <data name="Ft4.Waterfall">
     <value>Wasserfall</value>
   </data>

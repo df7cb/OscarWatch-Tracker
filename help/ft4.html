@@ -209,16 +209,20 @@
         <code>&lt;...&gt;</code>, for example <code>CQ &lt;...&gt; JO21</code>.
       </p>
       <p>
-        Clicking a <code>&lt;...&gt;</code> line does nothing, because the callsign is not known yet.
-        Keep listening: once that station sends its full call, later lines show it in angle
-        brackets, such as <code>&lt;PA/DL1ABC&gt;</code>, and clicking them works as normal.
-        WSJT-X behaves the same way.
+        Clicking a <code>&lt;...&gt;</code> line cannot answer it, because the callsign is not known yet.
+        The status line says so. Keep listening: once that station sends its full call, later lines
+        show it in angle brackets, such as <code>&lt;PA/DL1ABC&gt;</code>, and clicking them works as
+        normal. WSJT-X behaves the same way.
       </p>
       <p>
-        OscarWatch remembers up to 150 of these callsigns between sessions, in
-        <code>ft4-learned-callsigns.txt</code> in the OscarWatch settings folder. A station you have
-        heard before is named straight away next time. You can delete the file to start again.
+        To name these stations sooner, OscarWatch loads callsigns like this when FT4 starts:
       </p>
+      <ul>
+        <li>up to 50 you have worked, from your logbook;</li>
+        <li>ones heard on air in earlier sessions. Up to 150 are kept in
+          <code>ft4-learned-callsigns.txt</code> in the OscarWatch settings folder. You can delete the
+          file to start again.</li>
+      </ul>
 
       <h2 id="logging">Logging</h2>
       <p>

@@ -44,6 +44,28 @@ public sealed class Ft4LearnedCallsignsTests
     }
 
     [Fact]
+    public void BuildSeedList_puts_logbook_first_and_drops_duplicates()
+    {
+        var seeds = Ft4LearnedCallsigns.BuildSeedList(
+            ["PA/DL1ABC", "MM9SQL", "g4abc/p"],
+            ["G4ABC/P", "EA8/G0ABC"]);
+
+        Assert.Equal(["PA/DL1ABC", "G4ABC/P", "EA8/G0ABC"], seeds);
+    }
+
+    [Fact]
+    public void BuildSeedList_caps_logbook_and_total()
+    {
+        var logbook = Enumerable.Range(0, 100).Select(i => $"L{i}ABC/P").ToArray();
+        var heard = Enumerable.Range(0, 300).Select(i => $"H{i}ABC/P").ToArray();
+
+        var seeds = Ft4LearnedCallsigns.BuildSeedList(logbook, heard);
+
+        Assert.Equal(Ft4LearnedCallsigns.MaxSeeded, seeds.Count);
+        Assert.Equal(Ft4LearnedCallsigns.MaxFromLogbook, seeds.Count(s => s.StartsWith('L')));
+    }
+
+    [Fact]
     public void Save_and_load_round_trip()
     {
         var path = Path.Combine(Path.GetTempPath(), $"ow-learned-{Guid.NewGuid():N}.txt");

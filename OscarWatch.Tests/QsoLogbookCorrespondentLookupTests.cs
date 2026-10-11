@@ -170,6 +170,8 @@ public class QsoLogbookCorrespondentLookupTests
         public Task<(IReadOnlySet<string> Calls, IReadOnlySet<string> GridFields)> LoadWorkedCallAndGridFieldsAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult<(IReadOnlySet<string>, IReadOnlySet<string>)>(
                 (new HashSet<string>(), new HashSet<string>()));
+        public Task<IReadOnlyList<string>> ListRecentNonStandardCallsAsync(int limit, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<string>>([]);
     }
 
     private sealed class FakeSettings : ISettingsService

@@ -406,6 +406,39 @@ public class QsoLogbookRepositoryTests : IDisposable
     }
 
     [Fact]
+    public async Task ListRecentNonStandardCalls_returns_slash_and_long_calls_newest_first()
+    {
+        await _repository.InitializeAsync();
+        var logbook = await _repository.CreateLogbookAsync(new QsoLogbookCreateRequest
+        {
+            Name = "Hashed calls",
+            MyCallsign = "MM9SQL",
+            MyGridSquare = "IO87IP"
+        });
+
+        async Task Add(string call, int day) =>
+            await _repository.AddQsoAsync(new QsoRecordCreateRequest
+            {
+                LogbookId = logbook.Id,
+                QsoUtc = new DateTime(2026, 1, day, 12, 0, 0, DateTimeKind.Utc),
+                Call = call,
+                SatName = "RS-44",
+                Mode = "FT4"
+            });
+
+        await Add("G0ABC", 1);
+        await Add("PA/DL1ABC", 2);
+        await Add("G4ABC/P", 3);
+        await Add("pa/dl1abc", 4);
+        await Add("3DA0ABCD", 5);
+
+        var calls = await _repository.ListRecentNonStandardCallsAsync(10);
+        Assert.Equal(["3DA0ABCD", "PA/DL1ABC", "G4ABC/P"], calls);
+
+        Assert.Equal(["3DA0ABCD"], await _repository.ListRecentNonStandardCallsAsync(1));
+    }
+
+    [Fact]
     public async Task Add_qso_normalizes_multi_grid_locators()
     {
         await _repository.InitializeAsync();

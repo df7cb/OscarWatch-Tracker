@@ -1049,6 +1049,13 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
     {
         if (decode is null || decode.IsTransmitted || decode.IsOwnEcho || decode.IsRejected)
             return;
+        if (string.IsNullOrWhiteSpace(decode.CallDe)
+            && decode.Text.Contains("<...>", StringComparison.Ordinal))
+        {
+            StatusLine = _l.Get("Ft4.Status.HashedCallUnknown");
+            return;
+        }
+
         _modem.Answer(decode);
         CurrentTxMessage = _modem.Sequencer?.CurrentTxMessage ?? "";
         TxEnabled = _modem.Sequencer?.TransmitEnabled == true;

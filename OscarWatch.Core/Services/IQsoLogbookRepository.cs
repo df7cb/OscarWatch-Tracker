@@ -92,4 +92,12 @@ public interface IQsoLogbookRepository
     /// </summary>
     Task<(IReadOnlySet<string> Calls, IReadOnlySet<string> GridFields)> LoadWorkedCallAndGridFieldsAsync(
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Worked callsigns with a slash or longer than six characters, most recent first.
+    /// FT4 sends these as a hash, so the decoder needs them before it can name the station.
+    /// </summary>
+    Task<IReadOnlyList<string>> ListRecentNonStandardCallsAsync(
+        int limit,
+        CancellationToken cancellationToken = default);
 }

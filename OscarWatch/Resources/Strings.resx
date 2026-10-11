@@ -4653,6 +4653,9 @@ Latest: {1} ({2})</value>
   <data name="Ft4.Status.Answering">
     <value>Answering {0}</value>
   </data>
+  <data name="Ft4.Status.HashedCallUnknown">
+    <value>Callsign not known yet. It appears once the station sends its full call.</value>
+  </data>
   <data name="Ft4.Waterfall">
     <value>Waterfall</value>
   </data>

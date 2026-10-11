@@ -302,8 +302,7 @@ public sealed class Ft4ModemService : IDisposable
         Ft8Native.ClearCallsigns();
         Ft8Native.RememberCallsign(call);
         _learnedCalls.Load(Ft4LearnedCallsigns.DefaultFilePath);
-        foreach (var learned in _learnedCalls.Snapshot())
-            Ft8Native.RememberCallsign(learned);
+        _ = SeedHashedCallsignsAsync();
 
         // Pass recording shares the downlink capture card with FT4 RX. Stop it before we open
         // PortAudio so the modem loop is not starved waiting on a contended input stream.
@@ -401,6 +400,27 @@ public sealed class Ft4ModemService : IDisposable
     private bool UseAudioDopplerTx => _settings.Current.Ft4.AudioDopplerTx && _slotGateHeld;
 
     private bool UseAudioDopplerRx => _settings.Current.Ft4.AudioDopplerRx && _slotGateHeld;
+
+    private async Task SeedHashedCallsignsAsync()
+    {
+        IReadOnlyList<string> worked = [];
+        try
+        {
+            worked = await _logbook.ListRecentNonStandardCallsAsync(Ft4LearnedCallsigns.MaxFromLogbook)
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "FT4 could not read worked callsigns from the logbook");
+        }
+
+        var seeds = Ft4LearnedCallsigns.BuildSeedList(worked, _learnedCalls.Snapshot());
+        foreach (var seed in seeds)
+            Ft8Native.RememberCallsign(seed);
+        Log.Information("FT4 loaded {Count} non-standard callsigns for hashed calls ({Worked} from the logbook)",
+            seeds.Count,
+            worked.Count);
+    }
 
     public async Task StopAsync()
     {

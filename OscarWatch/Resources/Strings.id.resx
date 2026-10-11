@@ -4657,6 +4657,9 @@ Terbaru: {1} ({2})</value>
   <data name="Ft4.Status.Answering">
     <value>Menjawab {0}</value>
   </data>
+  <data name="Ft4.Status.HashedCallUnknown">
+    <value>Callsign belum diketahui. Callsign akan muncul setelah stasiun mengirim callsign lengkapnya.</value>
+  </data>
   <data name="Ft4.Waterfall">
     <value>Waterfall</value>
   </data>

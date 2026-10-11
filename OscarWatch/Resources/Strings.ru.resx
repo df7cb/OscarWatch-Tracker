@@ -4657,6 +4657,9 @@ LOS: {2}
   <data name="Ft4.Status.Answering">
     <value>Ответ {0}</value>
   </data>
+  <data name="Ft4.Status.HashedCallUnknown">
+    <value>Позывной пока неизвестен. Он появится, когда станция передаст полный позывной.</value>
+  </data>
   <data name="Ft4.Waterfall">
     <value>Водопад</value>
   </data>
