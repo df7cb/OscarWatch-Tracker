@@ -58,7 +58,7 @@
         <tbody>
           <tr><td>IC-910, IC-910D, IC-910H</td><td>Same CAT. Set the power class so FT4 uses 20 W, 50 W, or 100 W / 75 W. A saved IC-910 stays on the H ratings.</td></tr>
           <tr><td>IC-9700, Japan IC-9700, Japan IC-9700S</td><td>Same CAT. Default address <strong>94</strong> (hex A2). Set the power class so FT4 uses 100 W / 75 W, 50 W, or 20 W. A saved IC-9700 stays on 100 W / 75 W. 1200 MHz is 10 W on all three.</td></tr>
-          <tr><td>IC-9100</td><td>HF/VHF/UHF; satellite mode as on other ICOM satellite rigs</td></tr>
+          <tr><td>IC-9100</td><td>HF/VHF/UHF; satellite mode as on other ICOM satellite rigs. Data transponder modes (for example FT4) use USB-D / LSB-D, as on the IC-9700.</td></tr>
           <tr><td>IC-821H</td><td>Older satellite rig; Main/Sub only (no split CAT). Set uplink CTCSS on the radio manually</td></tr>
         </tbody>
       </table>
@@ -78,6 +78,7 @@
       <ul>
         <li>Turns <strong>satellite mode</strong> on for normal cross-band satellites.</li>
         <li>Puts <strong>downlink on Main</strong>, <strong>uplink on Sub</strong>.</li>
+        <li>On the IC-9700 and IC-9100, data transponder modes such as FT4 set <strong>USB-D</strong> / <strong>LSB-D</strong> so TX audio comes from USB. Voice modes turn data mode off again.</li>
         <li>Updates both frequencies for Doppler and applies your <a href="radio-offsets.html">offsets</a>.</li>
         <li>Keeps you on <strong>Main</strong> while you turn the dial to hunt SSB — uplink CAT waits briefly so Sub is not selected by accident. See <a href="radio-doppler-tuning.html#passband-knob">spinning the dial</a>.</li>
       </ul>

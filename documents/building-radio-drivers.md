@@ -87,7 +87,7 @@ Per-radio subclasses only override what differs, usually **`SetSatelliteMode`**:
 | [`IcomIc7100Driver`](../OscarWatch/Rig/IcomIc7100Driver.cs) | `IcomIc7100` | no-op (dual-radio VFO A only) |
 | [`IcomIc706SeriesDriver`](../OscarWatch/Rig/IcomIc706SeriesDriver.cs) | `IcomIc706`, `IcomIc706Mkii`, `IcomIc706MkiiG` | no-op (dual-radio VFO A only) |
 
-**IC-9700 digital modes:** database `DATA-USB` / `DATA-LSB` send base SSB (`06 01` / `06 00`) then DATA on with FIL1 (`1A 06 01 01`) — USB-D / LSB-D. Command `26` is unavailable in SAT mode; IC-910/9100 keep voice SSB only for `DATA-*` strings.
+**IC-9700 and IC-9100 digital modes:** database `DATA-USB` / `DATA-LSB` send base SSB (`06 01` / `06 00`) then DATA on with FIL1 (`1A 06 01 01`), giving USB-D / LSB-D. Plain `USB` / `LSB` send DATA off (`1A 06 00 00`) so a previous data mode is cleared. Command `26` is unavailable in SAT mode. The IC-910 has no data sideband and keeps voice SSB for `DATA-*` strings.
 
 **IC-910 FM narrow:** database `FMN` sends `06 05 02` (FM + filter 2). Plain `FM` sends `06 05 01`. Generic ICOM mode encoding still maps both to `06 05` (wide); only the IC-910 driver uses the filter byte (Hamlib / SatPC32).
 

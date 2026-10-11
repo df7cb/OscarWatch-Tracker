@@ -144,6 +144,22 @@ public sealed class IcomCivDriverTests
         Assert.Equal(["0605", "1a060101"], transport.SentCommandBodies);
     }
 
+    [Theory]
+    [InlineData("DATA-USB", new[] { "0601", "1a060101" })]
+    [InlineData("DATA-LSB", new[] { "0600", "1a060101" })]
+    [InlineData("USB", new[] { "0601", "1a060000" })]
+    public void Ic9100_SetMode_sets_data_mode_for_sideband(string mode, string[] expected)
+    {
+        var transport = new RecordingIcomCivTransport();
+        var driver = new IcomIc9100Driver(transport);
+        driver.Open();
+        driver.SelectVfo(RigVfo.Main);
+        transport.SentCommandBodies.Clear();
+        driver.SetMode(mode);
+
+        Assert.Equal(expected, transport.SentCommandBodies);
+    }
+
     [Fact]
     public void Ic9700_TryReadRfPowerLevel_reads_civ_14_0a()
     {
