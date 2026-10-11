@@ -326,34 +326,6 @@
     ]
   },
   {
-    "name": "SO-124",
-    "norad_id": "62690",
-    "modes": [
-      {
-        "type": "FM Voice",
-        "downlink": 436888,
-        "uplink": 145925,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
-        "doppler": "NOR"
-      }
-    ]
-  },
-  {
-    "name": "SO-125",
-    "norad_id": "63492",
-    "modes": [
-      {
-        "type": "FM Voice",
-        "downlink": 436666,
-        "uplink": 145875,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
-        "doppler": "NOR"
-      }
-    ]
-  },
-  {
     "name": "SONATE-2",
     "norad_id": "59112",
     "modes": [

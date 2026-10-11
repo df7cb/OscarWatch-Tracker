@@ -23,7 +23,6 @@ NAME_ALIASES = {
 
 # Satellites not yet in the published TLE bundle (verified elsewhere)
 MANUAL_NORAD = {
-    "SO-124": "62690",      # HADES-R / Spain-OSCAR 124
     "PARUS-T2": "64560",    # TASA / SpaceX Transporter-14
     "BOTAN": "65942",       # Chiba Institute of Technology (SatNOGS)
 }
