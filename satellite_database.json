@@ -585,8 +585,8 @@
         "type": "FM VOICE",
         "downlink": 436950,
         "uplink": 145920,
-        "downlink_mode": "FMN",
-        "uplink_mode": "FMN",
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
         "doppler": "NOR",
         "ctcss": 67.0
       },
@@ -594,8 +594,8 @@
         "type": "SSTV",
         "downlink": 436950,
         "uplink": 0,
-        "downlink_mode": "FMN",
-        "uplink_mode": "FMN",
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
         "doppler": "NOR"
       }
     ]
