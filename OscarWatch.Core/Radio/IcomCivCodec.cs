@@ -189,10 +189,11 @@ public static class IcomCivCodec
     }
 
     /// <summary>
-    /// IC-9700 SATL mode sequence: base mode (0x06) plus DATA on/off (0x1A/0x06).
-    /// Command 0x26 is unavailable in satellite mode; Hamlib uses this fallback path.
+    /// Base mode (0x06) plus DATA on/off (0x1A 0x06) for ICOM rigs with data sidebands
+    /// (IC-9700, IC-9100, IC-705, IC-7300, IC-905, IC-7100).
+    /// Command 0x26 is unavailable in IC-9700 satellite mode; Hamlib uses this fallback path.
     /// </summary>
-    public static byte[][] Encode9700SetModeCommands(string mode)
+    public static byte[][] EncodeSetModeWithDataCommands(string mode)
     {
         var normalized = TransponderCatModes.Normalize(mode);
         var baseMode = normalized switch

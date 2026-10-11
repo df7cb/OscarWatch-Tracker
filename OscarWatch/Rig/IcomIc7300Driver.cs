@@ -24,6 +24,8 @@ public sealed class IcomIc7300Driver : IcomCivDriverBase
     {
     }
 
+    protected override bool SupportsDataMode => true;
+
     protected override RigVfo MapOperationalVfo(RigVfo vfo) =>
         vfo is RigVfo.Main or RigVfo.Sub ? RigVfo.VfoA : vfo;
 

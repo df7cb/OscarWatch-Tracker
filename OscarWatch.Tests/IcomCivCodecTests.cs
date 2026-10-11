@@ -121,9 +121,9 @@ public class IcomCivCodecTests
     [InlineData("CW", new[] { "0603" })]
     [InlineData("DATA-FM", new[] { "0605", "1a060101" })]
     [InlineData("FM-DATA", new[] { "0605", "1a060101" })]
-    public void Encode9700SetModeCommands_includes_data_mode_for_digital_sideband(string mode, string[] expectedHex)
+    public void EncodeSetModeWithDataCommands_includes_data_mode_for_digital_sideband(string mode, string[] expectedHex)
     {
-        var commands = IcomCivCodec.Encode9700SetModeCommands(mode);
+        var commands = IcomCivCodec.EncodeSetModeWithDataCommands(mode);
         Assert.Equal(expectedHex.Length, commands.Length);
         for (var i = 0; i < expectedHex.Length; i++)
             Assert.Equal(expectedHex[i], Convert.ToHexString(commands[i]).ToLowerInvariant());

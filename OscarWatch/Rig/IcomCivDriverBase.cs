@@ -236,8 +236,19 @@ public abstract class IcomCivDriverBase : IRigDriver
             SendWithAckRetry(cmd, $"set mode {mode}");
     }
 
-    protected virtual IEnumerable<byte[]> GetSetModeCommands(string mode) =>
-        IcomCivCodec.EncodeSetModeCommand(mode) is { } cmd ? [cmd] : [];
+    /// <summary>
+    /// True when the radio has DATA sidebands (USB-D / LSB-D / FM-D) selectable with CI-V 0x1A 0x06.
+    /// Catalogue DATA-* modes then turn data on, and plain USB/LSB turn it off.
+    /// </summary>
+    protected virtual bool SupportsDataMode => false;
+
+    protected virtual IEnumerable<byte[]> GetSetModeCommands(string mode)
+    {
+        if (SupportsDataMode)
+            return IcomCivCodec.EncodeSetModeWithDataCommands(mode);
+
+        return IcomCivCodec.EncodeSetModeCommand(mode) is { } cmd ? [cmd] : [];
+    }
 
     public virtual void SetSplitOn(bool on) =>
         SendWithAckRetry(on ? [0x0F, 0x01] : [0x0F, 0x00], on ? "split on" : "split off");
