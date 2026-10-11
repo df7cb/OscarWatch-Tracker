@@ -62,6 +62,7 @@ public sealed class Ft4ModemService : IDisposable
     private readonly Ft4RxHealth _rxHealth = new(DateTime.UtcNow);
     private readonly HashSet<string> _postedDecodeKeys = new(StringComparer.Ordinal);
     private readonly Ft4CallDt _callDt = new();
+    private readonly Ft4LearnedCallsigns _learnedCalls = new();
     private readonly Dictionary<string, Ft4DecodedMessage> _postedEchoes = new(StringComparer.Ordinal);
     private readonly object _decodePostGate = new();
     private DateTime _txWatchdogResetUtc = DateTime.UtcNow;
@@ -300,6 +301,9 @@ public sealed class Ft4ModemService : IDisposable
 
         Ft8Native.ClearCallsigns();
         Ft8Native.RememberCallsign(call);
+        _learnedCalls.Load(Ft4LearnedCallsigns.DefaultFilePath);
+        foreach (var learned in _learnedCalls.Snapshot())
+            Ft8Native.RememberCallsign(learned);
 
         // Pass recording shares the downlink capture card with FT4 RX. Stop it before we open
         // PortAudio so the modem loop is not starved waiting on a contended input stream.
@@ -1961,6 +1965,11 @@ public sealed class Ft4ModemService : IDisposable
 
             if (!string.IsNullOrWhiteSpace(callDe))
                 Ft8Native.RememberCallsign(callDe);
+            if ((_learnedCalls.Note(callDe) | _learnedCalls.Note(callTo))
+                && !_learnedCalls.SaveIfChanged(Ft4LearnedCallsigns.DefaultFilePath))
+            {
+                Log.Warning("FT4 could not save learned callsigns to {Path}", Ft4LearnedCallsigns.DefaultFilePath);
+            }
 
             var timeSec = d.time_sec + (float)timeShiftSec;
 

@@ -200,6 +200,26 @@
         The limits are under <a href="#decoding">Decoding</a>.
       </p>
 
+      <h3 id="hashed-calls">Callsigns shown as &lt;...&gt;</h3>
+      <p>
+        FT4 has room for a normal callsign only. A callsign with a prefix or suffix, such as
+        <code>PA/DL1ABC</code> or <code>G4ABC/P</code>, or one longer than six characters, is sent
+        as a short code instead. OscarWatch can only turn that code back into a callsign if it has
+        already heard the full call in another message. Until then the line shows
+        <code>&lt;...&gt;</code>, for example <code>CQ &lt;...&gt; JO21</code>.
+      </p>
+      <p>
+        Clicking a <code>&lt;...&gt;</code> line does nothing, because the callsign is not known yet.
+        Keep listening: once that station sends its full call, later lines show it in angle
+        brackets, such as <code>&lt;PA/DL1ABC&gt;</code>, and clicking them works as normal.
+        WSJT-X behaves the same way.
+      </p>
+      <p>
+        OscarWatch remembers up to 150 of these callsigns between sessions, in
+        <code>ft4-learned-callsigns.txt</code> in the OscarWatch settings folder. A station you have
+        heard before is named straight away next time. You can delete the file to start again.
+      </p>
+
       <h2 id="logging">Logging</h2>
       <p>
         A finished contact is written to the
