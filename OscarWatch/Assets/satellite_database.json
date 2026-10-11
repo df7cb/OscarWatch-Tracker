@@ -628,7 +628,7 @@
     "modes": [
       {
         "type": "SSTV",
-        "downlink": 455890,
+        "downlink": 435890,
         "uplink": 0,
         "downlink_mode": "FM",
         "uplink_mode": "FM",
@@ -920,6 +920,36 @@
         "uplink": 0,
         "downlink_mode": "USB",
         "uplink_mode": "USB",
+        "doppler": "NOR"
+      }
+    ]
+  },
+  {
+    "name": "UNNE-1B",
+    "norad_id": "100948",
+    "modes": [
+      {
+        "type": "FM Repeater",
+        "downlink": 436888,
+        "uplink": 145925,
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
+        "doppler": "NOR"
+      },
+      {
+        "type": "200bps FSK Telemetry",
+        "downlink": 436888,
+        "uplink": 0,
+        "downlink_mode": "USB",
+        "uplink_mode": "USB",
+        "doppler": "NOR"
+      },
+      {
+        "type": "CW",
+        "downlink": 436888,
+        "uplink": 0,
+        "downlink_mode": "CW",
+        "uplink_mode": "CW",
         "doppler": "NOR"
       }
     ]
