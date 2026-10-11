@@ -106,23 +106,87 @@ public static partial class Ft4MessageCodec
             : rounded.ToString("00", CultureInfo.InvariantCulture);
     }
 
-    public static string BuildCq(string myCall, string myGrid) =>
-        $"CQ {NormalizeCall(myCall)} {NormalizeGrid(myGrid)}";
+    // A call in <> goes out as a hash. A non-standard call written bare goes out in full
+    // (type 4 message) where the message has room: CQ, a reply with no grid, RRR, RR73 and 73.
+    // Grids and reports need the standard message, which only carries such a call as a hash.
+    // That is the WSJT-X sequence, so a non-standard own call reaches the other station in full.
 
-    public static string BuildGridReply(string theirCall, string myCall, string myGrid) =>
-        $"{NormalizeCall(theirCall)} {NormalizeCall(myCall)} {NormalizeGrid(myGrid)}";
+    /// <summary>CQ with no grid when <paramref name="myCall"/> is non-standard: the full call takes the room.</summary>
+    public static string BuildCq(string myCall, string myGrid)
+    {
+        var my = NormalizeCall(myCall);
+        return IsHashedCall(my) ? $"CQ {my}" : $"CQ {my} {NormalizeGrid(myGrid)}";
+    }
 
-    public static string BuildReport(string theirCall, string myCall, string report) =>
-        $"{NormalizeCall(theirCall)} {NormalizeCall(myCall)} {report.Trim().ToUpperInvariant()}";
+    public static string BuildGridReply(string theirCall, string myCall, string myGrid)
+    {
+        var my = NormalizeCall(myCall);
+        return IsHashedCall(my)
+            ? $"{NormalizeCall(theirCall)} {my}"
+            : $"{Bracketed(theirCall)} {my} {NormalizeGrid(myGrid)}";
+    }
 
-    public static string BuildRrr(string theirCall, string myCall) =>
-        $"{NormalizeCall(theirCall)} {NormalizeCall(myCall)} RRR";
+    public static string BuildReport(string theirCall, string myCall, string report)
+    {
+        var my = NormalizeCall(myCall);
+        var rpt = report.Trim().ToUpperInvariant();
+        return IsHashedCall(my)
+            ? $"{NormalizeCall(theirCall)} <{my}> {rpt}"
+            : $"{Bracketed(theirCall)} {my} {rpt}";
+    }
 
-    public static string BuildRr73(string theirCall, string myCall) =>
-        $"{NormalizeCall(theirCall)} {NormalizeCall(myCall)} RR73";
+    public static string BuildRrr(string theirCall, string myCall) => BuildClosing(theirCall, myCall, "RRR");
 
-    public static string Build73(string theirCall, string myCall) =>
-        $"{NormalizeCall(theirCall)} {NormalizeCall(myCall)} 73";
+    public static string BuildRr73(string theirCall, string myCall) => BuildClosing(theirCall, myCall, "RR73");
+
+    public static string Build73(string theirCall, string myCall) => BuildClosing(theirCall, myCall, "73");
+
+    private static string BuildClosing(string theirCall, string myCall, string closing) =>
+        $"{Bracketed(theirCall)} {NormalizeCall(myCall)} {closing}";
+
+    /// <summary>Their call, in &lt;&gt; when it is non-standard so it goes out as a hash.</summary>
+    private static string Bracketed(string call)
+    {
+        var c = NormalizeCall(call);
+        return IsHashedCall(c) ? $"<{c}>" : c;
+    }
+
+    /// <summary>
+    /// True for a callsign a standard FT4 message can only carry as a hash: a prefix or
+    /// suffix other than /P or /R, or a call that does not fit the 6-character standard form.
+    /// </summary>
+    public static bool IsHashedCall(string? call)
+    {
+        var c = NormalizeCall(call ?? "");
+        if (c.Length < 3 || c == "CQ" || c == "DE" || c == "QRZ")
+            return false;
+        if (c.EndsWith("/P", StringComparison.Ordinal) || c.EndsWith("/R", StringComparison.Ordinal))
+            c = c[..^2];
+
+        // Same special cases as ft8_lib: 3DA0XYZ packs as 3D0XYZ, 3XA0XYZ as QA0XYZ.
+        if (c.StartsWith("3DA0", StringComparison.Ordinal) && c.Length is > 4 and <= 7)
+            c = "3D0" + c[4..];
+        else if (c.StartsWith("3X", StringComparison.Ordinal) && c.Length is > 2 and <= 7 && char.IsAsciiLetter(c[2]))
+            c = "Q" + c[2..];
+
+        string six;
+        if (c.Length is >= 3 and <= 6 && char.IsAsciiDigit(c[2]))
+            six = c;
+        else if (c.Length is >= 3 and <= 5 && char.IsAsciiDigit(c[1]))
+            six = " " + c;
+        else
+            return true;
+        six = six.PadRight(6);
+
+        return !((six[0] == ' ' || char.IsAsciiLetterOrDigit(six[0]))
+            && char.IsAsciiLetterOrDigit(six[1])
+            && char.IsAsciiDigit(six[2])
+            && IsLetterOrSpace(six[3])
+            && IsLetterOrSpace(six[4])
+            && IsLetterOrSpace(six[5]));
+
+        static bool IsLetterOrSpace(char ch) => ch == ' ' || char.IsAsciiLetterUpper(ch);
+    }
 
     public static string NormalizeCall(string call)
     {

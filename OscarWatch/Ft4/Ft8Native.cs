@@ -287,13 +287,11 @@ internal static class Ft8Native
         if (string.IsNullOrWhiteSpace(message))
             return "";
 
-        // ft8_lib cannot pack the <CALL> display form; the bare call is hashed the same way.
+        // <CALL> is kept: it tells ft8_lib to send that call as a hash.
         return message.Trim()
             .Replace('\u2215', '/')
             .Replace('\u2044', '/')
             .Replace('\\', '/')
-            .Replace("<", "", StringComparison.Ordinal)
-            .Replace(">", "", StringComparison.Ordinal)
             .ToUpperInvariant();
     }
 
@@ -301,9 +299,9 @@ internal static class Ft8Native
     {
         foreach (var part in message.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
-            // pack77 hashes any token containing '/', including portable suffixes like /M /P /A.
-            if (part.Contains('/', StringComparison.Ordinal) && !part.Equals("CQ", StringComparison.OrdinalIgnoreCase))
-                ow_ft8_remember_callsign(part);
+            var call = part.Trim('<', '>');
+            if (Ft4MessageCodec.IsHashedCall(call))
+                ow_ft8_remember_callsign(call);
         }
     }
 

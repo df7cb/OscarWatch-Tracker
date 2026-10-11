@@ -94,7 +94,8 @@ public interface IQsoLogbookRepository
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Worked callsigns with a slash or longer than six characters, most recent first.
+    /// Worked callsigns FT4 sends as a hash (prefixed, a suffix other than /P or /R,
+    /// or longer than six characters), most recent first.
     /// FT4 sends these as a hash, so the decoder needs them before it can name the station.
     /// </summary>
     Task<IReadOnlyList<string>> ListRecentNonStandardCallsAsync(

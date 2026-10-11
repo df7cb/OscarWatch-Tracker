@@ -47,6 +47,7 @@
         <a href="#before-you-start">Before a pass</a> ·
         <a href="#first-contact">A contact</a> ·
         <a href="#reading">Reading a message</a> ·
+        <a href="#hashed-calls">Callsigns in angle brackets</a> ·
         <a href="#logging">Logging</a> ·
         <a href="#power">Power and good practice</a> ·
         <a href="#window">The window</a> ·
@@ -93,7 +94,10 @@
       <ul>
         <li><strong>Who you are</strong>: set your callsign and grid square under
           <strong>Settings → Station</strong>. A grid is a short code for where you are, such as IO87.
-          Four or six characters are enough. FT4 will not transmit without a callsign and a grid.</li>
+          Four or six characters are enough. FT4 will not transmit without a callsign and a grid.
+          A portable or mobile callsign such as <code>MM9SQL/P</code> or <code>MM9SQL/M</code> is fine.
+          Some of these are sent a little differently: see
+          <a href="#own-compound-call">A prefix or suffix on your own callsign</a>.</li>
         <li><strong>Radio control</strong>: connect the radio so OscarWatch can follow Doppler,
           the way the frequency slides as the satellite moves.
           See <a href="radio-rotator.html">Radio &amp; rotator</a>.</li>
@@ -157,6 +161,10 @@
         <li>the last part is a grid, a signal report, or goodbye.</li>
       </ul>
       <p>
+        A callsign in angle brackets, such as <code>&lt;PA/DL1ABC&gt;</code>, was sent as a short code
+        rather than in full. See <a href="#hashed-calls">Callsigns in angle brackets</a>.
+      </p>
+      <p>
         A signal report is a number in dB. Higher is stronger. A minus number means the signal is
         below the noise, which is still a normal copy on FT4. You will work stations you cannot hear by ear.
         An <code>R</code> in front of the number means "I copied your report".
@@ -200,22 +208,36 @@
         The limits are under <a href="#decoding">Decoding</a>.
       </p>
 
-      <h3 id="hashed-calls">Callsigns shown as &lt;...&gt;</h3>
+      <h2 id="hashed-calls">Callsigns in angle brackets</h2>
       <p>
-        FT4 has room for a normal callsign only. A callsign with a prefix or suffix, such as
-        <code>PA/DL1ABC</code> or <code>G4ABC/P</code>, or one longer than six characters, is sent
-        as a short code instead. OscarWatch can only turn that code back into a callsign if it has
-        already heard the full call in another message. Until then the line shows
-        <code>&lt;...&gt;</code>, for example <code>CQ &lt;...&gt; JO21</code>.
+        An FT4 message has room for a <strong>standard callsign</strong>: up to six characters, such as
+        <code>G4ABC</code> or <code>MM9SQL</code>, with an optional <code>/P</code> or <code>/R</code>
+        on the end. Anything else is a <strong>compound callsign</strong>:
+      </p>
+      <ul>
+        <li>a prefix, such as <code>PA/DL1ABC</code>;</li>
+        <li>a suffix other than /P or /R, such as <code>G4ABC/M</code>;</li>
+        <li>a callsign too long for the standard pattern, such as <code>3DA0ABCD</code>.</li>
+      </ul>
+      <p>
+        A message with a grid or a signal report has no room left for a compound callsign, so it is
+        sent as a short code (a <strong>hash</strong>) instead. The other messages carry it in full:
+        a CQ, a reply to a CQ with no grid, and RRR, RR73 or 73. The two exact forms are shown under
+        <a href="#own-compound-call">A prefix or suffix on your own callsign</a>.
+      </p>
+      <p>
+        A short code can only be turned back into a callsign once that callsign has been heard in full.
+        When it has, the line shows it in angle brackets, such as <code>MM9SQL &lt;PA/DL1ABC&gt; -05</code>.
+        When it has not, you see <code>&lt;...&gt;</code> instead, such as
+        <code>MM9SQL &lt;...&gt; -05</code>. WSJT-X behaves the same way.
       </p>
       <p>
         Clicking a <code>&lt;...&gt;</code> line cannot answer it, because the callsign is not known yet.
-        The status line says so. Keep listening: once that station sends its full call, later lines
-        show it in angle brackets, such as <code>&lt;PA/DL1ABC&gt;</code>, and clicking them works as
-        normal. WSJT-X behaves the same way.
+        The status line says so. Keep listening: once that station sends its full callsign, later lines
+        name it and clicking them works as normal.
       </p>
       <p>
-        To name these stations sooner, OscarWatch loads callsigns like this when FT4 starts:
+        To name these stations sooner, OscarWatch loads compound callsigns like this when FT4 starts:
       </p>
       <ul>
         <li>up to 50 you have worked, from your logbook;</li>
@@ -223,6 +245,40 @@
           <code>ft4-learned-callsigns.txt</code> in the OscarWatch settings folder. You can delete the
           file to start again.</li>
       </ul>
+
+      <h3 id="their-compound-call">Working a station with a compound callsign</h3>
+      <p>
+        Nothing changes for you. Click their line as usual. Your messages to them show their callsign in
+        angle brackets, for example <code>&lt;PA/DL1ABC&gt; MM9SQL IO87</code>. That is expected: their
+        callsign goes as a short code, and their own station always recognises it. The logbook records
+        their full callsign.
+      </p>
+
+      <h3 id="own-compound-call">A prefix or suffix on your own callsign</h3>
+      <p>
+        If your own callsign is compound, such as <code>MM9SQL/M</code>, OscarWatch makes sure the other
+        station receives it in full. It uses the same messages as WSJT-X, so any WSJT-X station can
+        work you. In this example you are MM9SQL/M, calling CQ:
+      </p>
+      <table>
+        <tr><th>You see</th><th>What it is</th></tr>
+        <tr><td><code>CQ MM9SQL/M</code></td><td>Your CQ. There is no grid, because your full callsign takes that room.</td></tr>
+        <tr><td><code>&lt;MM9SQL/M&gt; G4ABC</code></td><td>G4ABC answered, with their full callsign and no grid.</td></tr>
+        <tr><td><code>G4ABC &lt;MM9SQL/M&gt; -05</code></td><td>Your report to them. Your callsign goes as a short code, because the report needs the room.</td></tr>
+        <tr><td><code>&lt;MM9SQL/M&gt; G4ABC R-08</code></td><td>Their report to you.</td></tr>
+        <tr><td><code>G4ABC MM9SQL/M RR73</code></td><td>Your goodbye, with your full callsign again.</td></tr>
+        <tr><td><code>MM9SQL/M &lt;G4ABC&gt; 73</code></td><td>Their 73. The contact is logged.</td></tr>
+      </table>
+      <p>
+        When you answer someone else's CQ, your first message is <code>G4ABC MM9SQL/M</code>, again
+        with no grid. Because your grid is never sent, it may be missing from the other station's log.
+        Your own log is written as normal. <code>/P</code> and <code>/R</code> on a standard callsign
+        are not compound, so <code>MM9SQL/P</code> sends its grid like any other callsign.
+      </p>
+      <div class="tip">
+        If you type a message yourself, a callsign in angle brackets is sent as the short code, and a
+        compound callsign without them is sent in full where the message has room.
+      </div>
 
       <h2 id="logging">Logging</h2>
       <p>
@@ -236,7 +292,8 @@
       <p>
         The logged grid is the one that station sent. If you start calling one station and then work
         another, the first station's grid is not carried over. When a contact finishes without a grid,
-        for example because they answered with a report straight away, OscarWatch uses the most recent
+        for example because they answered with a report straight away, or they have a
+        <a href="#hashed-calls">compound callsign</a> and so never sent one, OscarWatch uses the most recent
         grid already in that logbook for the same callsign. If there is none, the grid is left blank and
         you can add it later.
       </p>
@@ -353,7 +410,7 @@
         <li><strong>Enable Tx</strong>: send that text in your next transmit slot.</li>
         <li><strong>Halt Tx</strong>: stop at once. This also stops Tune.</li>
         <li><strong>Tune</strong>: a steady tone on your transmit frequency, for setting the level and finding your echo. Press again, or Halt Tx, to stop.</li>
-        <li><strong>CQ</strong>: call CQ with your callsign and grid. With <strong>Auto reply</strong> ticked, the first station that calls you is answered.</li>
+        <li><strong>CQ</strong>: call CQ with your callsign and grid (no grid with a <a href="#own-compound-call">compound callsign</a>). With <strong>Auto reply</strong> ticked, the first station that calls you is answered.</li>
         <li><strong>Report</strong> and <strong>73</strong>: send that message again to the station you are working, if they missed it. Both need a contact in progress.</li>
         <li><strong>Log QSO</strong>: save the contact now, even if it has not finished. Finished contacts are saved for you.</li>
         <li><strong>Skip RRR</strong>: ticked by default. The contact ends with RR73 instead of a separate RRR and then 73.</li>
@@ -567,6 +624,8 @@
         <tr><td>RR73</td><td>All received, and goodbye, in one message.</td></tr>
         <tr><td>73</td><td>Best wishes. The sign-off.</td></tr>
         <tr><td>AP</td><td>A reply with the callsigns filled in. A normal AP passed the check and is used. A struck-through AP did not, so it stays on the list and does not change the TX message.</td></tr>
+        <tr><td>Compound callsign</td><td>A callsign with a prefix, a suffix other than /P or /R, or too long for the standard pattern, such as <code>PA/DL1ABC</code> or <code>G4ABC/M</code>.</td></tr>
+        <tr><td>&lt;CALL&gt;</td><td>A compound callsign sent as a short code (a hash). <code>&lt;...&gt;</code> means the callsign has not been heard in full yet.</td></tr>
         <tr><td>QSO</td><td>A contact between two stations.</td></tr>
         <tr><td>Slot</td><td>7.5 seconds. You transmit in one and listen in the next.</td></tr>
         <tr><td>Even / odd slot</td><td>The two turns. The stations in a contact use opposite ones, so one is always listening.</td></tr>
@@ -593,7 +652,7 @@
 
       <h3 id="decoding">Decoding</h3>
       <p>
-        The decoder accepts an FT4 signal that starts up to about 2.5 seconds into the slot, which covers
+        The decoder searches for an FT4 signal starting up to about 2.5 seconds into the slot, which covers
         most satellite echoes. With <strong>Parallel TX echo decode</strong> on, a second look for late
         echoes runs at the same time during your transmit slots. If both find the same echo, one line is
         kept: the copy nearest your transmit frequency. Transmit audio is prepared before the slot and
@@ -629,8 +688,8 @@
         slot has started, or at a different delay from that station's other copies, is left out.
       </p>
       <p>
-        A decode later than 1.5 seconds into the slot is ignored. That delay is a moonbounce echo,
-        not a satellite path. If a strong signal sits on a weaker one, the strong signal is taken
+        A decode with a DT above 1.5 seconds is still ignored. A satellite path is never that slow, so it
+        is a moonbounce echo or a station with a badly wrong clock. If a strong signal sits on a weaker one, the strong signal is taken
         off the audio and the slot is decoded again, so the weaker station can still be read.
       </p>
 

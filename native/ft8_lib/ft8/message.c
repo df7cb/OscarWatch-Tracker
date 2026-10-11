@@ -113,10 +113,38 @@ ftx_message_type_t ftx_message_get_type(const ftx_message_t* msg)
     }
 }
 
+/// Copy a callsign without the <> that ask for it to be sent as a hash. Returns true when it had them.
+static bool strip_brackets(char* out, size_t out_size, const char* in)
+{
+    size_t len = strlen(in);
+    bool bracketed = (len >= 2) && (in[0] == '<') && (in[len - 1] == '>');
+    if (bracketed)
+    {
+        ++in;
+        len -= 2;
+    }
+    if (len >= out_size)
+        len = out_size - 1;
+    memcpy(out, in, len);
+    out[len] = '\0';
+    return bracketed;
+}
+
+/// True for a callsign that a standard (type 1/2) message can only carry as a hash.
+static bool is_hashed_call(const char* call)
+{
+    if (call[0] == '\0' || equals(call, "DE") || equals(call, "QRZ") || equals(call, "CQ") || starts_with(call, "CQ "))
+        return false;
+    int length_base = (int)strlen(call);
+    if (ends_with(call, "/P") || ends_with(call, "/R"))
+        length_base -= 2;
+    return pack_basecall(call, length_base) < 0;
+}
+
 ftx_message_rc_t ftx_message_encode(ftx_message_t* msg, ftx_callsign_hash_interface_t* hash_if, const char* message_text)
 {
-    char call_to[12];
-    char call_de[12];
+    char call_to[14];
+    char call_de[14];
     char extra[20];
 
     const char* parse_position = message_text;
@@ -171,10 +199,26 @@ ftx_message_rc_t ftx_message_encode(ftx_message_t* msg, ftx_callsign_hash_interf
     ftx_message_rc_t rc;
     if (!parse_position[0]) {
         // up to 3 tokens with no leftovers
-        rc = ftx_message_encode_std(msg, hash_if, call_to, call_de, extra);
-        if (rc == FTX_MESSAGE_RC_OK)
-            return rc;
-        LOG(LOG_DEBUG, "   ftx_message_encode_std failed: %d\n", rc);
+        char plain_to[12];
+        char plain_de[12];
+        bool bracket_to = strip_brackets(plain_to, sizeof(plain_to), call_to);
+        bool bracket_de = strip_brackets(plain_de, sizeof(plain_de), call_de);
+
+        // A non-standard call written without <> is sent in full (type 4) when the
+        // message has room for it, as WSJT-X does. Grids and reports need type 1,
+        // where such a call can only be a hash.
+        bool icq = equals(plain_to, "CQ") || starts_with(plain_to, "CQ ");
+        bool full_to = !icq && !bracket_to && is_hashed_call(plain_to);
+        bool full_de = !bracket_de && is_hashed_call(plain_de);
+        bool fits_type4 = icq || extra[0] == '\0' || equals(extra, "RRR") || equals(extra, "RR73") || equals(extra, "73");
+
+        if (!((full_to || full_de) && fits_type4))
+        {
+            rc = ftx_message_encode_std(msg, hash_if, plain_to, plain_de, extra);
+            if (rc == FTX_MESSAGE_RC_OK)
+                return rc;
+            LOG(LOG_DEBUG, "   ftx_message_encode_std failed: %d\n", rc);
+        }
         rc = ftx_message_encode_nonstd(msg, hash_if, call_to, call_de, extra);
         if (rc == FTX_MESSAGE_RC_OK)
             return rc;
@@ -257,6 +301,13 @@ ftx_message_rc_t ftx_message_encode_nonstd(ftx_message_t* msg, ftx_callsign_hash
 
     LOG(LOG_DEBUG, "ftx_message_encode_nonstd '%s' '%s' '%s'\n", call_to, call_de, extra);
 
+    char plain_to[12];
+    char plain_de[12];
+    bool bracket_to = strip_brackets(plain_to, sizeof(plain_to), call_to);
+    bool bracket_de = strip_brackets(plain_de, sizeof(plain_de), call_de);
+    call_to = plain_to;
+    call_de = plain_de;
+
     uint8_t icq = (uint8_t)equals(call_to, "CQ") || starts_with(call_to, "CQ ");
     int len_call_to = strlen(call_to);
     int len_call_de = strlen(call_de);
@@ -275,12 +326,13 @@ ftx_message_rc_t ftx_message_encode_nonstd(ftx_message_t* msg, ftx_callsign_hash
 
     if (icq == 0)
     {
-        // choose which of the callsigns to encode as plain-text (58 bits) or hash (12 bits)
+        // choose which of the callsigns to encode as plain-text (58 bits) or hash (12 bits):
+        // the one not in <>, else the non-standard one, else call_de
         iflip = 0; // call_de will be sent plain-text
-        if (call_de[0] == '<' && call_de[len_call_to - 1] == '>')
-        {
+        if (bracket_de != bracket_to)
+            iflip = bracket_de ? 1 : 0;
+        else if (is_hashed_call(call_to) && !is_hashed_call(call_de))
             iflip = 1;
-        }
 
         const char* call12;
         call12 = (iflip == 0) ? call_to : call_de;

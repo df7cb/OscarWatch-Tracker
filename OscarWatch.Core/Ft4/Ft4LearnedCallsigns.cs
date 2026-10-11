@@ -1,7 +1,7 @@
 namespace OscarWatch.Core.Ft4;
 
 /// <summary>
-/// Non-standard callsigns (portable, prefixed, or longer than six characters) heard in full.
+/// Non-standard callsigns (prefixed, a suffix other than /P or /R, or longer than six characters) heard in full.
 /// FT4 sends these as a hash, so a station shows as &lt;...&gt; until its full call has been
 /// decoded once. Keeping them between sessions lets the decoder name the station straight away.
 /// </summary>
@@ -51,7 +51,8 @@ public sealed class Ft4LearnedCallsigns
                 return false;
         }
 
-        return c.Contains('/') || c.Length > 6;
+        // /P and /R after a normal call are a flag bit in the message, not a hash.
+        return Ft4MessageCodec.IsHashedCall(c);
     }
 
     /// <summary>

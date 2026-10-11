@@ -383,30 +383,84 @@ public sealed class Ft4QsoSequencerTests
     }
 
     [Fact]
-    public void Hashed_compound_call_is_worked_without_angle_brackets()
+    public void Their_compound_call_is_sent_as_a_hash_when_ours_is_standard()
     {
         var seq = new Ft4QsoSequencer(() => "MM9SQL", () => "IO87", () => true);
         seq.StartAnswer(Msg("CQ R0CM/4"), oppositeEvenSlot: false);
-        Assert.Equal("R0CM/4 MM9SQL IO87", seq.CurrentTxMessage);
+        Assert.Equal("<R0CM/4> MM9SQL IO87", seq.CurrentTxMessage);
 
         // Their report comes back with their call shown hashed.
         Assert.False(seq.OnDecoded(Msg("MM9SQL <R0CM/4> -14", snr: -12f)));
-        Assert.Equal("R0CM/4 MM9SQL R-12", seq.CurrentTxMessage);
+        Assert.Equal("<R0CM/4> MM9SQL R-12", seq.CurrentTxMessage);
 
         Assert.False(seq.OnDecoded(Msg("MM9SQL <R0CM/4> RR73")));
-        Assert.Equal("R0CM/4 MM9SQL 73", seq.CurrentTxMessage);
+        Assert.Equal("<R0CM/4> MM9SQL 73", seq.CurrentTxMessage);
         Assert.True(seq.OnTxCompleted());
         Assert.Equal("R0CM/4", seq.TheirCall);
     }
 
     [Fact]
-    public void Clicking_a_hashed_report_answers_the_bare_call()
+    public void Clicking_a_hashed_report_answers_that_call()
     {
         var seq = new Ft4QsoSequencer(() => "MM9SQL", () => "IO87", () => true);
         seq.StartAnswer(Msg("MM9SQL <R0CM/4> -14", snr: -12f), oppositeEvenSlot: false);
 
         Assert.Equal("R0CM/4", seq.TheirCall);
-        Assert.Equal("R0CM/4 MM9SQL R-12", seq.CurrentTxMessage);
+        Assert.Equal("<R0CM/4> MM9SQL R-12", seq.CurrentTxMessage);
+    }
+
+    [Fact]
+    public void Own_compound_call_goes_out_in_full_when_calling_cq()
+    {
+        var seq = new Ft4QsoSequencer(() => "MM9SQL/M", () => "IO87", () => true, autoReply: () => true);
+        seq.StartCq(evenSlot: true);
+        Assert.Equal("CQ MM9SQL/M", seq.CurrentTxMessage);
+
+        // A standard call answers with no grid, our call hashed and theirs in full.
+        Assert.False(seq.OnDecoded(Msg("<MM9SQL/M> G4ABC", snr: -10f)));
+        Assert.Equal("G4ABC", seq.TheirCall);
+        Assert.Equal("G4ABC <MM9SQL/M> -10", seq.CurrentTxMessage);
+
+        Assert.False(seq.OnDecoded(Msg("<MM9SQL/M> G4ABC R-08")));
+        Assert.Equal("G4ABC MM9SQL/M RR73", seq.CurrentTxMessage);
+
+        Assert.False(seq.OnDecoded(Msg("MM9SQL/M <G4ABC> 73")));
+        Assert.True(seq.OnTxCompleted());
+    }
+
+    [Fact]
+    public void Own_compound_call_answers_a_cq_without_a_grid()
+    {
+        var seq = new Ft4QsoSequencer(() => "MM9SQL/M", () => "IO87", () => true);
+        seq.StartAnswer(Msg("CQ G4ABC IO91"), oppositeEvenSlot: false);
+        Assert.Equal("G4ABC MM9SQL/M", seq.CurrentTxMessage);
+
+        Assert.False(seq.OnDecoded(Msg("<MM9SQL/M> G4ABC -14", snr: -12f)));
+        Assert.Equal("G4ABC <MM9SQL/M> R-12", seq.CurrentTxMessage);
+
+        Assert.False(seq.OnDecoded(Msg("<MM9SQL/M> G4ABC RR73")));
+        Assert.Equal("G4ABC MM9SQL/M 73", seq.CurrentTxMessage);
+        Assert.True(seq.OnTxCompleted());
+    }
+
+    [Fact]
+    public void Clicking_a_no_grid_call_to_our_cq_sends_a_report()
+    {
+        var seq = new Ft4QsoSequencer(() => "MM9SQL/M", () => "IO87", () => true);
+        seq.StartAnswer(Msg("<MM9SQL/M> G4ABC", snr: -9f), oppositeEvenSlot: false);
+        Assert.Equal("G4ABC <MM9SQL/M> -09", seq.CurrentTxMessage);
+    }
+
+    [Fact]
+    public void Ap_hints_cover_full_call_replies_to_our_compound_call()
+    {
+        var seq = new Ft4QsoSequencer(() => "MM9SQL/M", () => "IO87", () => true);
+        seq.StartAnswer(Msg("<MM9SQL/M> G4ABC -14", snr: -12f), oppositeEvenSlot: false);
+
+        Assert.True(seq.TryGetApHints(out var hints, out _));
+        Assert.Contains("<MM9SQL/M> G4ABC -12", hints, StringComparison.Ordinal);
+        Assert.Contains("MM9SQL/M <G4ABC> RR73", hints, StringComparison.Ordinal);
+        Assert.Contains("MM9SQL/M <G4ABC> 73", hints, StringComparison.Ordinal);
     }
 
     [Fact]

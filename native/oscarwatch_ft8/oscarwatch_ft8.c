@@ -720,7 +720,14 @@ static int build_ap_hints(const char* hints_nl, int is_ft4, ap_hint_t* hints, in
             if (ftx_message_encode(&msg, &hash_if, text) == FTX_MESSAGE_RC_OK
                 && ftx_codeword_bits(is_ft4, msg.payload, hints[count].bits) == 0)
             {
-                memcpy(hints[count].text, text, (size_t)len + 1);
+                /* Keep the text as a decode prints it (hashed calls in <>), so it matches. */
+                char decoded[FTX_MAX_MESSAGE_LENGTH];
+                ftx_message_offsets_t offsets;
+                if (ftx_message_decode(&msg, &hash_if, decoded, &offsets) == FTX_MESSAGE_RC_OK
+                    && strlen(decoded) < OW_FT8_MAX_MESSAGE_LEN)
+                    strcpy(hints[count].text, decoded);
+                else
+                    memcpy(hints[count].text, text, (size_t)len + 1);
                 memcpy(hints[count].payload, msg.payload, FTX_PAYLOAD_LENGTH_BYTES);
                 ++count;
             }

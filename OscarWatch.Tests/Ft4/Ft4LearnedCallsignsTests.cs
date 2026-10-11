@@ -6,7 +6,10 @@ public sealed class Ft4LearnedCallsignsTests
 {
     [Theory]
     [InlineData("PA/DL1ABC", true)]
-    [InlineData("MM9SQL/P", true)]
+    [InlineData("MM9SQL/M", true)]
+    [InlineData("MM9SQL/P", false)]
+    [InlineData("G4ABC/R", false)]
+    [InlineData("PA/DL1ABC/P", true)]
     [InlineData("3DA0ABCD", true)]
     [InlineData("MM9SQL", false)]
     [InlineData("CQ", false)]
@@ -23,12 +26,12 @@ public sealed class Ft4LearnedCallsignsTests
     {
         var learned = new Ft4LearnedCallsigns();
         Assert.True(learned.Note("pa/dl1abc"));
-        Assert.True(learned.Note("G4ABC/P"));
-        Assert.False(learned.Note("G4ABC/P"));
+        Assert.True(learned.Note("G4ABC/M"));
+        Assert.False(learned.Note("G4ABC/M"));
         Assert.True(learned.Note("PA/DL1ABC"));
         Assert.False(learned.Note("MM9SQL"));
 
-        Assert.Equal(["PA/DL1ABC", "G4ABC/P"], learned.Snapshot());
+        Assert.Equal(["PA/DL1ABC", "G4ABC/M"], learned.Snapshot());
     }
 
     [Fact]
@@ -36,28 +39,28 @@ public sealed class Ft4LearnedCallsignsTests
     {
         var learned = new Ft4LearnedCallsigns();
         for (var i = 0; i < Ft4LearnedCallsigns.MaxCount + 20; i++)
-            learned.Note($"G{i}ABC/P");
+            learned.Note($"G{i}ABC/M");
 
         var calls = learned.Snapshot();
         Assert.Equal(Ft4LearnedCallsigns.MaxCount, calls.Count);
-        Assert.Equal($"G{Ft4LearnedCallsigns.MaxCount + 19}ABC/P", calls[0]);
+        Assert.Equal($"G{Ft4LearnedCallsigns.MaxCount + 19}ABC/M", calls[0]);
     }
 
     [Fact]
     public void BuildSeedList_puts_logbook_first_and_drops_duplicates()
     {
         var seeds = Ft4LearnedCallsigns.BuildSeedList(
-            ["PA/DL1ABC", "MM9SQL", "g4abc/p"],
-            ["G4ABC/P", "EA8/G0ABC"]);
+            ["PA/DL1ABC", "MM9SQL", "g4abc/m"],
+            ["G4ABC/M", "EA8/G0ABC"]);
 
-        Assert.Equal(["PA/DL1ABC", "G4ABC/P", "EA8/G0ABC"], seeds);
+        Assert.Equal(["PA/DL1ABC", "G4ABC/M", "EA8/G0ABC"], seeds);
     }
 
     [Fact]
     public void BuildSeedList_caps_logbook_and_total()
     {
-        var logbook = Enumerable.Range(0, 100).Select(i => $"L{i}ABC/P").ToArray();
-        var heard = Enumerable.Range(0, 300).Select(i => $"H{i}ABC/P").ToArray();
+        var logbook = Enumerable.Range(0, 100).Select(i => $"L{i}ABC/M").ToArray();
+        var heard = Enumerable.Range(0, 300).Select(i => $"H{i}ABC/M").ToArray();
 
         var seeds = Ft4LearnedCallsigns.BuildSeedList(logbook, heard);
 
@@ -73,12 +76,12 @@ public sealed class Ft4LearnedCallsignsTests
         {
             var learned = new Ft4LearnedCallsigns();
             learned.Note("PA/DL1ABC");
-            learned.Note("G4ABC/P");
+            learned.Note("G4ABC/M");
             Assert.True(learned.SaveIfChanged(path));
 
             var reloaded = new Ft4LearnedCallsigns();
             reloaded.Load(path);
-            Assert.Equal(["G4ABC/P", "PA/DL1ABC"], reloaded.Snapshot());
+            Assert.Equal(["G4ABC/M", "PA/DL1ABC"], reloaded.Snapshot());
         }
         finally
         {
@@ -96,9 +99,9 @@ public sealed class Ft4LearnedCallsignsTests
         var path = Path.Combine(Path.GetTempPath(), $"ow-learned-{Guid.NewGuid():N}.txt");
         try
         {
-            File.WriteAllLines(path, ["", "<...>", "MM9SQL", "g4abc/p", "G4ABC/P"]);
+            File.WriteAllLines(path, ["", "<...>", "MM9SQL", "g4abc/m", "G4ABC/M"]);
             learned.Load(path);
-            Assert.Equal(["G4ABC/P"], learned.Snapshot());
+            Assert.Equal(["G4ABC/M"], learned.Snapshot());
         }
         finally
         {

@@ -164,9 +164,11 @@ public sealed class Ft4QsoSequencer
                 return;
             }
 
-            if (Ft4MessageCodec.IsGrid(extra))
+            // No grid: the reply to a CQ from a non-standard call carries the full call instead.
+            if (Ft4MessageCodec.IsGrid(extra) || string.IsNullOrWhiteSpace(extra))
             {
-                TheirGrid = extra;
+                if (Ft4MessageCodec.IsGrid(extra))
+                    TheirGrid = extra;
                 ReportSent = Ft4MessageCodec.FormatSnrReport(decode.SnrDb);
                 CurrentTxMessage = Ft4MessageCodec.BuildReport(TheirCall, my, ReportSent);
                 return;
@@ -286,11 +288,17 @@ public sealed class Ft4QsoSequencer
         if (string.IsNullOrWhiteSpace(my))
             return false;
 
-        var lines = new List<string>(160);
+        // A standard call working our non-standard one sends its full call where it can
+        // (WSJT-X): "<MYCALL> THEM" in reply to our CQ, "MYCALL <THEM> RR73" to close.
+        var fullFromThem = Ft4MessageCodec.IsHashedCall(my) && !Ft4MessageCodec.IsHashedCall(them);
+
+        var lines = new List<string>(164);
         if (!IsOutgoingClosing(CurrentTxMessage))
         {
             if (!string.IsNullOrWhiteSpace(TheirGrid))
                 lines.Add(Ft4MessageCodec.BuildGridReply(my, them, TheirGrid));
+            if (fullFromThem)
+                lines.Add($"<{my}> {them}");
 
             for (var snr = -30; snr <= Ft4DecodeDepth.MaxHintedReportDb; snr++)
             {
@@ -304,6 +312,11 @@ public sealed class Ft4QsoSequencer
         {
             lines.Add(Ft4MessageCodec.BuildRr73(my, them));
             lines.Add(Ft4MessageCodec.Build73(my, them));
+            if (fullFromThem)
+            {
+                lines.Add($"{my} <{them}> RR73");
+                lines.Add($"{my} <{them}> 73");
+            }
         }
 
         hints = string.Join('\n', lines);

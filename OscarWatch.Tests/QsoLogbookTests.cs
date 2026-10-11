@@ -428,12 +428,13 @@ public class QsoLogbookRepositoryTests : IDisposable
 
         await Add("G0ABC", 1);
         await Add("PA/DL1ABC", 2);
-        await Add("G4ABC/P", 3);
+        await Add("G4ABC/M", 3);
         await Add("pa/dl1abc", 4);
         await Add("3DA0ABCD", 5);
+        await Add("G4XYZ/P", 6);
 
         var calls = await _repository.ListRecentNonStandardCallsAsync(10);
-        Assert.Equal(["3DA0ABCD", "PA/DL1ABC", "G4ABC/P"], calls);
+        Assert.Equal(["3DA0ABCD", "PA/DL1ABC", "G4ABC/M"], calls);
 
         Assert.Equal(["3DA0ABCD"], await _repository.ListRecentNonStandardCallsAsync(1));
     }

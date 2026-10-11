@@ -79,10 +79,42 @@ public sealed class Ft4MessageCodecTests
     {
         Assert.Equal("MM9SQL/M", Ft4MessageCodec.NormalizeCall("mm9sql/m"));
         Assert.Equal("MM9SQL/M", Ft4MessageCodec.NormalizeCall("mm9sql\u2215m"));
-        Assert.Equal("CQ MM9SQL/M IO85", Ft4MessageCodec.BuildCq("MM9SQL/M", "IO85"));
         Assert.True(Ft4MessageCodec.TryParse("CQ MM9SQL/M IO85", out var to, out var de, out var extra));
         Assert.Equal("CQ", to);
         Assert.Equal("MM9SQL/M", de);
         Assert.Equal("IO85", extra);
+    }
+
+    [Theory]
+    [InlineData("MM9SQL", false)]
+    [InlineData("G4ABC", false)]
+    [InlineData("K1A", false)]
+    [InlineData("G4ABC/P", false)]
+    [InlineData("G4ABC/R", false)]
+    [InlineData("3DA0ABC", false)]
+    [InlineData("MM9SQL/M", true)]
+    [InlineData("PA/DL1ABC", true)]
+    [InlineData("PA/DL1ABC/P", true)]
+    [InlineData("3DA0ABCD", true)]
+    [InlineData("<R0CM/4>", true)]
+    [InlineData("CQ", false)]
+    public void Hashed_call_matches_the_ft8_lib_standard_form(string call, bool hashed) =>
+        Assert.Equal(hashed, Ft4MessageCodec.IsHashedCall(call));
+
+    [Fact]
+    public void Own_compound_call_uses_the_wsjtx_message_forms()
+    {
+        Assert.Equal("CQ MM9SQL/M", Ft4MessageCodec.BuildCq("MM9SQL/M", "IO85"));
+        Assert.Equal("G4ABC MM9SQL/M", Ft4MessageCodec.BuildGridReply("G4ABC", "MM9SQL/M", "IO85"));
+        Assert.Equal("G4ABC <MM9SQL/M> R-05", Ft4MessageCodec.BuildReport("G4ABC", "MM9SQL/M", "R-05"));
+        Assert.Equal("G4ABC MM9SQL/M RR73", Ft4MessageCodec.BuildRr73("G4ABC", "MM9SQL/M"));
+    }
+
+    [Fact]
+    public void Their_compound_call_is_bracketed_when_ours_is_standard()
+    {
+        Assert.Equal("<PA/DL1ABC> MM9SQL IO85", Ft4MessageCodec.BuildGridReply("PA/DL1ABC", "MM9SQL", "IO85"));
+        Assert.Equal("<PA/DL1ABC> MM9SQL -05", Ft4MessageCodec.BuildReport("PA/DL1ABC", "MM9SQL", "-05"));
+        Assert.Equal("<PA/DL1ABC> MM9SQL 73", Ft4MessageCodec.Build73("PA/DL1ABC", "MM9SQL"));
     }
 }

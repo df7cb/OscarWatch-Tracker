@@ -66,6 +66,38 @@ public sealed class Ft8NativeRoundTripTests
             && d.text.Contains("MM9SQL", StringComparison.OrdinalIgnoreCase));
     }
 
+    [Theory]
+    [InlineData("CQ MM9SQL/M", "CQ MM9SQL/M")]
+    [InlineData("CQ 3DA0ABCD", "CQ 3DA0ABCD")]
+    [InlineData("G4ABC MM9SQL/M", "<G4ABC> MM9SQL/M")]
+    [InlineData("G4ABC MM9SQL/M RR73", "<G4ABC> MM9SQL/M RR73")]
+    [InlineData("<G4ABC> PA/DL1ABC 73", "<G4ABC> PA/DL1ABC 73")]
+    [InlineData("PA/DL1ABC <G4ABC> RR73", "PA/DL1ABC <G4ABC> RR73")]
+    [InlineData("G4ABC <MM9SQL/M> -05", "G4ABC <MM9SQL/M> -05")]
+    public void Non_standard_call_goes_out_in_full_unless_bracketed(string message, string expected)
+    {
+        if (!RequireNativeOrReturn())
+            return;
+
+        Assert.True(Ft8Native.TryEncodeFt4(message, 1500f, 12000, out var pcm, out var error), error);
+
+        var decoded = Ft8Native.DecodeFt4(pcm!, 12000, centreHz: 1500);
+        Assert.Contains(decoded, d => d.text == expected);
+    }
+
+    [Fact]
+    public void Full_call_arrives_at_a_station_that_has_never_heard_it()
+    {
+        if (!RequireNativeOrReturn())
+            return;
+
+        Assert.True(Ft8Native.TryEncodeFt4("G4ABC MM9SQL/M RR73", 1500f, 12000, out var pcm, out var error), error);
+        Ft8Native.ClearCallsigns();
+
+        var decoded = Ft8Native.DecodeFt4(pcm!, 12000, centreHz: 1500);
+        Assert.Contains(decoded, d => d.text == "<...> MM9SQL/M RR73");
+    }
+
     [Fact]
     public void Encode_report_message()
     {
