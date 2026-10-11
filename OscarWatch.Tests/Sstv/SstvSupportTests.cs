@@ -69,6 +69,15 @@ public sealed class SstvSupportTests
     }
 
     [Fact]
+    public void Auto_start_elevation_clamps_to_the_allowed_range()
+    {
+        Assert.Equal(-5, SstvSettings.ClampAutoStartElevationDeg(double.NaN));
+        Assert.Equal(-15, SstvSettings.ClampAutoStartElevationDeg(-90));
+        Assert.Equal(30, SstvSettings.ClampAutoStartElevationDeg(45));
+        Assert.Equal(-5, SstvSettings.ClampAutoStartElevationDeg(-5));
+    }
+
+    [Fact]
     public void Other_picture_names_use_the_file_time()
     {
         var fileTime = new DateTime(2025, 1, 2, 3, 4, 5, DateTimeKind.Utc);

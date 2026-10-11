@@ -66,7 +66,7 @@
           <TextBlock Text="{loc:Localize Key=Sstv.AutoStart.Elevation}" VerticalAlignment="Center" />
           <NumericUpDown Value="{Binding AutoStartElevationDeg}"
                          IsEnabled="{Binding AutoStartEnabled}"
-                         Minimum="0" Maximum="30" Increment="1"
+                         Minimum="-15" Maximum="30" Increment="1"
                          FormatString="0"
                          Width="140"
                          AutomationProperties.Name="{loc:Localize Key=Sstv.AutoStart.Elevation}" />

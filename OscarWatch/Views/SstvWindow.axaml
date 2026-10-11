@@ -34,6 +34,10 @@
       <Setter Property="FontSize" Value="12" />
       <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
+    <Style Selector="ListBoxItem">
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+      <Setter Property="Padding" Value="4,6" />
+    </Style>
   </Window.Styles>
 
   <DockPanel Margin="10">
@@ -89,23 +93,32 @@
     <Border DockPanel.Dock="Bottom"
             BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
             BorderThickness="0,1,0,0"
-            Padding="0,8,0,0"
+            Padding="0,8,8,2"
             Margin="0,8,0,0">
       <StackPanel Spacing="6">
-        <Grid ColumnDefinitions="*,Auto,160" ColumnSpacing="10">
-          <TextBlock Grid.Column="0" Text="{Binding StatusText}" FontWeight="SemiBold" TextWrapping="Wrap" VerticalAlignment="Center" />
-          <TextBlock Grid.Column="1"
-                     Text="{loc:Localize Key=Sstv.Level}"
-                     Classes="sstv-label"
-                     IsVisible="{Binding ShowInputLevel}" />
-          <ProgressBar Grid.Column="2"
-                       Minimum="0" Maximum="100"
-                       Value="{Binding InputLevelPercent}"
-                       Height="10" MinHeight="10"
-                       VerticalAlignment="Center"
-                       IsVisible="{Binding ShowInputLevel}"
-                       AutomationProperties.Name="{loc:Localize Key=Sstv.Level}" />
-        </Grid>
+        <DockPanel LastChildFill="True">
+          <StackPanel DockPanel.Dock="Right"
+                      Orientation="Horizontal"
+                      Spacing="8"
+                      Margin="12,0,0,0"
+                      VerticalAlignment="Center"
+                      IsVisible="{Binding ShowInputLevel}">
+            <TextBlock Text="{loc:Localize Key=Sstv.Level}"
+                       Classes="sstv-label"
+                       TextWrapping="NoWrap"
+                       VerticalAlignment="Center" />
+            <ProgressBar Minimum="0" Maximum="100"
+                         Value="{Binding InputLevelPercent}"
+                         Width="140" MinWidth="140" MaxWidth="140"
+                         Height="10" MinHeight="10"
+                         VerticalAlignment="Center"
+                         AutomationProperties.Name="{loc:Localize Key=Sstv.Level}" />
+          </StackPanel>
+          <TextBlock Text="{Binding StatusText}"
+                     FontWeight="SemiBold"
+                     TextWrapping="Wrap"
+                     VerticalAlignment="Center" />
+        </DockPanel>
         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10"
               IsVisible="{Binding LineText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
           <TextBlock Grid.Column="0" Text="{Binding LineText}" Classes="sstv-mono" MinWidth="120" />
@@ -188,14 +201,14 @@
           </Grid>
           <ListBox ItemsSource="{Binding Gallery}"
                    SelectedItem="{Binding SelectedGalleryItem}"
+                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                    AutomationProperties.Name="{loc:Localize Key=Sstv.Gallery}">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:SstvGalleryItem">
-                <StackPanel Spacing="4" Margin="0,2">
+                <StackPanel Spacing="4" HorizontalAlignment="Stretch">
                   <Image Source="{Binding Bitmap}"
-                         Height="150"
                          Stretch="Uniform"
-                         HorizontalAlignment="Left"
+                         HorizontalAlignment="Stretch"
                          AutomationProperties.Name="{Binding Caption}" />
                   <TextBlock Text="{Binding Caption}" FontSize="12" TextWrapping="Wrap" />
                   <TextBlock Text="{loc:Localize Key=Sstv.Picture.AlreadySaved}"

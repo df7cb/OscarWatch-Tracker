@@ -165,4 +165,35 @@ public sealed class SstvAutoStartCoordinatorTests
 
         Assert.Equal(SstvAutoStartAction.Start, c.Process(Input(8, running: false)));
     }
+
+    [Fact]
+    public void Negative_start_elevation_starts_before_aos_and_keeps_listening_through_the_horizon()
+    {
+        var c = new SstvAutoStartCoordinator();
+
+        Assert.Equal(SstvAutoStartAction.None, c.Process(Input(-8, start: -5)));
+        Assert.Equal(SstvAutoStartAction.Start, c.Process(Input(-4, start: -5)));
+        Assert.Equal(SstvAutoStartAction.None, c.Process(Input(-1, running: true, auto: true, start: -5)));
+        Assert.Equal(SstvAutoStartAction.None, c.Process(Input(12, running: true, auto: true, start: -5)));
+    }
+
+    [Fact]
+    public void Negative_start_stops_after_falling_back_below_the_start_elevation()
+    {
+        var c = new SstvAutoStartCoordinator();
+        Assert.Equal(SstvAutoStartAction.Start, c.Process(Input(-4, start: -5)));
+
+        Assert.Equal(SstvAutoStartAction.None, c.Process(Input(20, running: true, auto: true, start: -5)));
+        Assert.Equal(SstvAutoStartAction.None, c.Process(Input(-6, running: true, auto: true, start: -5)));
+        Assert.Equal(SstvAutoStartAction.None, c.Process(Input(-6, running: true, auto: true, start: -5)));
+        Assert.Equal(SstvAutoStartAction.Stop, c.Process(Input(-6, running: true, auto: true, start: -5)));
+    }
+
+    [Fact]
+    public void Stop_elevation_follows_a_negative_start_and_stays_at_horizon_for_a_positive_start()
+    {
+        Assert.Equal(-5, SstvAutoStartCoordinator.EffectiveStopElevationDeg(-5));
+        Assert.Equal(0, SstvAutoStartCoordinator.EffectiveStopElevationDeg(5));
+        Assert.Equal(0, SstvAutoStartCoordinator.EffectiveStopElevationDeg(0));
+    }
 }

@@ -668,10 +668,10 @@ Fortfahren?</value>
     <value>Starten, wenn der gewählte Satellit aufgeht</value>
   </data>
   <data name="Sstv.AutoStart.Tip">
-    <value>Beginnt mit dem Empfang, wenn der im Hauptfenster gewählte Satellit über die unten angegebene Elevation steigt, und stoppt, wenn er untergeht. Funktioniert nur bei geöffnetem Fenster. Mit „Automatisch speichern“ bleiben die Bilder erhalten, wenn Sie das Fenster schließen.</value>
+    <value>Beginnt mit dem Empfang, wenn der im Hauptfenster gewählte Satellit über die unten angegebene Elevation steigt, und stoppt, wenn er untergeht. Ein negativer Wert wie −5° startet etwas vor AOS, damit sich Funkgerät und Audio einpendeln können. Funktioniert nur bei geöffnetem Fenster. Mit „Automatisch speichern“ bleiben die Bilder erhalten, wenn Sie das Fenster schließen.</value>
   </data>
   <data name="Sstv.AutoStart.Elevation">
-    <value>Start über (Grad)</value>
+    <value>Start-Elevation (Grad)</value>
   </data>
   <data name="Sstv.AutoSave">
     <value>Bilder automatisch speichern</value>

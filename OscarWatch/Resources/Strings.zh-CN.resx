@@ -1015,10 +1015,10 @@
     <value>选定卫星升起时开始</value>
   </data>
   <data name="Sstv.AutoStart.Tip">
-    <value>当主窗口中选定的卫星升到下方仰角以上时开始接收，卫星落下时停止。仅在此窗口打开时工作。开启自动保存后，关闭窗口也会保留图片。</value>
+    <value>当主窗口中选定的卫星升到下方仰角以上时开始接收，卫星落下时停止。可设为负值（例如 −5°），在 AOS 稍前开始，以便电台和音频稳定。仅在此窗口打开时工作。开启自动保存后，关闭窗口也会保留图片。</value>
   </data>
   <data name="Sstv.AutoStart.Elevation">
-    <value>开始仰角（度）以上</value>
+    <value>开始仰角（度）</value>
   </data>
   <data name="Sstv.AutoSave">
     <value>自动保存图像</value>

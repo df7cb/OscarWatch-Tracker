@@ -668,10 +668,10 @@ Lanjutkan?</value>
     <value>Mulai saat satelit yang dipilih terbit</value>
   </data>
   <data name="Sstv.AutoStart.Tip">
-    <value>Mulai mendengarkan saat satelit yang dipilih di jendela utama naik di atas elevasi di bawah, dan berhenti saat satelit terbenam. Hanya berfungsi saat jendela ini terbuka. Simpan otomatis menjaga gambar jika Anda menutup jendela.</value>
+    <value>Mulai mendengarkan saat satelit yang dipilih di jendela utama naik di atas elevasi di bawah, dan berhenti saat satelit terbenam. Gunakan nilai negatif, misalnya −5°, agar mulai sedikit sebelum AOS sehingga radio dan audio sempat stabil. Hanya berfungsi saat jendela ini terbuka. Simpan otomatis menjaga gambar jika Anda menutup jendela.</value>
   </data>
   <data name="Sstv.AutoStart.Elevation">
-    <value>Mulai di atas (derajat)</value>
+    <value>Elevasi mulai (derajat)</value>
   </data>
   <data name="Sstv.AutoSave">
     <value>Simpan gambar otomatis</value>

@@ -64,7 +64,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         _autoSavePictures = s.AutoSavePictures;
         _saveSessionAudio = s.SaveSessionAudio;
         _autoStartEnabled = s.AutoStartEnabled;
-        _autoStartElevationDeg = s.AutoStartElevationDeg;
+        _autoStartElevationDeg = SstvSettings.ClampAutoStartElevationDeg(s.AutoStartElevationDeg);
 
         ModeOptions.Add(new SstvModeOption(null, _l.Get("Sstv.Mode.Auto")));
         foreach (var mode in SstvModeTable.All)
@@ -438,7 +438,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
     {
         if (!double.IsFinite(value))
             return;
-        _settings.Current.Sstv.AutoStartElevationDeg = Math.Clamp(value, 0, 30);
+        _settings.Current.Sstv.AutoStartElevationDeg = SstvSettings.ClampAutoStartElevationDeg(value);
         _settings.RequestSave();
     }
 
@@ -542,9 +542,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
 
         var snapshot = _tracker.GetCurrent();
         double? elevation = snapshot.IsAvailable ? snapshot.ElevationDeg : null;
-        var startElevation = double.IsFinite(AutoStartElevationDeg)
-            ? Math.Clamp(AutoStartElevationDeg, 0, 30)
-            : 5;
+        var startElevation = SstvSettings.ClampAutoStartElevationDeg(AutoStartElevationDeg);
 
         var action = _autoStart.Process(new SstvAutoStartInput(
             Enabled: AutoStartEnabled,

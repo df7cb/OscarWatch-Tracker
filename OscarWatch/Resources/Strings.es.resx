@@ -1015,10 +1015,10 @@
     <value>Empezar cuando el satélite seleccionado salga</value>
   </data>
   <data name="Sstv.AutoStart.Tip">
-    <value>Empieza a escuchar cuando el satélite seleccionado en la ventana principal supera la elevación indicada abajo, y se detiene cuando se pone. Solo funciona con esta ventana abierta. Con el guardado automático se conservan las imágenes si cierra la ventana.</value>
+    <value>Empieza a escuchar cuando el satélite seleccionado en la ventana principal supera la elevación indicada abajo, y se detiene cuando se pone. Use un valor negativo, por ejemplo −5°, para empezar un poco antes del AOS y dar tiempo a que la radio y el audio se estabilicen. Solo funciona con esta ventana abierta. Con el guardado automático se conservan las imágenes si cierra la ventana.</value>
   </data>
   <data name="Sstv.AutoStart.Elevation">
-    <value>Empezar por encima de (grados)</value>
+    <value>Elevación de inicio (grados)</value>
   </data>
   <data name="Sstv.AutoSave">
     <value>Guardar imágenes automáticamente</value>

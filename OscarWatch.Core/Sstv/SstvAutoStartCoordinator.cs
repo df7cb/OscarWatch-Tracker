@@ -26,8 +26,19 @@ public readonly record struct SstvAutoStartInput(
 /// </summary>
 public sealed class SstvAutoStartCoordinator
 {
-    /// <summary>Below this elevation the satellite counts as set. Listening stops and re-arms.</summary>
+    /// <summary>
+    /// Horizon used as the stop floor when the start elevation is positive. Listening stops
+    /// below <see cref="EffectiveStopElevationDeg(double)"/>, so a negative start (for example −5°)
+    /// is not treated as already set.
+    /// </summary>
     public const double StopElevationDeg = 0.0;
+
+    /// <summary>
+    /// Elevation at which an automatic session stops and the next pass re-arms.
+    /// When start is below the horizon, stop follows start so the approach to AOS can run.
+    /// </summary>
+    public static double EffectiveStopElevationDeg(double startElevationDeg) =>
+        Math.Min(StopElevationDeg, startElevationDeg);
 
     /// <summary>
     /// Consecutive below-stop samples before stopping or re-arming, so one noisy sample does not end a pass.
@@ -75,7 +86,8 @@ public sealed class SstvAutoStartCoordinator
         if (input.ElevationDeg is not { } elevation || !double.IsFinite(elevation))
             return SstvAutoStartAction.None;
 
-        if (elevation < StopElevationDeg)
+        var stopElevation = EffectiveStopElevationDeg(input.StartElevationDeg);
+        if (elevation < stopElevation)
         {
             _belowStopTicks++;
             if (_belowStopTicks >= BelowStopConfirmTicks)
