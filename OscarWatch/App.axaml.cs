@@ -10,6 +10,7 @@ using OscarWatch.Core.Logbook;
 using OscarWatch.Core.Net;
 using OscarWatch.Core.Orbit;
 using OscarWatch.Core.Services;
+using OscarWatch.Core.Sstv;
 using OscarWatch.Orbit;
 using OscarWatch.Core.Models;
 using OscarWatch.ViewModels;
@@ -117,6 +118,8 @@ public partial class App : Application
         services.AddTransient<LogbookSettingsViewModel>();
         services.AddSingleton<Ft4ModemService>();
         services.AddSingleton<Ft4ViewModel>();
+        services.AddSingleton<ISstvPictureShareService, SstvPictureShareService>();
+        services.AddSingleton(CreateSstvPictureUploader);
         services.AddSingleton<OscarWatch.Sstv.SstvAudioService>();
         services.AddSingleton<OscarWatch.Sstv.SstvReceiverService>();
         services.AddSingleton<SstvViewModel>();
@@ -125,6 +128,8 @@ public partial class App : Application
 
         var settingsService = Services.GetRequiredService<ISettingsService>();
         settingsService.Load();
+
+        Services.GetRequiredService<SstvPictureUploader>().Start();
 
         LocalizationCulture.ApplyFromSettings(settingsService);
         AppThemeManager.Apply(AppThemeManager.ReadPreferenceFromDisk());
@@ -150,6 +155,28 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private static SstvPictureUploader CreateSstvPictureUploader(IServiceProvider sp)
+    {
+        var settings = sp.GetRequiredService<ISettingsService>();
+        var live = sp.GetRequiredService<ILiveTrackingService>();
+        var uploader = new SstvPictureUploader(
+            sp.GetRequiredService<ISstvPictureShareService>(),
+            () => settings.Current.SatelliteStatus,
+            () => settings.Current.Sstv.SharePicturesWithOscarWatch,
+            norad => live.GetLiveNowSnapshot()
+                .FirstOrDefault(s => string.Equals(s.NoradId, norad, StringComparison.Ordinal))?
+                .LookAngles?.ElevationDeg,
+            $"OscarWatch-Tracker/{OscarWatchHttpClients.GetProductVersion()}");
+        uploader.Diagnostic += (message, ex) =>
+        {
+            if (ex is null)
+                Log.Information("{Message}", message);
+            else
+                Log.Warning(ex, "{Message}", message);
+        };
+        return uploader;
     }
 
     private static void OnDesktopExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)

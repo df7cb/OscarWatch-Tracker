@@ -97,6 +97,10 @@
         <CheckBox Content="{loc:Localize Key=Sstv.AutoSave}" IsChecked="{Binding AutoSavePictures}" />
         <CheckBox Content="{loc:Localize Key=Sstv.SaveSessionAudio}" IsChecked="{Binding SaveSessionAudio}" />
         <TextBlock Classes="sstv-note" Text="{loc:Localize Key=Sstv.SaveSessionAudio.Tip}" />
+        <CheckBox Content="{loc:Localize Key=Sstv.Share}"
+                  IsChecked="{Binding SharePictures}"
+                  IsEnabled="{Binding CanSharePictures}" />
+        <TextBlock Classes="sstv-note" Text="{Binding ShareNote}" />
         <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
           <Button Content="{loc:Localize Key=Sstv.OpenFolder}"
                   Command="{Binding OpenPictureFolderCommand}" />

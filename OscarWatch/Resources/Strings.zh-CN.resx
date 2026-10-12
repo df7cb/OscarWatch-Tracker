@@ -1029,6 +1029,42 @@
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>将接收音频保存为 WAV 文件（约每分钟 1.4 MB）到 SSTV 文件夹，以便之后重新解码。</value>
   </data>
+  <data name="Sstv.Share">
+    <value>将图片分享到 OscarWatch.org SSTV 图库</value>
+  </data>
+  <data name="Sstv.Share.Tip">
+    <value>卫星落下后，同步锁定达到 50% 及以上的完整图片会使用您的 OscarWatch API 令牌逐张上传。从录音解码的图片不会分享。您的网站资料需要填写呼号。</value>
+  </data>
+  <data name="Sstv.Share.NeedsToken">
+    <value>请在 设置 → OscarWatch 中保存 OscarWatch.org API 令牌，以便将图片分享到图库。</value>
+  </data>
+  <data name="Sstv.Share.Status.On">
+    <value>图库分享已开启。过境结束后分享优质图片。</value>
+  </data>
+  <data name="Sstv.Share.Status.Waiting">
+    <value>过境结束后待分享的图片：{0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Uploading">
+    <value>正在将图片分享到图库。等待中：{0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Shared">
+    <value>图片已分享到图库。仍在等待：{0}</value>
+  </data>
+  <data name="Sstv.Share.Status.SharedPending">
+    <value>图片已发送到图库，等待审核。仍在等待：{0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Rejected">
+    <value>图库拒绝了一张图片：{0}。仍在等待：{1}</value>
+  </data>
+  <data name="Sstv.Share.Status.Stopped">
+    <value>图库分享已停止：{0}。请检查 设置 → OscarWatch 中的 API 令牌。</value>
+  </data>
+  <data name="Sstv.Share.Status.RateLimited">
+    <value>已达到图库上限（每小时 20 张）。等待重试：{0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Retrying">
+    <value>无法连接 OscarWatch.org，将稍后重试。等待中：{0}</value>
+  </data>
   <data name="Sstv.Progress">
     <value>图像进度</value>
   </data>

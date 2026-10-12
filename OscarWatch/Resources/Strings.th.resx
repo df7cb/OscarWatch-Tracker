@@ -682,6 +682,42 @@ LOS: {2}
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>เก็บเสียงที่รับเป็นไฟล์ WAV (ประมาณ 1.4 MB ต่อนาที) ในโฟลเดอร์ SSTV เพื่อถอดรหัสซ้ำภายหลัง</value>
   </data>
+  <data name="Sstv.Share">
+    <value>แชร์ภาพไปยังแกลเลอรี SSTV ของ OscarWatch.org</value>
+  </data>
+  <data name="Sstv.Share.Tip">
+    <value>หลังดาวเทียมตกขอบฟ้า ภาพที่สมบูรณ์และมี sync lock ตั้งแต่ 50% ขึ้นไปจะถูกอัปโหลดทีละภาพด้วยโทเค็น API ของ OscarWatch ภาพจากไฟล์บันทึกจะไม่ถูกแชร์ โปรไฟล์บนเว็บไซต์ต้องมีสัญญาณเรียกขาน</value>
+  </data>
+  <data name="Sstv.Share.NeedsToken">
+    <value>บันทึกโทเค็น API ของ OscarWatch.org ใน การตั้งค่า → OscarWatch เพื่อแชร์ภาพไปยังแกลเลอรี</value>
+  </data>
+  <data name="Sstv.Share.Status.On">
+    <value>เปิดการแชร์ไปยังแกลเลอรีแล้ว ภาพที่ดีจะถูกแชร์หลังจบการผ่าน</value>
+  </data>
+  <data name="Sstv.Share.Status.Waiting">
+    <value>ภาพที่รอแชร์หลังจบการผ่าน: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Uploading">
+    <value>กำลังแชร์ภาพไปยังแกลเลอรี รออยู่: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Shared">
+    <value>แชร์ภาพไปยังแกลเลอรีแล้ว ยังรออยู่: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.SharedPending">
+    <value>ส่งภาพไปยังแกลเลอรีแล้ว รอการตรวจสอบ ยังรออยู่: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Rejected">
+    <value>แกลเลอรีไม่รับภาพ: {0} ยังรออยู่: {1}</value>
+  </data>
+  <data name="Sstv.Share.Status.Stopped">
+    <value>หยุดการแชร์ไปยังแกลเลอรี: {0} ตรวจสอบโทเค็น API ใน การตั้งค่า → OscarWatch</value>
+  </data>
+  <data name="Sstv.Share.Status.RateLimited">
+    <value>ถึงขีดจำกัดของแกลเลอรี (20 ภาพต่อชั่วโมง) รอลองใหม่: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Retrying">
+    <value>ติดต่อ OscarWatch.org ไม่ได้ จะลองใหม่ รออยู่: {0}</value>
+  </data>
   <data name="Sstv.Progress">
     <value>ความคืบหน้าภาพ</value>
   </data>

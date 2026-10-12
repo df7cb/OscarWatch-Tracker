@@ -682,6 +682,42 @@ Lanjutkan?</value>
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>Simpan audio penerimaan sebagai WAV (sekitar 1,4 MB per menit) di folder SSTV agar lintasan dapat didekode ulang nanti.</value>
   </data>
+  <data name="Sstv.Share">
+    <value>Bagikan gambar ke galeri SSTV OscarWatch.org</value>
+  </data>
+  <data name="Sstv.Share.Tip">
+    <value>Setelah satelit terbenam, gambar lengkap dengan sync lock 50% atau lebih diunggah satu per satu dengan token API OscarWatch Anda. Gambar dari rekaman tidak dibagikan. Profil situs web Anda memerlukan callsign.</value>
+  </data>
+  <data name="Sstv.Share.NeedsToken">
+    <value>Simpan token API OscarWatch.org Anda di Pengaturan → OscarWatch untuk membagikan gambar ke galeri.</value>
+  </data>
+  <data name="Sstv.Share.Status.On">
+    <value>Berbagi ke galeri aktif. Gambar yang bagus dibagikan setelah lintasan.</value>
+  </data>
+  <data name="Sstv.Share.Status.Waiting">
+    <value>Gambar menunggu dibagikan setelah lintasan: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Uploading">
+    <value>Membagikan gambar ke galeri. Menunggu: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Shared">
+    <value>Gambar dibagikan ke galeri. Masih menunggu: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.SharedPending">
+    <value>Gambar dikirim ke galeri dan menunggu diperiksa. Masih menunggu: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Rejected">
+    <value>Galeri menolak gambar: {0}. Masih menunggu: {1}</value>
+  </data>
+  <data name="Sstv.Share.Status.Stopped">
+    <value>Berbagi ke galeri dihentikan: {0}. Periksa token API di Pengaturan → OscarWatch.</value>
+  </data>
+  <data name="Sstv.Share.Status.RateLimited">
+    <value>Batas galeri tercapai (20 gambar per jam). Menunggu dicoba lagi: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Retrying">
+    <value>Tidak dapat menghubungi OscarWatch.org. Akan dicoba lagi. Menunggu: {0}</value>
+  </data>
   <data name="Sstv.Progress">
     <value>Kemajuan gambar</value>
   </data>

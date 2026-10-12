@@ -21,6 +21,12 @@ public sealed class SstvSettings
     /// </summary>
     public bool SaveSessionAudio { get; set; } = true;
 
+    /// <summary>
+    /// When true, finished pictures with a good lock are shared to the OscarWatch.org SSTV
+    /// gallery after the satellite sets. Needs the OscarWatch API token. Default off.
+    /// </summary>
+    public bool SharePicturesWithOscarWatch { get; set; }
+
     /// <summary>Mode to decode as regardless of the VIS. Empty picks the mode automatically.</summary>
     public string ForcedMode { get; set; } = "";
 

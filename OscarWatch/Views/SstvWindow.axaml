@@ -139,6 +139,11 @@
           <TextBlock Text="{Binding DopplerText}" Classes="sstv-mono"
                      IsVisible="{Binding DopplerText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
         </WrapPanel>
+        <TextBlock Text="{Binding ShareStatusText}"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{DynamicResource ThemeSecondaryForegroundBrush}"
+                   IsVisible="{Binding ShareStatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
       </StackPanel>
     </Border>
 

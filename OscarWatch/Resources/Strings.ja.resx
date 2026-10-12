@@ -2361,6 +2361,42 @@
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>受信音声を WAV ファイル (1 分あたり約 1.4 MB) として SSTV フォルダーに保存し、後で再デコードできるようにします。</value>
   </data>
+  <data name="Sstv.Share">
+    <value>OscarWatch.org の SSTV ギャラリーに画像を共有</value>
+  </data>
+  <data name="Sstv.Share.Tip">
+    <value>衛星が沈んだ後、同期ロック 50% 以上の完成画像を OscarWatch API トークンで 1 枚ずつアップロードします。録音から復調した画像は共有しません。ウェブサイトのプロフィールにコールサインが必要です。</value>
+  </data>
+  <data name="Sstv.Share.NeedsToken">
+    <value>ギャラリーに画像を共有するには、設定 → OscarWatch で OscarWatch.org の API トークンを保存してください。</value>
+  </data>
+  <data name="Sstv.Share.Status.On">
+    <value>ギャラリー共有はオンです。良好な画像はパス終了後に共有されます。</value>
+  </data>
+  <data name="Sstv.Share.Status.Waiting">
+    <value>パス終了後に共有待ちの画像: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Uploading">
+    <value>ギャラリーに画像を共有中。待機中: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Shared">
+    <value>画像をギャラリーに共有しました。残り: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.SharedPending">
+    <value>画像をギャラリーに送信しました（確認待ち）。残り: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Rejected">
+    <value>ギャラリーが画像を受け付けませんでした: {0}。残り: {1}</value>
+  </data>
+  <data name="Sstv.Share.Status.Stopped">
+    <value>ギャラリー共有を停止しました: {0}。設定 → OscarWatch の API トークンを確認してください。</value>
+  </data>
+  <data name="Sstv.Share.Status.RateLimited">
+    <value>ギャラリーの上限（1 時間 20 枚）に達しました。再試行待ち: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Retrying">
+    <value>OscarWatch.org に接続できません。再試行します。待機中: {0}</value>
+  </data>
   <data name="Sstv.Progress">
     <value>画像の進行状況</value>
   </data>

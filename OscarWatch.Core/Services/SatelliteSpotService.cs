@@ -82,7 +82,7 @@ public sealed class SatelliteSpotService : ISatelliteSpotService
         return text.Length <= max ? text : text[..max];
     }
 
-    private static bool TryBuildUri(string? baseUrl, string path, out Uri uri, out string error)
+    internal static bool TryBuildUri(string? baseUrl, string path, out Uri uri, out string error)
     {
         uri = null!;
         error = "";
@@ -104,7 +104,7 @@ public sealed class SatelliteSpotService : ISatelliteSpotService
         return true;
     }
 
-    private static string FormatError(HttpStatusCode status, string body)
+    internal static string FormatError(HttpStatusCode status, string body)
     {
         var detail = TryExtractMessage(body);
         var prefix = status switch

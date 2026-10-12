@@ -1029,6 +1029,42 @@ Continuar?</value>
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>Mantém o áudio recebido como WAV (cerca de 1,4 MB por minuto) na pasta SSTV para decodificar a passagem depois.</value>
   </data>
+  <data name="Sstv.Share">
+    <value>Compartilhar imagens com a galeria SSTV do OscarWatch.org</value>
+  </data>
+  <data name="Sstv.Share.Tip">
+    <value>Depois que o satélite se põe, imagens completas com sincronismo de 50% ou mais são enviadas uma a uma com seu token de API do OscarWatch. Imagens de gravações não são compartilhadas. Seu perfil no site precisa de um indicativo.</value>
+  </data>
+  <data name="Sstv.Share.NeedsToken">
+    <value>Salve seu token de API do OscarWatch.org em Configurações → OscarWatch para compartilhar imagens com a galeria.</value>
+  </data>
+  <data name="Sstv.Share.Status.On">
+    <value>Compartilhamento com a galeria ativado. Boas imagens são compartilhadas após a passagem.</value>
+  </data>
+  <data name="Sstv.Share.Status.Waiting">
+    <value>Imagens aguardando compartilhamento após a passagem: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Uploading">
+    <value>Compartilhando uma imagem com a galeria. Aguardando: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Shared">
+    <value>Imagem compartilhada na galeria. Ainda aguardando: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.SharedPending">
+    <value>Imagem enviada à galeria, aguardando revisão. Ainda aguardando: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Rejected">
+    <value>A galeria recusou uma imagem: {0}. Ainda aguardando: {1}</value>
+  </data>
+  <data name="Sstv.Share.Status.Stopped">
+    <value>Compartilhamento com a galeria interrompido: {0}. Verifique o token de API em Configurações → OscarWatch.</value>
+  </data>
+  <data name="Sstv.Share.Status.RateLimited">
+    <value>Limite da galeria atingido (20 imagens por hora). Aguardando nova tentativa: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Retrying">
+    <value>Não foi possível acessar o OscarWatch.org. Será tentado novamente. Aguardando: {0}</value>
+  </data>
   <data name="Sstv.Progress">
     <value>Progresso da imagem</value>
   </data>

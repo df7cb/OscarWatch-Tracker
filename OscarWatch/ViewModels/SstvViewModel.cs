@@ -24,6 +24,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
     private readonly IRigController _rig;
     private readonly ILocalizationService _l;
     private readonly SstvReceiverService _receiver;
+    private readonly SstvPictureUploader _shareQueue;
     private readonly SstvRecordingLoader _loader = new();
     private readonly DispatcherTimer _uiTimer;
     private WriteableBitmap? _liveA;
@@ -46,7 +47,8 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         ILiveTrackerSnapshotProvider tracker,
         IRigController rig,
         ILocalizationService localization,
-        SstvReceiverService receiver)
+        SstvReceiverService receiver,
+        SstvPictureUploader shareQueue)
     {
         _settings = settings;
         _frequencyOverlay = frequencyOverlay;
@@ -54,6 +56,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         _rig = rig;
         _l = localization;
         _receiver = receiver;
+        _shareQueue = shareQueue;
 
         var s = _settings.Current.Sstv;
         _autoSlant = s.AutoSlant;
@@ -63,6 +66,13 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         _detectWithoutVis = s.DetectWithoutVis;
         _autoSavePictures = s.AutoSavePictures;
         _saveSessionAudio = s.SaveSessionAudio;
+        _canSharePictures = HasApiToken;
+        _sharePictures = s.SharePicturesWithOscarWatch && _canSharePictures;
+        if (s.SharePicturesWithOscarWatch && !_sharePictures)
+        {
+            s.SharePicturesWithOscarWatch = false;
+            _settings.RequestSave();
+        }
         _autoStartEnabled = s.AutoStartEnabled;
         _autoStartElevationDeg = SstvSettings.ClampAutoStartElevationDeg(s.AutoStartElevationDeg);
 
@@ -76,7 +86,10 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         RefreshInputDevices();
 
         _receiver.SatelliteNameProvider = CurrentSatelliteName;
+        _receiver.SatelliteNoradProvider = () => _tracker.FocusedNoradId;
         _receiver.PictureReceived += OnPictureReceived;
+        _shareQueue.StatusChanged += OnShareStatusChanged;
+        _shareStatusText = ShareStatusFor(_shareQueue.Status);
         _receiver.PictureStarted += OnPictureStarted;
         _receiver.Faulted += OnReceiverFaulted;
         _receiver.Stopped += OnReceiverStopped;
@@ -118,6 +131,21 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     private bool _saveSessionAudio;
+
+    /// <summary>Share good pictures to the OscarWatch.org gallery after the pass. Needs the API token.</summary>
+    [ObservableProperty]
+    private bool _sharePictures;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShareNote))]
+    private bool _canSharePictures;
+
+    [ObservableProperty]
+    private string _shareStatusText = "";
+
+    public string ShareNote => CanSharePictures
+        ? _l.Get("Sstv.Share.Tip")
+        : _l.Get("Sstv.Share.NeedsToken");
 
     /// <summary>Start listening when the focused satellite rises. Only runs while this window is open.</summary>
     [ObservableProperty]
@@ -221,6 +249,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         // Opening the window mid-pass should listen straight away if the satellite is already up.
         _autoStart.ResetTracking();
         _lastAutoStartCheckUtc = DateTime.MinValue;
+        RefreshShareAvailability();
         _uiTimer.Start();
     }
 
@@ -426,6 +455,58 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
     {
         _settings.Current.Sstv.SaveSessionAudio = value;
         _settings.RequestSave();
+    }
+
+    partial void OnSharePicturesChanged(bool value)
+    {
+        _settings.Current.Sstv.SharePicturesWithOscarWatch = value;
+        _settings.RequestSave();
+        if (!value)
+            _shareQueue.Clear();
+        ShareStatusText = ShareStatusFor(_shareQueue.Status);
+    }
+
+    private bool HasApiToken => SstvShareRules.CanShare(_settings.Current.SatelliteStatus);
+
+    /// <summary>
+    /// Re-reads whether the OscarWatch API token is set. Without one, sharing is switched off
+    /// and stays off when a token is added later.
+    /// </summary>
+    public void RefreshShareAvailability()
+    {
+        CanSharePictures = HasApiToken;
+        if (!CanSharePictures && SharePictures)
+            SharePictures = false;
+        ShareStatusText = ShareStatusFor(_shareQueue.Status);
+    }
+
+    private void OnShareStatusChanged(object? sender, SstvShareStatus status) =>
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!_disposed)
+                ShareStatusText = ShareStatusFor(status);
+        });
+
+    private string ShareStatusFor(SstvShareStatus status)
+    {
+        if (!SharePictures && status.Pending == 0)
+            return "";
+
+        return status.State switch
+        {
+            SstvShareState.WaitingForPass when status.Pending > 0 => _l.Get("Sstv.Share.Status.Waiting", status.Pending),
+            SstvShareState.Uploading => _l.Get("Sstv.Share.Status.Uploading", status.Pending),
+            SstvShareState.Shared => _l.Get(
+                string.Equals(status.Detail, "pending", StringComparison.OrdinalIgnoreCase)
+                    ? "Sstv.Share.Status.SharedPending"
+                    : "Sstv.Share.Status.Shared",
+                status.Pending),
+            SstvShareState.Rejected => _l.Get("Sstv.Share.Status.Rejected", status.Detail ?? "", status.Pending),
+            SstvShareState.Stopped => _l.Get("Sstv.Share.Status.Stopped", status.Detail ?? ""),
+            SstvShareState.RateLimited => _l.Get("Sstv.Share.Status.RateLimited", status.Pending),
+            SstvShareState.Retrying => _l.Get("Sstv.Share.Status.Retrying", status.Pending),
+            _ => _l.Get("Sstv.Share.Status.On"),
+        };
     }
 
     partial void OnAutoStartEnabledChanged(bool value)
@@ -684,6 +765,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         _receiver.PictureStarted -= OnPictureStarted;
         _receiver.Faulted -= OnReceiverFaulted;
         _receiver.Stopped -= OnReceiverStopped;
+        _shareQueue.StatusChanged -= OnShareStatusChanged;
         _receiver.Stop();
     }
 }

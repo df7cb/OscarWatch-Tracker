@@ -682,6 +682,42 @@ Fortfahren?</value>
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>Empfangsaudio als WAV-Datei (etwa 1,4 MB pro Minute) im SSTV-Ordner behalten, um einen Pass später erneut zu dekodieren.</value>
   </data>
+  <data name="Sstv.Share">
+    <value>Bilder mit der SSTV-Galerie von OscarWatch.org teilen</value>
+  </data>
+  <data name="Sstv.Share.Tip">
+    <value>Nach dem Untergang des Satelliten werden fertige Bilder mit mindestens 50 % Sync-Lock einzeln mit Ihrem OscarWatch-API-Token hochgeladen. Bilder aus Aufnahmen werden nicht geteilt. Ihr Website-Profil benötigt ein Rufzeichen.</value>
+  </data>
+  <data name="Sstv.Share.NeedsToken">
+    <value>Speichern Sie Ihr OscarWatch.org-API-Token unter Einstellungen → OscarWatch, um Bilder mit der Galerie zu teilen.</value>
+  </data>
+  <data name="Sstv.Share.Status.On">
+    <value>Galerie-Freigabe ist aktiv. Gute Bilder werden nach dem Überflug geteilt.</value>
+  </data>
+  <data name="Sstv.Share.Status.Waiting">
+    <value>Bilder, die nach dem Überflug geteilt werden: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Uploading">
+    <value>Bild wird mit der Galerie geteilt. Wartend: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Shared">
+    <value>Bild in der Galerie geteilt. Noch wartend: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.SharedPending">
+    <value>Bild an die Galerie gesendet, wartet auf Prüfung. Noch wartend: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Rejected">
+    <value>Die Galerie hat ein Bild abgelehnt: {0}. Noch wartend: {1}</value>
+  </data>
+  <data name="Sstv.Share.Status.Stopped">
+    <value>Galerie-Freigabe gestoppt: {0}. Prüfen Sie das API-Token unter Einstellungen → OscarWatch.</value>
+  </data>
+  <data name="Sstv.Share.Status.RateLimited">
+    <value>Galerie-Limit erreicht (20 Bilder pro Stunde). Wartet auf erneuten Versuch: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Retrying">
+    <value>OscarWatch.org nicht erreichbar. Es wird erneut versucht. Wartend: {0}</value>
+  </data>
   <data name="Sstv.Progress">
     <value>Bildfortschritt</value>
   </data>

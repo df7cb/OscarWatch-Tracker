@@ -70,6 +70,7 @@ public partial class SstvWindow : Window
         if (DataContext is not SstvViewModel vm)
             return;
 
+        vm.RefreshShareAvailability();
         var dialog = new SstvSettingsWindow { DataContext = vm };
         await dialog.ShowDialog(this).ConfigureAwait(true);
     }

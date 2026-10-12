@@ -44,9 +44,12 @@ public sealed class SstvReceiverService : IDisposable
     private float[]? _spectrum;
     private long _spectrumVersion;
 
-    public SstvReceiverService(SstvAudioService audio)
+    private readonly SstvPictureUploader? _shareQueue;
+
+    public SstvReceiverService(SstvAudioService audio, SstvPictureUploader? shareQueue = null)
     {
         _audio = audio;
+        _shareQueue = shareQueue;
     }
 
     public SstvAudioService Audio => _audio;
@@ -66,6 +69,9 @@ public sealed class SstvReceiverService : IDisposable
 
     /// <summary>Called on the decoder thread for the satellite name to put in file names.</summary>
     public Func<string?>? SatelliteNameProvider { get; set; }
+
+    /// <summary>Called on the decoder thread for the NORAD id of the satellite being received.</summary>
+    public Func<string?>? SatelliteNoradProvider { get; set; }
 
     /// <summary>Audio offset from rig control, applied to the live decoder.</summary>
     public double FeedForwardHz
@@ -301,6 +307,7 @@ public sealed class SstvReceiverService : IDisposable
             string? saved = null;
             if (autoSave)
                 saved = SavePicture(image, received, satellite);
+            QueueForSharing(image, received, satellite, saved, fromRecording: fileStart is not null);
             // The decoder has already let go of this picture, so the regular preview copy
             // never sees the last lines or the final re-sync redraw.
             lock (_previewGate)
@@ -313,12 +320,46 @@ public sealed class SstvReceiverService : IDisposable
         return decoder;
     }
 
+    private void QueueForSharing(SstvDecodedImage image, DateTime received, string? satellite, string? saved, bool fromRecording)
+    {
+        if (_shareQueue is null || !_shareQueue.IsActive || !SstvShareRules.IsShareable(fromRecording, satellite, image))
+            return;
+
+        // With automatic saving off, keep a copy only until it has been shared.
+        var temporary = saved is null;
+        var path = saved ?? SavePicture(image, received, satellite, SstvShareQueueStore.DefaultPictureFolder);
+        if (path is null)
+            return;
+
+        string? norad = null;
+        try
+        {
+            norad = SatelliteNoradProvider?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            Log.Debug(ex, "SSTV share: NORAD id lookup failed");
+        }
+
+        _shareQueue.Enqueue(new SstvShareItem(
+            path,
+            satellite!.Trim(),
+            string.IsNullOrWhiteSpace(norad) ? null : norad.Trim(),
+            image.Mode.Name,
+            received,
+            image.LockPercent,
+            temporary));
+    }
+
     /// <summary>Save as PNG in the SSTV folder. Returns the path, or null if it failed.</summary>
-    public static string? SavePicture(SstvDecodedImage image, DateTime utc, string? satellite)
+    public static string? SavePicture(SstvDecodedImage image, DateTime utc, string? satellite) =>
+        SavePicture(image, utc, satellite, SstvPaths.GetDefaultDirectory());
+
+    private static string? SavePicture(SstvDecodedImage image, DateTime utc, string? satellite, string dir)
     {
         try
         {
-            var dir = SstvPaths.GetDefaultDirectory();
+            Directory.CreateDirectory(dir);
             var stem = SstvPaths.PictureStem(utc, image.Mode, satellite);
             var path = Path.Combine(dir, stem + ".png");
             for (var n = 2; File.Exists(path); n++)

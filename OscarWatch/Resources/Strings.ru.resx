@@ -682,6 +682,42 @@ LOS: {2}
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>Сохранять принятый звук в WAV (около 1,4 МБ в минуту) в папке SSTV для повторного декодирования.</value>
   </data>
+  <data name="Sstv.Share">
+    <value>Публиковать изображения в галерее SSTV на OscarWatch.org</value>
+  </data>
+  <data name="Sstv.Share.Tip">
+    <value>После захода спутника готовые изображения с синхронизацией от 50% загружаются по одному с вашим API-токеном OscarWatch. Изображения из записей не публикуются. В профиле на сайте должен быть указан позывной.</value>
+  </data>
+  <data name="Sstv.Share.NeedsToken">
+    <value>Сохраните API-токен OscarWatch.org в Настройки → OscarWatch, чтобы публиковать изображения в галерее.</value>
+  </data>
+  <data name="Sstv.Share.Status.On">
+    <value>Публикация в галерее включена. Хорошие изображения публикуются после пролёта.</value>
+  </data>
+  <data name="Sstv.Share.Status.Waiting">
+    <value>Изображений ожидают публикации после пролёта: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Uploading">
+    <value>Публикация изображения в галерее. В очереди: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Shared">
+    <value>Изображение опубликовано в галерее. Ещё в очереди: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.SharedPending">
+    <value>Изображение отправлено в галерею и ожидает проверки. Ещё в очереди: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Rejected">
+    <value>Галерея отклонила изображение: {0}. Ещё в очереди: {1}</value>
+  </data>
+  <data name="Sstv.Share.Status.Stopped">
+    <value>Публикация в галерее остановлена: {0}. Проверьте API-токен в Настройки → OscarWatch.</value>
+  </data>
+  <data name="Sstv.Share.Status.RateLimited">
+    <value>Достигнут лимит галереи (20 изображений в час). Ожидают повтора: {0}</value>
+  </data>
+  <data name="Sstv.Share.Status.Retrying">
+    <value>Не удалось связаться с OscarWatch.org. Попытка будет повторена. В очереди: {0}</value>
+  </data>
   <data name="Sstv.Progress">
     <value>Ход приёма</value>
   </data>
