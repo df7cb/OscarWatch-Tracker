@@ -322,6 +322,14 @@
         "uplink_mode": "FM",
         "doppler": "NOR",
         "ctcss": 67.0
+      },
+      {
+        "type": "SSDV 9k6 BPSK",
+        "downlink": 436210,
+        "uplink": 0,
+        "downlink_mode": "USB",
+        "uplink_mode": "USB",
+        "doppler": "NOR"
       }
     ]
   },
@@ -781,6 +789,14 @@
         "downlink_mode": "FM",
         "uplink_mode": "FM",
         "doppler": "NOR"
+      },
+      {
+        "type": "SSDV 1k2 IL2P",
+        "downlink": 145880,
+        "uplink": 0,
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
+        "doppler": "NOR"
       }
     ]
   },
@@ -921,6 +937,14 @@
         "downlink_mode": "USB",
         "uplink_mode": "USB",
         "doppler": "NOR"
+      },
+      {
+        "type": "SSDV 9k6 BPSK",
+        "downlink": 437443,
+        "uplink": 0,
+        "downlink_mode": "USB",
+        "uplink_mode": "USB",
+        "doppler": "NOR"
       }
     ]
   },
@@ -950,6 +974,118 @@
         "uplink": 0,
         "downlink_mode": "CW",
         "uplink_mode": "CW",
+        "doppler": "NOR"
+      }
+    ]
+  },
+  {
+    "name": "UTMN-2",
+    "norad_id": "57203",
+    "modes": [
+      {
+        "type": "SSTV",
+        "downlink": 436125,
+        "uplink": 0,
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
+        "doppler": "NOR"
+      }
+    ]
+  },
+  {
+    "name": "Marina",
+    "norad_id": "69920",
+    "modes": [
+      {
+        "type": "SSDV",
+        "downlink": 436680,
+        "uplink": 0,
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
+        "doppler": "NOR"
+      }
+    ]
+  },
+  {
+    "name": "239Alferov",
+    "norad_id": "64881",
+    "modes": [
+      {
+        "type": "SSDV 9k6 GFSK",
+        "downlink": 436270,
+        "uplink": 0,
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
+        "doppler": "NOR"
+      }
+    ]
+  },
+  {
+    "name": "Luca",
+    "norad_id": "67287",
+    "modes": [
+      {
+        "type": "SSDV 2k4 GMSK",
+        "downlink": 437180,
+        "uplink": 0,
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
+        "doppler": "NOR"
+      }
+    ]
+  },
+  {
+    "name": "Geoscan-2",
+    "norad_id": "64890",
+    "modes": [
+      {
+        "type": "SSDV 9k6 GFSK",
+        "downlink": 436160,
+        "uplink": 0,
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
+        "doppler": "NOR"
+      }
+    ]
+  },
+  {
+    "name": "Geoscan-4",
+    "norad_id": "64892",
+    "modes": [
+      {
+        "type": "SSDV 9k6 GFSK",
+        "downlink": 435335,
+        "uplink": 0,
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
+        "doppler": "NOR"
+      }
+    ]
+  },
+  {
+    "name": "Geoscan-5",
+    "norad_id": "64891",
+    "modes": [
+      {
+        "type": "SSDV 9k6 GFSK",
+        "downlink": 436660,
+        "uplink": 0,
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
+        "doppler": "NOR"
+      }
+    ]
+  },
+  {
+    "name": "SO-127",
+    "norad_id": "68446",
+    "modes": [
+      {
+        "type": "SSDV",
+        "downlink": 436875,
+        "uplink": 0,
+        "downlink_mode": "USB",
+        "uplink_mode": "USB",
         "doppler": "NOR"
       }
     ]
