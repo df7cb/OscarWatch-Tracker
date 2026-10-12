@@ -10,8 +10,13 @@ public sealed class Ft4OscarWatchSpotTests
     private const long DownlinkHz = 435_612_000;
     private static readonly DateTime Slot = new(2026, 10, 1, 17, 47, 0, DateTimeKind.Utc);
 
-    private static LiveTrackerSnapshot Snapshot(string satellite = "RS-44", long uplinkHz = UplinkHz, long downlinkHz = DownlinkHz) =>
-        new(satellite, "USB", "USB", uplinkHz, downlinkHz, "2m", "70cm", "FT4");
+    private static LiveTrackerSnapshot Snapshot(
+        string satellite = "RS-44",
+        long uplinkHz = UplinkHz,
+        long downlinkHz = DownlinkHz,
+        string uplinkMode = "USB",
+        string downlinkMode = "USB") =>
+        new(satellite, uplinkMode, downlinkMode, uplinkHz, downlinkHz, "2m", "70cm", "FT4");
 
     private static Ft4DecodedMessage Decode(string text, float snr = -9.4f, bool own = false, bool tx = false)
     {
@@ -84,6 +89,29 @@ public sealed class Ft4OscarWatchSpotTests
     [InlineData("CQ POTA")]
     public void Cq_modifier_is_not_a_callsign(string text) =>
         Assert.False(Ft4OscarWatchSpots.TryCreate(Decode(text), Snapshot(), "MM9SQL", "client", out _));
+
+    [Theory]
+    [InlineData("ISS", "FM", "FM", null)]
+    [InlineData("ISS (ZARYA)", "FM", "FM", "25544")]
+    [InlineData("FO-29", "LSB", "USB", null)]
+    [InlineData("JAS 2", "LSB", "USB", "24278")]
+    [InlineData("AO-07", "LSB", "USB", null)]
+    [InlineData("OSCAR 7", "LSB", "USB", "07530")]
+    [InlineData("RS-44", "", "", null)]
+    public void Blocked_or_unknown_radio_mode_is_not_spotted(
+        string satellite,
+        string uplinkMode,
+        string downlinkMode,
+        string? noradId)
+    {
+        Assert.False(Ft4OscarWatchSpots.TryCreate(
+            Decode("CQ W1AW FN31"),
+            Snapshot(satellite, uplinkMode: uplinkMode, downlinkMode: downlinkMode),
+            "MM9SQL",
+            "client",
+            noradId,
+            out _));
+    }
 
     [Fact]
     public void Missing_satellite_is_not_spotted() =>

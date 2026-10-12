@@ -18,6 +18,9 @@ public sealed class Ft4LearnedCallsignsTests
     [InlineData("", false)]
     [InlineData(null, false)]
     [InlineData("AB/CD/EF/GH/IJ", false)]
+    [InlineData("JN01", false)]
+    [InlineData("jn01", false)]
+    [InlineData("IO87", false)]
     public void IsWorthLearning_keeps_hashed_calls_only(string? call, bool expected) =>
         Assert.Equal(expected, Ft4LearnedCallsigns.IsWorthLearning(call));
 

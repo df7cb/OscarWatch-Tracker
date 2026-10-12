@@ -51,9 +51,20 @@ public sealed class Ft4LearnedCallsigns
                 return false;
         }
 
+        // A grid square is two letters and two digits, such as JN01. It is not a callsign.
+        if (IsGridSquare(c))
+            return false;
+
         // /P and /R after a normal call are a flag bit in the message, not a hash.
         return Ft4MessageCodec.IsHashedCall(c);
     }
+
+    private static bool IsGridSquare(string call) =>
+        call.Length == 4
+        && char.IsAsciiLetter(call[0])
+        && char.IsAsciiLetter(call[1])
+        && char.IsAsciiDigit(call[2])
+        && char.IsAsciiDigit(call[3]);
 
     /// <summary>
     /// Calls to load into the decoder: worked stations from the logbook first, then calls heard

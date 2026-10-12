@@ -170,7 +170,10 @@ public sealed class Ft4ModemService : IDisposable
         {
             var snap = _snapshot.GetCurrent();
             var station = _settings.Current.GroundStation;
-            if (!Ft4OscarWatchSpots.TryCreate(msg, snap, station.Callsign, _spotClientId, out var spot))
+            var norad = !string.IsNullOrWhiteSpace(_snapshot.FocusedNoradId)
+                ? _snapshot.FocusedNoradId
+                : _tracking.FocusedNoradId;
+            if (!Ft4OscarWatchSpots.TryCreate(msg, snap, station.Callsign, _spotClientId, norad, out var spot))
                 return;
 
             _spotReporter.TryEnqueue(spot);
