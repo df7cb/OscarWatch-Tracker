@@ -85,14 +85,14 @@
       <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
     <Style Selector="Button.offset-step:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="#FF2A2A2A" />
-      <Setter Property="BorderBrush" Value="#FF606060" />
-      <Setter Property="Foreground" Value="#FFFFFFFF" />
+      <Setter Property="Background" Value="#FF354535" />
+      <Setter Property="BorderBrush" Value="#FF609060" />
+      <Setter Property="Foreground" Value="#FFE0FFE0" />
     </Style>
     <Style Selector="Button.offset-step:pressed /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="#FF181818" />
-      <Setter Property="BorderBrush" Value="#FF505050" />
-      <Setter Property="Foreground" Value="#FFFFFFFF" />
+      <Setter Property="Background" Value="#FF243024" />
+      <Setter Property="BorderBrush" Value="#FF507050" />
+      <Setter Property="Foreground" Value="#FFE0FFE0" />
     </Style>
     <Style Selector="Button.store-offset">
       <Setter Property="MinHeight" Value="36" />
@@ -144,9 +144,14 @@
       <Setter Property="TextBlock.TextAlignment" Value="Center" />
     </Style>
     <Style Selector="Button.doppler-strategy-header:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="#FF2A2A2A" />
-      <Setter Property="BorderBrush" Value="#FF606060" />
-      <Setter Property="Foreground" Value="#FFFFFFFF" />
+      <Setter Property="Background" Value="#FF354535" />
+      <Setter Property="BorderBrush" Value="#FF609060" />
+      <Setter Property="Foreground" Value="#FFE0FFE0" />
+    </Style>
+    <Style Selector="Button.doppler-strategy-header:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#FF243024" />
+      <Setter Property="BorderBrush" Value="#FF507050" />
+      <Setter Property="Foreground" Value="#FFE0FFE0" />
     </Style>
     <Style Selector="Button.operating-style-header">
       <Setter Property="MinHeight" Value="26" />
@@ -169,9 +174,14 @@
       <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
     <Style Selector="Button.operating-style-header:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="#FF2A2A2A" />
-      <Setter Property="BorderBrush" Value="#FF606060" />
-      <Setter Property="Foreground" Value="#FFFFFFFF" />
+      <Setter Property="Background" Value="#FF354535" />
+      <Setter Property="BorderBrush" Value="#FF609060" />
+      <Setter Property="Foreground" Value="#FFE0FFE0" />
+    </Style>
+    <Style Selector="Button.operating-style-header:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#FF243024" />
+      <Setter Property="BorderBrush" Value="#FF507050" />
+      <Setter Property="Foreground" Value="#FFE0FFE0" />
     </Style>
     <Style Selector="Button.store-offset:pressed /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="#FF243024" />
