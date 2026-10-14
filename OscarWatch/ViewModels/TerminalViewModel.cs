@@ -105,6 +105,10 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty] private string _myCallText = "-";
     [ObservableProperty] private string _myGridText = "-";
+    [ObservableProperty] private string _gridSourceText = "";
+    [ObservableProperty] private string _gridSourceTip = "";
+    [ObservableProperty] private bool _showGridSource;
+    private string? _lastGrid;
     [ObservableProperty] private string _satelliteText = "-";
     [ObservableProperty] private string _losText = "-";
     [ObservableProperty] private string _horizonLabel = "";
@@ -781,7 +785,20 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         var call = _service.MyCall;
         var ssid = _settings.Current.Terminal.Ssid;
         MyCallText = string.IsNullOrWhiteSpace(call) ? "-" : ssid > 0 ? $"{call}-{ssid}" : call;
-        MyGridText = string.IsNullOrWhiteSpace(_service.MyGrid) ? "-" : _service.MyGrid;
+        var grid = _service.MyGrid.Trim();
+        MyGridText = grid.Length == 0 ? "-" : grid;
+        if (TerminalPositionSource.Grid4Changed(_lastGrid, grid))
+            StatusLine = _l.Get("Terminal.Status.GridChanged", _lastGrid![..4].ToUpperInvariant(), grid[..4].ToUpperInvariant());
+        if (grid.Length >= 4)
+            _lastGrid = grid;
+
+        var source = _service.GridSource();
+        ShowGridSource = source is not null;
+        if (source is { } s)
+        {
+            GridSourceText = _l.Get(s == TerminalGridSource.Gps ? "Terminal.GridSource.Gps" : "Terminal.GridSource.Saved");
+            GridSourceTip = _l.Get("Terminal.GridSource." + s + ".Tip");
+        }
 
         var angles = _service.CurrentLookAngles();
         if (angles is null)

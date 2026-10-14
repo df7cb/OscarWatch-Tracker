@@ -5633,4 +5633,22 @@ LOS: {2}
   <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
     <value>ใช้ล้อเมาส์เพื่อซูม หรือกด + และ − เมื่อแผนที่ได้รับโฟกัส ลากแผนที่เพื่อเลื่อน หรือกด Shift ค้างไว้แล้วใช้ปุ่มลูกศร กด 0 เพื่อแสดงทั้งโลกอีกครั้ง</value>
   </data>
+  <data name="Terminal.GridSource.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.GridSource.Saved" xml:space="preserve">
+    <value>ที่บันทึกไว้</value>
+  </data>
+  <data name="Terminal.GridSource.Gps.Tip" xml:space="preserve">
+    <value>กริดของคุณเปลี่ยนตามตำแหน่ง GPS ปัจจุบัน</value>
+  </data>
+  <data name="Terminal.GridSource.GpsNoFix.Tip" xml:space="preserve">
+    <value>ไม่มีตำแหน่ง GPS ล่าสุด กริดของคุณเป็นตำแหน่งล่าสุดที่ทราบ</value>
+  </data>
+  <data name="Terminal.GridSource.Saved.Tip" xml:space="preserve">
+    <value>กริดของคุณเป็นตำแหน่งสถานีที่บันทึกไว้ หากต้องการให้ตาม GPS ให้เปิด “อัปเดตตำแหน่งสถานีอัตโนมัติจาก GPS ที่ล็อกแล้ว” ในการตั้งค่า GPS</value>
+  </data>
+  <data name="Terminal.Status.GridChanged" xml:space="preserve">
+    <value>กริดของคุณเปลี่ยนจาก {0} เป็น {1} ตัวแทนกริดในมาโครจะใช้กริดใหม่ โปรดตรวจสอบมาโครที่พิมพ์กริดไว้เอง</value>
+  </data>
 </root>

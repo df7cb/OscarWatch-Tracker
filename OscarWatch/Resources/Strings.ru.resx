@@ -5633,4 +5633,22 @@ LOS: {2}
   <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
     <value>Масштаб меняется колесом мыши или клавишами + и −, когда карта в фокусе. Перетащите карту, чтобы сдвинуть её, или удерживайте Shift и используйте стрелки. Нажмите 0, чтобы снова показать весь мир.</value>
   </data>
+  <data name="Terminal.GridSource.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.GridSource.Saved" xml:space="preserve">
+    <value>Сохранено</value>
+  </data>
+  <data name="Terminal.GridSource.Gps.Tip" xml:space="preserve">
+    <value>Ваш QTH-локатор следует текущей позиции GPS.</value>
+  </data>
+  <data name="Terminal.GridSource.GpsNoFix.Tip" xml:space="preserve">
+    <value>Нет свежих данных GPS. Локатор соответствует последнему известному положению.</value>
+  </data>
+  <data name="Terminal.GridSource.Saved.Tip" xml:space="preserve">
+    <value>Локатор соответствует сохранённому положению станции. Чтобы следовать GPS, включите «Автоматически обновлять позицию станции по GPS-фиксу» в разделе Настройки, GPS.</value>
+  </data>
+  <data name="Terminal.Status.GridChanged" xml:space="preserve">
+    <value>Ваш локатор изменился с {0} на {1}. Подстановки локатора в макросах используют новый; проверьте макросы, где локатор введён вручную.</value>
+  </data>
 </root>

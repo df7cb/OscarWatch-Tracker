@@ -5628,4 +5628,22 @@ Está utilizando la versión {0}.
   <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
     <value>Use la rueda del ratón para acercar o alejar, o pulse + y − cuando el mapa tenga el foco. Arrastre el mapa para moverlo, o mantenga Mayús y use las flechas. Pulse 0 para ver de nuevo todo el mundo.</value>
   </data>
+  <data name="Terminal.GridSource.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.GridSource.Saved" xml:space="preserve">
+    <value>Guardada</value>
+  </data>
+  <data name="Terminal.GridSource.Gps.Tip" xml:space="preserve">
+    <value>Su cuadrícula sigue la posición GPS en directo.</value>
+  </data>
+  <data name="Terminal.GridSource.GpsNoFix.Tip" xml:space="preserve">
+    <value>No hay posición GPS reciente. Su cuadrícula es la última ubicación conocida.</value>
+  </data>
+  <data name="Terminal.GridSource.Saved.Tip" xml:space="preserve">
+    <value>Su cuadrícula es la ubicación guardada de la estación. Para seguir el GPS, active “Actualizar automáticamente la posición de la estación mediante el GPS” en Ajustes, GPS.</value>
+  </data>
+  <data name="Terminal.Status.GridChanged" xml:space="preserve">
+    <value>Su cuadrícula cambió de {0} a {1}. Los marcadores de cuadrícula de las macros usan la nueva; revise las macros con la cuadrícula escrita a mano.</value>
+  </data>
 </root>

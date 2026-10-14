@@ -79,6 +79,36 @@ public sealed class TerminalPositionTests
         Assert.Equal("=5552.00N/00415.50W[MM9SQL", TerminalPositionSource.BuildPayload(fix, settings, "MM9SQL"));
     }
 
+    [Fact]
+    public void Grid_source_is_hidden_without_gps()
+    {
+        Assert.Null(TerminalPositionSource.GridSource(null, null, Now));
+        Assert.Null(TerminalPositionSource.GridSource(new GpsSettings { Enabled = false, AutoUpdateStation = true }, Gps(Now), Now));
+    }
+
+    [Fact]
+    public void Grid_source_follows_gps_only_when_applied_and_fresh()
+    {
+        var applied = new GpsSettings { Enabled = true, AutoUpdateStation = true };
+        Assert.Equal(TerminalGridSource.Gps, TerminalPositionSource.GridSource(applied, Gps(Now.AddSeconds(-10)), Now));
+        Assert.Equal(TerminalGridSource.GpsNoFix, TerminalPositionSource.GridSource(applied, Gps(Now.AddMinutes(-5)), Now));
+        Assert.Equal(TerminalGridSource.GpsNoFix, TerminalPositionSource.GridSource(applied, null, Now));
+
+        var notApplied = new GpsSettings { Enabled = true, AutoUpdateStation = false };
+        Assert.Equal(TerminalGridSource.Saved, TerminalPositionSource.GridSource(notApplied, Gps(Now), Now));
+    }
+
+    [Theory]
+    [InlineData("IO75uu", "IO75tv", false)]
+    [InlineData("IO75uu", "io75UU", false)]
+    [InlineData("IO75xx", "IO85aa", true)]
+    [InlineData(null, "IO85aa", false)]
+    [InlineData("IO85aa", "", false)]
+    public void Grid_change_counts_only_four_character_square(string? previous, string? current, bool expected)
+    {
+        Assert.Equal(expected, TerminalPositionSource.Grid4Changed(previous, current));
+    }
+
     private static MapStationSource Src(string call, int minutesAgo, string? grid = "IO85", AprsPosition? position = null) =>
         new(call, position, grid, Now.AddMinutes(-minutesAgo));
 

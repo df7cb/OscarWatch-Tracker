@@ -10,6 +10,19 @@ public enum TerminalPositionOrigin
     Grid
 }
 
+/// <summary>Where the grid shown in the Terminal comes from, when GPS is set up.</summary>
+public enum TerminalGridSource
+{
+    /// <summary>The station follows a recent GPS fix.</summary>
+    Gps,
+
+    /// <summary>Following GPS, but there is no recent fix, so the last known location is used.</summary>
+    GpsNoFix,
+
+    /// <summary>GPS is set up but does not update the station, so the saved location is used.</summary>
+    Saved
+}
+
 /// <summary>Where Send position takes our location from, and the location itself.</summary>
 public sealed record TerminalPositionFix(double Latitude, double Longitude, TerminalPositionOrigin Origin)
 {
@@ -88,6 +101,35 @@ public static class TerminalPositionSource
         var symbol = TerminalSettings.NormalisePositionSymbol(settings.PositionSymbol);
         var comment = TerminalMessageCodec.ExpandMacro(settings.PositionComment ?? "", myCall, myGrid, null);
         return AprsPayloadCodec.BuildPosition(lat, lon, symbol[0], symbol[1], comment, ambiguity);
+    }
+
+    /// <summary>
+    /// Whether the station grid is following GPS. Null when GPS is not enabled, so no indicator is shown.
+    /// The station itself is updated from GPS elsewhere when <see cref="GpsSettings.AutoUpdateStation"/> is on.
+    /// </summary>
+    public static TerminalGridSource? GridSource(GpsSettings? gpsSettings, GpsConnectionStatus? gps, DateTime nowUtc)
+    {
+        if (gpsSettings is not { Enabled: true })
+            return null;
+        if (!gpsSettings.AutoUpdateStation)
+            return TerminalGridSource.Saved;
+        return gps is { HasFix: true, LatitudeDeg: not null, LongitudeDeg: not null, FixUtc: { } fixUtc }
+               && nowUtc - fixUtc <= MaxGpsFixAge
+            ? TerminalGridSource.Gps
+            : TerminalGridSource.GpsNoFix;
+    }
+
+    /// <summary>
+    /// True when the 4-character grid differs, for example after crossing a grid boundary.
+    /// Changes within the same square, and a first grid after none, are ignored.
+    /// </summary>
+    public static bool Grid4Changed(string? previous, string? current)
+    {
+        var a = (previous ?? "").Trim();
+        var b = (current ?? "").Trim();
+        if (a.Length < 4 || b.Length < 4)
+            return false;
+        return !string.Equals(a[..4], b[..4], StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsValid(double lat, double lon) =>

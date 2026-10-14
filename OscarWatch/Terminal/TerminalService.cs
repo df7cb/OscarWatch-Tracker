@@ -321,20 +321,29 @@ public sealed class TerminalService : IAsyncDisposable
     public TerminalPositionFix? ResolvePosition()
     {
         var gpsEnabled = _settings.Current.Gps?.Enabled == true;
-        GpsConnectionStatus? status = null;
-        if (gpsEnabled && _gps is not null)
-        {
-            try
-            {
-                status = _gps.GetStatus();
-            }
-            catch (Exception ex)
-            {
-                Log.Debug(ex, "GPS status read failed");
-            }
-        }
+        return TerminalPositionSource.Resolve(gpsEnabled, ReadGpsStatus(gpsEnabled), _settings.Current.GroundStation, DateTime.UtcNow);
+    }
 
-        return TerminalPositionSource.Resolve(gpsEnabled, status, _settings.Current.GroundStation, DateTime.UtcNow);
+    /// <summary>Whether <see cref="MyGrid"/> follows GPS; null when GPS is not enabled.</summary>
+    public TerminalGridSource? GridSource()
+    {
+        var gps = _settings.Current.Gps;
+        return TerminalPositionSource.GridSource(gps, ReadGpsStatus(gps?.Enabled == true), DateTime.UtcNow);
+    }
+
+    private GpsConnectionStatus? ReadGpsStatus(bool gpsEnabled)
+    {
+        if (!gpsEnabled || _gps is null)
+            return null;
+        try
+        {
+            return _gps.GetStatus();
+        }
+        catch (Exception ex)
+        {
+            Log.Debug(ex, "GPS status read failed");
+            return null;
+        }
     }
 
     /// <summary>

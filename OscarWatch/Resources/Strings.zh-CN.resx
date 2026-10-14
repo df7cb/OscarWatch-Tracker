@@ -5629,4 +5629,22 @@
   <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
     <value>使用鼠标滚轮缩放，或在地图获得焦点时按 + 和 −。拖动地图可移动视图，或按住 Shift 并使用方向键。按 0 重新显示整个世界。</value>
   </data>
+  <data name="Terminal.GridSource.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.GridSource.Saved" xml:space="preserve">
+    <value>已保存</value>
+  </data>
+  <data name="Terminal.GridSource.Gps.Tip" xml:space="preserve">
+    <value>您的网格跟随实时 GPS 位置。</value>
+  </data>
+  <data name="Terminal.GridSource.GpsNoFix.Tip" xml:space="preserve">
+    <value>没有最近的 GPS 定位。您的网格是最后已知的位置。</value>
+  </data>
+  <data name="Terminal.GridSource.Saved.Tip" xml:space="preserve">
+    <value>您的网格是已保存的电台位置。要跟随 GPS，请在“设置”的 GPS 中开启“根据 GPS 定位自动更新台站位置”。</value>
+  </data>
+  <data name="Terminal.Status.GridChanged" xml:space="preserve">
+    <value>您的网格已从 {0} 变为 {1}。宏中的网格占位符会使用新网格；请检查手动输入了网格的宏。</value>
+  </data>
 </root>

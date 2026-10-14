@@ -5628,4 +5628,22 @@ Latest: {1} ({2})</value>
   <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
     <value>Zoom with the mouse wheel, or press + and − while the map has focus. Drag the map to move it, or hold Shift and use the arrow keys. Press 0 to show the whole world again.</value>
   </data>
+  <data name="Terminal.GridSource.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.GridSource.Saved" xml:space="preserve">
+    <value>Saved</value>
+  </data>
+  <data name="Terminal.GridSource.Gps.Tip" xml:space="preserve">
+    <value>Your grid follows the live GPS position.</value>
+  </data>
+  <data name="Terminal.GridSource.GpsNoFix.Tip" xml:space="preserve">
+    <value>No recent GPS fix. Your grid is the last known location.</value>
+  </data>
+  <data name="Terminal.GridSource.Saved.Tip" xml:space="preserve">
+    <value>Your grid is the saved station location. To follow GPS, turn on “Automatically update station position from GPS fix” in Settings, GPS.</value>
+  </data>
+  <data name="Terminal.Status.GridChanged" xml:space="preserve">
+    <value>Your grid changed from {0} to {1}. Grid placeholders in macros use the new grid; check any macro with a grid typed in.</value>
+  </data>
 </root>

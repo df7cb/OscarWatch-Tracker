@@ -5633,4 +5633,22 @@ Aktuell: {1} ({2})</value>
   <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
     <value>Mit dem Mausrad zoomen oder + und − drücken, wenn die Karte den Fokus hat. Karte zum Verschieben ziehen oder Umschalt und die Pfeiltasten verwenden. 0 zeigt wieder die ganze Welt.</value>
   </data>
+  <data name="Terminal.GridSource.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.GridSource.Saved" xml:space="preserve">
+    <value>Gespeichert</value>
+  </data>
+  <data name="Terminal.GridSource.Gps.Tip" xml:space="preserve">
+    <value>Ihr Locator folgt der aktuellen GPS-Position.</value>
+  </data>
+  <data name="Terminal.GridSource.GpsNoFix.Tip" xml:space="preserve">
+    <value>Kein aktueller GPS-Fix. Ihr Locator ist die letzte bekannte Position.</value>
+  </data>
+  <data name="Terminal.GridSource.Saved.Tip" xml:space="preserve">
+    <value>Ihr Locator ist die gespeicherte Stationsposition. Um dem GPS zu folgen, aktivieren Sie „Stationsposition automatisch aus GPS-Fix aktualisieren“ unter Einstellungen, GPS.</value>
+  </data>
+  <data name="Terminal.Status.GridChanged" xml:space="preserve">
+    <value>Ihr Locator hat sich von {0} zu {1} geändert. Locator-Platzhalter in Makros verwenden den neuen Locator; prüfen Sie Makros mit fest eingetipptem Locator.</value>
+  </data>
 </root>

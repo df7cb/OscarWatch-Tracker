@@ -5629,4 +5629,22 @@
   <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
     <value>マウスホイールで拡大・縮小するか、地図にフォーカスがあるときに + と − を押します。地図をドラッグして移動するか、Shift を押しながら矢印キーを使います。0 を押すと世界全体の表示に戻ります。</value>
   </data>
+  <data name="Terminal.GridSource.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.GridSource.Saved" xml:space="preserve">
+    <value>保存済み</value>
+  </data>
+  <data name="Terminal.GridSource.Gps.Tip" xml:space="preserve">
+    <value>グリッドはライブの GPS 位置に追従しています。</value>
+  </data>
+  <data name="Terminal.GridSource.GpsNoFix.Tip" xml:space="preserve">
+    <value>最近の GPS 測位がありません。グリッドは最後に分かった位置です。</value>
+  </data>
+  <data name="Terminal.GridSource.Saved.Tip" xml:space="preserve">
+    <value>グリッドは保存された局の位置です。GPS に追従するには、設定の GPS で「GPS測位で局位置を自動更新」をオンにしてください。</value>
+  </data>
+  <data name="Terminal.Status.GridChanged" xml:space="preserve">
+    <value>グリッドが {0} から {1} に変わりました。マクロのグリッド置換は新しいグリッドを使います。グリッドを直接入力したマクロを確認してください。</value>
+  </data>
 </root>

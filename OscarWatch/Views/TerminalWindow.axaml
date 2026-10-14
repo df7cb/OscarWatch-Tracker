@@ -325,6 +325,13 @@
                           ToolTip.Tip="{loc:Localize Key=Terminal.Station.CallGrid.Tip}">
                 <TextBlock Text="{Binding MyCallText}" Classes="term-value" FontWeight="SemiBold" />
                 <TextBlock Text="{Binding MyGridText}" Classes="term-value" />
+                <Border IsVisible="{Binding ShowGridSource}" VerticalAlignment="Center"
+                        BorderBrush="{DynamicResource ThemeForegroundBrush}" BorderThickness="1"
+                        CornerRadius="3" Padding="4,0"
+                        ToolTip.Tip="{Binding GridSourceTip}"
+                        AutomationProperties.Name="{Binding GridSourceTip}">
+                  <TextBlock Text="{Binding GridSourceText}" FontSize="12" />
+                </Border>
               </StackPanel>
               <TextBlock Text="{loc:Localize Key=Terminal.Station}" Classes="term-heading" VerticalAlignment="Center" Margin="0" />
             </DockPanel>

@@ -5633,4 +5633,22 @@ Terbaru: {1} ({2})</value>
   <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
     <value>Gunakan roda mouse untuk zoom, atau tekan + dan − saat peta aktif. Seret peta untuk menggesernya, atau tahan Shift dan gunakan tombol panah. Tekan 0 untuk melihat seluruh dunia lagi.</value>
   </data>
+  <data name="Terminal.GridSource.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.GridSource.Saved" xml:space="preserve">
+    <value>Tersimpan</value>
+  </data>
+  <data name="Terminal.GridSource.Gps.Tip" xml:space="preserve">
+    <value>Grid Anda mengikuti posisi GPS langsung.</value>
+  </data>
+  <data name="Terminal.GridSource.GpsNoFix.Tip" xml:space="preserve">
+    <value>Tidak ada fix GPS terbaru. Grid Anda adalah lokasi terakhir yang diketahui.</value>
+  </data>
+  <data name="Terminal.GridSource.Saved.Tip" xml:space="preserve">
+    <value>Grid Anda adalah lokasi stasiun yang tersimpan. Untuk mengikuti GPS, aktifkan “Perbarui posisi stasiun otomatis dari fix GPS” di Pengaturan, GPS.</value>
+  </data>
+  <data name="Terminal.Status.GridChanged" xml:space="preserve">
+    <value>Grid Anda berubah dari {0} ke {1}. Placeholder grid di makro memakai grid baru; periksa makro yang grid-nya diketik langsung.</value>
+  </data>
 </root>
