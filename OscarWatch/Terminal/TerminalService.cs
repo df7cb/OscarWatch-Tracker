@@ -360,6 +360,27 @@ public sealed class TerminalService : IAsyncDisposable
         Changed?.Invoke();
     }
 
+    /// <summary>Clears QSO progress. Heard-only stations stay, and former QSO stations remain as heard.</summary>
+    public void ClearQsoStations()
+    {
+        lock (_gate)
+            _tracker.ClearQsoProgress();
+
+        Changed?.Invoke();
+    }
+
+    /// <summary>Removes every heard station, which also empties the QSO list. Statistics are left as they are.</summary>
+    public void ClearHeardStations()
+    {
+        lock (_gate)
+        {
+            _tracker.Clear();
+            _lastTextSentTo.Clear();
+        }
+
+        Changed?.Invoke();
+    }
+
     /// <summary>Satellite elevation seen from the centre of <paramref name="grid"/>, or null.</summary>
     public double? ElevationFromGrid(string? grid)
     {

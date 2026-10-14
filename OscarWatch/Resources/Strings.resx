@@ -4956,6 +4956,24 @@ Latest: {1} ({2})</value>
   <data name="Terminal.ClearLog">
     <value>Clear log</value>
   </data>
+  <data name="Terminal.Clear">
+    <value>Clear</value>
+  </data>
+  <data name="Terminal.ClearLog.Tip">
+    <value>Remove decoded frames from the message log.</value>
+  </data>
+  <data name="Terminal.ClearQso">
+    <value>Clear QSO list</value>
+  </data>
+  <data name="Terminal.ClearQso.Tip">
+    <value>Remove stations from the QSO list. They stay in Heard stations.</value>
+  </data>
+  <data name="Terminal.ClearHeard">
+    <value>Clear heard stations</value>
+  </data>
+  <data name="Terminal.ClearHeard.Tip">
+    <value>Remove every station from the Heard list. The QSO list is cleared as well.</value>
+  </data>
   <data name="Terminal.Log">
     <value>Message log</value>
   </data>

@@ -88,6 +88,13 @@
       <Setter Property="Margin" Value="0,0,6,0" />
       <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
+    <Style Selector="Button.term-clear">
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="Padding" Value="6,1" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Margin" Value="0,0,6,0" />
+    </Style>
     <Style Selector="Button.term-zoom">
       <Setter Property="FontSize" Value="11" />
       <Setter Property="Padding" Value="6,1" />
@@ -368,6 +375,11 @@
         <DockPanel>
           <DockPanel DockPanel.Dock="Top" Margin="0,0,0,4">
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="2" Margin="6,0,0,0">
+              <Button Classes="term-clear"
+                      Content="{loc:Localize Key=Terminal.Clear}"
+                      Command="{Binding ClearLogCommand}"
+                      ToolTip.Tip="{loc:Localize Key=Terminal.ClearLog.Tip}"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.ClearLog}" />
               <Button Classes="term-zoom" Content="A−"
                       Command="{Binding TextSmallerCommand}" CommandParameter="log"
                       ToolTip.Tip="{loc:Localize Key=Terminal.TextSmaller}"
@@ -440,6 +452,11 @@
           <DockPanel>
             <DockPanel DockPanel.Dock="Top" Margin="4,0,0,4">
               <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="2">
+                <Button Classes="term-clear"
+                        Content="{loc:Localize Key=Terminal.Clear}"
+                        Command="{Binding ClearQsoCommand}"
+                        ToolTip.Tip="{loc:Localize Key=Terminal.ClearQso.Tip}"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.ClearQso}" />
                 <Button Classes="term-zoom" Content="A−"
                         Command="{Binding TextSmallerCommand}" CommandParameter="qso"
                         ToolTip.Tip="{loc:Localize Key=Terminal.TextSmaller}"
@@ -503,6 +520,11 @@
           <DockPanel>
             <DockPanel DockPanel.Dock="Top" Margin="4,0,0,4">
               <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="2">
+                <Button Classes="term-clear"
+                        Content="{loc:Localize Key=Terminal.Clear}"
+                        Command="{Binding ClearHeardCommand}"
+                        ToolTip.Tip="{loc:Localize Key=Terminal.ClearHeard.Tip}"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.ClearHeard}" />
                 <Button Classes="term-zoom" Content="A−"
                         Command="{Binding TextSmallerCommand}" CommandParameter="heard"
                         ToolTip.Tip="{loc:Localize Key=Terminal.TextSmaller}"

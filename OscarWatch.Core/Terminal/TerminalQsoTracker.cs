@@ -198,6 +198,38 @@ public sealed class TerminalQsoTracker
         _lastCqWithExchangeUtc = DateTime.MinValue;
     }
 
+    /// <summary>
+    /// Drops QSO progress so those stations leave the QSO list. Call, grid, and hear counts stay, so the
+    /// station remains in the heard list as Heard or CQ.
+    /// </summary>
+    public void ClearQsoProgress()
+    {
+        foreach (var station in _stations.Values)
+        {
+            if (!ShowsInQsoList(station))
+                continue;
+
+            station.WeCalled = false;
+            station.TheyCalledUs = false;
+            station.RstSent = null;
+            station.RstReceived = null;
+            station.ExchangeSent = false;
+            station.RogerSent = false;
+            station.RogerReceived = false;
+            station.SignOffSent = false;
+            station.SignOffReceived = false;
+            station.Logged = false;
+        }
+    }
+
+    /// <summary>Same membership rule as the Terminal QSO list.</summary>
+    public static bool ShowsInQsoList(TerminalStation station) =>
+        station.IsInQso
+        || station.Logged
+        || station.RogerSent
+        || station.RogerReceived
+        || station.State is not (TerminalStationState.Heard or TerminalStationState.Cq);
+
     private TerminalStation GetOrAdd(string call, DateTime utc)
     {
         if (!_stations.TryGetValue(call, out var station))

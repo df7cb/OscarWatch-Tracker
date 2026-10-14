@@ -104,6 +104,41 @@ public sealed class TerminalQsoTrackerTests
     }
 
     [Fact]
+    public void Clear_qso_progress_keeps_heard_only_stations()
+    {
+        var t = new TerminalQsoTracker();
+        t.OnReceived(Rx("LA6OP", "CQ", "JP67", 0), Me);
+        t.OnSent("G0ABC", "IO85", T0);
+        t.OnReceived(Rx("G0ABC", Me, "R73", 5), Me);
+
+        t.ClearQsoProgress();
+
+        var heard = t.Get("LA6OP")!;
+        Assert.Equal(TerminalStationState.Cq, heard.State);
+        Assert.Equal(1, heard.CqCount);
+        Assert.False(TerminalQsoTracker.ShowsInQsoList(heard));
+
+        var worked = t.Get("G0ABC")!;
+        Assert.Equal(TerminalStationState.Heard, worked.State);
+        Assert.False(worked.IsInQso);
+        Assert.False(worked.RogerReceived);
+        Assert.False(worked.ExchangeSent);
+        Assert.Null(worked.RstSent);
+        Assert.False(TerminalQsoTracker.ShowsInQsoList(worked));
+        Assert.Equal(2, t.Stations.Count);
+    }
+
+    [Fact]
+    public void Clear_removes_every_station()
+    {
+        var t = new TerminalQsoTracker();
+        t.OnReceived(Rx("LA6OP", "CQ", "JP67", 0), Me);
+        t.OnSent("G0ABC", "IO85", T0);
+        t.Clear();
+        Assert.Empty(t.Stations);
+    }
+
+    [Fact]
     public void Classifier_orders_kinds()
     {
         Assert.Equal(TerminalMessageKind.MyTx, TerminalMessageClassifier.Classify(Rx(Me, "G0ABC", "x", 0), Me, true));

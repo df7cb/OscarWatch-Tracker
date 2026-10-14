@@ -4961,6 +4961,24 @@ Aktuell: {1} ({2})</value>
   <data name="Terminal.ClearLog">
     <value>Protokoll leeren</value>
   </data>
+  <data name="Terminal.Clear">
+    <value>Leeren</value>
+  </data>
+  <data name="Terminal.ClearLog.Tip">
+    <value>Entfernt decodierte Rahmen aus dem Nachrichtenprotokoll.</value>
+  </data>
+  <data name="Terminal.ClearQso">
+    <value>QSO-Liste leeren</value>
+  </data>
+  <data name="Terminal.ClearQso.Tip">
+    <value>Entfernt Stationen aus der QSO-Liste. Sie bleiben unter Gehörte Stationen.</value>
+  </data>
+  <data name="Terminal.ClearHeard">
+    <value>Gehörte Stationen leeren</value>
+  </data>
+  <data name="Terminal.ClearHeard.Tip">
+    <value>Entfernt alle Stationen aus Gehörte Stationen. Die QSO-Liste wird dadurch ebenfalls geleert.</value>
+  </data>
   <data name="Terminal.Log">
     <value>Nachrichtenprotokoll</value>
   </data>

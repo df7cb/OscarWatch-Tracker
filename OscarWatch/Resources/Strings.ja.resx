@@ -4957,6 +4957,24 @@
   <data name="Terminal.ClearLog">
     <value>ログを消去</value>
   </data>
+  <data name="Terminal.Clear">
+    <value>消去</value>
+  </data>
+  <data name="Terminal.ClearLog.Tip">
+    <value>メッセージログから復号したフレームを消します。</value>
+  </data>
+  <data name="Terminal.ClearQso">
+    <value>QSOリストを消去</value>
+  </data>
+  <data name="Terminal.ClearQso.Tip">
+    <value>QSOリストから局を消します。受信局には残ります。</value>
+  </data>
+  <data name="Terminal.ClearHeard">
+    <value>受信局を消去</value>
+  </data>
+  <data name="Terminal.ClearHeard.Tip">
+    <value>受信局をすべて消します。QSOリストも空になります。</value>
+  </data>
   <data name="Terminal.Log">
     <value>メッセージログ</value>
   </data>

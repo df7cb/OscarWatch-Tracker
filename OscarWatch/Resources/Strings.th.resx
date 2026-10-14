@@ -4961,6 +4961,24 @@ LOS: {2}
   <data name="Terminal.ClearLog">
     <value>ล้างบันทึก</value>
   </data>
+  <data name="Terminal.Clear">
+    <value>ล้าง</value>
+  </data>
+  <data name="Terminal.ClearLog.Tip">
+    <value>เอาเฟรมที่ถอดรหัสแล้วออกจากบันทึกข้อความ</value>
+  </data>
+  <data name="Terminal.ClearQso">
+    <value>ล้างรายการ QSO</value>
+  </data>
+  <data name="Terminal.ClearQso.Tip">
+    <value>เอาสถานีออกจากรายการ QSO สถานีเหล่านั้นยังอยู่ในสถานีที่ได้ยิน</value>
+  </data>
+  <data name="Terminal.ClearHeard">
+    <value>ล้างสถานีที่ได้ยิน</value>
+  </data>
+  <data name="Terminal.ClearHeard.Tip">
+    <value>เอาสถานีทั้งหมดออกจากสถานีที่ได้ยิน รายการ QSO จะว่างไปด้วย</value>
+  </data>
   <data name="Terminal.Log">
     <value>บันทึกข้อความ</value>
   </data>

@@ -4957,6 +4957,24 @@
   <data name="Terminal.ClearLog">
     <value>清除记录</value>
   </data>
+  <data name="Terminal.Clear">
+    <value>清除</value>
+  </data>
+  <data name="Terminal.ClearLog.Tip">
+    <value>从消息记录中移除已解码的帧。</value>
+  </data>
+  <data name="Terminal.ClearQso">
+    <value>清除 QSO 列表</value>
+  </data>
+  <data name="Terminal.ClearQso.Tip">
+    <value>从 QSO 列表中移除电台。它们仍留在已收听电台中。</value>
+  </data>
+  <data name="Terminal.ClearHeard">
+    <value>清除已收听电台</value>
+  </data>
+  <data name="Terminal.ClearHeard.Tip">
+    <value>移除已收听电台中的全部电台。QSO 列表也会被清空。</value>
+  </data>
   <data name="Terminal.Log">
     <value>消息记录</value>
   </data>

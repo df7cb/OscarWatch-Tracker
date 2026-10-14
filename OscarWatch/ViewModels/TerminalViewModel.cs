@@ -441,6 +441,25 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
+    private void ClearQso()
+    {
+        _service.ClearQsoStations();
+        RefreshTick();
+    }
+
+    [RelayCommand]
+    private void ClearHeard()
+    {
+        SelectedStation = null;
+        _service.ClearHeardStations();
+        QsoStations.Clear();
+        HeardStations.Clear();
+        HasQsoStations = false;
+        HasHeardStations = false;
+        RefreshTick();
+    }
+
+    [RelayCommand]
     private void ResetStatistics()
     {
         _service.ResetStatistics();
