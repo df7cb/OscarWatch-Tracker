@@ -140,8 +140,8 @@
   </Window.Styles>
 
   <DockPanel Margin="10">
-    <!-- Top: shortcuts, send box, statistics, station info -->
-    <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,0,0,8">
+    <!-- Top: shortcuts and send box, then one station and statistics panel -->
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" ColumnSpacing="8" Margin="0,0,0,8">
       <Border Grid.Column="0" Classes="term-panel">
         <StackPanel Spacing="6">
           <DockPanel>
@@ -248,77 +248,109 @@
         </StackPanel>
       </Border>
 
-      <Border Grid.Column="1" Classes="term-panel" MinWidth="190">
-        <StackPanel>
-          <DockPanel>
-            <Button DockPanel.Dock="Right"
-                    Content="{loc:Localize Key=Terminal.Stats.Reset}"
-                    Command="{Binding ResetStatisticsCommand}"
-                    ToolTip.Tip="{loc:Localize Key=Terminal.Stats.Reset.Tip}"
-                    Padding="6,2"
-                    FontSize="12" />
-            <TextBlock Text="{loc:Localize Key=Terminal.Stats}" Classes="term-heading" />
-          </DockPanel>
-          <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10">
-            <TextBlock Grid.Row="0" Text="{loc:Localize Key=Terminal.Stats.Unique}" Classes="term-label" />
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding UniqueCallsignsText}" Classes="term-value" />
-            <TextBlock Grid.Row="1" Text="{loc:Localize Key=Terminal.Stats.MyTx}" Classes="term-label" />
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MyTxText}" Classes="term-value" />
-            <TextBlock Grid.Row="2" Text="{loc:Localize Key=Terminal.Stats.MyRx}" Classes="term-label" />
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MyRxText}" Classes="term-value" />
-            <TextBlock Grid.Row="3" Text="{loc:Localize Key=Terminal.Stats.Success}" Classes="term-label"
-                       ToolTip.Tip="{loc:Localize Key=Terminal.Stats.Success.Tip}" />
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SuccessText}" Classes="term-value" />
-            <TextBlock Grid.Row="4" Text="{loc:Localize Key=Terminal.Stats.Digipeated}" Classes="term-label" />
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding DigipeatedText}" Classes="term-value" />
-            <TextBlock Grid.Row="5" Text="{loc:Localize Key=Terminal.Stats.Delay}" Classes="term-label" />
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding MedianDelayText}" Classes="term-value" />
-            <TextBlock Grid.Row="6" Text="{loc:Localize Key=Terminal.Stats.UhmUsers}" Classes="term-label"
-                       ToolTip.Tip="{loc:Localize Key=Terminal.Stats.UhmUsers.Tip}" />
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding UhmUsersText}" Classes="term-value" />
-          </Grid>
-        </StackPanel>
-      </Border>
-
-      <Border Grid.Column="2" Classes="term-panel" MinWidth="260">
-        <DockPanel>
-          <DockPanel DockPanel.Dock="Top">
-            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Top"
-                        ToolTip.Tip="{loc:Localize Key=Terminal.Station.CallGrid.Tip}">
-              <TextBlock Text="{Binding MyCallText}" Classes="term-value" FontWeight="SemiBold" />
-              <TextBlock Text="{Binding MyGridText}" Classes="term-value" Opacity="0.8" />
-            </StackPanel>
-            <TextBlock Text="{loc:Localize Key=Terminal.Station}" Classes="term-heading" />
-          </DockPanel>
-          <TextBlock DockPanel.Dock="Bottom" Text="{Binding ModemHintText}" FontSize="12"
-                     TextWrapping="Wrap" Opacity="0.85" Margin="0,4,0,0" />
-          <StackPanel Spacing="4">
+      <Border Grid.Column="1" Classes="term-panel" MinWidth="420">
+        <Grid RowDefinitions="Auto,Auto,*">
+          <StackPanel Spacing="6">
+            <DockPanel>
+              <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"
+                          ToolTip.Tip="{loc:Localize Key=Terminal.Station.CallGrid.Tip}">
+                <TextBlock Text="{Binding MyCallText}" Classes="term-value" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding MyGridText}" Classes="term-value" />
+              </StackPanel>
+              <TextBlock Text="{loc:Localize Key=Terminal.Station}" Classes="term-heading" VerticalAlignment="Center" Margin="0" />
+            </DockPanel>
             <TextBlock Text="{Binding SatelliteText}" FontSize="15" FontWeight="SemiBold"
                        TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding SatelliteText}" />
-            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
-              <StackPanel VerticalAlignment="Center">
+            <UniformGrid Columns="4">
+              <StackPanel>
                 <TextBlock Text="{Binding ElevationText}"
-                           FontSize="28" FontWeight="SemiBold"
+                           FontSize="18" FontWeight="SemiBold"
                            FontFamily="Consolas,Courier New,monospace"
+                           TextAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
                            Opacity="{Binding ElevationOpacity}" />
-                <TextBlock Text="{loc:Localize Key=Terminal.Station.Elevation}" Classes="term-label" />
+                <TextBlock Text="{loc:Localize Key=Terminal.Station.Elevation}" Classes="term-label" TextAlignment="Center" />
               </StackPanel>
-              <Grid Grid.Column="1" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto"
-                    ColumnSpacing="8" RowSpacing="2" VerticalAlignment="Center">
-                <TextBlock Grid.Row="0" Text="{loc:Localize Key=Terminal.Station.Azimuth}" Classes="term-label" />
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AzimuthText}" Classes="term-value" />
-                <TextBlock Grid.Row="1" Text="{loc:Localize Key=Terminal.Station.Range}" Classes="term-label" />
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding RangeText}" Classes="term-value" />
-                <TextBlock Grid.Row="2" Text="{Binding HorizonLabel}" Classes="term-label" />
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding LosText}" Classes="term-value" />
-              </Grid>
-            </Grid>
+              <StackPanel>
+                <TextBlock Text="{Binding AzimuthText}"
+                           FontSize="18" FontWeight="SemiBold"
+                           FontFamily="Consolas,Courier New,monospace"
+                           TextAlignment="Center"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{loc:Localize Key=Terminal.Station.Azimuth}" Classes="term-label" TextAlignment="Center" />
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="{Binding RangeText}"
+                           FontSize="18" FontWeight="SemiBold"
+                           FontFamily="Consolas,Courier New,monospace"
+                           TextAlignment="Center"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{loc:Localize Key=Terminal.Station.Range}" Classes="term-label" TextAlignment="Center" />
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="{Binding LosText}"
+                           FontSize="18" FontWeight="SemiBold"
+                           FontFamily="Consolas,Courier New,monospace"
+                           TextAlignment="Center"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding HorizonLabel}" Classes="term-label" TextAlignment="Center" />
+              </StackPanel>
+            </UniformGrid>
             <ProgressBar Minimum="0" Maximum="90" Value="{Binding ElevationBarValue}"
-                         Height="6" MinHeight="6" Margin="0,2,0,0"
+                         Height="6" MinHeight="6"
                          ToolTip.Tip="{loc:Localize Key=Terminal.Station.ElevationBar.Tip}"
                          AutomationProperties.Name="{loc:Localize Key=Terminal.Station.Elevation}" />
+            <TextBlock Text="{Binding ModemHintText}" FontSize="12" TextWrapping="Wrap" Opacity="0.85"
+                       IsVisible="{Binding ModemHintText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           </StackPanel>
-        </DockPanel>
+
+          <Border Grid.Row="1" Height="1" Margin="0,10,0,8"
+                  Background="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+
+          <Grid Grid.Row="2" RowDefinitions="Auto,*">
+            <DockPanel>
+              <Button DockPanel.Dock="Right"
+                      Content="{loc:Localize Key=Terminal.Stats.Reset}"
+                      Command="{Binding ResetStatisticsCommand}"
+                      ToolTip.Tip="{loc:Localize Key=Terminal.Stats.Reset.Tip}"
+                      Padding="6,2"
+                      FontSize="12" />
+              <TextBlock Text="{loc:Localize Key=Terminal.Stats}" Classes="term-heading" VerticalAlignment="Center" Margin="0" />
+            </DockPanel>
+            <Grid Grid.Row="1" RowDefinitions="*,*,*,*" ColumnDefinitions="*,*" ColumnSpacing="16">
+              <Grid Grid.Row="0" Grid.Column="0" ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalAlignment="Center">
+                <TextBlock Text="{loc:Localize Key=Terminal.Stats.Unique}" Classes="term-label" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Text="{Binding UniqueCallsignsText}" Classes="term-value" />
+              </Grid>
+              <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalAlignment="Center">
+                <TextBlock Text="{loc:Localize Key=Terminal.Stats.MyTx}" Classes="term-label" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Text="{Binding MyTxText}" Classes="term-value" />
+              </Grid>
+              <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalAlignment="Center">
+                <TextBlock Text="{loc:Localize Key=Terminal.Stats.MyRx}" Classes="term-label" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Text="{Binding MyRxText}" Classes="term-value" />
+              </Grid>
+              <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalAlignment="Center"
+                    ToolTip.Tip="{loc:Localize Key=Terminal.Stats.Success.Tip}">
+                <TextBlock Text="{loc:Localize Key=Terminal.Stats.Success}" Classes="term-label" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Text="{Binding SuccessText}" Classes="term-value" />
+              </Grid>
+              <Grid Grid.Row="2" Grid.Column="0" ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalAlignment="Center">
+                <TextBlock Text="{loc:Localize Key=Terminal.Stats.Digipeated}" Classes="term-label" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Text="{Binding DigipeatedText}" Classes="term-value" />
+              </Grid>
+              <Grid Grid.Row="2" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalAlignment="Center">
+                <TextBlock Text="{loc:Localize Key=Terminal.Stats.Delay}" Classes="term-label" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Text="{Binding MedianDelayText}" Classes="term-value" />
+              </Grid>
+              <Grid Grid.Row="3" Grid.Column="0" ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalAlignment="Center"
+                    ToolTip.Tip="{loc:Localize Key=Terminal.Stats.UhmUsers.Tip}">
+                <TextBlock Text="{loc:Localize Key=Terminal.Stats.UhmUsers}" Classes="term-label" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Text="{Binding UhmUsersText}" Classes="term-value" />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </Border>
     </Grid>
 
