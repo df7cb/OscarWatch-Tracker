@@ -10,6 +10,7 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using OscarWatch.Core.Geo;
 using OscarWatch.Core.Models;
+using OscarWatch.Core.Terminal;
 using OscarWatch.Localization;
 
 namespace OscarWatch.Controls;
@@ -53,6 +54,165 @@ public class WorldMapControl : ThemeAwareControl
     public static readonly StyledProperty<double> MapCentreLongitudeProperty =
         AvaloniaProperty.Register<WorldMapControl, double>(nameof(MapCentreLongitude));
 
+    public static readonly StyledProperty<IReadOnlyList<MapStationMarker>?> StationMarkersProperty =
+        AvaloniaProperty.Register<WorldMapControl, IReadOnlyList<MapStationMarker>?>(nameof(StationMarkers));
+
+    /// <summary>Mouse wheel zoom, drag to pan and the zoom keys. Off for the main map.</summary>
+    public static readonly StyledProperty<bool> IsZoomEnabledProperty =
+        AvaloniaProperty.Register<WorldMapControl, bool>(nameof(IsZoomEnabled));
+
+    public const double MaxZoom = 16;
+    private const double WheelZoomStep = 1.25;
+    private const double ButtonZoomStep = 2;
+    private const double DragThresholdPx = 4;
+    private const double KeyPanFraction = 0.2;
+
+    private double _zoom = 1;
+    private double? _viewCentreLon;
+    private double _viewCentreLat;
+    private Point? _dragStart;
+    private Point _dragLast;
+    private bool _dragging;
+
+    private const double StationLabelFontSize = 11;
+    private const double StationHitRadiusPx = 10;
+    private readonly FormattedTextCache _stationLabelCache = new();
+
+    /// <summary>Raised with the callsign when a heard-station marker is clicked.</summary>
+    public event EventHandler<string>? StationMarkerClicked;
+
+    /// <summary>Raised after the zoom level or the visible area changes.</summary>
+    public event EventHandler? ViewChanged;
+
+    public bool IsZoomEnabled
+    {
+        get => GetValue(IsZoomEnabledProperty);
+        set => SetValue(IsZoomEnabledProperty, value);
+    }
+
+    public double ZoomLevel => _zoom;
+
+    public bool CanZoomIn => IsZoomEnabled && _zoom < MaxZoom;
+
+    public bool CanZoomOut => IsZoomEnabled && _zoom > 1;
+
+    public bool IsViewChanged => _zoom > 1 || _viewCentreLon is not null;
+
+    private double EffectiveCentreLongitude => _viewCentreLon ?? MapCentreLongitude;
+
+    /// <summary>
+    /// The world is drawn at <c>zoom</c> times the control size; the offsets say which part of it is visible.
+    /// Horizontal panning moves the centre longitude instead, so the map still wraps.
+    /// </summary>
+    private (double W, double H, double OffsetX, double OffsetY) Viewport(double w, double h)
+    {
+        var z = IsZoomEnabled ? _zoom : 1;
+        var vw = w * z;
+        var vh = h * z;
+        var offsetY = Math.Clamp(vh * (90 - _viewCentreLat) / 180 - h / 2, 0, Math.Max(0, vh - h));
+        return (vw, vh, (vw - w) / 2, offsetY);
+    }
+
+    private (Point Pos, double W, double H) ToVirtual(Point pos)
+    {
+        var (vw, vh, ox, oy) = Viewport(Bounds.Width, Bounds.Height);
+        return (new Point(pos.X + ox, pos.Y + oy), vw, vh);
+    }
+
+    public void ZoomIn() => ZoomAroundCentre(ButtonZoomStep);
+
+    public void ZoomOut() => ZoomAroundCentre(1 / ButtonZoomStep);
+
+    /// <summary>Back to the whole world, centred on <see cref="MapCentreLongitude"/>.</summary>
+    public void ResetView()
+    {
+        _zoom = 1;
+        _viewCentreLon = null;
+        _viewCentreLat = 0;
+        OnViewChanged();
+    }
+
+    private void ZoomAroundCentre(double factor)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        if (!IsZoomEnabled || w <= 0 || h <= 0)
+            return;
+
+        // The first zoom in from the whole world goes to the home station rather than the equator.
+        if (_zoom <= 1 && factor > 1 && GroundStation is { } gs)
+        {
+            _zoom = Math.Min(MaxZoom, factor);
+            _viewCentreLon = NormaliseLongitude(gs.LongitudeDeg);
+            _viewCentreLat = ClampViewLatitude(gs.LatitudeDeg);
+            OnViewChanged();
+            return;
+        }
+
+        ZoomAt(new Point(w / 2, h / 2), factor);
+    }
+
+    /// <summary>Zooms by <paramref name="factor"/> keeping the place under <paramref name="pos"/> still.</summary>
+    private void ZoomAt(Point pos, double factor)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        if (!IsZoomEnabled || w <= 0 || h <= 0)
+            return;
+
+        var newZoom = Math.Clamp(_zoom * factor, 1, MaxZoom);
+        if (Math.Abs(newZoom - _zoom) < 1e-6)
+            return;
+        if (newZoom <= 1.0001)
+        {
+            ResetView();
+            return;
+        }
+
+        var (vw, vh, ox, oy) = Viewport(w, h);
+        var (lat, lon) = PixelToGeo(pos.X + ox, pos.Y + oy, vw, vh, EffectiveCentreLongitude);
+        _zoom = newZoom;
+        _viewCentreLon = NormaliseLongitude(lon - (pos.X - w / 2) / (w * _zoom) * 360);
+        _viewCentreLat = ClampViewLatitude(lat + (pos.Y - h / 2) / (h * _zoom) * 180);
+        OnViewChanged();
+    }
+
+    private void PanByPixels(double dx, double dy)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        if (!IsZoomEnabled || w <= 0 || h <= 0)
+            return;
+
+        _viewCentreLon = NormaliseLongitude(EffectiveCentreLongitude - dx / (w * _zoom) * 360);
+        _viewCentreLat = ClampViewLatitude(_viewCentreLat + dy / (h * _zoom) * 180);
+        OnViewChanged();
+    }
+
+    /// <summary>Keeps the visible area inside the map top and bottom.</summary>
+    private double ClampViewLatitude(double lat)
+    {
+        var half = 90 / _zoom;
+        return Math.Clamp(lat, -90 + half, 90 - half);
+    }
+
+    private static double NormaliseLongitude(double lon)
+    {
+        lon %= 360;
+        if (lon >= 180)
+            lon -= 360;
+        else if (lon < -180)
+            lon += 360;
+        return lon;
+    }
+
+    private void OnViewChanged()
+    {
+        _lastRenderedSubpoints.Clear();
+        InvalidateVisual();
+        ViewChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     private Bitmap? _mapBitmap;
     private INotifyCollectionChanged? _trackStatesSource;
     private Size _lastLayoutInvalidationSize;
@@ -92,7 +252,15 @@ public class WorldMapControl : ThemeAwareControl
             SoloFocusedSatelliteProperty,
             ShowGreylineOverlayProperty,
             ShowMultiTrackOverlayProperty,
-            MapCentreLongitudeProperty);
+            MapCentreLongitudeProperty,
+            StationMarkersProperty);
+    }
+
+    /// <summary>Heard Terminal stations to plot (pass map). Null or empty draws nothing.</summary>
+    public IReadOnlyList<MapStationMarker>? StationMarkers
+    {
+        get => GetValue(StationMarkersProperty);
+        set => SetValue(StationMarkersProperty, value);
     }
 
     public bool ShowFootprintMotionArrows
@@ -196,6 +364,10 @@ public class WorldMapControl : ThemeAwareControl
             _groundTrackSplitCache.Clear();
             _lastRenderedSubpoints.Clear();
         }
+        else if (change.Property == IsZoomEnabledProperty && !change.GetNewValue<bool>())
+        {
+            ResetView();
+        }
 
         if (change.Property == TrackStatesProperty || change.Property == FocusedNoradIdProperty)
             TrackingPlotAccessibility.UpdateName(
@@ -244,6 +416,7 @@ public class WorldMapControl : ThemeAwareControl
     {
         _renderCache.Clear();
         _labelCache.Clear();
+        _stationLabelCache.Clear();
         _lastRenderedSubpoints.Clear();
         _lastGreylineUtcMinuteTicks = long.MinValue;
     }
@@ -266,17 +439,16 @@ public class WorldMapControl : ThemeAwareControl
 
     private bool ShouldRenderForTrackStates()
     {
-        var w = Bounds.Width;
-        var h = Bounds.Height;
-        if (w <= 0 || h <= 0)
+        if (Bounds.Width <= 0 || Bounds.Height <= 0)
             return true;
 
+        var (w, h, _, _) = Viewport(Bounds.Width, Bounds.Height);
         return HasMovedBeyondThreshold(
             TrackStates,
             _lastRenderedSubpoints,
             w,
             h,
-            MapCentreLongitude);
+            EffectiveCentreLongitude);
     }
 
     private bool ShouldRenderForMapDisplayUtc()
@@ -346,14 +518,194 @@ public class WorldMapControl : ThemeAwareControl
         base.OnPointerPressed(e);
         Focus();
         var pos = e.GetPosition(this);
-        var hit = HitTestSatellite(pos, Bounds.Width, Bounds.Height);
+        var (vp, vw, vh) = ToVirtual(pos);
+        if (HitTestStation(vp, vw, vh) is { } station)
+        {
+            StationMarkerClicked?.Invoke(this, station.Call);
+            return;
+        }
+
+        var hit = HitTestSatellite(vp, vw, vh);
         if (hit is not null)
             FocusedNoradId = hit;
+
+        if (IsZoomEnabled && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            _dragStart = pos;
+            _dragLast = pos;
+            _dragging = false;
+        }
+    }
+
+    protected override void OnPointerMoved(PointerEventArgs e)
+    {
+        base.OnPointerMoved(e);
+        var pos = e.GetPosition(this);
+        if (_dragStart is { } start)
+        {
+            if (!_dragging && (Math.Abs(pos.X - start.X) > DragThresholdPx || Math.Abs(pos.Y - start.Y) > DragThresholdPx))
+            {
+                _dragging = true;
+                e.Pointer.Capture(this);
+                Cursor = new Cursor(StandardCursorType.SizeAll);
+                ToolTip.SetTip(this, null);
+            }
+
+            if (_dragging)
+            {
+                PanByPixels(pos.X - _dragLast.X, pos.Y - _dragLast.Y);
+                _dragLast = pos;
+                return;
+            }
+        }
+
+        if (StationMarkers is not { Count: > 0 })
+            return;
+        var (vp, vw, vh) = ToVirtual(pos);
+        var station = HitTestStation(vp, vw, vh);
+        var tip = station?.ToolTipText;
+        if (!Equals(ToolTip.GetTip(this), tip))
+            ToolTip.SetTip(this, tip);
+    }
+
+    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    {
+        base.OnPointerReleased(e);
+        if (_dragging)
+            e.Pointer.Capture(null);
+        EndDrag();
+    }
+
+    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+    {
+        base.OnPointerCaptureLost(e);
+        EndDrag();
+    }
+
+    protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
+    {
+        base.OnPointerWheelChanged(e);
+        if (!IsZoomEnabled || e.Delta.Y == 0)
+            return;
+        ZoomAt(e.GetPosition(this), Math.Pow(WheelZoomStep, e.Delta.Y));
+        e.Handled = true;
+    }
+
+    private void EndDrag()
+    {
+        if (_dragging)
+            Cursor = new Cursor(StandardCursorType.Hand);
+        _dragStart = null;
+        _dragging = false;
+    }
+
+    /// <summary>+ and − zoom, 0 shows the whole world, Shift with the arrow keys pans.</summary>
+    private bool HandleZoomKey(KeyEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case Key.OemPlus or Key.Add:
+                ZoomIn();
+                return true;
+            case Key.OemMinus or Key.Subtract:
+                ZoomOut();
+                return true;
+            case Key.D0 or Key.NumPad0:
+                ResetView();
+                return true;
+        }
+
+        if (!e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            return false;
+
+        var stepX = Bounds.Width * KeyPanFraction;
+        var stepY = Bounds.Height * KeyPanFraction;
+        switch (e.Key)
+        {
+            case Key.Left:
+                PanByPixels(stepX, 0);
+                return true;
+            case Key.Right:
+                PanByPixels(-stepX, 0);
+                return true;
+            case Key.Up:
+                PanByPixels(0, stepY);
+                return true;
+            case Key.Down:
+                PanByPixels(0, -stepY);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private MapStationMarker? HitTestStation(Point pos, double w, double h)
+    {
+        var markers = StationMarkers;
+        if (markers is not { Count: > 0 } || w <= 0 || h <= 0)
+            return null;
+
+        MapStationMarker? best = null;
+        var bestDist = double.MaxValue;
+        foreach (var m in markers)
+        {
+            var (mx, my) = EquirectangularProjection.GeoToPixel(m.Latitude, m.Longitude, w, h, EffectiveCentreLongitude);
+            foreach (var xOffset in GetSubpointWrapOffsets(mx, w))
+            {
+                var dx = pos.X - (mx + xOffset);
+                var dy = pos.Y - my;
+                var dist = Math.Sqrt(dx * dx + dy * dy);
+                if (dist <= StationHitRadiusPx && dist < bestDist)
+                {
+                    bestDist = dist;
+                    best = m;
+                }
+            }
+        }
+
+        return best;
+    }
+
+    private void DrawStationMarkers(DrawingContext context, double w, double h, double centreLon, UiPalette palette)
+    {
+        var markers = StationMarkers;
+        if (markers is not { Count: > 0 })
+            return;
+
+        // Oldest first so the most recently heard stations end up on top.
+        for (var i = markers.Count - 1; i >= 0; i--)
+        {
+            var m = markers[i];
+            var (mx, my) = EquirectangularProjection.GeoToPixel(m.Latitude, m.Longitude, w, h, centreLon);
+            foreach (var xOffset in GetSubpointWrapOffsets(mx, w))
+                PlotMarkerDrawing.DrawHeardStationMarker(context, mx + xOffset, my, m.IsFaded, _renderCache);
+        }
+
+        _stationLabelCache.GetLabelBrush(palette);
+        var background = _stationLabelCache.GetBackgroundBrush(palette);
+        for (var i = markers.Count - 1; i >= 0; i--)
+        {
+            var m = markers[i];
+            var text = _stationLabelCache.Get(m.Call, StationLabelFontSize, palette);
+            var (mx, my) = EquirectangularProjection.GeoToPixel(m.Latitude, m.Longitude, w, h, centreLon);
+            foreach (var xOffset in GetSubpointWrapOffsets(mx, w))
+            {
+                var bg = new Rect(mx + xOffset + 8, my - text.Height / 2 - 2, text.Width + 8, text.Height + 4);
+                context.FillRectangle(background, bg);
+                context.DrawText(text, new Point(bg.X + 4, bg.Y + 2));
+            }
+        }
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
+        if (IsZoomEnabled && HandleZoomKey(e))
+        {
+            e.Handled = true;
+            return;
+        }
+
         if (TrackStates is not { Count: > 0 })
             return;
 
@@ -384,16 +736,17 @@ public class WorldMapControl : ThemeAwareControl
         if (bounds.Width <= 0 || bounds.Height <= 0)
             return;
 
+        var (vw, vh, ox, oy) = Viewport(bounds.Width, bounds.Height);
         using (context.PushClip(new Rect(bounds.Size)))
+        using (context.PushTransform(Matrix.CreateTranslation(-ox, -oy)))
         {
-            RenderMapContent(context, bounds.Width, bounds.Height);
+            RenderMapContent(context, vw, vh, EffectiveCentreLongitude);
         }
     }
 
-    private void RenderMapContent(DrawingContext context, double w, double h)
+    private void RenderMapContent(DrawingContext context, double w, double h, double centreLon)
     {
         var palette = UiPaletteResolver.Current;
-        var centreLon = MapCentreLongitude;
         EnsureMapLoaded();
 
         if (_mapBitmap is not null)
@@ -435,6 +788,7 @@ public class WorldMapControl : ThemeAwareControl
         var states = TrackStates;
         if (states is null)
         {
+            DrawStationMarkers(context, w, h, centreLon, palette);
             _lastRenderedSubpoints.Clear();
             if (ShowGreylineOverlay)
                 _lastGreylineUtcMinuteTicks = FloorToUtcMinuteTicks(MapDisplayUtc);
@@ -605,6 +959,8 @@ public class WorldMapControl : ThemeAwareControl
             }
         }
 
+        DrawStationMarkers(context, w, h, centreLon, palette);
+
         // Pass 2: labels on top (non-focused first, focused last).
         // Use the same subpoint projection and map-wrap copies as the markers in pass 1.
         _labelOrderBuffer.Build(states, FocusedNoradId, SoloFocusedSatellite);
@@ -653,7 +1009,7 @@ public class WorldMapControl : ThemeAwareControl
         if (states is null || w <= 0 || h <= 0)
             return null;
 
-        var centreLon = MapCentreLongitude;
+        var centreLon = EffectiveCentreLongitude;
         var palette = UiPaletteResolver.Current;
 
         // Labels are painted on top, and the focused label is painted last.

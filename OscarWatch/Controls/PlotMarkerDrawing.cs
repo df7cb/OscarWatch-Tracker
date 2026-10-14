@@ -80,6 +80,16 @@ internal static class PlotMarkerDrawing
         context.DrawGeometry(null, cache.GetPen(Colors.White, 1.5), geometry);
     }
 
+    /// <summary>Square marker for a heard Terminal station; faded stations get a translucent fill and dashed ring.</summary>
+    public static void DrawHeardStationMarker(DrawingContext context, double x, double y, bool faded, RenderResourceCache cache)
+    {
+        const double half = 5;
+        var fill = faded ? Color.FromArgb(150, 0x56, 0xB4, 0xE9) : Color.Parse("#56B4E9");
+        var rect = new Rect(x - half, y - half, half * 2, half * 2);
+        context.DrawRectangle(cache.GetBrush(fill), cache.GetPen(OutlineDark, 2.5), rect);
+        context.DrawRectangle(null, faded ? cache.GetDashedPen(Colors.White, 1.5) : cache.GetPen(Colors.White, 1.5), rect);
+    }
+
     public static void DrawFootprintMotionArrow(
         DrawingContext context,
         GeoCoordinate subpoint,

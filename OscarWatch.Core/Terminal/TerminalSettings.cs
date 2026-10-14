@@ -72,10 +72,30 @@ public sealed class TerminalUhmSettings
     public bool FrameLevelMatch { get; set; }
 }
 
+/// <summary>How precisely Send position reports our location. Ambiguity blanks minute digits as APRS allows.</summary>
+public enum TerminalPositionPrecision
+{
+    Exact,
+
+    /// <summary>Ambiguity 2: whole minutes, about 2 km.</summary>
+    About2Km,
+
+    /// <summary>Ambiguity 3: tens of minutes, about 20 km.</summary>
+    About20Km,
+
+    /// <summary>Centre of the 4-character grid square.</summary>
+    GridSquare
+}
+
 /// <summary>OscarWatch Terminal (packet digipeater) settings.</summary>
 public sealed class TerminalSettings
 {
     public const int MacroCount = 8;
+    public const string DefaultPositionSymbol = "/[";
+    public const string DefaultPositionComment = "{MYGRID4}";
+    public const int DefaultMapFadeMinutes = 15;
+    public const int MinMapFadeMinutes = 1;
+    public const int MaxMapFadeMinutes = 120;
 
     public TerminalTransportKind Transport { get; set; } = TerminalTransportKind.Agwpe;
     public TerminalAgwpeSettings Agwpe { get; set; } = new();
@@ -134,6 +154,19 @@ public sealed class TerminalSettings
     public TerminalAprsIsSettings AprsIs { get; set; } = new();
     public TerminalUhmSettings Uhm { get; set; } = new();
 
+    /// <summary>Send position: precision, APRS symbol (table then code) and comment template (macro placeholders allowed).</summary>
+    public TerminalPositionPrecision PositionPrecision { get; set; } = TerminalPositionPrecision.About2Km;
+    public string PositionSymbol { get; set; } = DefaultPositionSymbol;
+    public string PositionComment { get; set; } = DefaultPositionComment;
+
+    /// <summary>Pass map: show only stations heard since AOS, and minutes before a station fades (dropped after twice this).</summary>
+    public bool MapThisPassOnly { get; set; }
+    public int MapFadeMinutes { get; set; } = DefaultMapFadeMinutes;
+    public int? MapWindowWidth { get; set; }
+    public int? MapWindowHeight { get; set; }
+    public int? MapWindowX { get; set; }
+    public int? MapWindowY { get; set; }
+
     public static List<TerminalMacro> DefaultMacros() =>
     [
         new() { Label = "CQ", Text = "CQ {MYGRID4}", SendsToCq = true },
@@ -177,7 +210,8 @@ public sealed class TerminalSettings
         HeardFontSize = ClampFontSize(HeardFontSize, DefaultStationFontSize);
         LogColumnWidths = TerminalTableLayout.Normalise(LogColumnWidths, TerminalTableLayout.DefaultLogColumns);
         QsoColumnWidths = TerminalTableLayout.Normalise(QsoColumnWidths, TerminalTableLayout.DefaultQsoColumns);
-        HeardColumnWidths = TerminalTableLayout.Normalise(HeardColumnWidths, TerminalTableLayout.DefaultHeardColumns);
+        HeardColumnWidths = TerminalTableLayout.Normalise(
+            TerminalTableLayout.MigrateHeardColumns(HeardColumnWidths), TerminalTableLayout.DefaultHeardColumns);
         CallersWidth = TerminalTableLayout.ClampCallersWidth(CallersWidth);
         QsoShare = TerminalTableLayout.ClampQsoShare(QsoShare);
         if (WindowWidth is not { } w || WindowHeight is not { } h || w <= 0 || h <= 0)
@@ -194,6 +228,20 @@ public sealed class TerminalSettings
         AprsIs.Server ??= "";
         AprsIs.Passcode ??= "";
         Uhm ??= new TerminalUhmSettings();
+        if (!Enum.IsDefined(PositionPrecision))
+            PositionPrecision = TerminalPositionPrecision.About2Km;
+        PositionSymbol = NormalisePositionSymbol(PositionSymbol);
+        PositionComment ??= DefaultPositionComment;
+        MapFadeMinutes = MapFadeMinutes <= 0 ? DefaultMapFadeMinutes : Math.Clamp(MapFadeMinutes, MinMapFadeMinutes, MaxMapFadeMinutes);
+        if (MapWindowWidth is not { } mw || MapWindowHeight is not { } mh || mw <= 0 || mh <= 0)
+            MapWindowWidth = MapWindowHeight = null;
+    }
+
+    /// <summary>Two printable characters (symbol table then symbol code), otherwise the default.</summary>
+    public static string NormalisePositionSymbol(string? symbol)
+    {
+        var s = (symbol ?? "").Trim();
+        return s.Length == 2 && s.All(c => c is >= '!' and <= '~') ? s : DefaultPositionSymbol;
     }
 
     /// <summary>Older settings files have no value (0) for newer sizes, so those fall back to the default.</summary>

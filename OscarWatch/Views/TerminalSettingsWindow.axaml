@@ -247,6 +247,55 @@
         </ScrollViewer>
       </TabItem>
 
+      <!-- Position -->
+      <TabItem Header="{loc:Localize Key=Terminal.Settings.Tab.Position}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,8,4,0">
+          <StackPanel Spacing="10" MaxWidth="420">
+            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Position.Help}" />
+            <TextBlock Text="{loc:Localize Key=Terminal.Settings.Position.Precision}" />
+            <ComboBox ItemsSource="{Binding PrecisionOptions}"
+                      SelectedItem="{Binding SelectedPrecision}"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Position.Precision}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:TerminalPrecisionOption">
+                  <TextBlock Text="{Binding Label}" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Position.Precision.Help}" />
+            <Grid ColumnDefinitions="*,120" ColumnSpacing="8">
+              <StackPanel Grid.Column="0" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Settings.Position.Symbol}" />
+                <ComboBox ItemsSource="{Binding SymbolOptions}"
+                          SelectedItem="{Binding SelectedSymbol}"
+                          PlaceholderText="{loc:Localize Key=Terminal.Settings.Position.Symbol.Custom}"
+                          HorizontalAlignment="Stretch"
+                          AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Position.Symbol}">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:TerminalSymbolOption">
+                      <TextBlock Text="{Binding Label}" />
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Settings.Position.SymbolCode}" />
+                <TextBox Text="{Binding PositionSymbol}" MaxLength="2"
+                         FontFamily="Consolas,Courier New,monospace"
+                         AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Position.SymbolCode}" />
+              </StackPanel>
+            </Grid>
+            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Position.Symbol.Help}" />
+            <TextBlock Text="{loc:Localize Key=Terminal.Settings.Position.Comment}" />
+            <TextBox Text="{Binding PositionComment}" MaxLength="43"
+                     FontFamily="Consolas,Courier New,monospace"
+                     AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Position.Comment}" />
+            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Position.Comment.Help}" />
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
       <!-- Colours -->
       <TabItem Header="{loc:Localize Key=Terminal.Settings.Tab.Colours}">
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,8,4,0">

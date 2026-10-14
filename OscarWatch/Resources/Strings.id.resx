@@ -5447,4 +5447,190 @@ Terbaru: {1} ({2})</value>
   <data name="Terminal.Station.ElevationBar.Tip" xml:space="preserve">
     <value>Elevasi satelit, dari cakrawala (0°) hingga tepat di atas (90°)</value>
   </data>
+  <data name="Window.TerminalMap.Title" xml:space="preserve">
+    <value>Peta Terminal</value>
+  </data>
+  <data name="Terminal.OpenMap" xml:space="preserve">
+    <value>Peta Terminal</value>
+  </data>
+  <data name="Terminal.OpenMap.Tip" xml:space="preserve">
+    <value>Tampilkan stasiun terdengar dengan lokasi diketahui di peta, beserta jejak satelit yang difokuskan</value>
+  </data>
+  <data name="Terminal.Col.Distance" xml:space="preserve">
+    <value>Jarak</value>
+  </data>
+  <data name="Terminal.Col.Distance.Tip" xml:space="preserve">
+    <value>Jarak dan arah dari stasiun Anda, dari posisi APRS atau titik tengah kotak grid</value>
+  </data>
+  <data name="TerminalMap.ThisPassOnly" xml:space="preserve">
+    <value>Hanya lintasan ini</value>
+  </data>
+  <data name="TerminalMap.ThisPassOnly.Tip" xml:space="preserve">
+    <value>Tampilkan hanya stasiun yang terdengar sejak AOS saat ini atau terakhir</value>
+  </data>
+  <data name="TerminalMap.FadeMinutes" xml:space="preserve">
+    <value>Pudar setelah (menit)</value>
+  </data>
+  <data name="TerminalMap.FadeMinutes.Tip" xml:space="preserve">
+    <value>Stasiun yang tidak terdengar selama ini ditampilkan pudar dengan garis putus-putus, dan dihapus setelah dua kali waktu tersebut</value>
+  </data>
+  <data name="TerminalMap.Empty" xml:space="preserve">
+    <value>Belum ada stasiun terdengar dengan posisi atau grid. Stasiun akan muncul di sini saat posisi APRS atau grid-nya didekode.</value>
+  </data>
+  <data name="TerminalMap.Count" xml:space="preserve">
+    <value>{0} stasiun di peta</value>
+  </data>
+  <data name="TerminalMap.Accessible" xml:space="preserve">
+    <value>Peta Terminal dengan {0} stasiun terdengar</value>
+  </data>
+  <data name="TerminalMap.MarkerTip" xml:space="preserve">
+    <value>{0} {1}, {2}, terakhir terdengar {3} UTC</value>
+  </data>
+  <data name="TerminalMap.MarkerTip.Grid" xml:space="preserve">
+    <value>{0} {1} (titik tengah kotak grid), {2}, terakhir terdengar {3} UTC</value>
+  </data>
+  <data name="Terminal.SendPosition" xml:space="preserve">
+    <value>Kirim posisi</value>
+  </data>
+  <data name="Terminal.SendPosition.Tip" xml:space="preserve">
+    <value>Mengirim {0}, {1} ({2}) dari {3}, presisi: {4}</value>
+  </data>
+  <data name="Terminal.SendPosition.Cooldown" xml:space="preserve">
+    <value>Posisi baru saja dikirim. Anda dapat mengirim lagi dalam {0} detik.</value>
+  </data>
+  <data name="Terminal.Status.PositionSent.Gps" xml:space="preserve">
+    <value>Posisi dikirim dari GPS.</value>
+  </data>
+  <data name="Terminal.Status.PositionSent.Station" xml:space="preserve">
+    <value>Posisi dikirim dari lokasi stasiun.</value>
+  </data>
+  <data name="Terminal.Status.PositionSent.Grid" xml:space="preserve">
+    <value>Posisi dikirim dari kotak grid stasiun.</value>
+  </data>
+  <data name="Terminal.Status.PositionNeedsAprs" xml:space="preserve">
+    <value>Posisi hanya dapat dikirim dengan profil satelit APRS.</value>
+  </data>
+  <data name="Terminal.Status.PositionUnknown" xml:space="preserve">
+    <value>Posisi tidak tersedia. Atur lokasi stasiun atau hubungkan GPS.</value>
+  </data>
+  <data name="Terminal.Log.Position" xml:space="preserve">
+    <value>Posisi {0} ({1})</value>
+  </data>
+  <data name="Terminal.PositionOrigin.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.PositionOrigin.Station" xml:space="preserve">
+    <value>lokasi stasiun</value>
+  </data>
+  <data name="Terminal.PositionOrigin.Grid" xml:space="preserve">
+    <value>kotak grid</value>
+  </data>
+  <data name="Terminal.Precision.Exact" xml:space="preserve">
+    <value>Tepat</value>
+  </data>
+  <data name="Terminal.Precision.About2Km" xml:space="preserve">
+    <value>Sekitar 2 km</value>
+  </data>
+  <data name="Terminal.Precision.About20Km" xml:space="preserve">
+    <value>Sekitar 20 km</value>
+  </data>
+  <data name="Terminal.Precision.GridSquare" xml:space="preserve">
+    <value>Titik tengah kotak grid</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
+    <value>Posisi</value>
+  </data>
+  <data name="Terminal.Settings.Position.Help" xml:space="preserve">
+    <value>Kirim posisi memancarkan laporan posisi APRS melalui satelit. OscarWatch memakai fix GPS terbaru lebih dulu, lalu lintang dan bujur stasiun, lalu titik tengah kotak grid Anda. Paling banyak satu posisi per menit.</value>
+  </data>
+  <data name="Terminal.Settings.Position.Precision" xml:space="preserve">
+    <value>Presisi</value>
+  </data>
+  <data name="Terminal.Settings.Position.Precision.Help" xml:space="preserve">
+    <value>Presisi lebih rendah mengosongkan digit posisi, sesuai aturan APRS, sehingga lokasi persis Anda tidak dibagikan.</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol" xml:space="preserve">
+    <value>Simbol</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Person" xml:space="preserve">
+    <value>Orang (portabel)</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.House" xml:space="preserve">
+    <value>Rumah</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Car" xml:space="preserve">
+    <value>Mobil</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Dish" xml:space="preserve">
+    <value>Antena parabola</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Custom" xml:space="preserve">
+    <value>Kustom</value>
+  </data>
+  <data name="Terminal.Settings.Position.SymbolCode" xml:space="preserve">
+    <value>Tabel dan kode</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Help" xml:space="preserve">
+    <value>Dua karakter: tabel simbol (/ atau \) lalu kode simbol, misalnya /[ untuk orang.</value>
+  </data>
+  <data name="Terminal.Settings.Position.Comment" xml:space="preserve">
+    <value>Komentar</value>
+  </data>
+  <data name="Terminal.Settings.Position.Comment.Help" xml:space="preserve">
+    <value>Hingga 43 karakter. {MYGRID4}, {MYGRID} dan {MYCALL} diganti saat mengirim. Tulis {POSITION} saja dalam makro untuk mengirim posisi dari tombol pintasan.</value>
+  </data>
+  <data name="Terminal.MicE.Emergency" xml:space="preserve">
+    <value>Darurat</value>
+  </data>
+  <data name="Terminal.MicE.Priority" xml:space="preserve">
+    <value>Prioritas</value>
+  </data>
+  <data name="Terminal.MicE.Special" xml:space="preserve">
+    <value>Khusus</value>
+  </data>
+  <data name="Terminal.MicE.Committed" xml:space="preserve">
+    <value>Bertugas</value>
+  </data>
+  <data name="Terminal.MicE.Returning" xml:space="preserve">
+    <value>Kembali</value>
+  </data>
+  <data name="Terminal.MicE.InService" xml:space="preserve">
+    <value>Dalam layanan</value>
+  </data>
+  <data name="Terminal.MicE.EnRoute" xml:space="preserve">
+    <value>Dalam perjalanan</value>
+  </data>
+  <data name="Terminal.MicE.Custom0" xml:space="preserve">
+    <value>Kustom 0</value>
+  </data>
+  <data name="Terminal.MicE.Custom1" xml:space="preserve">
+    <value>Kustom 1</value>
+  </data>
+  <data name="Terminal.MicE.Custom2" xml:space="preserve">
+    <value>Kustom 2</value>
+  </data>
+  <data name="Terminal.MicE.Custom3" xml:space="preserve">
+    <value>Kustom 3</value>
+  </data>
+  <data name="Terminal.MicE.Custom4" xml:space="preserve">
+    <value>Kustom 4</value>
+  </data>
+  <data name="Terminal.MicE.Custom5" xml:space="preserve">
+    <value>Kustom 5</value>
+  </data>
+  <data name="Terminal.MicE.Custom6" xml:space="preserve">
+    <value>Kustom 6</value>
+  </data>
+  <data name="TerminalMap.ZoomIn" xml:space="preserve">
+    <value>Perbesar</value>
+  </data>
+  <data name="TerminalMap.ZoomOut" xml:space="preserve">
+    <value>Perkecil</value>
+  </data>
+  <data name="TerminalMap.ResetView" xml:space="preserve">
+    <value>Seluruh dunia</value>
+  </data>
+  <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
+    <value>Gunakan roda mouse untuk zoom, atau tekan + dan − saat peta aktif. Seret peta untuk menggesernya, atau tahan Shift dan gunakan tombol panah. Tekan 0 untuk melihat seluruh dunia lagi.</value>
+  </data>
 </root>

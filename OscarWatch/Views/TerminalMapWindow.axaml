@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:OscarWatch.ViewModels"
+        xmlns:loc="using:OscarWatch.Localization"
+        xmlns:ctl="using:OscarWatch.Controls"
+        x:Class="OscarWatch.Views.TerminalMapWindow"
+        x:DataType="vm:TerminalMapViewModel"
+        Title="{loc:Localize Key=Window.TerminalMap.Title}"
+        Width="960" Height="560"
+        MinWidth="480" MinHeight="320"
+        WindowStartupLocation="CenterOwner">
+  <DockPanel Margin="8">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+      <TextBlock DockPanel.Dock="Right" Text="{Binding SummaryText}" FontSize="12"
+                 VerticalAlignment="Center" Margin="12,0,0,0" />
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6" Margin="16,0,0,0"
+                  VerticalAlignment="Center" ToolTip.Tip="{loc:Localize Key=TerminalMap.Zoom.Tip}">
+        <Button x:Name="ZoomOutButton" Content="−" MinWidth="32" HorizontalContentAlignment="Center"
+                Click="OnZoomOutClick" IsEnabled="False"
+                ToolTip.Tip="{loc:Localize Key=TerminalMap.ZoomOut}"
+                AutomationProperties.Name="{loc:Localize Key=TerminalMap.ZoomOut}" />
+        <Button x:Name="ZoomInButton" Content="+" MinWidth="32" HorizontalContentAlignment="Center"
+                Click="OnZoomInClick"
+                ToolTip.Tip="{loc:Localize Key=TerminalMap.ZoomIn}"
+                AutomationProperties.Name="{loc:Localize Key=TerminalMap.ZoomIn}" />
+        <Button x:Name="ResetViewButton" Content="{loc:Localize Key=TerminalMap.ResetView}"
+                Click="OnResetViewClick" IsEnabled="False"
+                ToolTip.Tip="{loc:Localize Key=TerminalMap.Zoom.Tip}" />
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+        <CheckBox Content="{loc:Localize Key=TerminalMap.ThisPassOnly}"
+                  IsChecked="{Binding ThisPassOnly}"
+                  ToolTip.Tip="{loc:Localize Key=TerminalMap.ThisPassOnly.Tip}" />
+        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+          <TextBlock Text="{loc:Localize Key=TerminalMap.FadeMinutes}" FontSize="12" VerticalAlignment="Center" />
+          <NumericUpDown Value="{Binding FadeMinutes}"
+                         Minimum="{Binding MinFadeMinutes}" Maximum="{Binding MaxFadeMinutes}"
+                         Increment="1" FormatString="0" Width="110"
+                         ToolTip.Tip="{loc:Localize Key=TerminalMap.FadeMinutes.Tip}"
+                         AutomationProperties.Name="{loc:Localize Key=TerminalMap.FadeMinutes}" />
+        </StackPanel>
+      </StackPanel>
+    </DockPanel>
+    <Grid>
+      <ctl:WorldMapControl x:Name="Map"
+                           TrackStates="{Binding TrackStates}"
+                           GroundStation="{Binding GroundStation}"
+                           FocusedNoradId="{Binding FocusedNoradId, Mode=OneWay}"
+                           MapCentreLongitude="{Binding MapCentreLongitude}"
+                           StationMarkers="{Binding StationMarkers}"
+                           SoloFocusedSatellite="True"
+                           ShowMultiTrackOverlay="False"
+                           IsZoomEnabled="True"
+                           AutomationProperties.HelpText="{Binding AccessibleSummary}" />
+      <Border IsVisible="{Binding !HasMarkers}" IsHitTestVisible="False"
+              HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,16"
+              Background="{DynamicResource ThemeSubtlePanelBackgroundBrush}" CornerRadius="4" Padding="10,6">
+        <TextBlock Text="{loc:Localize Key=TerminalMap.Empty}" FontSize="13" TextWrapping="Wrap" MaxWidth="520"
+                   Foreground="{DynamicResource ThemeForegroundBrush}" />
+      </Border>
+    </Grid>
+  </DockPanel>
+</Window>

@@ -138,6 +138,33 @@ public sealed class TerminalQsoTrackerTests
     }
 
     [Fact]
+    public void Aprs_position_fills_grid_and_updates()
+    {
+        var t = new TerminalQsoTracker();
+        t.OnReceived(Rx("RS0ISS", "APRS", "!5552.00N/00415.50W-first", 0, TerminalMessageFormat.Aprs), Me);
+        var s = t.Get("RS0ISS")!;
+        Assert.Equal("IO75uu", s.Grid);
+        Assert.Equal(55.8667, s.Position!.Latitude, 3);
+        Assert.Equal(T0, s.PositionUtc);
+
+        t.OnReceived(Rx("RS0ISS", "APRS", "!5130.00N/00007.00W-moved", 30, TerminalMessageFormat.Aprs), Me);
+        Assert.Equal("IO91wm", s.Grid);
+        Assert.Equal(51.5, s.Position!.Latitude, 3);
+        Assert.Equal(T0.AddSeconds(30), s.PositionUtc);
+    }
+
+    [Fact]
+    public void Grid_sent_as_text_is_kept_over_position()
+    {
+        var t = new TerminalQsoTracker();
+        t.OnReceived(Rx("G0ABC", "CQ", "CQ IO91", 0), Me);
+        t.OnReceived(Rx("G0ABC", "APRS", "!5552.00N/00415.50W-x", 10, TerminalMessageFormat.Aprs), Me);
+        var s = t.Get("G0ABC")!;
+        Assert.Equal("IO91", s.Grid);
+        Assert.NotNull(s.Position);
+    }
+
+    [Fact]
     public void Classifier_orders_kinds()
     {
         Assert.Equal(TerminalMessageKind.MyTx, TerminalMessageClassifier.Classify(Rx(Me, "G0ABC", "x", 0), Me, true));

@@ -197,6 +197,18 @@
                     Content="{loc:Localize Key=Terminal.OpenSettings}"
                     Click="OnSettingsClick"
                     Margin="6,0,0,0" />
+            <Button DockPanel.Dock="Right"
+                    Click="OnMapClick"
+                    Padding="6,4"
+                    VerticalAlignment="Stretch"
+                    ToolTip.Tip="{loc:Localize Key=Terminal.OpenMap}"
+                    AutomationProperties.Name="{loc:Localize Key=Terminal.OpenMap}"
+                    AutomationProperties.HelpText="{loc:Localize Key=Terminal.OpenMap.Tip}"
+                    Margin="6,0,0,0">
+              <Path Width="16" Height="16" Stretch="None"
+                    Stroke="{Binding $parent[Button].Foreground}" StrokeThickness="1.2"
+                    Data="M8,1 A7,7 0 1 1 7.99,1 Z M8,1 A3.2,7 0 1 1 7.99,1 Z M1,8 H15 M2.2,4.5 H13.8 M2.2,11.5 H13.8 M8,1 V15" />
+            </Button>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
               <Button Content="{loc:Localize Key=Terminal.Connect}"
                       Command="{Binding ConnectCommand}"
@@ -244,7 +256,7 @@
           </Grid>
 
           <TextBlock Text="{loc:Localize Key=Terminal.Send}" Classes="term-heading" Margin="0,4,0,0" />
-          <Grid ColumnDefinitions="Auto,130,Auto,*,Auto" ColumnSpacing="6">
+          <Grid ColumnDefinitions="Auto,130,Auto,*,Auto,Auto" ColumnSpacing="6">
             <TextBlock Grid.Column="0" Text="{loc:Localize Key=Terminal.To}" Classes="term-label" />
             <TextBox Grid.Column="1"
                      Text="{Binding ToCall}"
@@ -263,6 +275,15 @@
                     Command="{Binding SendCommand}"
                     IsDefault="True"
                     Classes="accent"
+                    MinWidth="96" />
+            <Button Grid.Column="5"
+                    Content="{loc:Localize Key=Terminal.SendPosition}"
+                    Command="{Binding SendPositionCommand}"
+                    IsEnabled="{Binding CanSendPosition}"
+                    ToolTip.Tip="{Binding SendPositionTip}"
+                    ToolTip.ShowOnDisabled="True"
+                    AutomationProperties.Name="{loc:Localize Key=Terminal.SendPosition}"
+                    AutomationProperties.HelpText="{Binding SendPositionTip}"
                     MinWidth="96" />
           </Grid>
           <DockPanel>
@@ -570,22 +591,25 @@
               <TextBlock Text="{loc:Localize Key=Terminal.Heard}" Classes="term-heading" Margin="0" VerticalAlignment="Center" />
             </DockPanel>
             <ctl:ZoomDecorator DockPanel.Dock="Top" Zoom="{Binding HeardZoom}">
-              <Grid ColumnDefinitions="88,60,52,52,44,72,*" ctl:TableColumns.Layout="{Binding HeardColumns}" Margin="8,0,4,4">
+              <Grid ColumnDefinitions="88,60,52,52,44,96,72,*" ctl:TableColumns.Layout="{Binding HeardColumns}" Margin="8,0,4,4">
                 <TextBlock Grid.Column="0" Text="{loc:Localize Key=Terminal.Col.Call}" Classes="term-col" />
                 <TextBlock Grid.Column="1" Text="{loc:Localize Key=Terminal.Col.Grid}" Classes="term-col" />
                 <TextBlock Grid.Column="2" Text="{loc:Localize Key=Terminal.Col.Since}" Classes="term-col" />
                 <TextBlock Grid.Column="3" Text="{loc:Localize Key=Terminal.Col.CqTx}" Classes="term-col"
                            ToolTip.Tip="{loc:Localize Key=Terminal.Col.CqTx.Tip}" />
                 <TextBlock Grid.Column="4" Text="{loc:Localize Key=Terminal.Col.El}" Classes="term-col" />
-                <TextBlock Grid.Column="5" Text="{loc:Localize Key=Terminal.Col.Uhm}" Classes="term-col"
+                <TextBlock Grid.Column="5" Text="{loc:Localize Key=Terminal.Col.Distance}" Classes="term-col"
+                           ToolTip.Tip="{loc:Localize Key=Terminal.Col.Distance.Tip}" />
+                <TextBlock Grid.Column="6" Text="{loc:Localize Key=Terminal.Col.Uhm}" Classes="term-col"
                            ToolTip.Tip="{loc:Localize Key=Terminal.Col.Uhm.Tip}" />
-                <TextBlock Grid.Column="6" Text="{loc:Localize Key=Terminal.Col.Marker}" Classes="term-col" />
+                <TextBlock Grid.Column="7" Text="{loc:Localize Key=Terminal.Col.Marker}" Classes="term-col" />
                 <Thumb Grid.Column="0" Classes="term-grip" Tag="heard,0,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
                 <Thumb Grid.Column="1" Classes="term-grip" Tag="heard,1,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
                 <Thumb Grid.Column="2" Classes="term-grip" Tag="heard,2,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
                 <Thumb Grid.Column="3" Classes="term-grip" Tag="heard,3,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
                 <Thumb Grid.Column="4" Classes="term-grip" Tag="heard,4,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
                 <Thumb Grid.Column="5" Classes="term-grip" Tag="heard,5,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="6" Classes="term-grip" Tag="heard,6,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
               </Grid>
             </ctl:ZoomDecorator>
             <Grid>
@@ -601,14 +625,15 @@
                 <DataTemplate x:DataType="vm:TerminalStationRowViewModel">
                   <ctl:ZoomDecorator Zoom="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).HeardZoom}">
                     <Border Classes="term-row" AutomationProperties.Name="{Binding AccessibleText}">
-                      <Grid ColumnDefinitions="88,60,52,52,44,72,*" ctl:TableColumns.Layout="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).HeardColumns}">
+                      <Grid ColumnDefinitions="88,60,52,52,44,96,72,*" ctl:TableColumns.Layout="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).HeardColumns}">
                         <TextBlock Grid.Column="0" Text="{Binding Call}" FontFamily="Consolas,Courier New,monospace" FontWeight="SemiBold" />
                         <TextBlock Grid.Column="1" Text="{Binding Grid}" FontFamily="Consolas,Courier New,monospace" />
                         <TextBlock Grid.Column="2" Text="{Binding SinceText}" FontFamily="Consolas,Courier New,monospace" />
                         <TextBlock Grid.Column="3" Text="{Binding CqTxText}" />
                         <TextBlock Grid.Column="4" Text="{Binding ElevationText}" />
-                        <TextBlock Grid.Column="5" Text="{Binding UhmText}" />
-                        <TextBlock Grid.Column="6" Text="{Binding MarkerText}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Column="5" Text="{Binding DistanceText}" FontFamily="Consolas,Courier New,monospace" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Column="6" Text="{Binding UhmText}" />
+                        <TextBlock Grid.Column="7" Text="{Binding MarkerText}" TextTrimming="CharacterEllipsis" />
                       </Grid>
                     </Border>
                   </ctl:ZoomDecorator>

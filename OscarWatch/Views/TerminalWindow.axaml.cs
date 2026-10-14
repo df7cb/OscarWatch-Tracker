@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using OscarWatch.Core.Services;
 using OscarWatch.Core.Terminal;
+using OscarWatch.Localization;
 using OscarWatch.ViewModels;
 
 namespace OscarWatch.Views;
@@ -14,6 +15,7 @@ namespace OscarWatch.Views;
 public partial class TerminalWindow : Window
 {
     private TerminalViewModel? _vm;
+    private TerminalMapWindow? _mapWindow;
 
     public TerminalWindow()
     {
@@ -100,6 +102,7 @@ public partial class TerminalWindow : Window
 
     private void OnClosed(object? sender, EventArgs e)
     {
+        _mapWindow?.Close();
         if (_vm is null)
             return;
 
@@ -186,6 +189,31 @@ public partial class TerminalWindow : Window
     {
         if (_vm is not null && e.AddedItems.Count > 0 && e.AddedItems[0] is TerminalStationRowViewModel row)
             _vm.ToCall = row.Call;
+    }
+
+    private void OnMapClick(object? sender, RoutedEventArgs e)
+    {
+        if (_vm is null)
+            return;
+        if (_mapWindow is not null)
+        {
+            _mapWindow.Activate();
+            return;
+        }
+
+        if (App.Services.GetService(typeof(ISettingsService)) is not ISettingsService settings
+            || App.Services.GetService(typeof(ILiveTrackingService)) is not ILiveTrackingService tracking
+            || App.Services.GetService(typeof(ILocalizationService)) is not ILocalizationService localization)
+            return;
+
+        var window = new TerminalMapWindow
+        {
+            DataContext = new TerminalMapViewModel(settings, tracking, _vm.Service, localization)
+        };
+        window.StationSelected += call => _vm?.SelectStationByCall(call);
+        window.Closed += (_, _) => _mapWindow = null;
+        _mapWindow = window;
+        window.Show(this);
     }
 
     private async void OnSettingsClick(object? sender, RoutedEventArgs e)

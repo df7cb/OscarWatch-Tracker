@@ -105,8 +105,8 @@
           cue. Hover a row to see the raw frame. Double-click a row to put that station in the To box.</li>
         <li><strong>QSO:</strong> the stations you are working, with their state, UHM status and whether they are logged.</li>
         <li><strong>Heard stations:</strong> everyone heard this session, with the time since last heard, CQ and frame counts,
-          the satellite's elevation from their grid, and whether they are a new call, a new grid or already worked. Click a
-          station to put it in the To box.</li>
+          the satellite's elevation from their grid, their distance and bearing from you, and whether they are a new call, a
+          new grid or already worked. Click a station to put it in the To box.</li>
       </ul>
       <p>
         The message log, QSO and Heard stations boxes each have <strong>A−</strong> and <strong>A+</strong> buttons to change
@@ -136,6 +136,55 @@
       <p>
         Tick <strong>To CQ</strong> for a macro that should always go to CQ (the default F1). The defaults are
         <code>CQ {MYGRID4}</code>, <code>{MYGRID4} 599</code>, <code>R73</code> and <code>73 TU</code>.
+        A macro whose text is just <code>{POSITION}</code> sends your position instead of a message (see below).
+      </p>
+
+      <h2 id="positions">APRS positions and the Terminal Map</h2>
+      <p>
+        Many stations on the ISS and IO-117 send APRS position reports. Terminal decodes uncompressed positions (with or
+        without a timestamp), compressed positions and Mic-E. The station's grid and its distance and bearing from you fill in
+        under Heard stations. A grid the station types in a message always takes priority over one worked out from its
+        position. For Mic-E, the radio's type characters are removed from the comment, the altitude is decoded, and a status
+        such as <strong>En route</strong> or <strong>Emergency</strong> is shown at the start of the message. Anything that
+        does not decode is shown as plain text, as before.
+      </p>
+      <p>
+        Press the globe button (<strong>Terminal Map</strong>) at the top of the Terminal to open a map of the heard stations that have a known
+        location, with your station and the focused satellite's footprint, so you can see who is in range now. A station with
+        an APRS position is drawn at that position, and one with only a grid is drawn at the grid square centre. Each station
+        is a square with its callsign beside it; hover over it for the grid, distance and time last heard, or click it to put
+        that station in the To box.
+      </p>
+      <ul>
+        <li><strong>This pass only:</strong> shows only stations heard since the current pass began, or since the start of the
+          most recent pass while the satellite is below the horizon.</li>
+        <li><strong>Fade after:</strong> stations not heard for this many minutes are drawn faded with a dashed outline, and
+          are removed after twice that time.</li>
+        <li><strong>Zoom:</strong> when an area such as Europe gets crowded, zoom in with the mouse wheel or the
+          <strong>+</strong> and <strong>−</strong> buttons, and drag the map to move around. With the map focused, the
+          + and − keys zoom, Shift and the arrow keys move the map, and 0 goes back to the whole world, as does
+          <strong>Whole world</strong>. Markers and callsigns stay the same size as you zoom, so close stations separate.</li>
+        <li>Clearing the Heard stations list also clears the map.</li>
+      </ul>
+
+      <h2 id="send-position">Sending your position</h2>
+      <p>
+        <strong>Send Position</strong>, next to <strong>Send</strong>, transmits an APRS position report through the
+        satellite, so your station shows on maps such as aprs.fi when an iGate hears it. It only works with an APRS satellite
+        profile. Hover over the button to see the location it will send. OscarWatch takes your location from, in order:
+      </p>
+      <ol>
+        <li>a GPS fix less than two minutes old, when a GPS is set up in Settings;</li>
+        <li>the station latitude and longitude in Settings;</li>
+        <li>the centre of your station grid square.</li>
+      </ol>
+      <p>
+        In <strong>Terminal settings → Position</strong> you can choose the precision, the APRS symbol and the comment.
+        <strong>About 2 km</strong> (the default) and <strong>About 20 km</strong> blank digits of the position, as APRS
+        allows, and <strong>Grid square centre</strong> sends the middle of your four-character grid square, so your exact
+        location is not shared. The comment can use <code>{MYGRID4}</code>, <code>{MYGRID}</code> and <code>{MYCALL}</code>.
+        To keep the satellite clear for everyone, you can send a position at most once a minute, and Terminal never beacons on
+        its own.
       </p>
 
       <h2>Logging</h2>
@@ -168,8 +217,9 @@
       <p>
         In <strong>Settings → APRS-IS</strong> you can forward the packets you hear to APRS-IS as a receive-only iGate, so they
         show on sites such as aprs.fi. Enter your APRS-IS passcode; without a valid one the server accepts the login but drops
-        the packets. Packets marked NOGATE, RFONLY or TCPIP are never forwarded, and duplicates within 30 seconds are dropped.
-        Terminal never transmits packets from the internet.
+        the packets. Position reports, including Mic-E and compressed positions, are forwarded just like messages, so stations
+        you hear through the satellite appear on the map at aprs.fi. Packets marked NOGATE, RFONLY or TCPIP are never
+        forwarded, and duplicates within 30 seconds are dropped. Terminal never transmits packets from the internet.
       </p>
 
       <h2>Problems?</h2>

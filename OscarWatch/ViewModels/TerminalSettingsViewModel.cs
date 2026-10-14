@@ -17,6 +17,11 @@ public sealed record TerminalFormatOption(TerminalMessageFormat Value, string La
 
 public sealed record TerminalRadioPortOption(int Index, string Label);
 
+public sealed record TerminalPrecisionOption(TerminalPositionPrecision Value, string Label);
+
+/// <summary>APRS symbol preset: table character then symbol code.</summary>
+public sealed record TerminalSymbolOption(string Symbol, string Label);
+
 public sealed partial class TerminalMacroEditViewModel : ObservableObject
 {
     public TerminalMacroEditViewModel(int index, TerminalMacro macro)
@@ -131,6 +136,42 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         _aprsAutoAck = t.AprsAutoAck;
         _txDelaySeconds = t.TxDelaySeconds;
         _fontSize = t.FontSize;
+
+        PrecisionOptions = Enum.GetValues<TerminalPositionPrecision>()
+            .Select(p => new TerminalPrecisionOption(p, _l.Get("Terminal.Precision." + p)))
+            .ToList();
+        SymbolOptions =
+        [
+            new("/[", _l.Get("Terminal.Settings.Position.Symbol.Person")),
+            new("/-", _l.Get("Terminal.Settings.Position.Symbol.House")),
+            new("/>", _l.Get("Terminal.Settings.Position.Symbol.Car")),
+            new("/`", _l.Get("Terminal.Settings.Position.Symbol.Dish")),
+        ];
+        _selectedPrecision = PrecisionOptions.First(o => o.Value == t.PositionPrecision);
+        _positionSymbol = t.PositionSymbol;
+        _selectedSymbol = SymbolOptions.FirstOrDefault(o => o.Symbol == t.PositionSymbol);
+        _positionComment = t.PositionComment;
+    }
+
+    public IReadOnlyList<TerminalPrecisionOption> PrecisionOptions { get; }
+    public IReadOnlyList<TerminalSymbolOption> SymbolOptions { get; }
+
+    [ObservableProperty] private TerminalPrecisionOption _selectedPrecision;
+    [ObservableProperty] private TerminalSymbolOption? _selectedSymbol;
+    [ObservableProperty] private string _positionSymbol;
+    [ObservableProperty] private string _positionComment;
+
+    partial void OnSelectedSymbolChanged(TerminalSymbolOption? value)
+    {
+        if (value is not null && PositionSymbol != value.Symbol)
+            PositionSymbol = value.Symbol;
+    }
+
+    partial void OnPositionSymbolChanged(string value)
+    {
+        var match = SymbolOptions.FirstOrDefault(o => o.Symbol == value);
+        if (!Equals(SelectedSymbol, match))
+            SelectedSymbol = match;
     }
 
     /// <summary>Raised with true after Save, false on Cancel.</summary>
@@ -385,6 +426,9 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         t.AprsAutoAck = AprsAutoAck;
         t.TxDelaySeconds = TxDelaySeconds;
         t.FontSize = FontSize;
+        t.PositionPrecision = SelectedPrecision.Value;
+        t.PositionSymbol = PositionSymbol ?? "";
+        t.PositionComment = PositionComment?.Trim() ?? "";
         t.Normalise();
         _settings.RequestSave();
         CloseRequested?.Invoke(true);

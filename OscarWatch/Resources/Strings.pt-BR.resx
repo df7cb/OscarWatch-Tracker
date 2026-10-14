@@ -5442,4 +5442,190 @@ Mais recente: {1} ({2})</value>
   <data name="Terminal.Station.ElevationBar.Tip" xml:space="preserve">
     <value>Elevação do satélite, do horizonte (0°) ao zênite (90°)</value>
   </data>
+  <data name="Window.TerminalMap.Title" xml:space="preserve">
+    <value>Mapa do Terminal</value>
+  </data>
+  <data name="Terminal.OpenMap" xml:space="preserve">
+    <value>Mapa do Terminal</value>
+  </data>
+  <data name="Terminal.OpenMap.Tip" xml:space="preserve">
+    <value>Mostrar no mapa as estações ouvidas com localização conhecida e a área de cobertura do satélite em foco</value>
+  </data>
+  <data name="Terminal.Col.Distance" xml:space="preserve">
+    <value>Distância</value>
+  </data>
+  <data name="Terminal.Col.Distance.Tip" xml:space="preserve">
+    <value>Distância e rumo a partir da sua estação, pela posição APRS ou pelo centro do quadrado do locator</value>
+  </data>
+  <data name="TerminalMap.ThisPassOnly" xml:space="preserve">
+    <value>Somente esta passagem</value>
+  </data>
+  <data name="TerminalMap.ThisPassOnly.Tip" xml:space="preserve">
+    <value>Mostrar apenas estações ouvidas desde o AOS atual ou mais recente</value>
+  </data>
+  <data name="TerminalMap.FadeMinutes" xml:space="preserve">
+    <value>Esmaecer após (minutos)</value>
+  </data>
+  <data name="TerminalMap.FadeMinutes.Tip" xml:space="preserve">
+    <value>Estações não ouvidas por este tempo aparecem esmaecidas com contorno tracejado e são removidas após o dobro do tempo</value>
+  </data>
+  <data name="TerminalMap.Empty" xml:space="preserve">
+    <value>Ainda não há estações ouvidas com posição ou locator. Elas aparecem aqui quando as posições APRS ou locators são decodificados.</value>
+  </data>
+  <data name="TerminalMap.Count" xml:space="preserve">
+    <value>{0} estações no mapa</value>
+  </data>
+  <data name="TerminalMap.Accessible" xml:space="preserve">
+    <value>Mapa do Terminal com {0} estações ouvidas</value>
+  </data>
+  <data name="TerminalMap.MarkerTip" xml:space="preserve">
+    <value>{0} {1}, {2}, ouvida pela última vez às {3} UTC</value>
+  </data>
+  <data name="TerminalMap.MarkerTip.Grid" xml:space="preserve">
+    <value>{0} {1} (centro do quadrado), {2}, ouvida pela última vez às {3} UTC</value>
+  </data>
+  <data name="Terminal.SendPosition" xml:space="preserve">
+    <value>Enviar posição</value>
+  </data>
+  <data name="Terminal.SendPosition.Tip" xml:space="preserve">
+    <value>Envia {0}, {1} ({2}) a partir de {3}, precisão: {4}</value>
+  </data>
+  <data name="Terminal.SendPosition.Cooldown" xml:space="preserve">
+    <value>Posição enviada há pouco. Você pode enviar de novo em {0} s.</value>
+  </data>
+  <data name="Terminal.Status.PositionSent.Gps" xml:space="preserve">
+    <value>Posição enviada a partir do GPS.</value>
+  </data>
+  <data name="Terminal.Status.PositionSent.Station" xml:space="preserve">
+    <value>Posição enviada a partir da localização da estação.</value>
+  </data>
+  <data name="Terminal.Status.PositionSent.Grid" xml:space="preserve">
+    <value>Posição enviada a partir do locator da estação.</value>
+  </data>
+  <data name="Terminal.Status.PositionNeedsAprs" xml:space="preserve">
+    <value>Posições só podem ser enviadas com um perfil de satélite APRS.</value>
+  </data>
+  <data name="Terminal.Status.PositionUnknown" xml:space="preserve">
+    <value>Nenhuma posição disponível. Defina a localização da estação ou conecte um GPS.</value>
+  </data>
+  <data name="Terminal.Log.Position" xml:space="preserve">
+    <value>Posição {0} ({1})</value>
+  </data>
+  <data name="Terminal.PositionOrigin.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.PositionOrigin.Station" xml:space="preserve">
+    <value>localização da estação</value>
+  </data>
+  <data name="Terminal.PositionOrigin.Grid" xml:space="preserve">
+    <value>quadrado do locator</value>
+  </data>
+  <data name="Terminal.Precision.Exact" xml:space="preserve">
+    <value>Exata</value>
+  </data>
+  <data name="Terminal.Precision.About2Km" xml:space="preserve">
+    <value>Cerca de 2 km</value>
+  </data>
+  <data name="Terminal.Precision.About20Km" xml:space="preserve">
+    <value>Cerca de 20 km</value>
+  </data>
+  <data name="Terminal.Precision.GridSquare" xml:space="preserve">
+    <value>Centro do quadrado do locator</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
+    <value>Posição</value>
+  </data>
+  <data name="Terminal.Settings.Position.Help" xml:space="preserve">
+    <value>Enviar posição transmite um relatório de posição APRS pelo satélite. O OscarWatch usa primeiro um fix GPS recente, depois a latitude e longitude da estação e depois o centro do seu locator. No máximo uma posição por minuto.</value>
+  </data>
+  <data name="Terminal.Settings.Position.Precision" xml:space="preserve">
+    <value>Precisão</value>
+  </data>
+  <data name="Terminal.Settings.Position.Precision.Help" xml:space="preserve">
+    <value>Uma precisão menor oculta dígitos da posição, como o APRS permite, para que sua localização exata não seja compartilhada.</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol" xml:space="preserve">
+    <value>Símbolo</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Person" xml:space="preserve">
+    <value>Pessoa (portátil)</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.House" xml:space="preserve">
+    <value>Casa</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Car" xml:space="preserve">
+    <value>Carro</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Dish" xml:space="preserve">
+    <value>Antena parabólica</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Custom" xml:space="preserve">
+    <value>Personalizado</value>
+  </data>
+  <data name="Terminal.Settings.Position.SymbolCode" xml:space="preserve">
+    <value>Tabela e código</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Help" xml:space="preserve">
+    <value>Dois caracteres: a tabela de símbolos (/ ou \) e depois o código, por exemplo /[ para pessoa.</value>
+  </data>
+  <data name="Terminal.Settings.Position.Comment" xml:space="preserve">
+    <value>Comentário</value>
+  </data>
+  <data name="Terminal.Settings.Position.Comment.Help" xml:space="preserve">
+    <value>Até 43 caracteres. {MYGRID4}, {MYGRID} e {MYCALL} são substituídos no envio. Coloque apenas {POSITION} em uma macro para enviar sua posição por uma tecla de atalho.</value>
+  </data>
+  <data name="Terminal.MicE.Emergency" xml:space="preserve">
+    <value>Emergência</value>
+  </data>
+  <data name="Terminal.MicE.Priority" xml:space="preserve">
+    <value>Prioridade</value>
+  </data>
+  <data name="Terminal.MicE.Special" xml:space="preserve">
+    <value>Especial</value>
+  </data>
+  <data name="Terminal.MicE.Committed" xml:space="preserve">
+    <value>Comprometido</value>
+  </data>
+  <data name="Terminal.MicE.Returning" xml:space="preserve">
+    <value>Retornando</value>
+  </data>
+  <data name="Terminal.MicE.InService" xml:space="preserve">
+    <value>Em serviço</value>
+  </data>
+  <data name="Terminal.MicE.EnRoute" xml:space="preserve">
+    <value>Em rota</value>
+  </data>
+  <data name="Terminal.MicE.Custom0" xml:space="preserve">
+    <value>Personalizado 0</value>
+  </data>
+  <data name="Terminal.MicE.Custom1" xml:space="preserve">
+    <value>Personalizado 1</value>
+  </data>
+  <data name="Terminal.MicE.Custom2" xml:space="preserve">
+    <value>Personalizado 2</value>
+  </data>
+  <data name="Terminal.MicE.Custom3" xml:space="preserve">
+    <value>Personalizado 3</value>
+  </data>
+  <data name="Terminal.MicE.Custom4" xml:space="preserve">
+    <value>Personalizado 4</value>
+  </data>
+  <data name="Terminal.MicE.Custom5" xml:space="preserve">
+    <value>Personalizado 5</value>
+  </data>
+  <data name="Terminal.MicE.Custom6" xml:space="preserve">
+    <value>Personalizado 6</value>
+  </data>
+  <data name="TerminalMap.ZoomIn" xml:space="preserve">
+    <value>Aproximar</value>
+  </data>
+  <data name="TerminalMap.ZoomOut" xml:space="preserve">
+    <value>Afastar</value>
+  </data>
+  <data name="TerminalMap.ResetView" xml:space="preserve">
+    <value>Mundo inteiro</value>
+  </data>
+  <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
+    <value>Use a roda do mouse para aproximar ou afastar, ou pressione + e − com o mapa em foco. Arraste o mapa para movê-lo, ou segure Shift e use as setas. Pressione 0 para ver o mundo inteiro novamente.</value>
+  </data>
 </root>

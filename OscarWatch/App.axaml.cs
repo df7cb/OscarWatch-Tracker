@@ -122,7 +122,8 @@ public partial class App : Application
             sp.GetRequiredService<ISettingsService>(),
             sp.GetRequiredService<LiveQsoLogger>(),
             sp.GetRequiredService<IOrbitPropagator>(),
-            sp.GetRequiredService<ILiveTrackingService>()));
+            sp.GetRequiredService<ILiveTrackingService>(),
+            gps: sp.GetRequiredService<IGpsService>()));
         services.AddSingleton<Ft4ViewModel>();
         services.AddSingleton<ISstvPictureShareService, SstvPictureShareService>();
         services.AddSingleton(CreateSstvPictureUploader);

@@ -26,6 +26,14 @@ public sealed class TerminalStation
 
     public string Call { get; }
     public string? Grid { get; internal set; }
+
+    /// <summary>True when <see cref="Grid"/> came from message text rather than an APRS position.</summary>
+    public bool GridFromText { get; internal set; }
+
+    /// <summary>Latest decoded APRS position report, if any.</summary>
+    public AprsPosition? Position { get; internal set; }
+
+    public DateTime? PositionUtc { get; internal set; }
     public DateTime FirstHeardUtc { get; }
     public DateTime LastHeardUtc { get; internal set; }
     public DateTime LastActivityUtc { get; internal set; }
@@ -112,8 +120,19 @@ public sealed class TerminalQsoTracker
         var station = GetOrAdd(call, message.Utc);
         station.LastHeardUtc = message.Utc;
         station.TxCount++;
-        if (message.Grid is not null)
+        if (message.Aprs?.Position is { } position)
+        {
+            station.Position = position;
+            station.PositionUtc = message.Utc;
+            if (!station.GridFromText && message.Grid is not null)
+                station.Grid = message.Grid;
+        }
+        else if (message.Grid is not null)
+        {
             station.Grid = message.Grid;
+            station.GridFromText = true;
+        }
+
         station.LastWasCq = message.IsCq;
         if (message.IsCq)
             station.CqCount++;

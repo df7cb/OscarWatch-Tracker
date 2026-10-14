@@ -15,10 +15,11 @@ public sealed class TerminalMessageRowViewModel
 {
     private const byte TintAlpha = 0x2E;
 
-    public TerminalMessageRowViewModel(TerminalLogEntry entry, string tag, Color? colour)
+    public TerminalMessageRowViewModel(TerminalLogEntry entry, string tag, Color? colour, string? textPrefix = null)
     {
         Entry = entry;
         Tag = tag;
+        Text = string.IsNullOrEmpty(textPrefix) ? entry.Text : $"[{textPrefix}] {entry.Text}".TrimEnd();
         if (colour is { } c)
         {
             Accent = new SolidColorBrush(c);
@@ -37,7 +38,7 @@ public sealed class TerminalMessageRowViewModel
     public string Tag { get; }
     public string From => Entry.From;
     public string To => Entry.To;
-    public string Text => Entry.Text;
+    public string Text { get; }
     public string DelayText => Entry.Delay is { } d ? $"{d.TotalSeconds:0.0} s" : "";
     public string Monitor => Entry.Monitor;
     public IBrush Background { get; }
@@ -60,13 +61,14 @@ public sealed partial class TerminalStationRowViewModel : ObservableObject
     [ObservableProperty] private string _sinceText = "";
     [ObservableProperty] private string _cqTxText = "";
     [ObservableProperty] private string _elevationText = "";
+    [ObservableProperty] private string _distanceText = "";
     [ObservableProperty] private string _stateText = "";
     [ObservableProperty] private string _uhmText = "";
     [ObservableProperty] private string _markerText = "";
     [ObservableProperty] private string _loggedText = "";
     [ObservableProperty] private UhmMatchState _uhm;
 
-    public string AccessibleText => $"{Call} {Grid} {StateText} {UhmText} {MarkerText}";
+    public string AccessibleText => $"{Call} {Grid} {DistanceText} {StateText} {UhmText} {MarkerText}";
 }
 
 public sealed partial class TerminalMacroButtonViewModel : ObservableObject

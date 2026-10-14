@@ -18,7 +18,8 @@ public sealed record TerminalLogEntry(
     string Text,
     TimeSpan? Delay,
     string Path,
-    string Monitor);
+    string Monitor,
+    AprsMicEStatus? MicEStatus = null);
 
 public sealed record TerminalStationSnapshot(
     string Call,
@@ -34,7 +35,9 @@ public sealed record TerminalStationSnapshot(
     bool RogerReceived,
     bool Logged,
     UhmMatchState Uhm,
-    bool IsUhmUser);
+    bool IsUhmUser,
+    AprsPosition? Position = null,
+    DateTime? PositionUtc = null);
 
 public sealed record TerminalStatsSnapshot(
     int UniqueCallsigns,
@@ -68,7 +71,9 @@ public enum TerminalSendResult
     NoCallsign,
     InvalidDestination,
     EmptyMessage,
-    Failed
+    Failed,
+    NotAprs,
+    NoPosition
 }
 
 /// <summary>
@@ -91,6 +96,7 @@ public sealed class TerminalService : IAsyncDisposable
     private readonly IOrbitPropagator _propagator;
     private readonly ILiveTrackingService _tracking;
     private readonly UhmApiClient _uhm;
+    private readonly IGpsService? _gps;
     private readonly AprsIsClient _aprsIs = new();
     private readonly object _gate = new();
     private readonly TerminalQsoTracker _tracker = new();
@@ -110,19 +116,24 @@ public sealed class TerminalService : IAsyncDisposable
     private string? _losCacheNorad;
     private DateTime _losCacheComputedUtc = DateTime.MinValue;
     private TerminalHorizonCrossing? _losCache;
+    private string? _passStartCacheNorad;
+    private DateTime _passStartComputedUtc = DateTime.MinValue;
+    private DateTime? _passStartCache;
 
     public TerminalService(
         ISettingsService settings,
         LiveQsoLogger qsoLogger,
         IOrbitPropagator propagator,
         ILiveTrackingService tracking,
-        UhmApiClient? uhm = null)
+        UhmApiClient? uhm = null,
+        IGpsService? gps = null)
     {
         _settings = settings;
         _qsoLogger = qsoLogger;
         _propagator = propagator;
         _tracking = tracking;
         _uhm = uhm ?? new UhmApiClient();
+        _gps = gps;
         _aprsIs.StateChanged += _ => Changed?.Invoke();
     }
 
@@ -306,6 +317,90 @@ public sealed class TerminalService : IAsyncDisposable
         return TerminalSendResult.Sent;
     }
 
+    /// <summary>Our location for Send position: a recent GPS fix, the station latitude and longitude, or the grid centre.</summary>
+    public TerminalPositionFix? ResolvePosition()
+    {
+        var gpsEnabled = _settings.Current.Gps?.Enabled == true;
+        GpsConnectionStatus? status = null;
+        if (gpsEnabled && _gps is not null)
+        {
+            try
+            {
+                status = _gps.GetStatus();
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex, "GPS status read failed");
+            }
+        }
+
+        return TerminalPositionSource.Resolve(gpsEnabled, status, _settings.Current.GroundStation, DateTime.UtcNow);
+    }
+
+    /// <summary>
+    /// Sends our APRS position as a broadcast UI frame (APRS profiles only). <paramref name="describe"/> gives the
+    /// text shown in the message log for the fix that was sent.
+    /// </summary>
+    public async Task<(TerminalSendResult Result, TerminalPositionFix? Fix)> SendPositionAsync(
+        Func<TerminalPositionFix, string> describe,
+        CancellationToken cancellationToken = default)
+    {
+        var myCall = MyCall;
+        if (!TerminalText.LooksLikeCallsign(myCall))
+            return (TerminalSendResult.NoCallsign, null);
+        var transport = _transport;
+        if (transport is null || transport.State != TerminalTransportState.Connected)
+            return (TerminalSendResult.NotConnected, null);
+        var profile = Profile;
+        if ((profile?.Format ?? TerminalMessageFormat.Aprs) != TerminalMessageFormat.Aprs)
+            return (TerminalSendResult.NotAprs, null);
+        if (ResolvePosition() is not { } fix)
+            return (TerminalSendResult.NoPosition, null);
+
+        var source = new Ax25Address(myCall, Settings.Ssid);
+        var frame = Ax25Frame.CreateUi(
+            Ax25Address.Parse(AprsPayloadCodec.Tocall),
+            source,
+            Ax25Frame.ParsePath(profile?.Path),
+            TerminalPositionSource.BuildPayload(fix, Settings, myCall));
+
+        var delay = Settings.TxDelaySeconds;
+        if (delay > 0)
+            await Task.Delay(TimeSpan.FromSeconds(delay), cancellationToken).ConfigureAwait(false);
+
+        try
+        {
+            await transport.SendAsync(frame.Encode(), Settings.Agwpe.RadioPort, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is IOException or InvalidOperationException or ObjectDisposedException
+                                       or System.Net.Sockets.SocketException)
+        {
+            Log.Warning(ex, "Terminal position send failed");
+            return (TerminalSendResult.Failed, fix);
+        }
+
+        var utc = DateTime.UtcNow;
+        TerminalLogEntry entry;
+        lock (_gate)
+        {
+            _stats.RecordSent(frame.InfoText, utc);
+            entry = new TerminalLogEntry(
+                Interlocked.Increment(ref _nextId),
+                utc,
+                TerminalMessageKind.MyTx,
+                source.Text,
+                TerminalMessageCodec.AllTo,
+                describe(fix),
+                null,
+                frame.PathText(),
+                frame.ToMonitorString());
+        }
+
+        MessageAdded?.Invoke(entry);
+        Changed?.Invoke();
+        return (TerminalSendResult.Sent, fix);
+    }
+
     /// <summary>Logs <paramref name="call"/> now (F12), using whatever grid and reports Terminal has seen.</summary>
     public Task<QsoRecord?> LogCallAsync(string call) => LogAsync(TerminalText.BaseCallsign(call), manual: true);
 
@@ -328,7 +423,9 @@ public sealed class TerminalService : IAsyncDisposable
                     s.RogerReceived,
                     s.Logged,
                     _uhmMatches.GetState(s.Call),
-                    _uhmMatches.IsActiveUser(s.Call)))
+                    _uhmMatches.IsActiveUser(s.Call),
+                    s.Position,
+                    s.PositionUtc))
                 .ToList();
         }
     }
@@ -451,6 +548,46 @@ public sealed class TerminalService : IAsyncDisposable
         return crossing;
     }
 
+    /// <summary>
+    /// AOS of the current pass of the focused satellite, or of the most recent pass within 3 hours when it is
+    /// below the horizon. Cached for 30 s; null when there is no focused satellite or no recent pass.
+    /// </summary>
+    public DateTime? LastPassStartUtc()
+    {
+        var norad = _tracking.FocusedNoradId;
+        var now = DateTime.UtcNow;
+        if (string.IsNullOrWhiteSpace(norad) || !_propagator.HasSatellite(norad))
+            return null;
+        if (norad == _passStartCacheNorad && now - _passStartComputedUtc < TimeSpan.FromSeconds(30))
+            return _passStartCache;
+
+        DateTime? start = null;
+        try
+        {
+            var site = _settings.Current.GroundStation;
+            var limit = now.AddHours(-3);
+            var step = TimeSpan.FromSeconds(10);
+            var t = now;
+            while (t > limit && _propagator.GetLookAngles(norad, site, t).ElevationDeg <= 0)
+                t -= step;
+            if (t > limit)
+            {
+                while (t > limit && _propagator.GetLookAngles(norad, site, t - step).ElevationDeg > 0)
+                    t -= step;
+                start = t;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Debug(ex, "Terminal pass start estimate failed");
+        }
+
+        _passStartCacheNorad = norad;
+        _passStartComputedUtc = now;
+        _passStartCache = start;
+        return start;
+    }
+
     public async ValueTask DisposeAsync()
     {
         await StopAsync().ConfigureAwait(false);
@@ -559,7 +696,8 @@ public sealed class TerminalService : IAsyncDisposable
                 message.Text,
                 delay,
                 message.Path,
-                message.Monitor);
+                message.Monitor,
+                message.Aprs?.Position?.MicEStatus);
         }
 
         MessageAdded?.Invoke(entry);

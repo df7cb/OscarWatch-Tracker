@@ -5442,4 +5442,190 @@ Latest: {1} ({2})</value>
   <data name="Terminal.Station.ElevationBar.Tip" xml:space="preserve">
     <value>Satellite elevation, from the horizon (0°) to overhead (90°)</value>
   </data>
+  <data name="Window.TerminalMap.Title" xml:space="preserve">
+    <value>Terminal Map</value>
+  </data>
+  <data name="Terminal.OpenMap" xml:space="preserve">
+    <value>Terminal Map</value>
+  </data>
+  <data name="Terminal.OpenMap.Tip" xml:space="preserve">
+    <value>Show heard stations with a known location on a map, with the focused satellite's footprint</value>
+  </data>
+  <data name="Terminal.Col.Distance" xml:space="preserve">
+    <value>Distance</value>
+  </data>
+  <data name="Terminal.Col.Distance.Tip" xml:space="preserve">
+    <value>Distance and bearing from your station, from the APRS position or the grid square centre</value>
+  </data>
+  <data name="TerminalMap.ThisPassOnly" xml:space="preserve">
+    <value>This pass only</value>
+  </data>
+  <data name="TerminalMap.ThisPassOnly.Tip" xml:space="preserve">
+    <value>Show only stations heard since the current or most recent AOS</value>
+  </data>
+  <data name="TerminalMap.FadeMinutes" xml:space="preserve">
+    <value>Fade after (minutes)</value>
+  </data>
+  <data name="TerminalMap.FadeMinutes.Tip" xml:space="preserve">
+    <value>Stations not heard for this long are shown faded with a dashed outline, and removed after twice this time</value>
+  </data>
+  <data name="TerminalMap.Empty" xml:space="preserve">
+    <value>No heard stations with a position or grid yet. Stations appear here as their APRS positions or grid squares are decoded.</value>
+  </data>
+  <data name="TerminalMap.Count" xml:space="preserve">
+    <value>{0} stations on the map</value>
+  </data>
+  <data name="TerminalMap.Accessible" xml:space="preserve">
+    <value>Terminal Map with {0} heard stations</value>
+  </data>
+  <data name="TerminalMap.MarkerTip" xml:space="preserve">
+    <value>{0} {1}, {2}, last heard {3} UTC</value>
+  </data>
+  <data name="TerminalMap.MarkerTip.Grid" xml:space="preserve">
+    <value>{0} {1} (grid square centre), {2}, last heard {3} UTC</value>
+  </data>
+  <data name="Terminal.SendPosition" xml:space="preserve">
+    <value>Send Position</value>
+  </data>
+  <data name="Terminal.SendPosition.Tip" xml:space="preserve">
+    <value>Sends {0}, {1} ({2}) from {3}, precision: {4}</value>
+  </data>
+  <data name="Terminal.SendPosition.Cooldown" xml:space="preserve">
+    <value>Position sent recently. You can send it again in {0} s.</value>
+  </data>
+  <data name="Terminal.Status.PositionSent.Gps" xml:space="preserve">
+    <value>Position sent from GPS.</value>
+  </data>
+  <data name="Terminal.Status.PositionSent.Station" xml:space="preserve">
+    <value>Position sent from the station location.</value>
+  </data>
+  <data name="Terminal.Status.PositionSent.Grid" xml:space="preserve">
+    <value>Position sent from the station grid square.</value>
+  </data>
+  <data name="Terminal.Status.PositionNeedsAprs" xml:space="preserve">
+    <value>Positions can only be sent with an APRS satellite profile.</value>
+  </data>
+  <data name="Terminal.Status.PositionUnknown" xml:space="preserve">
+    <value>No position available. Set your station location or connect a GPS.</value>
+  </data>
+  <data name="Terminal.Log.Position" xml:space="preserve">
+    <value>Position {0} ({1})</value>
+  </data>
+  <data name="Terminal.PositionOrigin.Gps" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="Terminal.PositionOrigin.Station" xml:space="preserve">
+    <value>station location</value>
+  </data>
+  <data name="Terminal.PositionOrigin.Grid" xml:space="preserve">
+    <value>grid square</value>
+  </data>
+  <data name="Terminal.Precision.Exact" xml:space="preserve">
+    <value>Exact</value>
+  </data>
+  <data name="Terminal.Precision.About2Km" xml:space="preserve">
+    <value>About 2 km</value>
+  </data>
+  <data name="Terminal.Precision.About20Km" xml:space="preserve">
+    <value>About 20 km</value>
+  </data>
+  <data name="Terminal.Precision.GridSquare" xml:space="preserve">
+    <value>Grid square centre</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="Terminal.Settings.Position.Help" xml:space="preserve">
+    <value>Send Position transmits an APRS position report through the satellite. OscarWatch uses a recent GPS fix first, then your station latitude and longitude, then the centre of your grid square. You can send at most one position a minute.</value>
+  </data>
+  <data name="Terminal.Settings.Position.Precision" xml:space="preserve">
+    <value>Precision</value>
+  </data>
+  <data name="Terminal.Settings.Position.Precision.Help" xml:space="preserve">
+    <value>Lower precision blanks digits of the position, as APRS allows, so your exact location is not shared.</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Person" xml:space="preserve">
+    <value>Person (portable)</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.House" xml:space="preserve">
+    <value>House</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Car" xml:space="preserve">
+    <value>Car</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Dish" xml:space="preserve">
+    <value>Satellite dish</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="Terminal.Settings.Position.SymbolCode" xml:space="preserve">
+    <value>Table and code</value>
+  </data>
+  <data name="Terminal.Settings.Position.Symbol.Help" xml:space="preserve">
+    <value>Two characters: the symbol table (/ or \) then the symbol code, for example /[ for a person.</value>
+  </data>
+  <data name="Terminal.Settings.Position.Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="Terminal.Settings.Position.Comment.Help" xml:space="preserve">
+    <value>Up to 43 characters. {MYGRID4}, {MYGRID} and {MYCALL} are replaced when sending. Put {POSITION} on its own in a macro to send your position from a shortcut key.</value>
+  </data>
+  <data name="Terminal.MicE.Emergency" xml:space="preserve">
+    <value>Emergency</value>
+  </data>
+  <data name="Terminal.MicE.Priority" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="Terminal.MicE.Special" xml:space="preserve">
+    <value>Special</value>
+  </data>
+  <data name="Terminal.MicE.Committed" xml:space="preserve">
+    <value>Committed</value>
+  </data>
+  <data name="Terminal.MicE.Returning" xml:space="preserve">
+    <value>Returning</value>
+  </data>
+  <data name="Terminal.MicE.InService" xml:space="preserve">
+    <value>In service</value>
+  </data>
+  <data name="Terminal.MicE.EnRoute" xml:space="preserve">
+    <value>En route</value>
+  </data>
+  <data name="Terminal.MicE.Custom0" xml:space="preserve">
+    <value>Custom 0</value>
+  </data>
+  <data name="Terminal.MicE.Custom1" xml:space="preserve">
+    <value>Custom 1</value>
+  </data>
+  <data name="Terminal.MicE.Custom2" xml:space="preserve">
+    <value>Custom 2</value>
+  </data>
+  <data name="Terminal.MicE.Custom3" xml:space="preserve">
+    <value>Custom 3</value>
+  </data>
+  <data name="Terminal.MicE.Custom4" xml:space="preserve">
+    <value>Custom 4</value>
+  </data>
+  <data name="Terminal.MicE.Custom5" xml:space="preserve">
+    <value>Custom 5</value>
+  </data>
+  <data name="Terminal.MicE.Custom6" xml:space="preserve">
+    <value>Custom 6</value>
+  </data>
+  <data name="TerminalMap.ZoomIn" xml:space="preserve">
+    <value>Zoom in</value>
+  </data>
+  <data name="TerminalMap.ZoomOut" xml:space="preserve">
+    <value>Zoom out</value>
+  </data>
+  <data name="TerminalMap.ResetView" xml:space="preserve">
+    <value>Whole world</value>
+  </data>
+  <data name="TerminalMap.Zoom.Tip" xml:space="preserve">
+    <value>Zoom with the mouse wheel, or press + and − while the map has focus. Drag the map to move it, or hold Shift and use the arrow keys. Press 0 to show the whole world again.</value>
+  </data>
 </root>

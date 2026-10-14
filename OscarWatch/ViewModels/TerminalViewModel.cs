@@ -300,7 +300,8 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         var t = _settings.Current.Terminal;
         t.LogColumnWidths = TerminalTableLayout.Normalise(t.LogColumnWidths, TerminalTableLayout.DefaultLogColumns);
         t.QsoColumnWidths = TerminalTableLayout.Normalise(t.QsoColumnWidths, TerminalTableLayout.DefaultQsoColumns);
-        t.HeardColumnWidths = TerminalTableLayout.Normalise(t.HeardColumnWidths, TerminalTableLayout.DefaultHeardColumns);
+        t.HeardColumnWidths = TerminalTableLayout.Normalise(
+            TerminalTableLayout.MigrateHeardColumns(t.HeardColumnWidths), TerminalTableLayout.DefaultHeardColumns);
         LogColumns = TerminalTableLayout.ToColumnDefinitions(t.LogColumnWidths);
         QsoColumns = TerminalTableLayout.ToColumnDefinitions(t.QsoColumnWidths);
         HeardColumns = TerminalTableLayout.ToColumnDefinitions(t.HeardColumnWidths);
@@ -398,6 +399,82 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private Task SendAsync() => SendTextAsync(ToCall, MessageText, clearMessage: true);
 
+    /// <summary>Minimum gap between position sends, so busy satellite digipeaters are not flooded.</summary>
+    public static readonly TimeSpan PositionCooldown = TimeSpan.FromSeconds(60);
+
+    /// <summary>Macro text that sends our position instead of a message.</summary>
+    public const string PositionMacroToken = "{POSITION}";
+
+    private DateTime _positionCooldownUntilUtc = DateTime.MinValue;
+
+    [ObservableProperty] private bool _canSendPosition;
+    [ObservableProperty] private string _sendPositionTip = "";
+
+    [RelayCommand]
+    private async Task SendPositionAsync()
+    {
+        var now = DateTime.UtcNow;
+        if (now < _positionCooldownUntilUtc)
+        {
+            StatusLine = _l.Get("Terminal.SendPosition.Cooldown", Math.Ceiling((_positionCooldownUntilUtc - now).TotalSeconds));
+            return;
+        }
+
+        var (result, fix) = await _service.SendPositionAsync(DescribePosition).ConfigureAwait(true);
+        if (result == TerminalSendResult.Sent && fix is not null)
+        {
+            _positionCooldownUntilUtc = DateTime.UtcNow + PositionCooldown;
+            StatusLine = _l.Get("Terminal.Status.PositionSent." + fix.Origin);
+        }
+        else
+        {
+            StatusLine = result switch
+            {
+                TerminalSendResult.NotConnected => _l.Get("Terminal.Status.NotConnected"),
+                TerminalSendResult.NoCallsign => _l.Get("Terminal.Status.NoCallsign"),
+                TerminalSendResult.NotAprs => _l.Get("Terminal.Status.PositionNeedsAprs"),
+                TerminalSendResult.NoPosition => _l.Get("Terminal.Status.PositionUnknown"),
+                _ => _l.Get("Terminal.Status.SendFailed"),
+            };
+        }
+
+        RefreshSendPosition(DateTime.UtcNow);
+    }
+
+    private string DescribePosition(TerminalPositionFix fix)
+    {
+        var precision = _settings.Current.Terminal.PositionPrecision;
+        var grid = precision == TerminalPositionPrecision.Exact ? fix.Grid6 : fix.Grid6[..4];
+        return _l.Get("Terminal.Log.Position", grid, _l.Get("Terminal.PositionOrigin." + fix.Origin));
+    }
+
+    private void RefreshSendPosition(DateTime now)
+    {
+        var cooling = now < _positionCooldownUntilUtc;
+        CanSendPosition = IsConnected && IsAprsFormat && HasProfile && !cooling;
+        if (cooling)
+        {
+            SendPositionTip = _l.Get("Terminal.SendPosition.Cooldown", Math.Ceiling((_positionCooldownUntilUtc - now).TotalSeconds));
+            return;
+        }
+
+        if (!IsAprsFormat || !HasProfile)
+        {
+            SendPositionTip = _l.Get("Terminal.Status.PositionNeedsAprs");
+            return;
+        }
+
+        var fix = _service.ResolvePosition();
+        SendPositionTip = fix is null
+            ? _l.Get("Terminal.Status.PositionUnknown")
+            : _l.Get("Terminal.SendPosition.Tip",
+                fix.Latitude.ToString("0.0000", CultureInfo.InvariantCulture),
+                fix.Longitude.ToString("0.0000", CultureInfo.InvariantCulture),
+                fix.Grid6,
+                _l.Get("Terminal.PositionOrigin." + fix.Origin),
+                _l.Get("Terminal.Precision." + _settings.Current.Terminal.PositionPrecision));
+    }
+
     [RelayCommand]
     private async Task SendMacroAsync(string? parameter)
     {
@@ -409,6 +486,12 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         if (string.IsNullOrWhiteSpace(macro.Text))
         {
             StatusLine = _l.Get("Terminal.Status.MacroEmpty", $"F{index + 1}");
+            return;
+        }
+
+        if (string.Equals(macro.Text.Trim(), PositionMacroToken, StringComparison.OrdinalIgnoreCase))
+        {
+            await SendPositionAsync().ConfigureAwait(true);
             return;
         }
 
@@ -486,6 +569,15 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         QsoStations.Clear();
         HeardStations.Clear();
         RefreshTick();
+    }
+
+    /// <summary>Pass map marker click: select the station in the heard list and put it in the To box.</summary>
+    public void SelectStationByCall(string call)
+    {
+        var row = HeardStations.FirstOrDefault(r => string.Equals(r.Call, call, StringComparison.Ordinal));
+        if (row is not null)
+            SelectedStation = row;
+        ToCall = call;
     }
 
     [RelayCommand]
@@ -615,7 +707,10 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
             _ => ("Terminal.Tag.Normal", null),
         };
         Color? colour = !string.IsNullOrWhiteSpace(hex) && Color.TryParse(hex.Trim(), out var c) && c.A > 0 ? c : null;
-        return new TerminalMessageRowViewModel(entry, _l.Get(tagKey), colour);
+        var micE = entry.MicEStatus is { } status and not AprsMicEStatus.OffDuty
+            ? _l.Get("Terminal.MicE." + status)
+            : null;
+        return new TerminalMessageRowViewModel(entry, _l.Get(tagKey), colour, micE);
     }
 
     private void OnServiceChanged()
@@ -678,6 +773,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         RefreshStatistics();
         RefreshStatus();
         RefreshStations(now);
+        RefreshSendPosition(now);
     }
 
     private void RefreshStationInfo(DateTime now)
@@ -841,6 +937,16 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         row.CqTxText = $"{s.CqCount}/{s.TxCount}";
         var el = _service.ElevationFromGrid(s.Grid);
         row.ElevationText = el is { } e ? (e < 0 ? $"−{Math.Abs(e):0}°" : $"{e:0}°") : "-";
+        var home = _settings.Current.GroundStation;
+        if (TerminalStationGeo.TryLocate(s.Position, s.Grid, out var lat, out var lon))
+        {
+            var (km, bearing) = TerminalStationGeo.DistanceBearing(home.LatitudeDeg, home.LongitudeDeg, lat, lon);
+            row.DistanceText = TerminalStationGeo.FormatDistanceBearing(km, bearing);
+        }
+        else
+        {
+            row.DistanceText = "-";
+        }
         row.StateText = _l.Get("Terminal.State." + s.State);
         row.Uhm = s.Uhm;
         row.UhmText = s.Uhm switch

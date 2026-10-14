@@ -22,8 +22,21 @@ public static class TerminalTableLayout
     /// <summary>Call, Grid, El, State, UHM, Logged.</summary>
     public static IReadOnlyList<double> DefaultQsoColumns { get; } = [88, 60, 44, 0, 72, 60];
 
-    /// <summary>Call, Grid, Since, CQ/TX, El, UHM, Marker.</summary>
-    public static IReadOnlyList<double> DefaultHeardColumns { get; } = [88, 60, 52, 52, 44, 72, 0];
+    /// <summary>Call, Grid, Since, CQ/TX, El, Distance, UHM, Marker.</summary>
+    public static IReadOnlyList<double> DefaultHeardColumns { get; } = [88, 60, 52, 52, 44, 96, 72, 0];
+
+    private const int DistanceColumnIndex = 5;
+
+    /// <summary>Inserts the Distance column into heard widths saved before it existed, keeping the other widths.</summary>
+    public static List<double>? MigrateHeardColumns(IReadOnlyList<double>? widths)
+    {
+        if (widths is null)
+            return null;
+        var list = widths.ToList();
+        if (list.Count == DefaultHeardColumns.Count - 1)
+            list.Insert(DistanceColumnIndex, DefaultHeardColumns[DistanceColumnIndex]);
+        return list;
+    }
 
     /// <summary>
     /// Returns a usable copy of <paramref name="widths"/>: the defaults when the shape does not match
