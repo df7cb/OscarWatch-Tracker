@@ -4832,4 +4832,604 @@ Aktuell: {1} ({2})</value>
     <value>„{0}“ ist weder ein Rufzeichen noch ein Locator.</value>
   </data>
 
+  <data name="Menu.Tools.Terminal">
+    <value>OscarWatch _Terminal</value>
+  </data>
+  <data name="Window.Terminal.Title">
+    <value>OscarWatch Terminal</value>
+  </data>
+  <data name="Window.TerminalSettings.Title">
+    <value>OscarWatch Terminal Einstellungen</value>
+  </data>
+  <data name="Terminal.Shortcuts">
+    <value>Kurzbefehle</value>
+  </data>
+  <data name="Terminal.LogCall">
+    <value>F12 QSO loggen</value>
+  </data>
+  <data name="Terminal.LogCall.Tip">
+    <value>Rufzeichen im Feld An (oder die gewählte Station) jetzt ins Logbuch speichern</value>
+  </data>
+  <data name="Terminal.OpenSettings">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Terminal.Connect">
+    <value>Verbinden</value>
+  </data>
+  <data name="Terminal.Disconnect">
+    <value>Trennen</value>
+  </data>
+  <data name="Terminal.Send">
+    <value>Nachricht senden</value>
+  </data>
+  <data name="Terminal.To">
+    <value>An</value>
+  </data>
+  <data name="Terminal.To.Tip">
+    <value>Zu rufendes Rufzeichen oder CQ für einen allgemeinen Anruf</value>
+  </data>
+  <data name="Terminal.Message">
+    <value>Nachricht</value>
+  </data>
+  <data name="Terminal.SendButton">
+    <value>Senden</value>
+  </data>
+  <data name="Terminal.TxDelay">
+    <value>TX-Verzögerung (s)</value>
+  </data>
+  <data name="Terminal.Format">
+    <value>Format</value>
+  </data>
+  <data name="Terminal.Format.Aprs">
+    <value>APRS</value>
+  </data>
+  <data name="Terminal.Format.Plain">
+    <value>Klartext</value>
+  </data>
+  <data name="Terminal.Path.None">
+    <value>keiner</value>
+  </data>
+  <data name="Terminal.Stats">
+    <value>Statistik</value>
+  </data>
+  <data name="Terminal.Stats.Reset">
+    <value>Zurücksetzen</value>
+  </data>
+  <data name="Terminal.Stats.Reset.Tip">
+    <value>Statistik sowie QSO- und Stationsliste leeren</value>
+  </data>
+  <data name="Terminal.Stats.Unique">
+    <value>Verschiedene Rufzeichen</value>
+  </data>
+  <data name="Terminal.Stats.MyTx">
+    <value>Meine TX</value>
+  </data>
+  <data name="Terminal.Stats.MyRx">
+    <value>Meine RX</value>
+  </data>
+  <data name="Terminal.Stats.Success">
+    <value>Digipeat-Erfolg</value>
+  </data>
+  <data name="Terminal.Stats.Success.Tip">
+    <value>Anteil Ihrer Rahmen, die über den Digipeater zurückkamen</value>
+  </data>
+  <data name="Terminal.Stats.Digipeated">
+    <value>Weitergeleitete Rahmen</value>
+  </data>
+  <data name="Terminal.Stats.Delay">
+    <value>Median-Verzögerung</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers">
+    <value>UHM-Nutzer</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers.Tip">
+    <value>Stationen, die in den letzten Minuten UHM für diesen Satelliten nutzten</value>
+  </data>
+  <data name="Terminal.Station">
+    <value>Station</value>
+  </data>
+  <data name="Terminal.Station.Call">
+    <value>Rufzeichen</value>
+  </data>
+  <data name="Terminal.Station.Grid">
+    <value>Locator</value>
+  </data>
+  <data name="Terminal.Station.Satellite">
+    <value>Satellit</value>
+  </data>
+  <data name="Terminal.Station.Los">
+    <value>LOS</value>
+  </data>
+  <data name="Terminal.Station.AzEl">
+    <value>Az / El</value>
+  </data>
+  <data name="Terminal.Station.Range">
+    <value>Entfernung</value>
+  </data>
+  <data name="Terminal.Legend">
+    <value>Legende:</value>
+  </data>
+  <data name="Terminal.ScrollToLast">
+    <value>Zur letzten Zeile scrollen</value>
+  </data>
+  <data name="Terminal.ShowCallers">
+    <value>Stationen anzeigen</value>
+  </data>
+  <data name="Terminal.ShowOwnOnly">
+    <value>Nur mein Verkehr</value>
+  </data>
+  <data name="Terminal.ClearLog">
+    <value>Protokoll leeren</value>
+  </data>
+  <data name="Terminal.Log">
+    <value>Nachrichtenprotokoll</value>
+  </data>
+  <data name="Terminal.Qso">
+    <value>QSO</value>
+  </data>
+  <data name="Terminal.Heard">
+    <value>Gehörte Stationen</value>
+  </data>
+  <data name="Terminal.Col.Time">
+    <value>UTC</value>
+  </data>
+  <data name="Terminal.Col.Type">
+    <value>Typ</value>
+  </data>
+  <data name="Terminal.Col.From">
+    <value>Von</value>
+  </data>
+  <data name="Terminal.Col.To">
+    <value>An</value>
+  </data>
+  <data name="Terminal.Col.Delay">
+    <value>Verz.</value>
+  </data>
+  <data name="Terminal.Col.Message">
+    <value>Nachricht</value>
+  </data>
+  <data name="Terminal.Col.Call">
+    <value>Rufzeichen</value>
+  </data>
+  <data name="Terminal.Col.Grid">
+    <value>Locator</value>
+  </data>
+  <data name="Terminal.Col.El">
+    <value>El</value>
+  </data>
+  <data name="Terminal.Col.State">
+    <value>Status</value>
+  </data>
+  <data name="Terminal.Col.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Col.Uhm.Tip">
+    <value>You Heard Me: ob diese Station auf OscarWatch.org gemeldet hat, Sie gehört zu haben</value>
+  </data>
+  <data name="Terminal.Col.Logged">
+    <value>Geloggt</value>
+  </data>
+  <data name="Terminal.Col.Since">
+    <value>Seit</value>
+  </data>
+  <data name="Terminal.Col.CqTx">
+    <value>CQ/TX</value>
+  </data>
+  <data name="Terminal.Col.CqTx.Tip">
+    <value>CQ-Rufe und insgesamt gehörte Rahmen dieser Station</value>
+  </data>
+  <data name="Terminal.Col.Marker">
+    <value>Hinweis</value>
+  </data>
+  <data name="Terminal.Tag.Normal">
+    <value>-</value>
+  </data>
+  <data name="Terminal.Tag.ToMe">
+    <value>AN MICH</value>
+  </data>
+  <data name="Terminal.Tag.Cq">
+    <value>CQ</value>
+  </data>
+  <data name="Terminal.Tag.MyTx">
+    <value>MEIN TX</value>
+  </data>
+  <data name="Terminal.Tag.MyDigipeated">
+    <value>MEIN DIGI</value>
+  </data>
+  <data name="Terminal.Tag.Telemetry">
+    <value>TLM</value>
+  </data>
+  <data name="Terminal.Tag.Beacon">
+    <value>BAKE</value>
+  </data>
+  <data name="Terminal.Marker.NewCall">
+    <value>Neues Rufzeichen</value>
+  </data>
+  <data name="Terminal.Marker.NewGrid">
+    <value>Neuer Locator</value>
+  </data>
+  <data name="Terminal.Marker.Worked">
+    <value>Gearbeitet</value>
+  </data>
+  <data name="Terminal.Logged.Yes">
+    <value>Ja</value>
+  </data>
+  <data name="Terminal.State.Heard">
+    <value>Gehört</value>
+  </data>
+  <data name="Terminal.State.Cq">
+    <value>Ruft CQ</value>
+  </data>
+  <data name="Terminal.State.Called">
+    <value>Gerufen</value>
+  </data>
+  <data name="Terminal.State.ReportSent">
+    <value>Rapport gesendet</value>
+  </data>
+  <data name="Terminal.State.ReportReceived">
+    <value>Rapport erhalten</value>
+  </data>
+  <data name="Terminal.State.ReportsExchanged">
+    <value>Rapporte getauscht</value>
+  </data>
+  <data name="Terminal.State.RogerSent">
+    <value>Roger gesendet</value>
+  </data>
+  <data name="Terminal.State.RogerReceived">
+    <value>Roger erhalten</value>
+  </data>
+  <data name="Terminal.State.Complete">
+    <value>Vollständig</value>
+  </data>
+  <data name="Terminal.State.Logged">
+    <value>Geloggt</value>
+  </data>
+  <data name="Terminal.Uhm.Waiting">
+    <value>Warten</value>
+  </data>
+  <data name="Terminal.Uhm.HeardMe">
+    <value>Hörte mich</value>
+  </data>
+  <data name="Terminal.Uhm.Mutual">
+    <value>Gegenseitig</value>
+  </data>
+  <data name="Terminal.Uhm.Expired">
+    <value>Abgelaufen</value>
+  </data>
+  <data name="Terminal.Uhm.User">
+    <value>Nutzer</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Off">
+    <value>UHM: aus</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Active">
+    <value>UHM: aktiv</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoToken">
+    <value>UHM: OscarWatch.org-API-Token in den Einstellungen eintragen</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoSatellite">
+    <value>UHM: einen Satelliten mit Digipeater wählen</value>
+  </data>
+  <data name="Terminal.Uhm.Status.RateLimited">
+    <value>UHM: Anfragelimit erreicht, neuer Versuch gleich</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NotEnabled">
+    <value>UHM: für dieses Konto nicht aktiviert</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Unauthorised">
+    <value>UHM: API-Token nicht akzeptiert</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Forbidden">
+    <value>UHM: Zugriff für dieses Konto verweigert</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Error">
+    <value>UHM: Server nicht erreichbar</value>
+  </data>
+  <data name="Terminal.AprsIs.Off">
+    <value>APRS-IS: aus</value>
+  </data>
+  <data name="Terminal.AprsIs.Connecting">
+    <value>APRS-IS: verbinde…</value>
+  </data>
+  <data name="Terminal.AprsIs.Connected">
+    <value>APRS-IS: Gateway aktiv</value>
+  </data>
+  <data name="Terminal.AprsIs.Unverified">
+    <value>APRS-IS: Passcode nicht bestätigt, keine Weiterleitung</value>
+  </data>
+  <data name="Terminal.AprsIs.Error">
+    <value>APRS-IS: Verbindung verloren, neuer Versuch</value>
+  </data>
+  <data name="Terminal.Modem.Disconnected">
+    <value>Modem: getrennt</value>
+  </data>
+  <data name="Terminal.Modem.Connecting">
+    <value>Modem: verbinde mit {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Connected">
+    <value>Modem: verbunden mit {0} ({1})</value>
+  </data>
+  <data name="Terminal.Modem.Error">
+    <value>Modem: {0} nicht erreichbar. {1}</value>
+  </data>
+  <data name="Terminal.Profile.None">
+    <value>Der gewählte Satellit hat keinen Packet-Digipeater</value>
+  </data>
+  <data name="Terminal.Profile.Summary">
+    <value>Format: {0}, Pfad: {1}</value>
+  </data>
+  <data name="Terminal.Profile.Modem">
+    <value>Modem: {0}</value>
+  </data>
+  <data name="Terminal.Status.Ready">
+    <value>Bereit. F1 ruft CQ.</value>
+  </data>
+  <data name="Terminal.Status.Sent">
+    <value>Gesendet: {0}</value>
+  </data>
+  <data name="Terminal.Status.NotConnected">
+    <value>Nicht gesendet: Das Modem ist nicht verbunden.</value>
+  </data>
+  <data name="Terminal.Status.NoCallsign">
+    <value>Nicht gesendet: Bitte zuerst das Rufzeichen in den Einstellungen eintragen.</value>
+  </data>
+  <data name="Terminal.Status.InvalidDestination">
+    <value>Nicht gesendet: Im Feld An muss ein Rufzeichen oder CQ stehen.</value>
+  </data>
+  <data name="Terminal.Status.EmptyMessage">
+    <value>Bitte zuerst eine Nachricht eingeben.</value>
+  </data>
+  <data name="Terminal.Status.SendFailed">
+    <value>Nicht gesendet: Das Modem hat den Rahmen abgelehnt.</value>
+  </data>
+  <data name="Terminal.Status.MacroEmpty">
+    <value>{0} hat keinen Makrotext. Bitte in den Einstellungen ergänzen.</value>
+  </data>
+  <data name="Terminal.Status.LogNeedsCall">
+    <value>Rufzeichen ins Feld An eintragen oder eine Station wählen.</value>
+  </data>
+  <data name="Terminal.Status.LogFailed">
+    <value>{0} konnte nicht geloggt werden.</value>
+  </data>
+  <data name="Terminal.Status.LoggedAuto">
+    <value>{0} geloggt.</value>
+  </data>
+  <data name="Terminal.Status.LoggedManual">
+    <value>{0} geloggt (manuell).</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Modem">
+    <value>Modem</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Satellites">
+    <value>Satelliten</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Macros">
+    <value>Makros</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Colours">
+    <value>Farben</value>
+  </data>
+  <data name="Terminal.Settings.Tab.AprsIs">
+    <value>APRS-IS</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Logging">
+    <value>Logbuch</value>
+  </data>
+  <data name="Terminal.Settings.Transport">
+    <value>Verbindung</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Agwpe">
+    <value>AGWPE (Direwolf, UZ7HO soundmodem)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissTcp">
+    <value>KISS über TCP (geplant)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissSerial">
+    <value>KISS seriell (TNC, geplant)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.BuiltIn">
+    <value>Eingebautes Soundmodem (geplant)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Planned">
+    <value>{0} ist für eine spätere Version geplant. Vorerst wird AGWPE verwendet.</value>
+  </data>
+  <data name="Terminal.Settings.Host">
+    <value>Host</value>
+  </data>
+  <data name="Terminal.Settings.Port">
+    <value>Port</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort">
+    <value>Funkport</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort.Item">
+    <value>Port {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Test">
+    <value>Testen und Ports auflisten</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Testing">
+    <value>Verbindung wird getestet…</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestOk">
+    <value>Verbunden mit {0}. Gefundene Funkports: {1}.</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestFailed">
+    <value>Keine Verbindung: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Help">
+    <value>Direwolf und das UZ7HO-Soundmodem bieten beide einen AGWPE-Server, meist auf Port 8000. In UZ7HO unter Settings, Devices den AGW-Server aktivieren; in Direwolf AGWPORT 8000 in direwolf.conf setzen. Für IO-117 (BPSK 1200) UZ7HO verwenden.</value>
+  </data>
+  <data name="Terminal.Settings.AutoConnect">
+    <value>Beim Öffnen des Terminal-Fensters verbinden</value>
+  </data>
+  <data name="Terminal.Settings.Callsign">
+    <value>Rufzeichen</value>
+  </data>
+  <data name="Terminal.Settings.Ssid">
+    <value>SSID</value>
+  </data>
+  <data name="Terminal.Settings.Callsign.Help">
+    <value>Leer lassen, um das Rufzeichen der Bodenstation zu verwenden. Die meisten Satellitenfunker nutzen SSID 0.</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Help">
+    <value>Terminal wählt Nachrichtenformat und Digipeater-Pfad anhand des gewählten Satelliten. Fügen Sie hier einen Satelliten hinzu, um die Vorgaben zu ändern.</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltIn">
+    <value>Eingebaute Vorgaben</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltInLine">
+    <value>{0} ({1}): {2}, Pfad {3}, {4}</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.AddCurrent">
+    <value>Gewählten Satelliten hinzufügen</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Remove">
+    <value>Entfernen</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Norad">
+    <value>NORAD</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Name">
+    <value>Name</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Path">
+    <value>Pfad</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.UhmName">
+    <value>UHM-Name</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.ModemHint">
+    <value>Modem</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Help">
+    <value>Platzhalter: {CALL} ist das Rufzeichen im Feld An, {MYCALL} Ihr Rufzeichen, {MYGRID} Ihr ganzer Locator und {MYGRID4} die ersten vier Zeichen. An CQ ankreuzen für Makros, die immer an CQ gehen.</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Key">
+    <value>Taste</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Label">
+    <value>Beschriftung</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Text">
+    <value>Text</value>
+  </data>
+  <data name="Terminal.Settings.Macros.ToCq">
+    <value>An CQ</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Reset">
+    <value>Standardmakros wiederherstellen</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Help">
+    <value>Zeilenfarben im Nachrichtenprotokoll. Jede Zeile zeigt auch eine Textmarke, die Farbe ist also nie der einzige Hinweis.</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Reset">
+    <value>Standardfarben wiederherstellen</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Enabled">
+    <value>Gehörte Pakete an APRS-IS weiterleiten (Nur-Empfangs-iGate)</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Server">
+    <value>Server</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Passcode">
+    <value>Passcode</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Help">
+    <value>Pakete mit NOGATE, RFONLY oder TCPIP werden nie weitergeleitet, Duplikate innerhalb von 30 Sekunden werden verworfen. Ohne gültigen Passcode nimmt der Server die Anmeldung an, ignoriert aber die Pakete.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Help">
+    <value>You Heard Me (UHM) auf OscarWatch.org meldet, wenn eine gehörte Station auch Sie gehört hat. Terminal meldet Stationen, die Sie rufen, und prüft Ihre QSO-Partner. Es nutzt den OscarWatch.org-API-Token aus den Einstellungen.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.NoToken">
+    <value>Kein OscarWatch.org-API-Token eingetragen. Bitte unter Einstellungen, OscarWatch hinzufügen, bevor Sie UHM aktivieren.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Enabled">
+    <value>UHM aktivieren</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel">
+    <value>Anhand des Nachrichtentexts abgleichen</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
+    <value>Beim Abgleich auch den dekodierten Text senden, damit UHM den genauen Rahmen bestätigt und nicht nur das Rufzeichenpaar</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual">
+    <value>Loggen, wenn UHM einen gegenseitigen Kontakt bestätigt</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
+    <value>Speichert das QSO, sobald beide Seiten sich gehört und Locator oder Rapport getauscht haben, auch ohne abschließendes 73</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Test">
+    <value>Verbindung testen</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Testing">
+    <value>Token wird geprüft…</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestOk">
+    <value>Token akzeptiert. Rufzeichen des OscarWatch.org-Kontos: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestFailed">
+    <value>UHM-Prüfung fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.CallMismatch">
+    <value>Das Rufzeichen Ihres OscarWatch.org-Kontos ({0}) weicht vom Terminal-Rufzeichen ({1}) ab. UHM-Meldungen passen dann eventuell nicht zusammen.</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog">
+    <value>Kontakte automatisch loggen</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog.Help">
+    <value>Ein Kontakt wird geloggt, sobald Rufzeichen und Locator oder Rapport in beide Richtungen getauscht und ein Roger oder 73 gesendet oder empfangen wurde. Geloggte QSOs nutzen Betriebsart PKT mit Ausbreitung SAT und werden zu Cloudlog hochgeladen, falls eingerichtet.</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck">
+    <value>Nummerierte APRS-Nachrichten bestätigen</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck.Tip">
+    <value>Sendet ein APRS-Ack über den Digipeater für nummerierte Nachrichten an Sie. Bei vollen Überflügen aus lassen, um den Digipeater zu schonen.</value>
+  </data>
+  <data name="Terminal.Settings.FontSize">
+    <value>Textgröße im Nachrichtenprotokoll</value>
+  </data>
+  <data name="Terminal.Station.Aos">
+    <value>AOS</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizon">
+    <value>{0} ist unter dem Horizont. Jetzt gesendete Rahmen werden nicht gehört.</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizonAos">
+    <value>{0} ist unter dem Horizont (AOS in {1}). Jetzt gesendete Rahmen werden nicht gehört.</value>
+  </data>
+  <data name="Terminal.Empty.Log">
+    <value>Noch keine Rahmen. Dekodierte Pakete erscheinen hier, während der Satellit überfliegt.</value>
+  </data>
+  <data name="Terminal.Empty.Qso">
+    <value>Stationen, die Sie rufen oder die Sie rufen, erscheinen hier.</value>
+  </data>
+  <data name="Terminal.Empty.Heard">
+    <value>Jede in dieser Sitzung gehörte Station erscheint hier. Ein Klick setzt sie ins Feld An.</value>
+  </data>
+  <data name="Terminal.TextSmaller" xml:space="preserve">
+    <value>Kleinere Schrift (Strg+Mausrad)</value>
+  </data>
+  <data name="Terminal.TextLarger" xml:space="preserve">
+    <value>Größere Schrift (Strg+Mausrad)</value>
+  </data>
+  <data name="Terminal.ColumnResize.Tip" xml:space="preserve">
+    <value>Ziehen, um die Spaltenbreite zu ändern. Doppelklick setzt sie zurück.</value>
+  </data>
+  <data name="Terminal.Station.Elevation" xml:space="preserve">
+    <value>Elevation</value>
+  </data>
+  <data name="Terminal.Station.Azimuth" xml:space="preserve">
+    <value>Azimut</value>
+  </data>
+  <data name="Terminal.Station.CallGrid.Tip" xml:space="preserve">
+    <value>Ihr Rufzeichen und Locator</value>
+  </data>
+  <data name="Terminal.Station.ElevationBar.Tip" xml:space="preserve">
+    <value>Satellitenelevation, vom Horizont (0°) bis zum Zenit (90°)</value>
+  </data>
 </root>

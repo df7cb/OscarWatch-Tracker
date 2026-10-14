@@ -4827,4 +4827,604 @@ Está utilizando la versión {0}.
   <data name="Ft4.Status.PounceInvalid">
     <value>"{0}" no es un indicativo ni una cuadrícula.</value>
   </data>
+  <data name="Menu.Tools.Terminal">
+    <value>OscarWatch _Terminal</value>
+  </data>
+  <data name="Window.Terminal.Title">
+    <value>OscarWatch Terminal</value>
+  </data>
+  <data name="Window.TerminalSettings.Title">
+    <value>Ajustes de OscarWatch Terminal</value>
+  </data>
+  <data name="Terminal.Shortcuts">
+    <value>Atajos</value>
+  </data>
+  <data name="Terminal.LogCall">
+    <value>F12 Registrar QSO</value>
+  </data>
+  <data name="Terminal.LogCall.Tip">
+    <value>Guarda ahora en el libro de guardia el indicativo del campo Para (o la estación seleccionada)</value>
+  </data>
+  <data name="Terminal.OpenSettings">
+    <value>Ajustes</value>
+  </data>
+  <data name="Terminal.Connect">
+    <value>Conectar</value>
+  </data>
+  <data name="Terminal.Disconnect">
+    <value>Desconectar</value>
+  </data>
+  <data name="Terminal.Send">
+    <value>Enviar mensaje</value>
+  </data>
+  <data name="Terminal.To">
+    <value>Para</value>
+  </data>
+  <data name="Terminal.To.Tip">
+    <value>Indicativo al que llamar, o CQ para una llamada general</value>
+  </data>
+  <data name="Terminal.Message">
+    <value>Mensaje</value>
+  </data>
+  <data name="Terminal.SendButton">
+    <value>Enviar</value>
+  </data>
+  <data name="Terminal.TxDelay">
+    <value>Retardo TX (s)</value>
+  </data>
+  <data name="Terminal.Format">
+    <value>Formato</value>
+  </data>
+  <data name="Terminal.Format.Aprs">
+    <value>APRS</value>
+  </data>
+  <data name="Terminal.Format.Plain">
+    <value>Texto plano</value>
+  </data>
+  <data name="Terminal.Path.None">
+    <value>ninguna</value>
+  </data>
+  <data name="Terminal.Stats">
+    <value>Estadísticas</value>
+  </data>
+  <data name="Terminal.Stats.Reset">
+    <value>Reiniciar</value>
+  </data>
+  <data name="Terminal.Stats.Reset.Tip">
+    <value>Borra las estadísticas y las listas de QSO y estaciones oídas</value>
+  </data>
+  <data name="Terminal.Stats.Unique">
+    <value>Indicativos únicos</value>
+  </data>
+  <data name="Terminal.Stats.MyTx">
+    <value>Mis TX</value>
+  </data>
+  <data name="Terminal.Stats.MyRx">
+    <value>Mis RX</value>
+  </data>
+  <data name="Terminal.Stats.Success">
+    <value>Éxito del digipeater</value>
+  </data>
+  <data name="Terminal.Stats.Success.Tip">
+    <value>Porcentaje de tus tramas oídas de vuelta a través del digipeater</value>
+  </data>
+  <data name="Terminal.Stats.Digipeated">
+    <value>Tramas repetidas</value>
+  </data>
+  <data name="Terminal.Stats.Delay">
+    <value>Retardo mediano</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers">
+    <value>Usuarios UHM</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers.Tip">
+    <value>Estaciones activas en UHM para este satélite en los últimos minutos</value>
+  </data>
+  <data name="Terminal.Station">
+    <value>Estación</value>
+  </data>
+  <data name="Terminal.Station.Call">
+    <value>Indicativo</value>
+  </data>
+  <data name="Terminal.Station.Grid">
+    <value>Cuadrícula</value>
+  </data>
+  <data name="Terminal.Station.Satellite">
+    <value>Satélite</value>
+  </data>
+  <data name="Terminal.Station.Los">
+    <value>LOS</value>
+  </data>
+  <data name="Terminal.Station.AzEl">
+    <value>Az / El</value>
+  </data>
+  <data name="Terminal.Station.Range">
+    <value>Distancia</value>
+  </data>
+  <data name="Terminal.Legend">
+    <value>Leyenda:</value>
+  </data>
+  <data name="Terminal.ScrollToLast">
+    <value>Desplazar a la última línea</value>
+  </data>
+  <data name="Terminal.ShowCallers">
+    <value>Mostrar estaciones</value>
+  </data>
+  <data name="Terminal.ShowOwnOnly">
+    <value>Solo mi tráfico</value>
+  </data>
+  <data name="Terminal.ClearLog">
+    <value>Borrar registro</value>
+  </data>
+  <data name="Terminal.Log">
+    <value>Registro de mensajes</value>
+  </data>
+  <data name="Terminal.Qso">
+    <value>QSO</value>
+  </data>
+  <data name="Terminal.Heard">
+    <value>Estaciones oídas</value>
+  </data>
+  <data name="Terminal.Col.Time">
+    <value>UTC</value>
+  </data>
+  <data name="Terminal.Col.Type">
+    <value>Tipo</value>
+  </data>
+  <data name="Terminal.Col.From">
+    <value>De</value>
+  </data>
+  <data name="Terminal.Col.To">
+    <value>Para</value>
+  </data>
+  <data name="Terminal.Col.Delay">
+    <value>Retardo</value>
+  </data>
+  <data name="Terminal.Col.Message">
+    <value>Mensaje</value>
+  </data>
+  <data name="Terminal.Col.Call">
+    <value>Indicativo</value>
+  </data>
+  <data name="Terminal.Col.Grid">
+    <value>Cuadrícula</value>
+  </data>
+  <data name="Terminal.Col.El">
+    <value>El</value>
+  </data>
+  <data name="Terminal.Col.State">
+    <value>Estado</value>
+  </data>
+  <data name="Terminal.Col.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Col.Uhm.Tip">
+    <value>You Heard Me: si esta estación informó en OscarWatch.org que te oyó</value>
+  </data>
+  <data name="Terminal.Col.Logged">
+    <value>Registrado</value>
+  </data>
+  <data name="Terminal.Col.Since">
+    <value>Hace</value>
+  </data>
+  <data name="Terminal.Col.CqTx">
+    <value>CQ/TX</value>
+  </data>
+  <data name="Terminal.Col.CqTx.Tip">
+    <value>Llamadas CQ y tramas totales oídas de esta estación</value>
+  </data>
+  <data name="Terminal.Col.Marker">
+    <value>Estado</value>
+  </data>
+  <data name="Terminal.Tag.Normal">
+    <value>-</value>
+  </data>
+  <data name="Terminal.Tag.ToMe">
+    <value>PARA MÍ</value>
+  </data>
+  <data name="Terminal.Tag.Cq">
+    <value>CQ</value>
+  </data>
+  <data name="Terminal.Tag.MyTx">
+    <value>MI TX</value>
+  </data>
+  <data name="Terminal.Tag.MyDigipeated">
+    <value>MI DIGI</value>
+  </data>
+  <data name="Terminal.Tag.Telemetry">
+    <value>TLM</value>
+  </data>
+  <data name="Terminal.Tag.Beacon">
+    <value>BALIZA</value>
+  </data>
+  <data name="Terminal.Marker.NewCall">
+    <value>Nuevo indicativo</value>
+  </data>
+  <data name="Terminal.Marker.NewGrid">
+    <value>Nueva cuadrícula</value>
+  </data>
+  <data name="Terminal.Marker.Worked">
+    <value>Trabajado</value>
+  </data>
+  <data name="Terminal.Logged.Yes">
+    <value>Sí</value>
+  </data>
+  <data name="Terminal.State.Heard">
+    <value>Oído</value>
+  </data>
+  <data name="Terminal.State.Cq">
+    <value>Llamando CQ</value>
+  </data>
+  <data name="Terminal.State.Called">
+    <value>Llamado</value>
+  </data>
+  <data name="Terminal.State.ReportSent">
+    <value>Reporte enviado</value>
+  </data>
+  <data name="Terminal.State.ReportReceived">
+    <value>Reporte recibido</value>
+  </data>
+  <data name="Terminal.State.ReportsExchanged">
+    <value>Reportes intercambiados</value>
+  </data>
+  <data name="Terminal.State.RogerSent">
+    <value>Roger enviado</value>
+  </data>
+  <data name="Terminal.State.RogerReceived">
+    <value>Roger recibido</value>
+  </data>
+  <data name="Terminal.State.Complete">
+    <value>Completo</value>
+  </data>
+  <data name="Terminal.State.Logged">
+    <value>Registrado</value>
+  </data>
+  <data name="Terminal.Uhm.Waiting">
+    <value>Espera</value>
+  </data>
+  <data name="Terminal.Uhm.HeardMe">
+    <value>Me oyó</value>
+  </data>
+  <data name="Terminal.Uhm.Mutual">
+    <value>Mutuo</value>
+  </data>
+  <data name="Terminal.Uhm.Expired">
+    <value>Caducado</value>
+  </data>
+  <data name="Terminal.Uhm.User">
+    <value>Usuario</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Off">
+    <value>UHM: desactivado</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Active">
+    <value>UHM: activo</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoToken">
+    <value>UHM: añade tu token de API de OscarWatch.org en Ajustes</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoSatellite">
+    <value>UHM: enfoca un satélite con digipeater</value>
+  </data>
+  <data name="Terminal.Uhm.Status.RateLimited">
+    <value>UHM: límite de peticiones, reintentando en breve</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NotEnabled">
+    <value>UHM: no habilitado para esta cuenta</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Unauthorised">
+    <value>UHM: token de API no aceptado</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Forbidden">
+    <value>UHM: acceso denegado para esta cuenta</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Error">
+    <value>UHM: servidor no disponible</value>
+  </data>
+  <data name="Terminal.AprsIs.Off">
+    <value>APRS-IS: desactivado</value>
+  </data>
+  <data name="Terminal.AprsIs.Connecting">
+    <value>APRS-IS: conectando…</value>
+  </data>
+  <data name="Terminal.AprsIs.Connected">
+    <value>APRS-IS: pasarela activa</value>
+  </data>
+  <data name="Terminal.AprsIs.Unverified">
+    <value>APRS-IS: código no verificado, sin pasarela</value>
+  </data>
+  <data name="Terminal.AprsIs.Error">
+    <value>APRS-IS: conexión perdida, reintentando</value>
+  </data>
+  <data name="Terminal.Modem.Disconnected">
+    <value>Módem: desconectado</value>
+  </data>
+  <data name="Terminal.Modem.Connecting">
+    <value>Módem: conectando a {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Connected">
+    <value>Módem: conectado a {0} ({1})</value>
+  </data>
+  <data name="Terminal.Modem.Error">
+    <value>Módem: no se puede conectar a {0}. {1}</value>
+  </data>
+  <data name="Terminal.Profile.None">
+    <value>El satélite enfocado no tiene digipeater de paquetes</value>
+  </data>
+  <data name="Terminal.Profile.Summary">
+    <value>Formato: {0}, ruta: {1}</value>
+  </data>
+  <data name="Terminal.Profile.Modem">
+    <value>Módem: {0}</value>
+  </data>
+  <data name="Terminal.Status.Ready">
+    <value>Listo. Pulsa F1 para llamar CQ.</value>
+  </data>
+  <data name="Terminal.Status.Sent">
+    <value>Enviado: {0}</value>
+  </data>
+  <data name="Terminal.Status.NotConnected">
+    <value>No enviado: el módem no está conectado.</value>
+  </data>
+  <data name="Terminal.Status.NoCallsign">
+    <value>No enviado: configura primero tu indicativo en Ajustes.</value>
+  </data>
+  <data name="Terminal.Status.InvalidDestination">
+    <value>No enviado: el campo Para debe contener un indicativo o CQ.</value>
+  </data>
+  <data name="Terminal.Status.EmptyMessage">
+    <value>Escribe primero un mensaje.</value>
+  </data>
+  <data name="Terminal.Status.SendFailed">
+    <value>No enviado: el módem rechazó la trama.</value>
+  </data>
+  <data name="Terminal.Status.MacroEmpty">
+    <value>{0} no tiene texto de macro. Añádelo en Ajustes.</value>
+  </data>
+  <data name="Terminal.Status.LogNeedsCall">
+    <value>Escribe un indicativo en Para o selecciona una estación para registrar.</value>
+  </data>
+  <data name="Terminal.Status.LogFailed">
+    <value>No se pudo registrar {0}.</value>
+  </data>
+  <data name="Terminal.Status.LoggedAuto">
+    <value>{0} registrado.</value>
+  </data>
+  <data name="Terminal.Status.LoggedManual">
+    <value>{0} registrado (manual).</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Modem">
+    <value>Módem</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Satellites">
+    <value>Satélites</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Macros">
+    <value>Macros</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Colours">
+    <value>Colores</value>
+  </data>
+  <data name="Terminal.Settings.Tab.AprsIs">
+    <value>APRS-IS</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Logging">
+    <value>Registro</value>
+  </data>
+  <data name="Terminal.Settings.Transport">
+    <value>Conexión</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Agwpe">
+    <value>AGWPE (Direwolf, UZ7HO soundmodem)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissTcp">
+    <value>KISS sobre TCP (previsto)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissSerial">
+    <value>TNC KISS serie (previsto)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.BuiltIn">
+    <value>Soundmodem integrado (previsto)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Planned">
+    <value>{0} está previsto para una versión futura. Por ahora se usa AGWPE.</value>
+  </data>
+  <data name="Terminal.Settings.Host">
+    <value>Host</value>
+  </data>
+  <data name="Terminal.Settings.Port">
+    <value>Puerto</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort">
+    <value>Puerto de radio</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort.Item">
+    <value>Puerto {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Test">
+    <value>Probar y listar puertos</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Testing">
+    <value>Probando conexión…</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestOk">
+    <value>Conectado a {0}. Puertos de radio encontrados: {1}.</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestFailed">
+    <value>No se pudo conectar: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Help">
+    <value>Direwolf y el soundmodem de UZ7HO ofrecen un servidor AGWPE, normalmente en el puerto 8000. En UZ7HO abre Settings, Devices y activa el servidor AGW; en Direwolf pon AGWPORT 8000 en direwolf.conf. Usa UZ7HO para IO-117 (BPSK 1200).</value>
+  </data>
+  <data name="Terminal.Settings.AutoConnect">
+    <value>Conectar al abrir la ventana de Terminal</value>
+  </data>
+  <data name="Terminal.Settings.Callsign">
+    <value>Indicativo</value>
+  </data>
+  <data name="Terminal.Settings.Ssid">
+    <value>SSID</value>
+  </data>
+  <data name="Terminal.Settings.Callsign.Help">
+    <value>Deja el indicativo vacío para usar el de tu estación terrena. La mayoría de operadores de satélite usan SSID 0.</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Help">
+    <value>Terminal elige el formato de mensaje y la ruta del digipeater según el satélite enfocado. Añade aquí un satélite para cambiar los valores por defecto.</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltIn">
+    <value>Valores integrados</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltInLine">
+    <value>{0} ({1}): {2}, ruta {3}, {4}</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.AddCurrent">
+    <value>Añadir satélite enfocado</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Remove">
+    <value>Quitar</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Norad">
+    <value>NORAD</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Name">
+    <value>Nombre</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Path">
+    <value>Ruta</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.UhmName">
+    <value>Nombre UHM</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.ModemHint">
+    <value>Módem</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Help">
+    <value>Marcadores: {CALL} es el indicativo de Para, {MYCALL} tu indicativo, {MYGRID} tu cuadrícula completa y {MYGRID4} sus cuatro primeros caracteres. Marca A CQ en las macros que siempre deban ir a CQ.</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Key">
+    <value>Tecla</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Label">
+    <value>Etiqueta</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Text">
+    <value>Texto</value>
+  </data>
+  <data name="Terminal.Settings.Macros.ToCq">
+    <value>A CQ</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Reset">
+    <value>Restaurar macros predeterminadas</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Help">
+    <value>Colores de las filas del registro de mensajes. Cada fila muestra también una etiqueta de texto, así que el color nunca es la única pista.</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Reset">
+    <value>Restaurar colores predeterminados</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Enabled">
+    <value>Reenviar paquetes oídos a APRS-IS (iGate solo recepción)</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Server">
+    <value>Servidor</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Passcode">
+    <value>Código</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Help">
+    <value>Los paquetes marcados NOGATE, RFONLY o TCPIP nunca se reenvían y los duplicados en 30 segundos se descartan. Sin un código válido el servidor acepta el acceso pero ignora los paquetes.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Help">
+    <value>You Heard Me (UHM) en OscarWatch.org te avisa cuando una estación que oíste también informó que te oyó. Terminal informa de las estaciones que te llaman y comprueba tus corresponsales. Usa el mismo token de API que el informe de estado de satélites.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.NoToken">
+    <value>No hay token de API de OscarWatch.org. Añade uno en Ajustes, OscarWatch antes de activar UHM.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Enabled">
+    <value>Activar UHM</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel">
+    <value>Coincidir por texto del mensaje</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
+    <value>Envía también el texto decodificado al comprobar, para que UHM confirme la trama exacta y no solo el par de indicativos</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual">
+    <value>Registrar cuando UHM confirme un contacto mutuo</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
+    <value>Guarda el QSO cuando ambos lados se oyeron y se intercambió una cuadrícula o reporte, aunque falte el 73 final</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Test">
+    <value>Probar conexión</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Testing">
+    <value>Comprobando token…</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestOk">
+    <value>Token aceptado. Indicativo de la cuenta de OscarWatch.org: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestFailed">
+    <value>Falló la comprobación de UHM: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.CallMismatch">
+    <value>El indicativo de tu cuenta de OscarWatch.org ({0}) no coincide con el de Terminal ({1}). Los informes UHM podrían no coincidir.</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog">
+    <value>Registrar contactos automáticamente</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog.Help">
+    <value>Un contacto se registra cuando se han intercambiado indicativos y una cuadrícula o reporte en ambos sentidos y se ha enviado o recibido un roger o 73. Los QSO usan el modo PKT con propagación SAT y se suben a Cloudlog si está configurado.</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck">
+    <value>Confirmar mensajes APRS numerados</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck.Tip">
+    <value>Envía un ack APRS a través del digipeater para los mensajes dirigidos a ti que llevan número. Déjalo desactivado en pases concurridos para ahorrar tiempo del digipeater.</value>
+  </data>
+  <data name="Terminal.Settings.FontSize">
+    <value>Tamaño del texto del registro</value>
+  </data>
+  <data name="Terminal.Station.Aos">
+    <value>AOS</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizon">
+    <value>{0} está bajo el horizonte. Las tramas que envíes ahora no se oirán.</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizonAos">
+    <value>{0} está bajo el horizonte (AOS en {1}). Las tramas que envíes ahora no se oirán.</value>
+  </data>
+  <data name="Terminal.Empty.Log">
+    <value>Aún no hay tramas. Los paquetes decodificados aparecen aquí durante el pase del satélite.</value>
+  </data>
+  <data name="Terminal.Empty.Qso">
+    <value>Aquí aparecen las estaciones a las que llamas o que te llaman.</value>
+  </data>
+  <data name="Terminal.Empty.Heard">
+    <value>Aquí aparece cada estación oída en esta sesión. Haz clic en una para ponerla en Para.</value>
+  </data>
+  <data name="Terminal.TextSmaller" xml:space="preserve">
+    <value>Texto más pequeño (Ctrl+rueda del ratón)</value>
+  </data>
+  <data name="Terminal.TextLarger" xml:space="preserve">
+    <value>Texto más grande (Ctrl+rueda del ratón)</value>
+  </data>
+  <data name="Terminal.ColumnResize.Tip" xml:space="preserve">
+    <value>Arrastre para cambiar el ancho de la columna. Doble clic para restablecerlo.</value>
+  </data>
+  <data name="Terminal.Station.Elevation" xml:space="preserve">
+    <value>Elevación</value>
+  </data>
+  <data name="Terminal.Station.Azimuth" xml:space="preserve">
+    <value>Acimut</value>
+  </data>
+  <data name="Terminal.Station.CallGrid.Tip" xml:space="preserve">
+    <value>Su indicativo y localizador</value>
+  </data>
+  <data name="Terminal.Station.ElevationBar.Tip" xml:space="preserve">
+    <value>Elevación del satélite, desde el horizonte (0°) hasta el cénit (90°)</value>
+  </data>
 </root>

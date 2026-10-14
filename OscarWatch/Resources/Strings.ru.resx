@@ -4832,4 +4832,604 @@ LOS: {2}
     <value>«{0}» не является позывным или квадратом.</value>
   </data>
 
+  <data name="Menu.Tools.Terminal">
+    <value>OscarWatch _Терминал</value>
+  </data>
+  <data name="Window.Terminal.Title">
+    <value>OscarWatch Терминал</value>
+  </data>
+  <data name="Window.TerminalSettings.Title">
+    <value>Настройки OscarWatch Терминал</value>
+  </data>
+  <data name="Terminal.Shortcuts">
+    <value>Быстрые клавиши</value>
+  </data>
+  <data name="Terminal.LogCall">
+    <value>F12 Записать QSO</value>
+  </data>
+  <data name="Terminal.LogCall.Tip">
+    <value>Сразу записать в журнал позывной из поля «Кому» (или выбранную станцию)</value>
+  </data>
+  <data name="Terminal.OpenSettings">
+    <value>Настройки</value>
+  </data>
+  <data name="Terminal.Connect">
+    <value>Подключить</value>
+  </data>
+  <data name="Terminal.Disconnect">
+    <value>Отключить</value>
+  </data>
+  <data name="Terminal.Send">
+    <value>Отправить сообщение</value>
+  </data>
+  <data name="Terminal.To">
+    <value>Кому</value>
+  </data>
+  <data name="Terminal.To.Tip">
+    <value>Вызываемый позывной или CQ для общего вызова</value>
+  </data>
+  <data name="Terminal.Message">
+    <value>Сообщение</value>
+  </data>
+  <data name="Terminal.SendButton">
+    <value>Отправить</value>
+  </data>
+  <data name="Terminal.TxDelay">
+    <value>Задержка TX (с)</value>
+  </data>
+  <data name="Terminal.Format">
+    <value>Формат</value>
+  </data>
+  <data name="Terminal.Format.Aprs">
+    <value>APRS</value>
+  </data>
+  <data name="Terminal.Format.Plain">
+    <value>Простой текст</value>
+  </data>
+  <data name="Terminal.Path.None">
+    <value>нет</value>
+  </data>
+  <data name="Terminal.Stats">
+    <value>Статистика</value>
+  </data>
+  <data name="Terminal.Stats.Reset">
+    <value>Сбросить</value>
+  </data>
+  <data name="Terminal.Stats.Reset.Tip">
+    <value>Очистить статистику и списки QSO и услышанных станций</value>
+  </data>
+  <data name="Terminal.Stats.Unique">
+    <value>Уникальных позывных</value>
+  </data>
+  <data name="Terminal.Stats.MyTx">
+    <value>Мои TX</value>
+  </data>
+  <data name="Terminal.Stats.MyRx">
+    <value>Мои RX</value>
+  </data>
+  <data name="Terminal.Stats.Success">
+    <value>Успех ретрансляции</value>
+  </data>
+  <data name="Terminal.Stats.Success.Tip">
+    <value>Доля ваших кадров, услышанных обратно через дигипитер</value>
+  </data>
+  <data name="Terminal.Stats.Digipeated">
+    <value>Ретранслированных кадров</value>
+  </data>
+  <data name="Terminal.Stats.Delay">
+    <value>Медианная задержка</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers">
+    <value>Пользователи UHM</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers.Tip">
+    <value>Станции, активные в UHM на этом спутнике за последние минуты</value>
+  </data>
+  <data name="Terminal.Station">
+    <value>Станция</value>
+  </data>
+  <data name="Terminal.Station.Call">
+    <value>Позывной</value>
+  </data>
+  <data name="Terminal.Station.Grid">
+    <value>Локатор</value>
+  </data>
+  <data name="Terminal.Station.Satellite">
+    <value>Спутник</value>
+  </data>
+  <data name="Terminal.Station.Los">
+    <value>LOS</value>
+  </data>
+  <data name="Terminal.Station.AzEl">
+    <value>Аз / Эл</value>
+  </data>
+  <data name="Terminal.Station.Range">
+    <value>Дальность</value>
+  </data>
+  <data name="Terminal.Legend">
+    <value>Обозначения:</value>
+  </data>
+  <data name="Terminal.ScrollToLast">
+    <value>Прокручивать к последней строке</value>
+  </data>
+  <data name="Terminal.ShowCallers">
+    <value>Показывать станции</value>
+  </data>
+  <data name="Terminal.ShowOwnOnly">
+    <value>Только мой трафик</value>
+  </data>
+  <data name="Terminal.ClearLog">
+    <value>Очистить журнал</value>
+  </data>
+  <data name="Terminal.Log">
+    <value>Журнал сообщений</value>
+  </data>
+  <data name="Terminal.Qso">
+    <value>QSO</value>
+  </data>
+  <data name="Terminal.Heard">
+    <value>Услышанные станции</value>
+  </data>
+  <data name="Terminal.Col.Time">
+    <value>UTC</value>
+  </data>
+  <data name="Terminal.Col.Type">
+    <value>Тип</value>
+  </data>
+  <data name="Terminal.Col.From">
+    <value>От</value>
+  </data>
+  <data name="Terminal.Col.To">
+    <value>Кому</value>
+  </data>
+  <data name="Terminal.Col.Delay">
+    <value>Задерж.</value>
+  </data>
+  <data name="Terminal.Col.Message">
+    <value>Сообщение</value>
+  </data>
+  <data name="Terminal.Col.Call">
+    <value>Позывной</value>
+  </data>
+  <data name="Terminal.Col.Grid">
+    <value>Локатор</value>
+  </data>
+  <data name="Terminal.Col.El">
+    <value>Эл</value>
+  </data>
+  <data name="Terminal.Col.State">
+    <value>Состояние</value>
+  </data>
+  <data name="Terminal.Col.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Col.Uhm.Tip">
+    <value>You Heard Me: сообщила ли эта станция на OscarWatch.org, что слышала вас</value>
+  </data>
+  <data name="Terminal.Col.Logged">
+    <value>В журнале</value>
+  </data>
+  <data name="Terminal.Col.Since">
+    <value>Назад</value>
+  </data>
+  <data name="Terminal.Col.CqTx">
+    <value>CQ/TX</value>
+  </data>
+  <data name="Terminal.Col.CqTx.Tip">
+    <value>Вызовы CQ и всего кадров, услышанных от этой станции</value>
+  </data>
+  <data name="Terminal.Col.Marker">
+    <value>Отметка</value>
+  </data>
+  <data name="Terminal.Tag.Normal">
+    <value>-</value>
+  </data>
+  <data name="Terminal.Tag.ToMe">
+    <value>МНЕ</value>
+  </data>
+  <data name="Terminal.Tag.Cq">
+    <value>CQ</value>
+  </data>
+  <data name="Terminal.Tag.MyTx">
+    <value>МОЙ TX</value>
+  </data>
+  <data name="Terminal.Tag.MyDigipeated">
+    <value>МОЙ DIGI</value>
+  </data>
+  <data name="Terminal.Tag.Telemetry">
+    <value>ТЛМ</value>
+  </data>
+  <data name="Terminal.Tag.Beacon">
+    <value>МАЯК</value>
+  </data>
+  <data name="Terminal.Marker.NewCall">
+    <value>Новый позывной</value>
+  </data>
+  <data name="Terminal.Marker.NewGrid">
+    <value>Новый локатор</value>
+  </data>
+  <data name="Terminal.Marker.Worked">
+    <value>Сработан</value>
+  </data>
+  <data name="Terminal.Logged.Yes">
+    <value>Да</value>
+  </data>
+  <data name="Terminal.State.Heard">
+    <value>Услышан</value>
+  </data>
+  <data name="Terminal.State.Cq">
+    <value>Зовёт CQ</value>
+  </data>
+  <data name="Terminal.State.Called">
+    <value>Вызван</value>
+  </data>
+  <data name="Terminal.State.ReportSent">
+    <value>Рапорт отправлен</value>
+  </data>
+  <data name="Terminal.State.ReportReceived">
+    <value>Рапорт получен</value>
+  </data>
+  <data name="Terminal.State.ReportsExchanged">
+    <value>Рапорты обменяны</value>
+  </data>
+  <data name="Terminal.State.RogerSent">
+    <value>Roger отправлен</value>
+  </data>
+  <data name="Terminal.State.RogerReceived">
+    <value>Roger получен</value>
+  </data>
+  <data name="Terminal.State.Complete">
+    <value>Завершён</value>
+  </data>
+  <data name="Terminal.State.Logged">
+    <value>В журнале</value>
+  </data>
+  <data name="Terminal.Uhm.Waiting">
+    <value>Ожид.</value>
+  </data>
+  <data name="Terminal.Uhm.HeardMe">
+    <value>Слышал меня</value>
+  </data>
+  <data name="Terminal.Uhm.Mutual">
+    <value>Взаимно</value>
+  </data>
+  <data name="Terminal.Uhm.Expired">
+    <value>Истекло</value>
+  </data>
+  <data name="Terminal.Uhm.User">
+    <value>Пользов.</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Off">
+    <value>UHM: выкл.</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Active">
+    <value>UHM: активен</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoToken">
+    <value>UHM: добавьте API-токен OscarWatch.org в настройках</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoSatellite">
+    <value>UHM: выберите спутник с дигипитером</value>
+  </data>
+  <data name="Terminal.Uhm.Status.RateLimited">
+    <value>UHM: лимит запросов, скоро повтор</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NotEnabled">
+    <value>UHM: не включён для этой учётной записи</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Unauthorised">
+    <value>UHM: API-токен не принят</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Forbidden">
+    <value>UHM: доступ для этой учётной записи запрещён</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Error">
+    <value>UHM: сервер недоступен</value>
+  </data>
+  <data name="Terminal.AprsIs.Off">
+    <value>APRS-IS: выкл.</value>
+  </data>
+  <data name="Terminal.AprsIs.Connecting">
+    <value>APRS-IS: подключение…</value>
+  </data>
+  <data name="Terminal.AprsIs.Connected">
+    <value>APRS-IS: шлюз активен</value>
+  </data>
+  <data name="Terminal.AprsIs.Unverified">
+    <value>APRS-IS: пароль не подтверждён, пересылки нет</value>
+  </data>
+  <data name="Terminal.AprsIs.Error">
+    <value>APRS-IS: соединение потеряно, повтор</value>
+  </data>
+  <data name="Terminal.Modem.Disconnected">
+    <value>Модем: отключён</value>
+  </data>
+  <data name="Terminal.Modem.Connecting">
+    <value>Модем: подключение к {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Connected">
+    <value>Модем: подключён к {0} ({1})</value>
+  </data>
+  <data name="Terminal.Modem.Error">
+    <value>Модем: нет связи с {0}. {1}</value>
+  </data>
+  <data name="Terminal.Profile.None">
+    <value>У выбранного спутника нет пакетного дигипитера</value>
+  </data>
+  <data name="Terminal.Profile.Summary">
+    <value>Формат: {0}, путь: {1}</value>
+  </data>
+  <data name="Terminal.Profile.Modem">
+    <value>Модем: {0}</value>
+  </data>
+  <data name="Terminal.Status.Ready">
+    <value>Готово. Нажмите F1 для вызова CQ.</value>
+  </data>
+  <data name="Terminal.Status.Sent">
+    <value>Отправлено: {0}</value>
+  </data>
+  <data name="Terminal.Status.NotConnected">
+    <value>Не отправлено: модем не подключён.</value>
+  </data>
+  <data name="Terminal.Status.NoCallsign">
+    <value>Не отправлено: сначала укажите позывной в настройках.</value>
+  </data>
+  <data name="Terminal.Status.InvalidDestination">
+    <value>Не отправлено: в поле «Кому» должен быть позывной или CQ.</value>
+  </data>
+  <data name="Terminal.Status.EmptyMessage">
+    <value>Сначала введите сообщение.</value>
+  </data>
+  <data name="Terminal.Status.SendFailed">
+    <value>Не отправлено: модем отклонил кадр.</value>
+  </data>
+  <data name="Terminal.Status.MacroEmpty">
+    <value>У {0} нет текста макроса. Добавьте его в настройках.</value>
+  </data>
+  <data name="Terminal.Status.LogNeedsCall">
+    <value>Введите позывной в поле «Кому» или выберите станцию.</value>
+  </data>
+  <data name="Terminal.Status.LogFailed">
+    <value>Не удалось записать {0}.</value>
+  </data>
+  <data name="Terminal.Status.LoggedAuto">
+    <value>{0} записан в журнал.</value>
+  </data>
+  <data name="Terminal.Status.LoggedManual">
+    <value>{0} записан в журнал (вручную).</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Modem">
+    <value>Модем</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Satellites">
+    <value>Спутники</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Macros">
+    <value>Макросы</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Colours">
+    <value>Цвета</value>
+  </data>
+  <data name="Terminal.Settings.Tab.AprsIs">
+    <value>APRS-IS</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Logging">
+    <value>Журнал</value>
+  </data>
+  <data name="Terminal.Settings.Transport">
+    <value>Подключение</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Agwpe">
+    <value>AGWPE (Direwolf, UZ7HO soundmodem)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissTcp">
+    <value>KISS через TCP (планируется)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissSerial">
+    <value>KISS через последовательный порт (планируется)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.BuiltIn">
+    <value>Встроенный звуковой модем (планируется)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Planned">
+    <value>{0} планируется в будущей версии. Пока используется AGWPE.</value>
+  </data>
+  <data name="Terminal.Settings.Host">
+    <value>Хост</value>
+  </data>
+  <data name="Terminal.Settings.Port">
+    <value>Порт</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort">
+    <value>Радиопорт</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort.Item">
+    <value>Порт {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Test">
+    <value>Проверить и получить порты</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Testing">
+    <value>Проверка подключения…</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestOk">
+    <value>Подключено к {0}. Найдено радиопортов: {1}.</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestFailed">
+    <value>Не удалось подключиться: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Help">
+    <value>Direwolf и звуковой модем UZ7HO предоставляют сервер AGWPE, обычно на порту 8000. В UZ7HO откройте Settings, Devices и включите AGW-сервер; в Direwolf укажите AGWPORT 8000 в direwolf.conf. Для IO-117 (BPSK 1200) используйте UZ7HO.</value>
+  </data>
+  <data name="Terminal.Settings.AutoConnect">
+    <value>Подключаться при открытии окна терминала</value>
+  </data>
+  <data name="Terminal.Settings.Callsign">
+    <value>Позывной</value>
+  </data>
+  <data name="Terminal.Settings.Ssid">
+    <value>SSID</value>
+  </data>
+  <data name="Terminal.Settings.Callsign.Help">
+    <value>Оставьте пустым, чтобы использовать позывной наземной станции. Большинство операторов спутников используют SSID 0.</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Help">
+    <value>Терминал выбирает формат сообщений и путь дигипитера по выбранному спутнику. Добавьте спутник сюда, чтобы изменить значения по умолчанию.</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltIn">
+    <value>Встроенные значения</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltInLine">
+    <value>{0} ({1}): {2}, путь {3}, {4}</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.AddCurrent">
+    <value>Добавить выбранный спутник</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Remove">
+    <value>Удалить</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Norad">
+    <value>NORAD</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Name">
+    <value>Название</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Path">
+    <value>Путь</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.UhmName">
+    <value>Имя в UHM</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.ModemHint">
+    <value>Модем</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Help">
+    <value>Подстановки: {CALL} позывной из поля «Кому», {MYCALL} ваш позывной, {MYGRID} полный локатор, {MYGRID4} его первые четыре символа. Отметьте «В CQ» для макросов, которые всегда идут в CQ.</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Key">
+    <value>Клавиша</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Label">
+    <value>Подпись</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Text">
+    <value>Текст</value>
+  </data>
+  <data name="Terminal.Settings.Macros.ToCq">
+    <value>В CQ</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Reset">
+    <value>Восстановить макросы по умолчанию</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Help">
+    <value>Цвета строк в журнале сообщений. В каждой строке есть и текстовая метка, поэтому цвет никогда не единственная подсказка.</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Reset">
+    <value>Восстановить цвета по умолчанию</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Enabled">
+    <value>Пересылать услышанные пакеты в APRS-IS (iGate только на приём)</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Server">
+    <value>Сервер</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Passcode">
+    <value>Пароль</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Help">
+    <value>Пакеты с NOGATE, RFONLY или TCPIP никогда не пересылаются, дубликаты в течение 30 секунд отбрасываются. Без верного пароля сервер принимает вход, но игнорирует пакеты.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Help">
+    <value>You Heard Me (UHM) на OscarWatch.org сообщает, когда услышанная вами станция тоже услышала вас. Терминал сообщает о станциях, которые вас зовут, и проверяет ваших корреспондентов. Используется API-токен OscarWatch.org из настроек.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.NoToken">
+    <value>API-токен OscarWatch.org не задан. Добавьте его в разделе Настройки, OscarWatch перед включением UHM.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Enabled">
+    <value>Включить UHM</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel">
+    <value>Сверять по тексту сообщения</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
+    <value>Отправлять также декодированный текст, чтобы UHM подтверждал точный кадр, а не только пару позывных</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual">
+    <value>Записывать, когда UHM подтверждает взаимную связь</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
+    <value>Сохраняет QSO, как только обе стороны услышали друг друга и обменялись локатором или рапортом, даже без финального 73</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Test">
+    <value>Проверить подключение</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Testing">
+    <value>Проверка токена…</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestOk">
+    <value>Токен принят. Позывной учётной записи OscarWatch.org: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestFailed">
+    <value>Проверка UHM не удалась: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.CallMismatch">
+    <value>Позывной учётной записи OscarWatch.org ({0}) отличается от позывного терминала ({1}). Отчёты UHM могут не совпасть.</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog">
+    <value>Записывать связи автоматически</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog.Help">
+    <value>Связь записывается, когда позывные и локатор или рапорт переданы в обе стороны и отправлен или получен roger или 73. QSO записываются с видом PKT и распространением SAT и выгружаются в Cloudlog, если он настроен.</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck">
+    <value>Подтверждать нумерованные сообщения APRS</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck.Tip">
+    <value>Отправляет APRS ack через дигипитер на нумерованные сообщения вам. На загруженных пролётах лучше выключить, чтобы беречь дигипитер.</value>
+  </data>
+  <data name="Terminal.Settings.FontSize">
+    <value>Размер текста журнала сообщений</value>
+  </data>
+  <data name="Terminal.Station.Aos">
+    <value>AOS</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizon">
+    <value>{0} за горизонтом. Отправленные сейчас кадры не будут услышаны.</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizonAos">
+    <value>{0} за горизонтом (AOS через {1}). Отправленные сейчас кадры не будут услышаны.</value>
+  </data>
+  <data name="Terminal.Empty.Log">
+    <value>Кадров пока нет. Декодированные пакеты появятся здесь во время пролёта спутника.</value>
+  </data>
+  <data name="Terminal.Empty.Qso">
+    <value>Здесь появятся станции, которых вы зовёте или которые зовут вас.</value>
+  </data>
+  <data name="Terminal.Empty.Heard">
+    <value>Здесь появится каждая услышанная станция. Щёлкните, чтобы подставить её в поле «Кому».</value>
+  </data>
+  <data name="Terminal.TextSmaller" xml:space="preserve">
+    <value>Уменьшить текст (Ctrl+колесо мыши)</value>
+  </data>
+  <data name="Terminal.TextLarger" xml:space="preserve">
+    <value>Увеличить текст (Ctrl+колесо мыши)</value>
+  </data>
+  <data name="Terminal.ColumnResize.Tip" xml:space="preserve">
+    <value>Перетащите, чтобы изменить ширину столбца. Двойной щелчок сбрасывает её.</value>
+  </data>
+  <data name="Terminal.Station.Elevation" xml:space="preserve">
+    <value>Угол места</value>
+  </data>
+  <data name="Terminal.Station.Azimuth" xml:space="preserve">
+    <value>Азимут</value>
+  </data>
+  <data name="Terminal.Station.CallGrid.Tip" xml:space="preserve">
+    <value>Ваш позывной и QTH-локатор</value>
+  </data>
+  <data name="Terminal.Station.ElevationBar.Tip" xml:space="preserve">
+    <value>Угол места спутника, от горизонта (0°) до зенита (90°)</value>
+  </data>
 </root>

@@ -116,13 +116,21 @@ public partial class App : Application
         services.AddTransient<QsoLogbookViewModel>();
         services.AddTransient<CreateLogbookViewModel>();
         services.AddTransient<LogbookSettingsViewModel>();
+        services.AddSingleton<LiveQsoLogger>();
         services.AddSingleton<Ft4ModemService>();
+        services.AddSingleton(sp => new OscarWatch.Terminal.TerminalService(
+            sp.GetRequiredService<ISettingsService>(),
+            sp.GetRequiredService<LiveQsoLogger>(),
+            sp.GetRequiredService<IOrbitPropagator>(),
+            sp.GetRequiredService<ILiveTrackingService>()));
         services.AddSingleton<Ft4ViewModel>();
         services.AddSingleton<ISstvPictureShareService, SstvPictureShareService>();
         services.AddSingleton(CreateSstvPictureUploader);
         services.AddSingleton<OscarWatch.Sstv.SstvAudioService>();
         services.AddSingleton<OscarWatch.Sstv.SstvReceiverService>();
         services.AddSingleton<SstvViewModel>();
+        services.AddSingleton<TerminalViewModel>();
+        services.AddTransient<TerminalSettingsViewModel>();
 
         Services = services.BuildServiceProvider();
 

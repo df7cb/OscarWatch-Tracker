@@ -4832,4 +4832,604 @@ LOS: {2}
     <value>"{0}" ไม่ใช่สัญญาณเรียกขานหรือกริด</value>
   </data>
 
+  <data name="Menu.Tools.Terminal">
+    <value>OscarWatch _Terminal</value>
+  </data>
+  <data name="Window.Terminal.Title">
+    <value>OscarWatch Terminal</value>
+  </data>
+  <data name="Window.TerminalSettings.Title">
+    <value>การตั้งค่า OscarWatch Terminal</value>
+  </data>
+  <data name="Terminal.Shortcuts">
+    <value>ปุ่มลัด</value>
+  </data>
+  <data name="Terminal.LogCall">
+    <value>F12 บันทึก QSO</value>
+  </data>
+  <data name="Terminal.LogCall.Tip">
+    <value>บันทึกสัญญาณเรียกขานในช่อง ถึง (หรือสถานีที่เลือก) ลงสมุดบันทึกทันที</value>
+  </data>
+  <data name="Terminal.OpenSettings">
+    <value>การตั้งค่า</value>
+  </data>
+  <data name="Terminal.Connect">
+    <value>เชื่อมต่อ</value>
+  </data>
+  <data name="Terminal.Disconnect">
+    <value>ตัดการเชื่อมต่อ</value>
+  </data>
+  <data name="Terminal.Send">
+    <value>ส่งข้อความ</value>
+  </data>
+  <data name="Terminal.To">
+    <value>ถึง</value>
+  </data>
+  <data name="Terminal.To.Tip">
+    <value>สัญญาณเรียกขานที่จะเรียก หรือ CQ สำหรับการเรียกทั่วไป</value>
+  </data>
+  <data name="Terminal.Message">
+    <value>ข้อความ</value>
+  </data>
+  <data name="Terminal.SendButton">
+    <value>ส่ง</value>
+  </data>
+  <data name="Terminal.TxDelay">
+    <value>หน่วงเวลา TX (วินาที)</value>
+  </data>
+  <data name="Terminal.Format">
+    <value>รูปแบบ</value>
+  </data>
+  <data name="Terminal.Format.Aprs">
+    <value>APRS</value>
+  </data>
+  <data name="Terminal.Format.Plain">
+    <value>ข้อความธรรมดา</value>
+  </data>
+  <data name="Terminal.Path.None">
+    <value>ไม่มี</value>
+  </data>
+  <data name="Terminal.Stats">
+    <value>สถิติ</value>
+  </data>
+  <data name="Terminal.Stats.Reset">
+    <value>รีเซ็ต</value>
+  </data>
+  <data name="Terminal.Stats.Reset.Tip">
+    <value>ล้างสถิติและรายการ QSO และสถานีที่ได้ยิน</value>
+  </data>
+  <data name="Terminal.Stats.Unique">
+    <value>สัญญาณเรียกขานไม่ซ้ำ</value>
+  </data>
+  <data name="Terminal.Stats.MyTx">
+    <value>TX ของฉัน</value>
+  </data>
+  <data name="Terminal.Stats.MyRx">
+    <value>RX ของฉัน</value>
+  </data>
+  <data name="Terminal.Stats.Success">
+    <value>อัตราสำเร็จการทวนสัญญาณ</value>
+  </data>
+  <data name="Terminal.Stats.Success.Tip">
+    <value>สัดส่วนเฟรมของคุณที่ได้ยินกลับมาผ่านดิจิพีทเตอร์</value>
+  </data>
+  <data name="Terminal.Stats.Digipeated">
+    <value>เฟรมที่ถูกทวน</value>
+  </data>
+  <data name="Terminal.Stats.Delay">
+    <value>ค่ามัธยฐานความหน่วง</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers">
+    <value>ผู้ใช้ UHM</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers.Tip">
+    <value>สถานีที่ใช้ UHM กับดาวเทียมนี้ในไม่กี่นาทีที่ผ่านมา</value>
+  </data>
+  <data name="Terminal.Station">
+    <value>สถานี</value>
+  </data>
+  <data name="Terminal.Station.Call">
+    <value>สัญญาณเรียกขาน</value>
+  </data>
+  <data name="Terminal.Station.Grid">
+    <value>กริด</value>
+  </data>
+  <data name="Terminal.Station.Satellite">
+    <value>ดาวเทียม</value>
+  </data>
+  <data name="Terminal.Station.Los">
+    <value>LOS</value>
+  </data>
+  <data name="Terminal.Station.AzEl">
+    <value>Az / El</value>
+  </data>
+  <data name="Terminal.Station.Range">
+    <value>ระยะ</value>
+  </data>
+  <data name="Terminal.Legend">
+    <value>คำอธิบาย:</value>
+  </data>
+  <data name="Terminal.ScrollToLast">
+    <value>เลื่อนไปบรรทัดล่าสุด</value>
+  </data>
+  <data name="Terminal.ShowCallers">
+    <value>แสดงสถานี</value>
+  </data>
+  <data name="Terminal.ShowOwnOnly">
+    <value>เฉพาะการสื่อสารของฉัน</value>
+  </data>
+  <data name="Terminal.ClearLog">
+    <value>ล้างบันทึก</value>
+  </data>
+  <data name="Terminal.Log">
+    <value>บันทึกข้อความ</value>
+  </data>
+  <data name="Terminal.Qso">
+    <value>QSO</value>
+  </data>
+  <data name="Terminal.Heard">
+    <value>สถานีที่ได้ยิน</value>
+  </data>
+  <data name="Terminal.Col.Time">
+    <value>UTC</value>
+  </data>
+  <data name="Terminal.Col.Type">
+    <value>ประเภท</value>
+  </data>
+  <data name="Terminal.Col.From">
+    <value>จาก</value>
+  </data>
+  <data name="Terminal.Col.To">
+    <value>ถึง</value>
+  </data>
+  <data name="Terminal.Col.Delay">
+    <value>หน่วง</value>
+  </data>
+  <data name="Terminal.Col.Message">
+    <value>ข้อความ</value>
+  </data>
+  <data name="Terminal.Col.Call">
+    <value>สัญญาณเรียกขาน</value>
+  </data>
+  <data name="Terminal.Col.Grid">
+    <value>กริด</value>
+  </data>
+  <data name="Terminal.Col.El">
+    <value>El</value>
+  </data>
+  <data name="Terminal.Col.State">
+    <value>สถานะ</value>
+  </data>
+  <data name="Terminal.Col.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Col.Uhm.Tip">
+    <value>You Heard Me: สถานีนี้รายงานบน OscarWatch.org ว่าได้ยินคุณหรือไม่</value>
+  </data>
+  <data name="Terminal.Col.Logged">
+    <value>บันทึกแล้ว</value>
+  </data>
+  <data name="Terminal.Col.Since">
+    <value>ผ่านมา</value>
+  </data>
+  <data name="Terminal.Col.CqTx">
+    <value>CQ/TX</value>
+  </data>
+  <data name="Terminal.Col.CqTx.Tip">
+    <value>จำนวนการเรียก CQ และเฟรมทั้งหมดที่ได้ยินจากสถานีนี้</value>
+  </data>
+  <data name="Terminal.Col.Marker">
+    <value>หมายเหตุ</value>
+  </data>
+  <data name="Terminal.Tag.Normal">
+    <value>-</value>
+  </data>
+  <data name="Terminal.Tag.ToMe">
+    <value>ถึงฉัน</value>
+  </data>
+  <data name="Terminal.Tag.Cq">
+    <value>CQ</value>
+  </data>
+  <data name="Terminal.Tag.MyTx">
+    <value>TX ของฉัน</value>
+  </data>
+  <data name="Terminal.Tag.MyDigipeated">
+    <value>DIGI ของฉัน</value>
+  </data>
+  <data name="Terminal.Tag.Telemetry">
+    <value>TLM</value>
+  </data>
+  <data name="Terminal.Tag.Beacon">
+    <value>บีคอน</value>
+  </data>
+  <data name="Terminal.Marker.NewCall">
+    <value>สัญญาณเรียกขานใหม่</value>
+  </data>
+  <data name="Terminal.Marker.NewGrid">
+    <value>กริดใหม่</value>
+  </data>
+  <data name="Terminal.Marker.Worked">
+    <value>เคยติดต่อแล้ว</value>
+  </data>
+  <data name="Terminal.Logged.Yes">
+    <value>ใช่</value>
+  </data>
+  <data name="Terminal.State.Heard">
+    <value>ได้ยิน</value>
+  </data>
+  <data name="Terminal.State.Cq">
+    <value>กำลังเรียก CQ</value>
+  </data>
+  <data name="Terminal.State.Called">
+    <value>เรียกแล้ว</value>
+  </data>
+  <data name="Terminal.State.ReportSent">
+    <value>ส่งรายงานแล้ว</value>
+  </data>
+  <data name="Terminal.State.ReportReceived">
+    <value>ได้รับรายงานแล้ว</value>
+  </data>
+  <data name="Terminal.State.ReportsExchanged">
+    <value>แลกรายงานแล้ว</value>
+  </data>
+  <data name="Terminal.State.RogerSent">
+    <value>ส่ง Roger แล้ว</value>
+  </data>
+  <data name="Terminal.State.RogerReceived">
+    <value>ได้รับ Roger แล้ว</value>
+  </data>
+  <data name="Terminal.State.Complete">
+    <value>สมบูรณ์</value>
+  </data>
+  <data name="Terminal.State.Logged">
+    <value>บันทึกแล้ว</value>
+  </data>
+  <data name="Terminal.Uhm.Waiting">
+    <value>รอ</value>
+  </data>
+  <data name="Terminal.Uhm.HeardMe">
+    <value>ได้ยินฉัน</value>
+  </data>
+  <data name="Terminal.Uhm.Mutual">
+    <value>ทั้งสองฝ่าย</value>
+  </data>
+  <data name="Terminal.Uhm.Expired">
+    <value>หมดเวลา</value>
+  </data>
+  <data name="Terminal.Uhm.User">
+    <value>ผู้ใช้</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Off">
+    <value>UHM: ปิด</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Active">
+    <value>UHM: ทำงาน</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoToken">
+    <value>UHM: เพิ่มโทเค็น API ของ OscarWatch.org ในการตั้งค่า</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoSatellite">
+    <value>UHM: เลือกดาวเทียมที่มีดิจิพีทเตอร์</value>
+  </data>
+  <data name="Terminal.Uhm.Status.RateLimited">
+    <value>UHM: ถูกจำกัดอัตรา จะลองใหม่เร็วๆ นี้</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NotEnabled">
+    <value>UHM: ยังไม่เปิดใช้สำหรับบัญชีนี้</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Unauthorised">
+    <value>UHM: ไม่ยอมรับโทเค็น API</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Forbidden">
+    <value>UHM: บัญชีนี้ถูกปฏิเสธการเข้าถึง</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Error">
+    <value>UHM: เซิร์ฟเวอร์ไม่พร้อมใช้งาน</value>
+  </data>
+  <data name="Terminal.AprsIs.Off">
+    <value>APRS-IS: ปิด</value>
+  </data>
+  <data name="Terminal.AprsIs.Connecting">
+    <value>APRS-IS: กำลังเชื่อมต่อ…</value>
+  </data>
+  <data name="Terminal.AprsIs.Connected">
+    <value>APRS-IS: กำลังส่งต่อ</value>
+  </data>
+  <data name="Terminal.AprsIs.Unverified">
+    <value>APRS-IS: ยังไม่ยืนยันรหัสผ่าน ไม่ส่งต่อ</value>
+  </data>
+  <data name="Terminal.AprsIs.Error">
+    <value>APRS-IS: การเชื่อมต่อหลุด กำลังลองใหม่</value>
+  </data>
+  <data name="Terminal.Modem.Disconnected">
+    <value>โมเด็ม: ไม่ได้เชื่อมต่อ</value>
+  </data>
+  <data name="Terminal.Modem.Connecting">
+    <value>โมเด็ม: กำลังเชื่อมต่อ {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Connected">
+    <value>โมเด็ม: เชื่อมต่อ {0} แล้ว ({1})</value>
+  </data>
+  <data name="Terminal.Modem.Error">
+    <value>โมเด็ม: ติดต่อ {0} ไม่ได้ {1}</value>
+  </data>
+  <data name="Terminal.Profile.None">
+    <value>ดาวเทียมที่เลือกไม่มีดิจิพีทเตอร์แพ็กเก็ต</value>
+  </data>
+  <data name="Terminal.Profile.Summary">
+    <value>รูปแบบ: {0}, เส้นทาง: {1}</value>
+  </data>
+  <data name="Terminal.Profile.Modem">
+    <value>โมเด็ม: {0}</value>
+  </data>
+  <data name="Terminal.Status.Ready">
+    <value>พร้อม กด F1 เพื่อเรียก CQ</value>
+  </data>
+  <data name="Terminal.Status.Sent">
+    <value>ส่งแล้ว: {0}</value>
+  </data>
+  <data name="Terminal.Status.NotConnected">
+    <value>ไม่ได้ส่ง: โมเด็มไม่ได้เชื่อมต่อ</value>
+  </data>
+  <data name="Terminal.Status.NoCallsign">
+    <value>ไม่ได้ส่ง: ตั้งค่าสัญญาณเรียกขานในการตั้งค่าก่อน</value>
+  </data>
+  <data name="Terminal.Status.InvalidDestination">
+    <value>ไม่ได้ส่ง: ช่อง ถึง ต้องเป็นสัญญาณเรียกขานหรือ CQ</value>
+  </data>
+  <data name="Terminal.Status.EmptyMessage">
+    <value>พิมพ์ข้อความก่อน</value>
+  </data>
+  <data name="Terminal.Status.SendFailed">
+    <value>ไม่ได้ส่ง: โมเด็มปฏิเสธเฟรม</value>
+  </data>
+  <data name="Terminal.Status.MacroEmpty">
+    <value>{0} ไม่มีข้อความมาโคร เพิ่มได้ในการตั้งค่า</value>
+  </data>
+  <data name="Terminal.Status.LogNeedsCall">
+    <value>ใส่สัญญาณเรียกขานในช่อง ถึง หรือเลือกสถานีเพื่อบันทึก</value>
+  </data>
+  <data name="Terminal.Status.LogFailed">
+    <value>บันทึก {0} ไม่ได้</value>
+  </data>
+  <data name="Terminal.Status.LoggedAuto">
+    <value>บันทึก {0} แล้ว</value>
+  </data>
+  <data name="Terminal.Status.LoggedManual">
+    <value>บันทึก {0} แล้ว (ด้วยตนเอง)</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Modem">
+    <value>โมเด็ม</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Satellites">
+    <value>ดาวเทียม</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Macros">
+    <value>มาโคร</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Colours">
+    <value>สี</value>
+  </data>
+  <data name="Terminal.Settings.Tab.AprsIs">
+    <value>APRS-IS</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Logging">
+    <value>การบันทึก</value>
+  </data>
+  <data name="Terminal.Settings.Transport">
+    <value>การเชื่อมต่อ</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Agwpe">
+    <value>AGWPE (Direwolf, UZ7HO soundmodem)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissTcp">
+    <value>KISS ผ่าน TCP (วางแผนไว้)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissSerial">
+    <value>KISS อนุกรม TNC (วางแผนไว้)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.BuiltIn">
+    <value>ซาวด์โมเด็มในตัว (วางแผนไว้)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Planned">
+    <value>{0} วางแผนไว้สำหรับรุ่นถัดไป ขณะนี้ใช้ AGWPE</value>
+  </data>
+  <data name="Terminal.Settings.Host">
+    <value>โฮสต์</value>
+  </data>
+  <data name="Terminal.Settings.Port">
+    <value>พอร์ต</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort">
+    <value>พอร์ตวิทยุ</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort.Item">
+    <value>พอร์ต {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Test">
+    <value>ทดสอบและแสดงพอร์ต</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Testing">
+    <value>กำลังทดสอบการเชื่อมต่อ…</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestOk">
+    <value>เชื่อมต่อ {0} แล้ว พบพอร์ตวิทยุ: {1}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestFailed">
+    <value>เชื่อมต่อไม่ได้: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Help">
+    <value>Direwolf และ UZ7HO soundmodem มีเซิร์ฟเวอร์ AGWPE โดยปกติที่พอร์ต 8000 ใน UZ7HO เปิด Settings, Devices แล้วเลือกเซิร์ฟเวอร์ AGW ใน Direwolf ตั้ง AGWPORT 8000 ใน direwolf.conf ใช้ UZ7HO สำหรับ IO-117 (BPSK 1200)</value>
+  </data>
+  <data name="Terminal.Settings.AutoConnect">
+    <value>เชื่อมต่อเมื่อเปิดหน้าต่าง Terminal</value>
+  </data>
+  <data name="Terminal.Settings.Callsign">
+    <value>สัญญาณเรียกขาน</value>
+  </data>
+  <data name="Terminal.Settings.Ssid">
+    <value>SSID</value>
+  </data>
+  <data name="Terminal.Settings.Callsign.Help">
+    <value>เว้นว่างไว้เพื่อใช้สัญญาณเรียกขานของสถานีภาคพื้น ผู้ใช้ดาวเทียมส่วนใหญ่ใช้ SSID 0</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Help">
+    <value>Terminal เลือกรูปแบบข้อความและเส้นทางดิจิพีทเตอร์ตามดาวเทียมที่เลือก เพิ่มดาวเทียมที่นี่เพื่อเปลี่ยนค่าเริ่มต้น</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltIn">
+    <value>ค่าเริ่มต้นในตัว</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltInLine">
+    <value>{0} ({1}): {2}, เส้นทาง {3}, {4}</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.AddCurrent">
+    <value>เพิ่มดาวเทียมที่เลือก</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Remove">
+    <value>ลบ</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Norad">
+    <value>NORAD</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Name">
+    <value>ชื่อ</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Path">
+    <value>เส้นทาง</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.UhmName">
+    <value>ชื่อ UHM</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.ModemHint">
+    <value>โมเด็ม</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Help">
+    <value>ตัวแทน: {CALL} คือสัญญาณเรียกขานในช่อง ถึง, {MYCALL} คือของคุณ, {MYGRID} คือกริดเต็ม และ {MYGRID4} คือสี่ตัวแรก เลือก ถึง CQ สำหรับมาโครที่ส่งถึง CQ เสมอ</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Key">
+    <value>ปุ่ม</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Label">
+    <value>ป้าย</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Text">
+    <value>ข้อความ</value>
+  </data>
+  <data name="Terminal.Settings.Macros.ToCq">
+    <value>ถึง CQ</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Reset">
+    <value>คืนค่ามาโครเริ่มต้น</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Help">
+    <value>สีของแถวในบันทึกข้อความ แต่ละแถวมีป้ายข้อความด้วย สีจึงไม่ใช่สิ่งบอกเพียงอย่างเดียว</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Reset">
+    <value>คืนค่าสีเริ่มต้น</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Enabled">
+    <value>ส่งต่อแพ็กเก็ตที่ได้ยินไปยัง APRS-IS (iGate รับอย่างเดียว)</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Server">
+    <value>เซิร์ฟเวอร์</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Passcode">
+    <value>รหัสผ่าน</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Help">
+    <value>แพ็กเก็ตที่มี NOGATE, RFONLY หรือ TCPIP จะไม่ถูกส่งต่อ และแพ็กเก็ตซ้ำภายใน 30 วินาทีจะถูกทิ้ง หากไม่มีรหัสผ่านที่ถูกต้อง เซิร์ฟเวอร์จะยอมรับการเข้าสู่ระบบแต่ไม่สนใจแพ็กเก็ต</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Help">
+    <value>You Heard Me (UHM) บน OscarWatch.org แจ้งเมื่อสถานีที่คุณได้ยินรายงานว่าได้ยินคุณด้วย Terminal รายงานสถานีที่เรียกคุณและตรวจสอบคู่ QSO ของคุณ โดยใช้โทเค็น API ของ OscarWatch.org จากการตั้งค่า</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.NoToken">
+    <value>ยังไม่ได้ตั้งโทเค็น API ของ OscarWatch.org เพิ่มได้ที่ การตั้งค่า, OscarWatch ก่อนเปิด UHM</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Enabled">
+    <value>เปิดใช้ UHM</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel">
+    <value>จับคู่ตามข้อความ</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
+    <value>ส่งข้อความที่ถอดรหัสไปด้วยเมื่อตรวจสอบ เพื่อให้ UHM ยืนยันเฟรมที่ตรงกันแทนที่จะเป็นแค่คู่สัญญาณเรียกขาน</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual">
+    <value>บันทึกเมื่อ UHM ยืนยันการติดต่อทั้งสองฝ่าย</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
+    <value>บันทึก QSO เมื่อทั้งสองฝ่ายได้ยินกันและแลกกริดหรือรายงานแล้ว แม้ไม่มี 73 ปิดท้าย</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Test">
+    <value>ทดสอบการเชื่อมต่อ</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Testing">
+    <value>กำลังตรวจสอบโทเค็น…</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestOk">
+    <value>ยอมรับโทเค็นแล้ว สัญญาณเรียกขานของบัญชี OscarWatch.org: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestFailed">
+    <value>ตรวจสอบ UHM ไม่สำเร็จ: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.CallMismatch">
+    <value>สัญญาณเรียกขานของบัญชี OscarWatch.org ({0}) ไม่ตรงกับของ Terminal ({1}) รายงาน UHM อาจจับคู่ไม่ได้</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog">
+    <value>บันทึกการติดต่ออัตโนมัติ</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog.Help">
+    <value>การติดต่อจะถูกบันทึกเมื่อแลกสัญญาณเรียกขานและกริดหรือรายงานทั้งสองทาง และส่งหรือได้รับ roger หรือ 73 แล้ว QSO ใช้โหมด PKT กับการแพร่กระจาย SAT และอัปโหลดไปยัง Cloudlog หากตั้งค่าไว้</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck">
+    <value>ตอบรับข้อความ APRS ที่มีหมายเลข</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck.Tip">
+    <value>ส่ง APRS ack ผ่านดิจิพีทเตอร์สำหรับข้อความถึงคุณที่มีหมายเลข ควรปิดไว้ในรอบที่มีผู้ใช้มากเพื่อประหยัดเวลาดิจิพีทเตอร์</value>
+  </data>
+  <data name="Terminal.Settings.FontSize">
+    <value>ขนาดตัวอักษรบันทึกข้อความ</value>
+  </data>
+  <data name="Terminal.Station.Aos">
+    <value>AOS</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizon">
+    <value>{0} อยู่ใต้ขอบฟ้า เฟรมที่ส่งตอนนี้จะไม่มีใครได้ยิน</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizonAos">
+    <value>{0} อยู่ใต้ขอบฟ้า (AOS ในอีก {1}) เฟรมที่ส่งตอนนี้จะไม่มีใครได้ยิน</value>
+  </data>
+  <data name="Terminal.Empty.Log">
+    <value>ยังไม่มีเฟรม แพ็กเก็ตที่ถอดรหัสได้จะแสดงที่นี่ระหว่างดาวเทียมผ่าน</value>
+  </data>
+  <data name="Terminal.Empty.Qso">
+    <value>สถานีที่คุณเรียกหรือที่เรียกคุณจะแสดงที่นี่</value>
+  </data>
+  <data name="Terminal.Empty.Heard">
+    <value>ทุกสถานีที่ได้ยินในรอบนี้จะแสดงที่นี่ คลิกเพื่อใส่ในช่อง ถึง</value>
+  </data>
+  <data name="Terminal.TextSmaller" xml:space="preserve">
+    <value>ตัวอักษรเล็กลง (Ctrl+ล้อเมาส์)</value>
+  </data>
+  <data name="Terminal.TextLarger" xml:space="preserve">
+    <value>ตัวอักษรใหญ่ขึ้น (Ctrl+ล้อเมาส์)</value>
+  </data>
+  <data name="Terminal.ColumnResize.Tip" xml:space="preserve">
+    <value>ลากเพื่อปรับความกว้างคอลัมน์ ดับเบิลคลิกเพื่อรีเซ็ต</value>
+  </data>
+  <data name="Terminal.Station.Elevation" xml:space="preserve">
+    <value>มุมเงย</value>
+  </data>
+  <data name="Terminal.Station.Azimuth" xml:space="preserve">
+    <value>มุมราบ</value>
+  </data>
+  <data name="Terminal.Station.CallGrid.Tip" xml:space="preserve">
+    <value>สัญญาณเรียกขานและกริดโลเคเตอร์ของคุณ</value>
+  </data>
+  <data name="Terminal.Station.ElevationBar.Tip" xml:space="preserve">
+    <value>มุมเงยของดาวเทียม จากขอบฟ้า (0°) ถึงเหนือศีรษะ (90°)</value>
+  </data>
 </root>

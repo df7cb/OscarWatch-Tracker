@@ -430,6 +430,8 @@ public sealed class SettingsService : ISettingsService, IDisposable
         settings.Sstv.InputDeviceId ??= "";
         settings.Sstv.InputDeviceDisplayName ??= "";
         settings.Sstv.ForcedMode ??= "";
+        settings.Terminal ??= new OscarWatch.Core.Terminal.TerminalSettings();
+        settings.Terminal.Normalise();
         settings.QsoLogbook ??= new QsoLogbookSettings();
         settings.QsoLogbook.HistoryColumnWidthsPx ??=
             new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);

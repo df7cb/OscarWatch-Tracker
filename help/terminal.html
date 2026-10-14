@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OscarWatch Terminal - OscarWatch Help</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <a href="index.html" class="brand-home" title="Home"><img src="oscarwatch-icon.png" alt="" class="brand-icon" width="56" height="56" /></a>
+        <div class="brand-text">
+          <h1>OscarWatch Terminal</h1>
+          <p class="tagline">Packet contacts through the ISS and IO-117 digipeaters</p>
+        </div>
+      </div>
+      <nav aria-label="Help topics">
+        <ul>
+          <li><a href="quick-start.html">Quick start</a></li>
+          <li><a href="map-and-sidebar.html">Map &amp; sidebar</a></li>
+          <li><a href="frequencies.html">Frequencies</a></li>
+          <li><a href="satellites.html">Satellites &amp; TLEs</a></li>
+          <li><a href="passes.html">Pass planning</a></li>
+          <li><a href="radio-rotator.html">Radio &amp; rotator</a></li>
+          <li><a href="qso-logbook.html">Logbook</a></li>
+          <li><a href="ft4.html">OscarWatch FT4</a></li>
+          <li><a href="sstv.html">OscarWatch SSTV</a></li>
+          <li><a href="terminal.html" aria-current="page">OscarWatch Terminal</a></li>
+          <li><a href="settings.html">Settings</a></li>
+          <li><a href="keyboard-shortcuts.html">Shortcuts</a></li>
+          <li><a href="troubleshooting.html">Problems?</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <p class="lead">
+        <strong>Tools → OscarWatch Terminal</strong> is a keyboard-to-keyboard packet window for working stations through
+        satellite digipeaters, in the style of GreenCube Terminal. It talks to a packet soundmodem (Direwolf or the UZ7HO
+        soundmodem) over AGWPE, shows every frame heard, tracks your contacts and logs them for you.
+      </p>
+
+      <h2>What you need</h2>
+      <ul>
+        <li>A radio with its audio connected to the PC, and PTT handled by the soundmodem (VOX, CAT or a serial line).</li>
+        <li>A soundmodem with its AGWPE server switched on:
+          <ul>
+            <li><strong>UZ7HO soundmodem:</strong> open <em>Settings → Devices</em>, tick the AGW server and leave the port on
+              <strong>8000</strong>. Use it for IO-117, which needs the <strong>BPSK AX.25 1200</strong> modem.</li>
+            <li><strong>Direwolf:</strong> add <code>AGWPORT 8000</code> to <code>direwolf.conf</code> (it is on by default in
+              most builds) and use <code>MODEM 1200</code> for the ISS.</li>
+          </ul>
+        </li>
+        <li>Your callsign and grid in <strong>Settings → Station</strong>.</li>
+      </ul>
+      <p>
+        OscarWatch keeps tuning the radio for Doppler as usual. Terminal only sends and receives the packets, so keep CAT
+        tracking running for the satellite you are working.
+      </p>
+
+      <h2>Getting started</h2>
+      <ol>
+        <li>Start the soundmodem and check it decodes packets.</li>
+        <li>Focus the ISS or IO-117 in the main window and open <strong>Tools → OscarWatch Terminal</strong>.</li>
+        <li>Terminal connects to <code>127.0.0.1:8000</code> on its own. The status bar shows the modem state. If your modem is
+          on another PC or port, change it in <strong>Settings → Modem</strong>; <strong>Test and list ports</strong> checks
+          the connection and fills in the radio port list.</li>
+        <li>When the satellite rises, frames appear in the message log. Press <strong>F1</strong> to call CQ.</li>
+      </ol>
+
+      <h2>Message formats</h2>
+      <p>
+        Each satellite has a message format and digipeater path. Terminal picks them from the focused satellite:
+      </p>
+      <table>
+        <thead><tr><th>Satellite</th><th>Format</th><th>Path</th><th>Modem</th></tr></thead>
+        <tbody>
+          <tr><td>ISS (25544)</td><td>APRS</td><td>ARISS</td><td>1200 AFSK</td></tr>
+          <tr><td>IO-117 GreenCube (53106)</td><td>Plain text</td><td>none</td><td>BPSK 1200 (UZ7HO only)</td></tr>
+        </tbody>
+      </table>
+      <p>
+        <strong>APRS</strong> sends a CQ as an APRS status (<code>&gt;CQ IO85</code>) and a message to a station as an APRS
+        message addressed to that call. <strong>Plain text</strong> puts the text straight in the frame with the To call as the
+        destination, which is how GreenCube operators work. Other satellites with a packet or APRS digipeater in the
+        satellite database get APRS with no path. Use the <strong>Format</strong> buttons in the window, or
+        <strong>Settings → Satellites</strong>, to change a satellite's format, path or the name used for UHM.
+      </p>
+
+      <h2>The window</h2>
+      <ul>
+        <li><strong>Shortcuts:</strong> F1 to F8 send your macros. F12 logs the station in the To box now.</li>
+        <li><strong>Send message:</strong> type a call in <strong>To</strong> (or <code>CQ</code>) and a message, then press
+          Enter or <strong>Send</strong>. <strong>TX delay</strong> waits a few seconds before sending, which helps on a busy
+          pass. Messages are limited to 67 characters.</li>
+        <li><strong>Statistics:</strong> unique callsigns heard, frames you sent and received, how many of your frames came back
+          through the digipeater, the median round-trip delay, and how many UHM users are active.</li>
+        <li><strong>Station:</strong> your call and grid, the satellite, its current elevation in large type with an elevation
+          bar underneath, and the azimuth, range and LOS time (or AOS time while it is below the horizon).</li>
+        <li><strong>Message log:</strong> every frame heard, newest at the bottom. The <strong>Type</strong> column labels
+          each row (TO ME, CQ, MY TX, MY DIGI, TLM, BEACON) and the row colour matches the legend, so colour is never the only
+          cue. Hover a row to see the raw frame. Double-click a row to put that station in the To box.</li>
+        <li><strong>QSO:</strong> the stations you are working, with their state, UHM status and whether they are logged.</li>
+        <li><strong>Heard stations:</strong> everyone heard this session, with the time since last heard, CQ and frame counts,
+          the satellite's elevation from their grid, and whether they are a new call, a new grid or already worked. Click a
+          station to put it in the To box.</li>
+      </ul>
+      <p>
+        The message log, QSO and Heard stations boxes each have <strong>A−</strong> and <strong>A+</strong> buttons to change
+        the text size. Hold Ctrl and turn the mouse wheel over a box for the same effect. The columns grow with the text, and
+        each box remembers its own size.
+      </p>
+      <p>
+        Drag the thin lines between the column headings to change a column's width. Double-click one to put that column back
+        to its default width. You can also drag the gap between the message log and the QSO and Heard stations boxes, and the gap
+        between those two boxes. OscarWatch remembers text sizes, column widths and these divider positions next time you open
+        the Terminal.
+      </p>
+
+      <h2>Macros</h2>
+      <p>
+        Edit macros in <strong>Settings → Macros</strong>. These placeholders are filled in when you send:
+      </p>
+      <ul>
+        <li><code>{CALL}</code>: the call in the To box</li>
+        <li><code>{MYCALL}</code>: your callsign</li>
+        <li><code>{MYGRID}</code>: your full grid; <code>{MYGRID4}</code>: its first four characters</li>
+      </ul>
+      <p>
+        Tick <strong>To CQ</strong> for a macro that should always go to CQ (the default F1). The defaults are
+        <code>CQ {MYGRID4}</code>, <code>{MYGRID4} 599</code>, <code>R73</code> and <code>73 TU</code>.
+      </p>
+
+      <h2>Logging</h2>
+      <p>
+        With <strong>Log contacts automatically</strong> on (the default), a contact is saved once you and the other station
+        have both sent a grid or report, and a roger or 73 has gone either way. It works whether you answered their CQ or they
+        answered yours. QSOs are saved to the current logbook with mode <strong>PKT</strong>, propagation mode
+        <strong>SAT</strong>, the satellite name and frequencies, and are uploaded to Cloudlog and sent over the satellite link
+        when those are set up. Press <strong>F12</strong> to log the station in the To box at any time.
+      </p>
+
+      <h2 id="uhm">You Heard Me (UHM)</h2>
+      <p>
+        UHM on OscarWatch.org tells you when a station you heard has also reported hearing you, so you know the path works both
+        ways even if their reply was lost. To use it, save your OscarWatch.org API token in <strong>Settings → OscarWatch</strong>,
+        then tick <strong>Enable UHM</strong> in <strong>Terminal settings → UHM</strong>. <strong>Test connection</strong> checks
+        the token and warns you if the account callsign is not the one Terminal transmits.
+      </p>
+      <ul>
+        <li>Terminal reports stations whose frames are addressed to you. CQ calls, beacons, telemetry and your own echoes are
+          not reported, and the same station is reported at most once every 30 seconds.</li>
+        <li>For your QSO partners and the call in the To box, Terminal asks UHM every 7 seconds whether they heard you.
+          The UHM column then shows <strong>Wait</strong>, <strong>Heard me</strong>, <strong>Mutual</strong> or
+          <strong>Expired</strong>. <strong>User</strong> means the station uses UHM on this satellite.</li>
+        <li><strong>Match on message text</strong> also sends the decoded text, so UHM confirms the exact frame.</li>
+        <li><strong>Log when UHM confirms a mutual contact</strong> saves the QSO once both sides heard each other and a grid or
+          report was exchanged, even if the final roger or 73 was not copied.</li>
+      </ul>
+      <p>The UHM state and any message from the server appear in the status bar.</p>
+
+      <h2>APRS-IS gateway</h2>
+      <p>
+        In <strong>Settings → APRS-IS</strong> you can forward the packets you hear to APRS-IS as a receive-only iGate, so they
+        show on sites such as aprs.fi. Enter your APRS-IS passcode; without a valid one the server accepts the login but drops
+        the packets. Packets marked NOGATE, RFONLY or TCPIP are never forwarded, and duplicates within 30 seconds are dropped.
+        Terminal never transmits packets from the internet.
+      </p>
+
+      <h2>Problems?</h2>
+      <ul>
+        <li><strong>"Modem: cannot reach 127.0.0.1:8000":</strong> the soundmodem is not running, or its AGW server is off or on
+          another port.</li>
+        <li><strong>Connected but nothing appears:</strong> check the soundmodem decodes packets on its own, that the right
+          <strong>Radio port</strong> is chosen, and that the radio is tuned (Doppler) to the downlink.</li>
+        <li><strong>IO-117 shows nothing:</strong> Direwolf has no BPSK modem; use the UZ7HO soundmodem.</li>
+        <li><strong>Your frames never come back:</strong> check PTT and transmit audio level in the soundmodem, and the uplink
+          frequency. The statistics panel shows how many of your frames were digipeated.</li>
+        <li><strong>UHM says the token was not accepted:</strong> create a new token on OscarWatch.org and save it in
+          Settings.</li>
+      </ul>
+    </main>
+
+    <footer>OscarWatch: help for satellite operators</footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,569 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:OscarWatch.ViewModels"
+        xmlns:loc="using:OscarWatch.Localization"
+        xmlns:ft4="using:OscarWatch.Ft4"
+        xmlns:ctl="using:OscarWatch.Controls"
+        x:Class="OscarWatch.Views.TerminalWindow"
+        x:DataType="vm:TerminalViewModel"
+        Title="{loc:Localize Key=Window.Terminal.Title}"
+        Width="1280" Height="800"
+        MinWidth="960" MinHeight="600"
+        WindowStartupLocation="CenterOwner">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="F1" Command="{Binding SendMacroCommand}" CommandParameter="0" />
+    <KeyBinding Gesture="F2" Command="{Binding SendMacroCommand}" CommandParameter="1" />
+    <KeyBinding Gesture="F3" Command="{Binding SendMacroCommand}" CommandParameter="2" />
+    <KeyBinding Gesture="F4" Command="{Binding SendMacroCommand}" CommandParameter="3" />
+    <KeyBinding Gesture="F5" Command="{Binding SendMacroCommand}" CommandParameter="4" />
+    <KeyBinding Gesture="F6" Command="{Binding SendMacroCommand}" CommandParameter="5" />
+    <KeyBinding Gesture="F7" Command="{Binding SendMacroCommand}" CommandParameter="6" />
+    <KeyBinding Gesture="F8" Command="{Binding SendMacroCommand}" CommandParameter="7" />
+    <KeyBinding Gesture="F12" Command="{Binding LogCallCommand}" />
+  </Window.KeyBindings>
+
+  <Window.Styles>
+    <Style Selector="Border.term-panel">
+      <Setter Property="Background" Value="{DynamicResource ThemeSubtlePanelBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Padding" Value="8" />
+    </Style>
+    <Style Selector="TextBlock.term-heading">
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Margin" Value="0,0,0,6" />
+    </Style>
+    <Style Selector="TextBlock.term-label">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Opacity" Value="0.85" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBlock.term-value">
+      <Setter Property="FontFamily" Value="Consolas,Courier New,monospace" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBlock.term-col">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Opacity" Value="0.85" />
+    </Style>
+    <Style Selector="ListBox.term-list ListBoxItem">
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="MinHeight" Value="0" />
+    </Style>
+    <Style Selector="Border.term-row">
+      <Setter Property="Padding" Value="4,2" />
+    </Style>
+    <Style Selector="Border.term-pill">
+      <Setter Property="CornerRadius" Value="3" />
+      <Setter Property="Padding" Value="5,0" />
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.term-pill TextBlock">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Opacity" Value="0.7" />
+    </Style>
+    <Style Selector="Border.term-pill.hl TextBlock">
+      <Setter Property="Foreground" Value="Black" />
+      <Setter Property="Opacity" Value="1" />
+    </Style>
+    <Style Selector="TextBlock.term-empty">
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="Opacity" Value="0.7" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="TextAlignment" Value="Center" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Margin" Value="16" />
+      <Setter Property="IsHitTestVisible" Value="False" />
+    </Style>
+    <Style Selector="Ellipse.term-dot">
+      <Setter Property="Width" Value="9" />
+      <Setter Property="Height" Value="9" />
+      <Setter Property="Margin" Value="0,0,6,0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.term-zoom">
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="Padding" Value="6,1" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="MinWidth" Value="28" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Thumb.term-grip">
+      <Setter Property="Width" Value="9" />
+      <Setter Property="Margin" Value="0,0,-5,0" />
+      <Setter Property="HorizontalAlignment" Value="Right" />
+      <Setter Property="Cursor" Value="SizeWestEast" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border Background="Transparent">
+            <Rectangle Width="1" HorizontalAlignment="Center" Margin="0,2"
+                       Fill="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+          </Border>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="Thumb.term-grip.left">
+      <Setter Property="Margin" Value="-5,0,0,0" />
+      <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+    <Style Selector="Border.term-warning">
+      <Setter Property="Background" Value="#33FFB300" />
+      <Setter Property="BorderBrush" Value="#FFB300" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="Padding" Value="8,4" />
+    </Style>
+    <Style Selector="Border.term-swatch">
+      <Setter Property="Width" Value="14" />
+      <Setter Property="Height" Value="14" />
+      <Setter Property="CornerRadius" Value="2" />
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Margin" Value="0,0,4,0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+  </Window.Styles>
+
+  <DockPanel Margin="10">
+    <!-- Top: shortcuts, send box, statistics, station info -->
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,0,0,8">
+      <Border Grid.Column="0" Classes="term-panel">
+        <StackPanel Spacing="6">
+          <DockPanel>
+            <Button DockPanel.Dock="Right"
+                    Content="{loc:Localize Key=Terminal.OpenSettings}"
+                    Click="OnSettingsClick"
+                    Margin="6,0,0,0" />
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
+              <Button Content="{loc:Localize Key=Terminal.Connect}"
+                      Command="{Binding ConnectCommand}"
+                      IsVisible="{Binding !IsRunning}"
+                      Classes="accent" />
+              <Button Content="{loc:Localize Key=Terminal.Disconnect}"
+                      Command="{Binding DisconnectCommand}"
+                      IsVisible="{Binding IsRunning}" />
+            </StackPanel>
+            <TextBlock Text="{loc:Localize Key=Terminal.Shortcuts}" Classes="term-heading" VerticalAlignment="Center" Margin="0" />
+          </DockPanel>
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+            <ItemsControl Grid.Column="0" ItemsSource="{Binding Macros}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <UniformGrid Columns="4" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:TerminalMacroButtonViewModel">
+                  <Button Content="{Binding Caption}"
+                          Command="{Binding Command}"
+                          CommandParameter="{Binding Parameter}"
+                          IsEnabled="{Binding HasMacro}"
+                          ToolTip.Tip="{Binding Text}"
+                          AutomationProperties.Name="{Binding Caption}"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Left"
+                          Padding="8,3"
+                          Margin="0,0,4,4" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Grid.Column="1"
+                    Command="{Binding LogCallCommand}"
+                    ToolTip.Tip="{loc:Localize Key=Terminal.LogCall.Tip}"
+                    AutomationProperties.Name="{loc:Localize Key=Terminal.LogCall}"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    MinWidth="96"
+                    Margin="0,0,0,4">
+              <TextBlock Text="{loc:Localize Key=Terminal.LogCall}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="90" />
+            </Button>
+          </Grid>
+
+          <TextBlock Text="{loc:Localize Key=Terminal.Send}" Classes="term-heading" Margin="0,4,0,0" />
+          <Grid ColumnDefinitions="Auto,130,Auto,*,Auto" ColumnSpacing="6">
+            <TextBlock Grid.Column="0" Text="{loc:Localize Key=Terminal.To}" Classes="term-label" />
+            <TextBox Grid.Column="1"
+                     Text="{Binding ToCall}"
+                     FontFamily="Consolas,Courier New,monospace"
+                     ToolTip.Tip="{loc:Localize Key=Terminal.To.Tip}"
+                     AutomationProperties.Name="{loc:Localize Key=Terminal.To}" />
+            <TextBlock Grid.Column="2" Text="{loc:Localize Key=Terminal.Message}" Classes="term-label" />
+            <TextBox Grid.Column="3"
+                     x:Name="MessageBox"
+                     Text="{Binding MessageText}"
+                     MaxLength="67"
+                     FontFamily="Consolas,Courier New,monospace"
+                     AutomationProperties.Name="{loc:Localize Key=Terminal.Message}" />
+            <Button Grid.Column="4"
+                    Content="{loc:Localize Key=Terminal.SendButton}"
+                    Command="{Binding SendCommand}"
+                    IsDefault="True"
+                    Classes="accent"
+                    MinWidth="96" />
+          </Grid>
+          <DockPanel>
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+              <TextBlock Text="{loc:Localize Key=Terminal.TxDelay}" Classes="term-label" Margin="0,0,6,0" />
+              <NumericUpDown Value="{Binding TxDelaySeconds}"
+                             Minimum="0" Maximum="60" Increment="1"
+                             FormatString="0"
+                             Width="110"
+                             AutomationProperties.Name="{loc:Localize Key=Terminal.TxDelay}"
+                             Margin="0,0,16,0" />
+              <TextBlock Text="{loc:Localize Key=Terminal.Format}" Classes="term-label" Margin="0,0,6,0" />
+              <RadioButton GroupName="TerminalFormat"
+                           Content="{loc:Localize Key=Terminal.Format.Aprs}"
+                           IsChecked="{Binding IsAprsFormat}"
+                           IsEnabled="{Binding HasProfile}"
+                           Margin="0,0,8,0" />
+              <RadioButton GroupName="TerminalFormat"
+                           Content="{loc:Localize Key=Terminal.Format.Plain}"
+                           IsChecked="{Binding IsPlainFormat}"
+                           IsEnabled="{Binding HasProfile}"
+                           Margin="0,0,16,0" />
+            </StackPanel>
+            <TextBlock Text="{Binding StatusLine}" FontSize="12" Opacity="0.85"
+                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                       ToolTip.Tip="{Binding StatusLine}" />
+          </DockPanel>
+          <Border Classes="term-warning" IsVisible="{Binding IsBelowHorizon}">
+            <TextBlock Text="{Binding HorizonWarningText}" FontSize="12" TextWrapping="Wrap" />
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Column="1" Classes="term-panel" MinWidth="190">
+        <StackPanel>
+          <DockPanel>
+            <Button DockPanel.Dock="Right"
+                    Content="{loc:Localize Key=Terminal.Stats.Reset}"
+                    Command="{Binding ResetStatisticsCommand}"
+                    ToolTip.Tip="{loc:Localize Key=Terminal.Stats.Reset.Tip}"
+                    Padding="6,2"
+                    FontSize="12" />
+            <TextBlock Text="{loc:Localize Key=Terminal.Stats}" Classes="term-heading" />
+          </DockPanel>
+          <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10">
+            <TextBlock Grid.Row="0" Text="{loc:Localize Key=Terminal.Stats.Unique}" Classes="term-label" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding UniqueCallsignsText}" Classes="term-value" />
+            <TextBlock Grid.Row="1" Text="{loc:Localize Key=Terminal.Stats.MyTx}" Classes="term-label" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MyTxText}" Classes="term-value" />
+            <TextBlock Grid.Row="2" Text="{loc:Localize Key=Terminal.Stats.MyRx}" Classes="term-label" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MyRxText}" Classes="term-value" />
+            <TextBlock Grid.Row="3" Text="{loc:Localize Key=Terminal.Stats.Success}" Classes="term-label"
+                       ToolTip.Tip="{loc:Localize Key=Terminal.Stats.Success.Tip}" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SuccessText}" Classes="term-value" />
+            <TextBlock Grid.Row="4" Text="{loc:Localize Key=Terminal.Stats.Digipeated}" Classes="term-label" />
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding DigipeatedText}" Classes="term-value" />
+            <TextBlock Grid.Row="5" Text="{loc:Localize Key=Terminal.Stats.Delay}" Classes="term-label" />
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding MedianDelayText}" Classes="term-value" />
+            <TextBlock Grid.Row="6" Text="{loc:Localize Key=Terminal.Stats.UhmUsers}" Classes="term-label"
+                       ToolTip.Tip="{loc:Localize Key=Terminal.Stats.UhmUsers.Tip}" />
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding UhmUsersText}" Classes="term-value" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Column="2" Classes="term-panel" MinWidth="260">
+        <DockPanel>
+          <DockPanel DockPanel.Dock="Top">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Top"
+                        ToolTip.Tip="{loc:Localize Key=Terminal.Station.CallGrid.Tip}">
+              <TextBlock Text="{Binding MyCallText}" Classes="term-value" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding MyGridText}" Classes="term-value" Opacity="0.8" />
+            </StackPanel>
+            <TextBlock Text="{loc:Localize Key=Terminal.Station}" Classes="term-heading" />
+          </DockPanel>
+          <TextBlock DockPanel.Dock="Bottom" Text="{Binding ModemHintText}" FontSize="12"
+                     TextWrapping="Wrap" Opacity="0.85" Margin="0,4,0,0" />
+          <StackPanel Spacing="4">
+            <TextBlock Text="{Binding SatelliteText}" FontSize="15" FontWeight="SemiBold"
+                       TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding SatelliteText}" />
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="{Binding ElevationText}"
+                           FontSize="28" FontWeight="SemiBold"
+                           FontFamily="Consolas,Courier New,monospace"
+                           Opacity="{Binding ElevationOpacity}" />
+                <TextBlock Text="{loc:Localize Key=Terminal.Station.Elevation}" Classes="term-label" />
+              </StackPanel>
+              <Grid Grid.Column="1" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto"
+                    ColumnSpacing="8" RowSpacing="2" VerticalAlignment="Center">
+                <TextBlock Grid.Row="0" Text="{loc:Localize Key=Terminal.Station.Azimuth}" Classes="term-label" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AzimuthText}" Classes="term-value" />
+                <TextBlock Grid.Row="1" Text="{loc:Localize Key=Terminal.Station.Range}" Classes="term-label" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding RangeText}" Classes="term-value" />
+                <TextBlock Grid.Row="2" Text="{Binding HorizonLabel}" Classes="term-label" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding LosText}" Classes="term-value" />
+              </Grid>
+            </Grid>
+            <ProgressBar Minimum="0" Maximum="90" Value="{Binding ElevationBarValue}"
+                         Height="6" MinHeight="6" Margin="0,2,0,0"
+                         ToolTip.Tip="{loc:Localize Key=Terminal.Station.ElevationBar.Tip}"
+                         AutomationProperties.Name="{loc:Localize Key=Terminal.Station.Elevation}" />
+          </StackPanel>
+        </DockPanel>
+      </Border>
+    </Grid>
+
+    <!-- Status bar -->
+    <Border DockPanel.Dock="Bottom"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="0,1,0,0"
+            Padding="0,6,0,0"
+            Margin="0,8,0,0">
+      <WrapPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
+          <Ellipse Classes="term-dot" Fill="{Binding ModemDot}" />
+          <TextBlock Text="{Binding ModemStatusText}" FontSize="12" VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="{Binding ProfileText}" FontSize="12" Margin="0,0,18,0" VerticalAlignment="Center" />
+        <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
+          <Ellipse Classes="term-dot" Fill="{Binding AprsIsDot}" />
+          <TextBlock Text="{Binding AprsIsStatusText}" FontSize="12" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,0,18,0" ToolTip.Tip="{Binding UhmServerText}">
+          <Ellipse Classes="term-dot" Fill="{Binding UhmDot}" />
+          <TextBlock Text="{Binding UhmStatusText}" FontSize="12" VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="{Binding UhmServerText}" FontSize="12" Margin="0,0,18,0"
+                   IsVisible="{Binding UhmServerText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <TextBlock Text="{Binding UtcClockText}" FontSize="12" FontFamily="Consolas,Courier New,monospace" />
+      </WrapPanel>
+    </Border>
+
+    <!-- Legend and view options -->
+    <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="12">
+        <CheckBox Content="{loc:Localize Key=Terminal.ScrollToLast}" IsChecked="{Binding ScrollToLastLine}" />
+        <CheckBox Content="{loc:Localize Key=Terminal.ShowCallers}" IsChecked="{Binding ShowCallers}" />
+        <CheckBox Content="{loc:Localize Key=Terminal.ShowOwnOnly}" IsChecked="{Binding ShowOwnOnly}" />
+        <Button Content="{loc:Localize Key=Terminal.ClearLog}" Command="{Binding ClearLogCommand}" />
+      </StackPanel>
+      <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <TextBlock Text="{loc:Localize Key=Terminal.Legend}" Classes="term-label" Margin="0,0,8,0" />
+        <Border Classes="term-swatch" Background="{Binding LegendToMeBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
+        <TextBlock Text="{loc:Localize Key=Terminal.Tag.ToMe}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
+        <Border Classes="term-swatch" Background="{Binding LegendCqBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
+        <TextBlock Text="{loc:Localize Key=Terminal.Tag.Cq}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
+        <Border Classes="term-swatch" Background="{Binding LegendMyTxBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
+        <TextBlock Text="{loc:Localize Key=Terminal.Tag.MyTx}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
+        <Border Classes="term-swatch" Background="{Binding LegendMyDigipeatedBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
+        <TextBlock Text="{loc:Localize Key=Terminal.Tag.MyDigipeated}" FontSize="12" VerticalAlignment="Center" />
+      </WrapPanel>
+    </DockPanel>
+
+    <!-- Message log and station lists -->
+    <Grid x:Name="BodyGrid" ColumnDefinitions="*,Auto,460">
+      <Border Grid.Column="0" Classes="term-panel" Padding="4">
+        <DockPanel>
+          <DockPanel DockPanel.Dock="Top" Margin="0,0,0,4">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="2" Margin="6,0,0,0">
+              <Button Classes="term-zoom" Content="A−"
+                      Command="{Binding TextSmallerCommand}" CommandParameter="log"
+                      ToolTip.Tip="{loc:Localize Key=Terminal.TextSmaller}"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.TextSmaller}" />
+              <Button Classes="term-zoom" Content="A+"
+                      Command="{Binding TextLargerCommand}" CommandParameter="log"
+                      ToolTip.Tip="{loc:Localize Key=Terminal.TextLarger}"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.TextLarger}" />
+            </StackPanel>
+            <ctl:ZoomDecorator Zoom="{Binding LogZoom}" VerticalAlignment="Bottom">
+              <Grid ColumnDefinitions="12,76,96,104,92,56,*" ctl:TableColumns.Layout="{Binding LogColumns}" Margin="4,0,4,0">
+                <TextBlock Grid.Column="1" Text="{loc:Localize Key=Terminal.Col.Time}" Classes="term-col" />
+                <TextBlock Grid.Column="2" Text="{loc:Localize Key=Terminal.Col.Type}" Classes="term-col" />
+                <TextBlock Grid.Column="3" Text="{loc:Localize Key=Terminal.Col.From}" Classes="term-col" />
+                <TextBlock Grid.Column="4" Text="{loc:Localize Key=Terminal.Col.To}" Classes="term-col" />
+                <TextBlock Grid.Column="5" Text="{loc:Localize Key=Terminal.Col.Delay}" Classes="term-col" />
+                <TextBlock Grid.Column="6" Text="{loc:Localize Key=Terminal.Col.Message}" Classes="term-col" />
+                <Thumb Grid.Column="1" Classes="term-grip" Tag="log,1,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="2" Classes="term-grip" Tag="log,2,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="3" Classes="term-grip" Tag="log,3,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="4" Classes="term-grip" Tag="log,4,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="5" Classes="term-grip" Tag="log,5,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+              </Grid>
+            </ctl:ZoomDecorator>
+          </DockPanel>
+          <Grid>
+            <ListBox x:Name="LogList"
+                     Classes="term-list"
+                     ItemsSource="{Binding Rows}"
+                     SelectedItem="{Binding SelectedRow}"
+                     FontFamily="Consolas,Courier New,monospace"
+                     FontSize="13"
+                     DoubleTapped="OnLogDoubleTapped"
+                     AutomationProperties.Name="{loc:Localize Key=Terminal.Log}">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:TerminalMessageRowViewModel">
+                  <ctl:ZoomDecorator Zoom="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).LogZoom}">
+                    <Border Classes="term-row"
+                            Background="{Binding Background}"
+                            ToolTip.Tip="{Binding Monitor}"
+                            AutomationProperties.Name="{Binding AccessibleText}">
+                      <Grid ColumnDefinitions="12,76,96,104,92,56,*" ctl:TableColumns.Layout="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).LogColumns}">
+                        <Border Grid.Column="0" Width="4" HorizontalAlignment="Left" CornerRadius="2"
+                                Background="{Binding Accent}" />
+                        <TextBlock Grid.Column="1" Text="{Binding TimeText}" Opacity="0.8" VerticalAlignment="Center" />
+                        <Border Grid.Column="2" Classes="term-pill" Classes.hl="{Binding IsHighlighted}"
+                                Background="{Binding Accent}">
+                          <TextBlock Text="{Binding Tag}" FontFamily="{DynamicResource ContentControlThemeFontFamily}" />
+                        </Border>
+                        <TextBlock Grid.Column="3" Text="{Binding From}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="4" Text="{Binding To}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="5" Text="{Binding DelayText}" Opacity="0.8" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="6" Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                      </Grid>
+                    </Border>
+                  </ctl:ZoomDecorator>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBlock Classes="term-empty" Text="{loc:Localize Key=Terminal.Empty.Log}" IsVisible="{Binding !HasRows}" />
+          </Grid>
+        </DockPanel>
+      </Border>
+
+      <GridSplitter x:Name="CallersSplitter" Grid.Column="1" Width="8" Background="Transparent" ResizeDirection="Columns"
+                    IsVisible="{Binding ShowCallers}" />
+
+      <Grid x:Name="CallersGrid" Grid.Column="2" RowDefinitions="*,8,2*" IsVisible="{Binding ShowCallers}">
+        <Border Grid.Row="0" Classes="term-panel" Padding="4">
+          <DockPanel>
+            <DockPanel DockPanel.Dock="Top" Margin="4,0,0,4">
+              <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="2">
+                <Button Classes="term-zoom" Content="A−"
+                        Command="{Binding TextSmallerCommand}" CommandParameter="qso"
+                        ToolTip.Tip="{loc:Localize Key=Terminal.TextSmaller}"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.TextSmaller}" />
+                <Button Classes="term-zoom" Content="A+"
+                        Command="{Binding TextLargerCommand}" CommandParameter="qso"
+                        ToolTip.Tip="{loc:Localize Key=Terminal.TextLarger}"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.TextLarger}" />
+              </StackPanel>
+              <TextBlock Text="{loc:Localize Key=Terminal.Qso}" Classes="term-heading" Margin="0" VerticalAlignment="Center" />
+            </DockPanel>
+            <ctl:ZoomDecorator DockPanel.Dock="Top" Zoom="{Binding QsoZoom}">
+              <Grid ColumnDefinitions="88,60,44,*,72,60" ctl:TableColumns.Layout="{Binding QsoColumns}" Margin="8,0,4,4">
+                <TextBlock Grid.Column="0" Text="{loc:Localize Key=Terminal.Col.Call}" Classes="term-col" />
+                <TextBlock Grid.Column="1" Text="{loc:Localize Key=Terminal.Col.Grid}" Classes="term-col" />
+                <TextBlock Grid.Column="2" Text="{loc:Localize Key=Terminal.Col.El}" Classes="term-col" />
+                <TextBlock Grid.Column="3" Text="{loc:Localize Key=Terminal.Col.State}" Classes="term-col" />
+                <TextBlock Grid.Column="4" Text="{loc:Localize Key=Terminal.Col.Uhm}" Classes="term-col"
+                           ToolTip.Tip="{loc:Localize Key=Terminal.Col.Uhm.Tip}" />
+                <TextBlock Grid.Column="5" Text="{loc:Localize Key=Terminal.Col.Logged}" Classes="term-col" />
+                <Thumb Grid.Column="0" Classes="term-grip" Tag="qso,0,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="1" Classes="term-grip" Tag="qso,1,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="2" Classes="term-grip" Tag="qso,2,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="4" Classes="term-grip left" Tag="qso,4,-" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="5" Classes="term-grip left" Tag="qso,5,-" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+              </Grid>
+            </ctl:ZoomDecorator>
+            <Grid>
+            <TextBlock Classes="term-empty" Text="{loc:Localize Key=Terminal.Empty.Qso}" IsVisible="{Binding !HasQsoStations}" />
+            <ListBox x:Name="QsoList"
+                     Classes="term-list"
+                     ItemsSource="{Binding QsoStations}"
+                     FontSize="12"
+                     Background="Transparent"
+                     SelectionChanged="OnQsoSelectionChanged"
+                     AutomationProperties.Name="{loc:Localize Key=Terminal.Qso}">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:TerminalStationRowViewModel">
+                  <ctl:ZoomDecorator Zoom="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).QsoZoom}">
+                    <Border Classes="term-row" AutomationProperties.Name="{Binding AccessibleText}">
+                      <Grid ColumnDefinitions="88,60,44,*,72,60" ctl:TableColumns.Layout="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).QsoColumns}">
+                        <TextBlock Grid.Column="0" Text="{Binding Call}" FontFamily="Consolas,Courier New,monospace" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="{Binding Grid}" FontFamily="Consolas,Courier New,monospace" />
+                        <TextBlock Grid.Column="2" Text="{Binding ElevationText}" />
+                        <TextBlock Grid.Column="3" Text="{Binding StateText}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Column="4" Text="{Binding UhmText}" />
+                        <TextBlock Grid.Column="5" Text="{Binding LoggedText}" />
+                      </Grid>
+                    </Border>
+                  </ctl:ZoomDecorator>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            </Grid>
+          </DockPanel>
+        </Border>
+
+        <GridSplitter x:Name="QsoHeardSplitter" Grid.Row="1" Height="8" Background="Transparent" ResizeDirection="Rows" />
+
+        <Border Grid.Row="2" Classes="term-panel" Padding="4">
+          <DockPanel>
+            <DockPanel DockPanel.Dock="Top" Margin="4,0,0,4">
+              <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="2">
+                <Button Classes="term-zoom" Content="A−"
+                        Command="{Binding TextSmallerCommand}" CommandParameter="heard"
+                        ToolTip.Tip="{loc:Localize Key=Terminal.TextSmaller}"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.TextSmaller}" />
+                <Button Classes="term-zoom" Content="A+"
+                        Command="{Binding TextLargerCommand}" CommandParameter="heard"
+                        ToolTip.Tip="{loc:Localize Key=Terminal.TextLarger}"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.TextLarger}" />
+              </StackPanel>
+              <TextBlock Text="{loc:Localize Key=Terminal.Heard}" Classes="term-heading" Margin="0" VerticalAlignment="Center" />
+            </DockPanel>
+            <ctl:ZoomDecorator DockPanel.Dock="Top" Zoom="{Binding HeardZoom}">
+              <Grid ColumnDefinitions="88,60,52,52,44,72,*" ctl:TableColumns.Layout="{Binding HeardColumns}" Margin="8,0,4,4">
+                <TextBlock Grid.Column="0" Text="{loc:Localize Key=Terminal.Col.Call}" Classes="term-col" />
+                <TextBlock Grid.Column="1" Text="{loc:Localize Key=Terminal.Col.Grid}" Classes="term-col" />
+                <TextBlock Grid.Column="2" Text="{loc:Localize Key=Terminal.Col.Since}" Classes="term-col" />
+                <TextBlock Grid.Column="3" Text="{loc:Localize Key=Terminal.Col.CqTx}" Classes="term-col"
+                           ToolTip.Tip="{loc:Localize Key=Terminal.Col.CqTx.Tip}" />
+                <TextBlock Grid.Column="4" Text="{loc:Localize Key=Terminal.Col.El}" Classes="term-col" />
+                <TextBlock Grid.Column="5" Text="{loc:Localize Key=Terminal.Col.Uhm}" Classes="term-col"
+                           ToolTip.Tip="{loc:Localize Key=Terminal.Col.Uhm.Tip}" />
+                <TextBlock Grid.Column="6" Text="{loc:Localize Key=Terminal.Col.Marker}" Classes="term-col" />
+                <Thumb Grid.Column="0" Classes="term-grip" Tag="heard,0,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="1" Classes="term-grip" Tag="heard,1,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="2" Classes="term-grip" Tag="heard,2,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="3" Classes="term-grip" Tag="heard,3,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="4" Classes="term-grip" Tag="heard,4,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="5" Classes="term-grip" Tag="heard,5,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+              </Grid>
+            </ctl:ZoomDecorator>
+            <Grid>
+            <TextBlock Classes="term-empty" Text="{loc:Localize Key=Terminal.Empty.Heard}" IsVisible="{Binding !HasHeardStations}" />
+            <ListBox x:Name="HeardList"
+                     Classes="term-list"
+                     ItemsSource="{Binding HeardStations}"
+                     SelectedItem="{Binding SelectedStation}"
+                     FontSize="12"
+                     Background="Transparent"
+                     AutomationProperties.Name="{loc:Localize Key=Terminal.Heard}">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:TerminalStationRowViewModel">
+                  <ctl:ZoomDecorator Zoom="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).HeardZoom}">
+                    <Border Classes="term-row" AutomationProperties.Name="{Binding AccessibleText}">
+                      <Grid ColumnDefinitions="88,60,52,52,44,72,*" ctl:TableColumns.Layout="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).HeardColumns}">
+                        <TextBlock Grid.Column="0" Text="{Binding Call}" FontFamily="Consolas,Courier New,monospace" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="{Binding Grid}" FontFamily="Consolas,Courier New,monospace" />
+                        <TextBlock Grid.Column="2" Text="{Binding SinceText}" FontFamily="Consolas,Courier New,monospace" />
+                        <TextBlock Grid.Column="3" Text="{Binding CqTxText}" />
+                        <TextBlock Grid.Column="4" Text="{Binding ElevationText}" />
+                        <TextBlock Grid.Column="5" Text="{Binding UhmText}" />
+                        <TextBlock Grid.Column="6" Text="{Binding MarkerText}" TextTrimming="CharacterEllipsis" />
+                      </Grid>
+                    </Border>
+                  </ctl:ZoomDecorator>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            </Grid>
+          </DockPanel>
+        </Border>
+      </Grid>
+    </Grid>
+  </DockPanel>
+</Window>

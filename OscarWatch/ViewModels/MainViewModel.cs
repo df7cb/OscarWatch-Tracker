@@ -2539,6 +2539,28 @@ public partial class MainViewModel : ViewModelBase
         window.Show(App.MainWindow);
     }
 
+    private static TerminalWindow? _openTerminalWindow;
+
+    [RelayCommand]
+    private void OpenTerminal()
+    {
+        _trackerSnapshot.FocusedNoradId = FocusedNoradId;
+        if (_openTerminalWindow is { IsVisible: true })
+        {
+            _openTerminalWindow.Activate();
+            return;
+        }
+
+        var vm = App.Services.GetRequiredService<TerminalViewModel>();
+        var window = new TerminalWindow { DataContext = vm };
+        window.Closed += (_, _) => _openTerminalWindow = null;
+        _openTerminalWindow = window;
+        if (App.MainWindow is null)
+            return;
+
+        window.Show(App.MainWindow);
+    }
+
     private bool CanOpenFt4() =>
         Ft4SatelliteEligibility.IsAllowed(
             Frequencies.SatelliteName,

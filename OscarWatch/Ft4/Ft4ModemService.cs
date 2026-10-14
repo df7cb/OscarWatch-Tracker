@@ -7,6 +7,7 @@ using OscarWatch.Core.Orbit;
 using OscarWatch.Core.PskReporter;
 using OscarWatch.Core.Services;
 using OscarWatch.Localization;
+using OscarWatch.Services;
 using OscarWatch.ViewModels;
 using Serilog;
 
@@ -20,14 +21,13 @@ public sealed class Ft4ModemService : IDisposable
     private readonly ILiveTrackingService _tracking;
     private readonly FrequencyOverlayViewModel _frequencies;
     private readonly IQsoLogbookRepository _logbook;
-    private readonly ICloudlogQsoUploadService _cloudlogUpload;
-    private readonly ISatelliteLinkBroadcastService _satelliteLink;
     private readonly ILiveTrackerSnapshotProvider _snapshot;
     private readonly IOrbitPropagator _propagator;
     private readonly IRigController _rig;
     private readonly ILocalizationService _l;
     private readonly IAudioRecordingService _recording;
     private readonly IGpsService _gps;
+    private readonly LiveQsoLogger _qsoLogger;
     private readonly Ft4AudioService _audio = new();
     private readonly Ft4PttKeyer _ptt;
     private readonly Ft4SlotRecorder _slotRecorder;
@@ -75,21 +75,19 @@ public sealed class Ft4ModemService : IDisposable
         FrequencyOverlayViewModel frequencies,
         IRigController rig,
         IQsoLogbookRepository logbook,
-        ICloudlogQsoUploadService cloudlogUpload,
-        ISatelliteLinkBroadcastService satelliteLink,
         ILiveTrackerSnapshotProvider snapshot,
         IOrbitPropagator propagator,
         ILocalizationService localization,
         IAudioRecordingService recording,
         IGpsService gps,
-        ISatelliteSpotService spots)
+        ISatelliteSpotService spots,
+        LiveQsoLogger qsoLogger)
     {
+        _qsoLogger = qsoLogger;
         _settings = settings;
         _tracking = tracking;
         _frequencies = frequencies;
         _logbook = logbook;
-        _cloudlogUpload = cloudlogUpload;
-        _satelliteLink = satelliteLink;
         _snapshot = snapshot;
         _propagator = propagator;
         _rig = rig;
@@ -2418,41 +2416,15 @@ public sealed class Ft4ModemService : IDisposable
 
         try
         {
-            var station = _settings.Current.GroundStation;
-            var book = await _logbook.GetOrCreateLogbookAsync(new QsoLogbookCreateRequest
-            {
-                Name = _l.Get("Logbook.DefaultName"),
-                MyGridSquare = station.GridSquare
-            }).ConfigureAwait(false);
-
-            var snap = _snapshot.GetCurrent();
-            var cloudlogUpload = book.CloudlogAutoUpload && book.CloudlogStationProfileId.HasValue
-                ? CloudlogUploadStatus.Pending
-                : CloudlogUploadStatus.None;
-            var record = await _logbook.AddQsoAsync(new QsoRecordCreateRequest
-            {
-                LogbookId = book.Id,
-                QsoUtc = Ft4Clock.UtcNow,
-                Call = seq.TheirCall,
-                RstSent = Ft4MessageCodec.NormalizeSnrReport(seq.ReportSent),
-                RstRcvd = Ft4MessageCodec.NormalizeSnrReport(seq.ReportReceived),
-                GridSquare = seq.TheirGrid ?? "",
-                SatName = snap.IsAvailable ? snap.SatelliteName : _frequencies.SatelliteName,
-                Mode = "FT4",
-                ModeRx = "FT4",
-                FreqHz = snap.IsAvailable ? snap.UplinkHz : 0,
-                FreqRxHz = snap.IsAvailable ? snap.DownlinkHz : 0,
-                Band = snap.IsAvailable ? snap.Band : "",
-                BandRx = snap.IsAvailable ? snap.BandRx : "",
-                PropMode = "SAT",
-                Comment = manual ? "FT4 manual log" : "",
-                CloudlogUploadStatus = cloudlogUpload
-            }).ConfigureAwait(false);
-
-            if (cloudlogUpload == CloudlogUploadStatus.Pending)
-                await _cloudlogUpload.QueueUploadIfEnabledAsync(record.Id).ConfigureAwait(false);
-
-            _satelliteLink.PublishQso(record, book, SatelliteLinkQsoEventKind.Logged, _tracking.FocusedNoradId);
+            var record = await _qsoLogger.LogAsync(new LiveQsoEntry(
+                Ft4Clock.UtcNow,
+                seq.TheirCall,
+                Ft4MessageCodec.NormalizeSnrReport(seq.ReportSent),
+                Ft4MessageCodec.NormalizeSnrReport(seq.ReportReceived),
+                seq.TheirGrid ?? "",
+                "FT4",
+                "FT4",
+                manual ? "FT4 manual log" : "")).ConfigureAwait(false);
 
             _lastLoggedKey = key;
             Status = manual

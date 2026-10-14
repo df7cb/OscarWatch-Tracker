@@ -4828,4 +4828,604 @@
     <value>“{0}”不是呼号或网格。</value>
   </data>
 
+  <data name="Menu.Tools.Terminal">
+    <value>OscarWatch 终端(_T)</value>
+  </data>
+  <data name="Window.Terminal.Title">
+    <value>OscarWatch 终端</value>
+  </data>
+  <data name="Window.TerminalSettings.Title">
+    <value>OscarWatch 终端设置</value>
+  </data>
+  <data name="Terminal.Shortcuts">
+    <value>快捷键</value>
+  </data>
+  <data name="Terminal.LogCall">
+    <value>F12 记录 QSO</value>
+  </data>
+  <data name="Terminal.LogCall.Tip">
+    <value>立即将“发往”框中的呼号(或所选电台)保存到日志</value>
+  </data>
+  <data name="Terminal.OpenSettings">
+    <value>设置</value>
+  </data>
+  <data name="Terminal.Connect">
+    <value>连接</value>
+  </data>
+  <data name="Terminal.Disconnect">
+    <value>断开</value>
+  </data>
+  <data name="Terminal.Send">
+    <value>发送消息</value>
+  </data>
+  <data name="Terminal.To">
+    <value>发往</value>
+  </data>
+  <data name="Terminal.To.Tip">
+    <value>要呼叫的呼号,或 CQ 表示普遍呼叫</value>
+  </data>
+  <data name="Terminal.Message">
+    <value>消息</value>
+  </data>
+  <data name="Terminal.SendButton">
+    <value>发送</value>
+  </data>
+  <data name="Terminal.TxDelay">
+    <value>发射延迟 (秒)</value>
+  </data>
+  <data name="Terminal.Format">
+    <value>格式</value>
+  </data>
+  <data name="Terminal.Format.Aprs">
+    <value>APRS</value>
+  </data>
+  <data name="Terminal.Format.Plain">
+    <value>纯文本</value>
+  </data>
+  <data name="Terminal.Path.None">
+    <value>无</value>
+  </data>
+  <data name="Terminal.Stats">
+    <value>统计</value>
+  </data>
+  <data name="Terminal.Stats.Reset">
+    <value>重置</value>
+  </data>
+  <data name="Terminal.Stats.Reset.Tip">
+    <value>清除统计以及 QSO 和已收听电台列表</value>
+  </data>
+  <data name="Terminal.Stats.Unique">
+    <value>不同呼号</value>
+  </data>
+  <data name="Terminal.Stats.MyTx">
+    <value>我的发射</value>
+  </data>
+  <data name="Terminal.Stats.MyRx">
+    <value>我的接收</value>
+  </data>
+  <data name="Terminal.Stats.Success">
+    <value>转发成功率</value>
+  </data>
+  <data name="Terminal.Stats.Success.Tip">
+    <value>经转发器回传被听到的本台帧比例</value>
+  </data>
+  <data name="Terminal.Stats.Digipeated">
+    <value>已转发帧</value>
+  </data>
+  <data name="Terminal.Stats.Delay">
+    <value>延迟中位数</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers">
+    <value>UHM 用户</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers.Tip">
+    <value>最近几分钟内在此卫星上使用 UHM 的电台</value>
+  </data>
+  <data name="Terminal.Station">
+    <value>电台</value>
+  </data>
+  <data name="Terminal.Station.Call">
+    <value>呼号</value>
+  </data>
+  <data name="Terminal.Station.Grid">
+    <value>网格</value>
+  </data>
+  <data name="Terminal.Station.Satellite">
+    <value>卫星</value>
+  </data>
+  <data name="Terminal.Station.Los">
+    <value>LOS</value>
+  </data>
+  <data name="Terminal.Station.AzEl">
+    <value>方位 / 仰角</value>
+  </data>
+  <data name="Terminal.Station.Range">
+    <value>距离</value>
+  </data>
+  <data name="Terminal.Legend">
+    <value>图例:</value>
+  </data>
+  <data name="Terminal.ScrollToLast">
+    <value>滚动到最后一行</value>
+  </data>
+  <data name="Terminal.ShowCallers">
+    <value>显示电台</value>
+  </data>
+  <data name="Terminal.ShowOwnOnly">
+    <value>仅我的通信</value>
+  </data>
+  <data name="Terminal.ClearLog">
+    <value>清除记录</value>
+  </data>
+  <data name="Terminal.Log">
+    <value>消息记录</value>
+  </data>
+  <data name="Terminal.Qso">
+    <value>QSO</value>
+  </data>
+  <data name="Terminal.Heard">
+    <value>已收听电台</value>
+  </data>
+  <data name="Terminal.Col.Time">
+    <value>UTC</value>
+  </data>
+  <data name="Terminal.Col.Type">
+    <value>类型</value>
+  </data>
+  <data name="Terminal.Col.From">
+    <value>来自</value>
+  </data>
+  <data name="Terminal.Col.To">
+    <value>发往</value>
+  </data>
+  <data name="Terminal.Col.Delay">
+    <value>延迟</value>
+  </data>
+  <data name="Terminal.Col.Message">
+    <value>消息</value>
+  </data>
+  <data name="Terminal.Col.Call">
+    <value>呼号</value>
+  </data>
+  <data name="Terminal.Col.Grid">
+    <value>网格</value>
+  </data>
+  <data name="Terminal.Col.El">
+    <value>仰角</value>
+  </data>
+  <data name="Terminal.Col.State">
+    <value>状态</value>
+  </data>
+  <data name="Terminal.Col.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Col.Uhm.Tip">
+    <value>You Heard Me:此电台是否在 OscarWatch.org 上报告听到了你</value>
+  </data>
+  <data name="Terminal.Col.Logged">
+    <value>已记录</value>
+  </data>
+  <data name="Terminal.Col.Since">
+    <value>距今</value>
+  </data>
+  <data name="Terminal.Col.CqTx">
+    <value>CQ/TX</value>
+  </data>
+  <data name="Terminal.Col.CqTx.Tip">
+    <value>从此电台收到的 CQ 次数和总帧数</value>
+  </data>
+  <data name="Terminal.Col.Marker">
+    <value>标记</value>
+  </data>
+  <data name="Terminal.Tag.Normal">
+    <value>-</value>
+  </data>
+  <data name="Terminal.Tag.ToMe">
+    <value>发给我</value>
+  </data>
+  <data name="Terminal.Tag.Cq">
+    <value>CQ</value>
+  </data>
+  <data name="Terminal.Tag.MyTx">
+    <value>我的发射</value>
+  </data>
+  <data name="Terminal.Tag.MyDigipeated">
+    <value>我的转发</value>
+  </data>
+  <data name="Terminal.Tag.Telemetry">
+    <value>遥测</value>
+  </data>
+  <data name="Terminal.Tag.Beacon">
+    <value>信标</value>
+  </data>
+  <data name="Terminal.Marker.NewCall">
+    <value>新呼号</value>
+  </data>
+  <data name="Terminal.Marker.NewGrid">
+    <value>新网格</value>
+  </data>
+  <data name="Terminal.Marker.Worked">
+    <value>已通联</value>
+  </data>
+  <data name="Terminal.Logged.Yes">
+    <value>是</value>
+  </data>
+  <data name="Terminal.State.Heard">
+    <value>已收听</value>
+  </data>
+  <data name="Terminal.State.Cq">
+    <value>正在呼叫 CQ</value>
+  </data>
+  <data name="Terminal.State.Called">
+    <value>已呼叫</value>
+  </data>
+  <data name="Terminal.State.ReportSent">
+    <value>已发报告</value>
+  </data>
+  <data name="Terminal.State.ReportReceived">
+    <value>已收报告</value>
+  </data>
+  <data name="Terminal.State.ReportsExchanged">
+    <value>已交换报告</value>
+  </data>
+  <data name="Terminal.State.RogerSent">
+    <value>已发确认</value>
+  </data>
+  <data name="Terminal.State.RogerReceived">
+    <value>已收确认</value>
+  </data>
+  <data name="Terminal.State.Complete">
+    <value>完成</value>
+  </data>
+  <data name="Terminal.State.Logged">
+    <value>已记录</value>
+  </data>
+  <data name="Terminal.Uhm.Waiting">
+    <value>等待</value>
+  </data>
+  <data name="Terminal.Uhm.HeardMe">
+    <value>听到我</value>
+  </data>
+  <data name="Terminal.Uhm.Mutual">
+    <value>双向</value>
+  </data>
+  <data name="Terminal.Uhm.Expired">
+    <value>已过期</value>
+  </data>
+  <data name="Terminal.Uhm.User">
+    <value>用户</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Off">
+    <value>UHM:关闭</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Active">
+    <value>UHM:运行中</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoToken">
+    <value>UHM:请在设置中添加 OscarWatch.org API 令牌</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoSatellite">
+    <value>UHM:请选择带转发器的卫星</value>
+  </data>
+  <data name="Terminal.Uhm.Status.RateLimited">
+    <value>UHM:请求受限,稍后重试</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NotEnabled">
+    <value>UHM:此账户未启用</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Unauthorised">
+    <value>UHM:API 令牌未被接受</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Forbidden">
+    <value>UHM:此账户访问被拒绝</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Error">
+    <value>UHM:服务器不可用</value>
+  </data>
+  <data name="Terminal.AprsIs.Off">
+    <value>APRS-IS:关闭</value>
+  </data>
+  <data name="Terminal.AprsIs.Connecting">
+    <value>APRS-IS:正在连接…</value>
+  </data>
+  <data name="Terminal.AprsIs.Connected">
+    <value>APRS-IS:正在转发</value>
+  </data>
+  <data name="Terminal.AprsIs.Unverified">
+    <value>APRS-IS:验证码未通过,不转发</value>
+  </data>
+  <data name="Terminal.AprsIs.Error">
+    <value>APRS-IS:连接中断,正在重试</value>
+  </data>
+  <data name="Terminal.Modem.Disconnected">
+    <value>调制解调器:未连接</value>
+  </data>
+  <data name="Terminal.Modem.Connecting">
+    <value>调制解调器:正在连接 {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Connected">
+    <value>调制解调器:已连接 {0} ({1})</value>
+  </data>
+  <data name="Terminal.Modem.Error">
+    <value>调制解调器:无法连接 {0}。{1}</value>
+  </data>
+  <data name="Terminal.Profile.None">
+    <value>所选卫星没有分组转发器</value>
+  </data>
+  <data name="Terminal.Profile.Summary">
+    <value>格式:{0},路径:{1}</value>
+  </data>
+  <data name="Terminal.Profile.Modem">
+    <value>调制解调器:{0}</value>
+  </data>
+  <data name="Terminal.Status.Ready">
+    <value>就绪。按 F1 呼叫 CQ。</value>
+  </data>
+  <data name="Terminal.Status.Sent">
+    <value>已发送:{0}</value>
+  </data>
+  <data name="Terminal.Status.NotConnected">
+    <value>未发送:调制解调器未连接。</value>
+  </data>
+  <data name="Terminal.Status.NoCallsign">
+    <value>未发送:请先在设置中填写呼号。</value>
+  </data>
+  <data name="Terminal.Status.InvalidDestination">
+    <value>未发送:“发往”框必须为呼号或 CQ。</value>
+  </data>
+  <data name="Terminal.Status.EmptyMessage">
+    <value>请先输入消息。</value>
+  </data>
+  <data name="Terminal.Status.SendFailed">
+    <value>未发送:调制解调器拒绝了该帧。</value>
+  </data>
+  <data name="Terminal.Status.MacroEmpty">
+    <value>{0} 没有宏文本。请在设置中添加。</value>
+  </data>
+  <data name="Terminal.Status.LogNeedsCall">
+    <value>请在“发往”框填写呼号或选择电台以记录。</value>
+  </data>
+  <data name="Terminal.Status.LogFailed">
+    <value>无法记录 {0}。</value>
+  </data>
+  <data name="Terminal.Status.LoggedAuto">
+    <value>已记录 {0}。</value>
+  </data>
+  <data name="Terminal.Status.LoggedManual">
+    <value>已记录 {0}(手动)。</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Modem">
+    <value>调制解调器</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Satellites">
+    <value>卫星</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Macros">
+    <value>宏</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Colours">
+    <value>颜色</value>
+  </data>
+  <data name="Terminal.Settings.Tab.AprsIs">
+    <value>APRS-IS</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Logging">
+    <value>日志</value>
+  </data>
+  <data name="Terminal.Settings.Transport">
+    <value>连接方式</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Agwpe">
+    <value>AGWPE(Direwolf、UZ7HO soundmodem)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissTcp">
+    <value>KISS over TCP(计划中)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissSerial">
+    <value>KISS 串口 TNC(计划中)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.BuiltIn">
+    <value>内置声卡调制解调器(计划中)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Planned">
+    <value>{0} 计划在后续版本提供。目前使用 AGWPE。</value>
+  </data>
+  <data name="Terminal.Settings.Host">
+    <value>主机</value>
+  </data>
+  <data name="Terminal.Settings.Port">
+    <value>端口</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort">
+    <value>电台端口</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort.Item">
+    <value>端口 {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Test">
+    <value>测试并列出端口</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Testing">
+    <value>正在测试连接…</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestOk">
+    <value>已连接 {0}。找到电台端口:{1}。</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestFailed">
+    <value>无法连接:{0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Help">
+    <value>Direwolf 和 UZ7HO soundmodem 都提供 AGWPE 服务器,通常在 8000 端口。在 UZ7HO 中打开 Settings、Devices 并勾选 AGW 服务器;在 Direwolf 的 direwolf.conf 中设置 AGWPORT 8000。IO-117(BPSK 1200)请使用 UZ7HO。</value>
+  </data>
+  <data name="Terminal.Settings.AutoConnect">
+    <value>打开终端窗口时自动连接</value>
+  </data>
+  <data name="Terminal.Settings.Callsign">
+    <value>呼号</value>
+  </data>
+  <data name="Terminal.Settings.Ssid">
+    <value>SSID</value>
+  </data>
+  <data name="Terminal.Settings.Callsign.Help">
+    <value>呼号留空则使用地面站呼号。大多数卫星操作员使用 SSID 0。</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Help">
+    <value>终端根据所选卫星确定消息格式和转发路径。在此添加卫星可覆盖默认值。</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltIn">
+    <value>内置默认值</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltInLine">
+    <value>{0} ({1}):{2},路径 {3},{4}</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.AddCurrent">
+    <value>添加所选卫星</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Remove">
+    <value>移除</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Norad">
+    <value>NORAD</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Name">
+    <value>名称</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Path">
+    <value>路径</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.UhmName">
+    <value>UHM 名称</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.ModemHint">
+    <value>调制解调器</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Help">
+    <value>占位符:{CALL} 为“发往”呼号,{MYCALL} 为你的呼号,{MYGRID} 为完整网格,{MYGRID4} 为前四个字符。始终发往 CQ 的宏请勾选“发往 CQ”。</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Key">
+    <value>按键</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Label">
+    <value>标签</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Text">
+    <value>文本</value>
+  </data>
+  <data name="Terminal.Settings.Macros.ToCq">
+    <value>发往 CQ</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Reset">
+    <value>恢复默认宏</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Help">
+    <value>消息记录中的行颜色。每行还会显示文字标签,因此颜色不是唯一提示。</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Reset">
+    <value>恢复默认颜色</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Enabled">
+    <value>将收到的数据包转发到 APRS-IS(仅接收 iGate)</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Server">
+    <value>服务器</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Passcode">
+    <value>验证码</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Help">
+    <value>标有 NOGATE、RFONLY 或 TCPIP 的数据包不会转发,30 秒内的重复包会被丢弃。没有有效验证码时服务器接受登录但忽略转发的数据包。</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Help">
+    <value>OscarWatch.org 的 You Heard Me(UHM)会在你听到的电台也报告听到你时通知你。终端会上报呼叫你的电台并检查通联对象。它使用与卫星状态报告相同的 API 令牌。</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.NoToken">
+    <value>未设置 OscarWatch.org API 令牌。启用 UHM 前请在设置的 OscarWatch 中添加。</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Enabled">
+    <value>启用 UHM</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel">
+    <value>按消息文本匹配</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
+    <value>检查匹配时同时发送解码文本,使 UHM 确认具体帧而不仅是呼号对</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual">
+    <value>UHM 确认双向通联时记录</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
+    <value>双方互相听到并交换网格或报告后即保存 QSO,即使没有最后的 73</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Test">
+    <value>测试连接</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Testing">
+    <value>正在检查令牌…</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestOk">
+    <value>令牌已接受。OscarWatch.org 账户呼号:{0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestFailed">
+    <value>UHM 检查失败:{0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.CallMismatch">
+    <value>你的 OscarWatch.org 账户呼号 ({0}) 与终端呼号 ({1}) 不同。UHM 报告可能无法匹配。</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog">
+    <value>自动记录通联</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog.Help">
+    <value>当双方交换了呼号及网格或报告,并发送或收到确认或 73 后记录通联。QSO 使用 PKT 模式和 SAT 传播方式,如已配置则上传到 Cloudlog。</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck">
+    <value>确认带编号的 APRS 消息</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck.Tip">
+    <value>对发给你且带编号的消息通过转发器发送 APRS 确认。繁忙过境时请关闭以节省转发器时间。</value>
+  </data>
+  <data name="Terminal.Settings.FontSize">
+    <value>消息记录字号</value>
+  </data>
+  <data name="Terminal.Station.Aos">
+    <value>AOS</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizon">
+    <value>{0} 位于地平线以下。现在发送的帧不会被收到。</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizonAos">
+    <value>{0} 位于地平线以下({1} 后 AOS)。现在发送的帧不会被收到。</value>
+  </data>
+  <data name="Terminal.Empty.Log">
+    <value>暂无帧。卫星过境时解码的数据包会显示在这里。</value>
+  </data>
+  <data name="Terminal.Empty.Qso">
+    <value>你呼叫的或呼叫你的电台会显示在这里。</value>
+  </data>
+  <data name="Terminal.Empty.Heard">
+    <value>本次会话中听到的每个电台都会显示在这里。点击即可填入“发往”框。</value>
+  </data>
+  <data name="Terminal.TextSmaller" xml:space="preserve">
+    <value>缩小文字 (Ctrl+鼠标滚轮)</value>
+  </data>
+  <data name="Terminal.TextLarger" xml:space="preserve">
+    <value>放大文字 (Ctrl+鼠标滚轮)</value>
+  </data>
+  <data name="Terminal.ColumnResize.Tip" xml:space="preserve">
+    <value>拖动可调整列宽。双击可恢复默认。</value>
+  </data>
+  <data name="Terminal.Station.Elevation" xml:space="preserve">
+    <value>仰角</value>
+  </data>
+  <data name="Terminal.Station.Azimuth" xml:space="preserve">
+    <value>方位角</value>
+  </data>
+  <data name="Terminal.Station.CallGrid.Tip" xml:space="preserve">
+    <value>您的呼号和网格定位</value>
+  </data>
+  <data name="Terminal.Station.ElevationBar.Tip" xml:space="preserve">
+    <value>卫星仰角，从地平线 (0°) 到天顶 (90°)</value>
+  </data>
 </root>

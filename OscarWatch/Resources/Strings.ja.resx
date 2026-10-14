@@ -4828,4 +4828,604 @@
     <value>「{0}」はコールサインでもグリッドでもありません。</value>
   </data>
 
+  <data name="Menu.Tools.Terminal">
+    <value>OscarWatch ターミナル(_T)</value>
+  </data>
+  <data name="Window.Terminal.Title">
+    <value>OscarWatch ターミナル</value>
+  </data>
+  <data name="Window.TerminalSettings.Title">
+    <value>OscarWatch ターミナルの設定</value>
+  </data>
+  <data name="Terminal.Shortcuts">
+    <value>ショートカット</value>
+  </data>
+  <data name="Terminal.LogCall">
+    <value>F12 QSO を記録</value>
+  </data>
+  <data name="Terminal.LogCall.Tip">
+    <value>宛先欄のコールサイン(または選択した局)を今すぐログに保存します</value>
+  </data>
+  <data name="Terminal.OpenSettings">
+    <value>設定</value>
+  </data>
+  <data name="Terminal.Connect">
+    <value>接続</value>
+  </data>
+  <data name="Terminal.Disconnect">
+    <value>切断</value>
+  </data>
+  <data name="Terminal.Send">
+    <value>メッセージ送信</value>
+  </data>
+  <data name="Terminal.To">
+    <value>宛先</value>
+  </data>
+  <data name="Terminal.To.Tip">
+    <value>呼び出すコールサイン、または一般呼び出しの CQ</value>
+  </data>
+  <data name="Terminal.Message">
+    <value>メッセージ</value>
+  </data>
+  <data name="Terminal.SendButton">
+    <value>送信</value>
+  </data>
+  <data name="Terminal.TxDelay">
+    <value>送信遅延 (秒)</value>
+  </data>
+  <data name="Terminal.Format">
+    <value>形式</value>
+  </data>
+  <data name="Terminal.Format.Aprs">
+    <value>APRS</value>
+  </data>
+  <data name="Terminal.Format.Plain">
+    <value>プレーンテキスト</value>
+  </data>
+  <data name="Terminal.Path.None">
+    <value>なし</value>
+  </data>
+  <data name="Terminal.Stats">
+    <value>統計</value>
+  </data>
+  <data name="Terminal.Stats.Reset">
+    <value>リセット</value>
+  </data>
+  <data name="Terminal.Stats.Reset.Tip">
+    <value>統計と QSO・受信局リストを消去します</value>
+  </data>
+  <data name="Terminal.Stats.Unique">
+    <value>ユニーク局数</value>
+  </data>
+  <data name="Terminal.Stats.MyTx">
+    <value>自局送信</value>
+  </data>
+  <data name="Terminal.Stats.MyRx">
+    <value>自局受信</value>
+  </data>
+  <data name="Terminal.Stats.Success">
+    <value>デジピート成功率</value>
+  </data>
+  <data name="Terminal.Stats.Success.Tip">
+    <value>デジピーター経由で戻ってきた自局フレームの割合</value>
+  </data>
+  <data name="Terminal.Stats.Digipeated">
+    <value>デジピートされたフレーム</value>
+  </data>
+  <data name="Terminal.Stats.Delay">
+    <value>遅延の中央値</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers">
+    <value>UHM ユーザー</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers.Tip">
+    <value>この数分間にこの衛星で UHM を使用している局</value>
+  </data>
+  <data name="Terminal.Station">
+    <value>局情報</value>
+  </data>
+  <data name="Terminal.Station.Call">
+    <value>コール</value>
+  </data>
+  <data name="Terminal.Station.Grid">
+    <value>グリッド</value>
+  </data>
+  <data name="Terminal.Station.Satellite">
+    <value>衛星</value>
+  </data>
+  <data name="Terminal.Station.Los">
+    <value>LOS</value>
+  </data>
+  <data name="Terminal.Station.AzEl">
+    <value>方位 / 仰角</value>
+  </data>
+  <data name="Terminal.Station.Range">
+    <value>距離</value>
+  </data>
+  <data name="Terminal.Legend">
+    <value>凡例:</value>
+  </data>
+  <data name="Terminal.ScrollToLast">
+    <value>最終行へスクロール</value>
+  </data>
+  <data name="Terminal.ShowCallers">
+    <value>局リストを表示</value>
+  </data>
+  <data name="Terminal.ShowOwnOnly">
+    <value>自局関連のみ</value>
+  </data>
+  <data name="Terminal.ClearLog">
+    <value>ログを消去</value>
+  </data>
+  <data name="Terminal.Log">
+    <value>メッセージログ</value>
+  </data>
+  <data name="Terminal.Qso">
+    <value>QSO</value>
+  </data>
+  <data name="Terminal.Heard">
+    <value>受信局</value>
+  </data>
+  <data name="Terminal.Col.Time">
+    <value>UTC</value>
+  </data>
+  <data name="Terminal.Col.Type">
+    <value>種別</value>
+  </data>
+  <data name="Terminal.Col.From">
+    <value>送信元</value>
+  </data>
+  <data name="Terminal.Col.To">
+    <value>宛先</value>
+  </data>
+  <data name="Terminal.Col.Delay">
+    <value>遅延</value>
+  </data>
+  <data name="Terminal.Col.Message">
+    <value>メッセージ</value>
+  </data>
+  <data name="Terminal.Col.Call">
+    <value>コール</value>
+  </data>
+  <data name="Terminal.Col.Grid">
+    <value>グリッド</value>
+  </data>
+  <data name="Terminal.Col.El">
+    <value>仰角</value>
+  </data>
+  <data name="Terminal.Col.State">
+    <value>状態</value>
+  </data>
+  <data name="Terminal.Col.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Col.Uhm.Tip">
+    <value>You Heard Me: この局が OscarWatch.org で自局を受信したと報告したか</value>
+  </data>
+  <data name="Terminal.Col.Logged">
+    <value>記録済</value>
+  </data>
+  <data name="Terminal.Col.Since">
+    <value>経過</value>
+  </data>
+  <data name="Terminal.Col.CqTx">
+    <value>CQ/TX</value>
+  </data>
+  <data name="Terminal.Col.CqTx.Tip">
+    <value>この局から受信した CQ 数と総フレーム数</value>
+  </data>
+  <data name="Terminal.Col.Marker">
+    <value>区分</value>
+  </data>
+  <data name="Terminal.Tag.Normal">
+    <value>-</value>
+  </data>
+  <data name="Terminal.Tag.ToMe">
+    <value>自局宛</value>
+  </data>
+  <data name="Terminal.Tag.Cq">
+    <value>CQ</value>
+  </data>
+  <data name="Terminal.Tag.MyTx">
+    <value>自局送信</value>
+  </data>
+  <data name="Terminal.Tag.MyDigipeated">
+    <value>自局デジ</value>
+  </data>
+  <data name="Terminal.Tag.Telemetry">
+    <value>TLM</value>
+  </data>
+  <data name="Terminal.Tag.Beacon">
+    <value>ビーコン</value>
+  </data>
+  <data name="Terminal.Marker.NewCall">
+    <value>新規局</value>
+  </data>
+  <data name="Terminal.Marker.NewGrid">
+    <value>新規グリッド</value>
+  </data>
+  <data name="Terminal.Marker.Worked">
+    <value>交信済</value>
+  </data>
+  <data name="Terminal.Logged.Yes">
+    <value>済</value>
+  </data>
+  <data name="Terminal.State.Heard">
+    <value>受信</value>
+  </data>
+  <data name="Terminal.State.Cq">
+    <value>CQ 中</value>
+  </data>
+  <data name="Terminal.State.Called">
+    <value>呼び出し済</value>
+  </data>
+  <data name="Terminal.State.ReportSent">
+    <value>レポート送信済</value>
+  </data>
+  <data name="Terminal.State.ReportReceived">
+    <value>レポート受信済</value>
+  </data>
+  <data name="Terminal.State.ReportsExchanged">
+    <value>レポート交換済</value>
+  </data>
+  <data name="Terminal.State.RogerSent">
+    <value>R 送信済</value>
+  </data>
+  <data name="Terminal.State.RogerReceived">
+    <value>R 受信済</value>
+  </data>
+  <data name="Terminal.State.Complete">
+    <value>完了</value>
+  </data>
+  <data name="Terminal.State.Logged">
+    <value>記録済</value>
+  </data>
+  <data name="Terminal.Uhm.Waiting">
+    <value>待機</value>
+  </data>
+  <data name="Terminal.Uhm.HeardMe">
+    <value>受信された</value>
+  </data>
+  <data name="Terminal.Uhm.Mutual">
+    <value>相互</value>
+  </data>
+  <data name="Terminal.Uhm.Expired">
+    <value>期限切れ</value>
+  </data>
+  <data name="Terminal.Uhm.User">
+    <value>利用者</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Off">
+    <value>UHM: オフ</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Active">
+    <value>UHM: 有効</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoToken">
+    <value>UHM: 設定で OscarWatch.org の API トークンを追加してください</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoSatellite">
+    <value>UHM: デジピーター付き衛星を選択してください</value>
+  </data>
+  <data name="Terminal.Uhm.Status.RateLimited">
+    <value>UHM: レート制限中、まもなく再試行します</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NotEnabled">
+    <value>UHM: このアカウントでは無効です</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Unauthorised">
+    <value>UHM: API トークンが受け付けられません</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Forbidden">
+    <value>UHM: このアカウントはアクセスが拒否されました</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Error">
+    <value>UHM: サーバーを利用できません</value>
+  </data>
+  <data name="Terminal.AprsIs.Off">
+    <value>APRS-IS: オフ</value>
+  </data>
+  <data name="Terminal.AprsIs.Connecting">
+    <value>APRS-IS: 接続中…</value>
+  </data>
+  <data name="Terminal.AprsIs.Connected">
+    <value>APRS-IS: ゲート中</value>
+  </data>
+  <data name="Terminal.AprsIs.Unverified">
+    <value>APRS-IS: パスコード未確認のためゲートしません</value>
+  </data>
+  <data name="Terminal.AprsIs.Error">
+    <value>APRS-IS: 接続が切れました、再試行中</value>
+  </data>
+  <data name="Terminal.Modem.Disconnected">
+    <value>モデム: 切断</value>
+  </data>
+  <data name="Terminal.Modem.Connecting">
+    <value>モデム: {0} に接続中…</value>
+  </data>
+  <data name="Terminal.Modem.Connected">
+    <value>モデム: {0} に接続 ({1})</value>
+  </data>
+  <data name="Terminal.Modem.Error">
+    <value>モデム: {0} に接続できません。{1}</value>
+  </data>
+  <data name="Terminal.Profile.None">
+    <value>選択中の衛星にパケットデジピーターはありません</value>
+  </data>
+  <data name="Terminal.Profile.Summary">
+    <value>形式: {0}、パス: {1}</value>
+  </data>
+  <data name="Terminal.Profile.Modem">
+    <value>モデム: {0}</value>
+  </data>
+  <data name="Terminal.Status.Ready">
+    <value>準備完了。F1 で CQ を送信します。</value>
+  </data>
+  <data name="Terminal.Status.Sent">
+    <value>送信: {0}</value>
+  </data>
+  <data name="Terminal.Status.NotConnected">
+    <value>未送信: モデムが接続されていません。</value>
+  </data>
+  <data name="Terminal.Status.NoCallsign">
+    <value>未送信: 先に設定でコールサインを入力してください。</value>
+  </data>
+  <data name="Terminal.Status.InvalidDestination">
+    <value>未送信: 宛先欄にはコールサインまたは CQ を入力してください。</value>
+  </data>
+  <data name="Terminal.Status.EmptyMessage">
+    <value>先にメッセージを入力してください。</value>
+  </data>
+  <data name="Terminal.Status.SendFailed">
+    <value>未送信: モデムがフレームを拒否しました。</value>
+  </data>
+  <data name="Terminal.Status.MacroEmpty">
+    <value>{0} にマクロが設定されていません。設定で追加してください。</value>
+  </data>
+  <data name="Terminal.Status.LogNeedsCall">
+    <value>記録するには宛先欄にコールサインを入力するか局を選択してください。</value>
+  </data>
+  <data name="Terminal.Status.LogFailed">
+    <value>{0} を記録できませんでした。</value>
+  </data>
+  <data name="Terminal.Status.LoggedAuto">
+    <value>{0} を記録しました。</value>
+  </data>
+  <data name="Terminal.Status.LoggedManual">
+    <value>{0} を記録しました (手動)。</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Modem">
+    <value>モデム</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Satellites">
+    <value>衛星</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Macros">
+    <value>マクロ</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Colours">
+    <value>色</value>
+  </data>
+  <data name="Terminal.Settings.Tab.AprsIs">
+    <value>APRS-IS</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Logging">
+    <value>ログ</value>
+  </data>
+  <data name="Terminal.Settings.Transport">
+    <value>接続方式</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Agwpe">
+    <value>AGWPE (Direwolf、UZ7HO soundmodem)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissTcp">
+    <value>KISS over TCP (予定)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissSerial">
+    <value>KISS シリアル TNC (予定)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.BuiltIn">
+    <value>内蔵サウンドモデム (予定)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Planned">
+    <value>{0} は今後のリリースで対応予定です。現在は AGWPE を使用します。</value>
+  </data>
+  <data name="Terminal.Settings.Host">
+    <value>ホスト</value>
+  </data>
+  <data name="Terminal.Settings.Port">
+    <value>ポート</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort">
+    <value>無線ポート</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort.Item">
+    <value>ポート {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Test">
+    <value>テストしてポート一覧を取得</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Testing">
+    <value>接続をテスト中…</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestOk">
+    <value>{0} に接続しました。無線ポート数: {1}。</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestFailed">
+    <value>接続できませんでした: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Help">
+    <value>Direwolf と UZ7HO soundmodem はどちらも AGWPE サーバーを提供します (通常ポート 8000)。UZ7HO では Settings、Devices で AGW サーバーを有効にし、Direwolf では direwolf.conf に AGWPORT 8000 を設定します。IO-117 (BPSK 1200) には UZ7HO を使用してください。</value>
+  </data>
+  <data name="Terminal.Settings.AutoConnect">
+    <value>ターミナルを開いたときに接続する</value>
+  </data>
+  <data name="Terminal.Settings.Callsign">
+    <value>コールサイン</value>
+  </data>
+  <data name="Terminal.Settings.Ssid">
+    <value>SSID</value>
+  </data>
+  <data name="Terminal.Settings.Callsign.Help">
+    <value>空欄にすると地上局のコールサインを使用します。衛星運用では通常 SSID 0 を使います。</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Help">
+    <value>ターミナルは選択中の衛星からメッセージ形式とデジピーターパスを決めます。既定値を変更するにはここに衛星を追加します。</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltIn">
+    <value>組み込みの既定値</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltInLine">
+    <value>{0} ({1}): {2}、パス {3}、{4}</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.AddCurrent">
+    <value>選択中の衛星を追加</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Remove">
+    <value>削除</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Norad">
+    <value>NORAD</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Name">
+    <value>名前</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Path">
+    <value>パス</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.UhmName">
+    <value>UHM 名</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.ModemHint">
+    <value>モデム</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Help">
+    <value>置換: {CALL} は宛先、{MYCALL} は自局コール、{MYGRID} は自局グリッド全体、{MYGRID4} は先頭 4 文字です。常に CQ 宛に送るマクロは「CQ 宛」にチェックします。</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Key">
+    <value>キー</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Label">
+    <value>ラベル</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Text">
+    <value>テキスト</value>
+  </data>
+  <data name="Terminal.Settings.Macros.ToCq">
+    <value>CQ 宛</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Reset">
+    <value>既定のマクロに戻す</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Help">
+    <value>メッセージログの行の色です。各行には文字のタグも表示されるため、色だけに頼ることはありません。</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Reset">
+    <value>既定の色に戻す</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Enabled">
+    <value>受信したパケットを APRS-IS に転送する (受信専用 iGate)</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Server">
+    <value>サーバー</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Passcode">
+    <value>パスコード</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Help">
+    <value>NOGATE、RFONLY、TCPIP の付いたパケットは転送せず、30 秒以内の重複は破棄します。有効なパスコードがないとサーバーはログインを受け付けますが、転送パケットを無視します。</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Help">
+    <value>OscarWatch.org の You Heard Me (UHM) は、受信した局が自局を受信したと報告したときに知らせます。ターミナルは自局を呼んだ局を報告し、QSO 相手を確認します。衛星ステータス報告と同じ API トークンを使用します。</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.NoToken">
+    <value>OscarWatch.org の API トークンが未設定です。UHM を有効にする前に、設定の OscarWatch で追加してください。</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Enabled">
+    <value>UHM を有効にする</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel">
+    <value>メッセージ本文で照合する</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
+    <value>照合時にデコードした本文も送信し、コールサインの組だけでなくフレーム単位で確認します</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual">
+    <value>UHM が相互受信を確認したら記録する</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
+    <value>双方が受信し合い、グリッドまたはレポートを交換した時点で、最後の 73 がなくても QSO を保存します</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Test">
+    <value>接続テスト</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Testing">
+    <value>トークンを確認中…</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestOk">
+    <value>トークンが受け付けられました。OscarWatch.org アカウントのコールサイン: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestFailed">
+    <value>UHM の確認に失敗しました: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.CallMismatch">
+    <value>OscarWatch.org アカウントのコールサイン ({0}) がターミナルのコールサイン ({1}) と異なります。UHM の照合が一致しない可能性があります。</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog">
+    <value>交信を自動で記録する</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog.Help">
+    <value>双方でコールとグリッドまたはレポートを交換し、R または 73 を送受信した時点で記録します。記録はモード PKT、伝搬モード SAT で、Cloudlog が設定されていればアップロードします。</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck">
+    <value>番号付き APRS メッセージに ack を返す</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck.Tip">
+    <value>番号付きの自局宛メッセージに対して、デジピーター経由で APRS ack を送信します。混雑したパスではデジピーターの負荷を減らすためオフにしてください。</value>
+  </data>
+  <data name="Terminal.Settings.FontSize">
+    <value>メッセージログの文字サイズ</value>
+  </data>
+  <data name="Terminal.Station.Aos">
+    <value>AOS</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizon">
+    <value>{0} は地平線の下にあります。今送信しても受信されません。</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizonAos">
+    <value>{0} は地平線の下にあります (AOS まで {1})。今送信しても受信されません。</value>
+  </data>
+  <data name="Terminal.Empty.Log">
+    <value>まだフレームはありません。衛星の通過中にデコードしたパケットがここに表示されます。</value>
+  </data>
+  <data name="Terminal.Empty.Qso">
+    <value>呼び出した局や自局を呼んだ局がここに表示されます。</value>
+  </data>
+  <data name="Terminal.Empty.Heard">
+    <value>このセッションで受信した局がここに表示されます。クリックすると宛先欄に入ります。</value>
+  </data>
+  <data name="Terminal.TextSmaller" xml:space="preserve">
+    <value>文字を小さく (Ctrl+マウスホイール)</value>
+  </data>
+  <data name="Terminal.TextLarger" xml:space="preserve">
+    <value>文字を大きく (Ctrl+マウスホイール)</value>
+  </data>
+  <data name="Terminal.ColumnResize.Tip" xml:space="preserve">
+    <value>ドラッグして列の幅を変更します。ダブルクリックで元に戻します。</value>
+  </data>
+  <data name="Terminal.Station.Elevation" xml:space="preserve">
+    <value>仰角</value>
+  </data>
+  <data name="Terminal.Station.Azimuth" xml:space="preserve">
+    <value>方位角</value>
+  </data>
+  <data name="Terminal.Station.CallGrid.Tip" xml:space="preserve">
+    <value>自局のコールサインとグリッドロケーター</value>
+  </data>
+  <data name="Terminal.Station.ElevationBar.Tip" xml:space="preserve">
+    <value>衛星の仰角、地平線 (0°) から天頂 (90°) まで</value>
+  </data>
 </root>

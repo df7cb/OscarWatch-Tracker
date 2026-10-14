@@ -4832,4 +4832,604 @@ Terbaru: {1} ({2})</value>
     <value>"{0}" bukan callsign atau grid.</value>
   </data>
 
+  <data name="Menu.Tools.Terminal">
+    <value>OscarWatch _Terminal</value>
+  </data>
+  <data name="Window.Terminal.Title">
+    <value>OscarWatch Terminal</value>
+  </data>
+  <data name="Window.TerminalSettings.Title">
+    <value>Pengaturan OscarWatch Terminal</value>
+  </data>
+  <data name="Terminal.Shortcuts">
+    <value>Pintasan</value>
+  </data>
+  <data name="Terminal.LogCall">
+    <value>F12 Catat QSO</value>
+  </data>
+  <data name="Terminal.LogCall.Tip">
+    <value>Simpan tanda panggil di kotak Ke (atau stasiun terpilih) ke logbook sekarang</value>
+  </data>
+  <data name="Terminal.OpenSettings">
+    <value>Pengaturan</value>
+  </data>
+  <data name="Terminal.Connect">
+    <value>Hubungkan</value>
+  </data>
+  <data name="Terminal.Disconnect">
+    <value>Putuskan</value>
+  </data>
+  <data name="Terminal.Send">
+    <value>Kirim pesan</value>
+  </data>
+  <data name="Terminal.To">
+    <value>Ke</value>
+  </data>
+  <data name="Terminal.To.Tip">
+    <value>Tanda panggil yang dipanggil, atau CQ untuk panggilan umum</value>
+  </data>
+  <data name="Terminal.Message">
+    <value>Pesan</value>
+  </data>
+  <data name="Terminal.SendButton">
+    <value>Kirim</value>
+  </data>
+  <data name="Terminal.TxDelay">
+    <value>Tunda TX (d)</value>
+  </data>
+  <data name="Terminal.Format">
+    <value>Format</value>
+  </data>
+  <data name="Terminal.Format.Aprs">
+    <value>APRS</value>
+  </data>
+  <data name="Terminal.Format.Plain">
+    <value>Teks biasa</value>
+  </data>
+  <data name="Terminal.Path.None">
+    <value>tidak ada</value>
+  </data>
+  <data name="Terminal.Stats">
+    <value>Statistik</value>
+  </data>
+  <data name="Terminal.Stats.Reset">
+    <value>Atur ulang</value>
+  </data>
+  <data name="Terminal.Stats.Reset.Tip">
+    <value>Hapus statistik serta daftar QSO dan stasiun yang terdengar</value>
+  </data>
+  <data name="Terminal.Stats.Unique">
+    <value>Tanda panggil unik</value>
+  </data>
+  <data name="Terminal.Stats.MyTx">
+    <value>TX saya</value>
+  </data>
+  <data name="Terminal.Stats.MyRx">
+    <value>RX saya</value>
+  </data>
+  <data name="Terminal.Stats.Success">
+    <value>Keberhasilan digipeat</value>
+  </data>
+  <data name="Terminal.Stats.Success.Tip">
+    <value>Persentase frame Anda yang terdengar kembali lewat digipeater</value>
+  </data>
+  <data name="Terminal.Stats.Digipeated">
+    <value>Frame yang di-digipeat</value>
+  </data>
+  <data name="Terminal.Stats.Delay">
+    <value>Median tundaan</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers">
+    <value>Pengguna UHM</value>
+  </data>
+  <data name="Terminal.Stats.UhmUsers.Tip">
+    <value>Stasiun yang aktif di UHM untuk satelit ini dalam beberapa menit terakhir</value>
+  </data>
+  <data name="Terminal.Station">
+    <value>Stasiun</value>
+  </data>
+  <data name="Terminal.Station.Call">
+    <value>Tanda panggil</value>
+  </data>
+  <data name="Terminal.Station.Grid">
+    <value>Grid</value>
+  </data>
+  <data name="Terminal.Station.Satellite">
+    <value>Satelit</value>
+  </data>
+  <data name="Terminal.Station.Los">
+    <value>LOS</value>
+  </data>
+  <data name="Terminal.Station.AzEl">
+    <value>Az / El</value>
+  </data>
+  <data name="Terminal.Station.Range">
+    <value>Jarak</value>
+  </data>
+  <data name="Terminal.Legend">
+    <value>Keterangan:</value>
+  </data>
+  <data name="Terminal.ScrollToLast">
+    <value>Gulir ke baris terakhir</value>
+  </data>
+  <data name="Terminal.ShowCallers">
+    <value>Tampilkan stasiun</value>
+  </data>
+  <data name="Terminal.ShowOwnOnly">
+    <value>Hanya lalu lintas saya</value>
+  </data>
+  <data name="Terminal.ClearLog">
+    <value>Bersihkan log</value>
+  </data>
+  <data name="Terminal.Log">
+    <value>Log pesan</value>
+  </data>
+  <data name="Terminal.Qso">
+    <value>QSO</value>
+  </data>
+  <data name="Terminal.Heard">
+    <value>Stasiun terdengar</value>
+  </data>
+  <data name="Terminal.Col.Time">
+    <value>UTC</value>
+  </data>
+  <data name="Terminal.Col.Type">
+    <value>Jenis</value>
+  </data>
+  <data name="Terminal.Col.From">
+    <value>Dari</value>
+  </data>
+  <data name="Terminal.Col.To">
+    <value>Ke</value>
+  </data>
+  <data name="Terminal.Col.Delay">
+    <value>Tunda</value>
+  </data>
+  <data name="Terminal.Col.Message">
+    <value>Pesan</value>
+  </data>
+  <data name="Terminal.Col.Call">
+    <value>Tanda panggil</value>
+  </data>
+  <data name="Terminal.Col.Grid">
+    <value>Grid</value>
+  </data>
+  <data name="Terminal.Col.El">
+    <value>El</value>
+  </data>
+  <data name="Terminal.Col.State">
+    <value>Status</value>
+  </data>
+  <data name="Terminal.Col.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Col.Uhm.Tip">
+    <value>You Heard Me: apakah stasiun ini melaporkan mendengar Anda di OscarWatch.org</value>
+  </data>
+  <data name="Terminal.Col.Logged">
+    <value>Tercatat</value>
+  </data>
+  <data name="Terminal.Col.Since">
+    <value>Sejak</value>
+  </data>
+  <data name="Terminal.Col.CqTx">
+    <value>CQ/TX</value>
+  </data>
+  <data name="Terminal.Col.CqTx.Tip">
+    <value>Panggilan CQ dan total frame yang terdengar dari stasiun ini</value>
+  </data>
+  <data name="Terminal.Col.Marker">
+    <value>Tanda</value>
+  </data>
+  <data name="Terminal.Tag.Normal">
+    <value>-</value>
+  </data>
+  <data name="Terminal.Tag.ToMe">
+    <value>KE SAYA</value>
+  </data>
+  <data name="Terminal.Tag.Cq">
+    <value>CQ</value>
+  </data>
+  <data name="Terminal.Tag.MyTx">
+    <value>TX SAYA</value>
+  </data>
+  <data name="Terminal.Tag.MyDigipeated">
+    <value>DIGI SAYA</value>
+  </data>
+  <data name="Terminal.Tag.Telemetry">
+    <value>TLM</value>
+  </data>
+  <data name="Terminal.Tag.Beacon">
+    <value>BEACON</value>
+  </data>
+  <data name="Terminal.Marker.NewCall">
+    <value>Tanda panggil baru</value>
+  </data>
+  <data name="Terminal.Marker.NewGrid">
+    <value>Grid baru</value>
+  </data>
+  <data name="Terminal.Marker.Worked">
+    <value>Sudah dikontak</value>
+  </data>
+  <data name="Terminal.Logged.Yes">
+    <value>Ya</value>
+  </data>
+  <data name="Terminal.State.Heard">
+    <value>Terdengar</value>
+  </data>
+  <data name="Terminal.State.Cq">
+    <value>Memanggil CQ</value>
+  </data>
+  <data name="Terminal.State.Called">
+    <value>Dipanggil</value>
+  </data>
+  <data name="Terminal.State.ReportSent">
+    <value>Laporan terkirim</value>
+  </data>
+  <data name="Terminal.State.ReportReceived">
+    <value>Laporan diterima</value>
+  </data>
+  <data name="Terminal.State.ReportsExchanged">
+    <value>Laporan ditukar</value>
+  </data>
+  <data name="Terminal.State.RogerSent">
+    <value>Roger terkirim</value>
+  </data>
+  <data name="Terminal.State.RogerReceived">
+    <value>Roger diterima</value>
+  </data>
+  <data name="Terminal.State.Complete">
+    <value>Selesai</value>
+  </data>
+  <data name="Terminal.State.Logged">
+    <value>Tercatat</value>
+  </data>
+  <data name="Terminal.Uhm.Waiting">
+    <value>Tunggu</value>
+  </data>
+  <data name="Terminal.Uhm.HeardMe">
+    <value>Mendengar saya</value>
+  </data>
+  <data name="Terminal.Uhm.Mutual">
+    <value>Timbal balik</value>
+  </data>
+  <data name="Terminal.Uhm.Expired">
+    <value>Kedaluwarsa</value>
+  </data>
+  <data name="Terminal.Uhm.User">
+    <value>Pengguna</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Off">
+    <value>UHM: mati</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Active">
+    <value>UHM: aktif</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoToken">
+    <value>UHM: tambahkan token API OscarWatch.org di Pengaturan</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NoSatellite">
+    <value>UHM: pilih satelit yang memiliki digipeater</value>
+  </data>
+  <data name="Terminal.Uhm.Status.RateLimited">
+    <value>UHM: batas permintaan, mencoba lagi sebentar</value>
+  </data>
+  <data name="Terminal.Uhm.Status.NotEnabled">
+    <value>UHM: tidak diaktifkan untuk akun ini</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Unauthorised">
+    <value>UHM: token API tidak diterima</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Forbidden">
+    <value>UHM: akses ditolak untuk akun ini</value>
+  </data>
+  <data name="Terminal.Uhm.Status.Error">
+    <value>UHM: server tidak tersedia</value>
+  </data>
+  <data name="Terminal.AprsIs.Off">
+    <value>APRS-IS: mati</value>
+  </data>
+  <data name="Terminal.AprsIs.Connecting">
+    <value>APRS-IS: menghubungkan…</value>
+  </data>
+  <data name="Terminal.AprsIs.Connected">
+    <value>APRS-IS: gateway aktif</value>
+  </data>
+  <data name="Terminal.AprsIs.Unverified">
+    <value>APRS-IS: passcode belum terverifikasi, tidak diteruskan</value>
+  </data>
+  <data name="Terminal.AprsIs.Error">
+    <value>APRS-IS: koneksi terputus, mencoba lagi</value>
+  </data>
+  <data name="Terminal.Modem.Disconnected">
+    <value>Modem: terputus</value>
+  </data>
+  <data name="Terminal.Modem.Connecting">
+    <value>Modem: menghubungkan ke {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Connected">
+    <value>Modem: terhubung ke {0} ({1})</value>
+  </data>
+  <data name="Terminal.Modem.Error">
+    <value>Modem: tidak dapat menjangkau {0}. {1}</value>
+  </data>
+  <data name="Terminal.Profile.None">
+    <value>Satelit terpilih tidak memiliki digipeater paket</value>
+  </data>
+  <data name="Terminal.Profile.Summary">
+    <value>Format: {0}, jalur: {1}</value>
+  </data>
+  <data name="Terminal.Profile.Modem">
+    <value>Modem: {0}</value>
+  </data>
+  <data name="Terminal.Status.Ready">
+    <value>Siap. Tekan F1 untuk memanggil CQ.</value>
+  </data>
+  <data name="Terminal.Status.Sent">
+    <value>Terkirim: {0}</value>
+  </data>
+  <data name="Terminal.Status.NotConnected">
+    <value>Tidak terkirim: modem tidak terhubung.</value>
+  </data>
+  <data name="Terminal.Status.NoCallsign">
+    <value>Tidak terkirim: atur tanda panggil Anda di Pengaturan terlebih dahulu.</value>
+  </data>
+  <data name="Terminal.Status.InvalidDestination">
+    <value>Tidak terkirim: kotak Ke harus berisi tanda panggil atau CQ.</value>
+  </data>
+  <data name="Terminal.Status.EmptyMessage">
+    <value>Ketik pesan terlebih dahulu.</value>
+  </data>
+  <data name="Terminal.Status.SendFailed">
+    <value>Tidak terkirim: modem menolak frame.</value>
+  </data>
+  <data name="Terminal.Status.MacroEmpty">
+    <value>{0} belum memiliki teks makro. Tambahkan di Pengaturan.</value>
+  </data>
+  <data name="Terminal.Status.LogNeedsCall">
+    <value>Isi tanda panggil di kotak Ke atau pilih stasiun untuk dicatat.</value>
+  </data>
+  <data name="Terminal.Status.LogFailed">
+    <value>Tidak dapat mencatat {0}.</value>
+  </data>
+  <data name="Terminal.Status.LoggedAuto">
+    <value>{0} tercatat.</value>
+  </data>
+  <data name="Terminal.Status.LoggedManual">
+    <value>{0} tercatat (manual).</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Modem">
+    <value>Modem</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Satellites">
+    <value>Satelit</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Macros">
+    <value>Makro</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Colours">
+    <value>Warna</value>
+  </data>
+  <data name="Terminal.Settings.Tab.AprsIs">
+    <value>APRS-IS</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Uhm">
+    <value>UHM</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Logging">
+    <value>Pencatatan</value>
+  </data>
+  <data name="Terminal.Settings.Transport">
+    <value>Koneksi</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Agwpe">
+    <value>AGWPE (Direwolf, UZ7HO soundmodem)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissTcp">
+    <value>KISS lewat TCP (direncanakan)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.KissSerial">
+    <value>TNC KISS serial (direncanakan)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.BuiltIn">
+    <value>Soundmodem bawaan (direncanakan)</value>
+  </data>
+  <data name="Terminal.Settings.Transport.Planned">
+    <value>{0} direncanakan untuk rilis mendatang. Untuk saat ini AGWPE digunakan.</value>
+  </data>
+  <data name="Terminal.Settings.Host">
+    <value>Host</value>
+  </data>
+  <data name="Terminal.Settings.Port">
+    <value>Port</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort">
+    <value>Port radio</value>
+  </data>
+  <data name="Terminal.Settings.RadioPort.Item">
+    <value>Port {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Test">
+    <value>Uji dan tampilkan port</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Testing">
+    <value>Menguji koneksi…</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestOk">
+    <value>Terhubung ke {0}. Port radio ditemukan: {1}.</value>
+  </data>
+  <data name="Terminal.Settings.Modem.TestFailed">
+    <value>Tidak dapat terhubung: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Modem.Help">
+    <value>Direwolf dan soundmodem UZ7HO sama-sama menyediakan server AGWPE, biasanya di port 8000. Di UZ7HO buka Settings, Devices lalu centang server AGW; di Direwolf atur AGWPORT 8000 di direwolf.conf. Gunakan UZ7HO untuk IO-117 (BPSK 1200).</value>
+  </data>
+  <data name="Terminal.Settings.AutoConnect">
+    <value>Hubungkan saat jendela Terminal dibuka</value>
+  </data>
+  <data name="Terminal.Settings.Callsign">
+    <value>Tanda panggil</value>
+  </data>
+  <data name="Terminal.Settings.Ssid">
+    <value>SSID</value>
+  </data>
+  <data name="Terminal.Settings.Callsign.Help">
+    <value>Kosongkan untuk memakai tanda panggil stasiun bumi. Sebagian besar operator satelit memakai SSID 0.</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Help">
+    <value>Terminal memilih format pesan dan jalur digipeater dari satelit terpilih. Tambahkan satelit di sini untuk mengganti bawaan.</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltIn">
+    <value>Bawaan</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.BuiltInLine">
+    <value>{0} ({1}): {2}, jalur {3}, {4}</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.AddCurrent">
+    <value>Tambah satelit terpilih</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Remove">
+    <value>Hapus</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Norad">
+    <value>NORAD</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Name">
+    <value>Nama</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Path">
+    <value>Jalur</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.UhmName">
+    <value>Nama UHM</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.ModemHint">
+    <value>Modem</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Help">
+    <value>Placeholder: {CALL} adalah tanda panggil di kotak Ke, {MYCALL} tanda panggil Anda, {MYGRID} grid lengkap Anda dan {MYGRID4} empat karakter pertamanya. Centang Ke CQ untuk makro yang selalu dikirim ke CQ.</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Key">
+    <value>Tombol</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Label">
+    <value>Label</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Text">
+    <value>Teks</value>
+  </data>
+  <data name="Terminal.Settings.Macros.ToCq">
+    <value>Ke CQ</value>
+  </data>
+  <data name="Terminal.Settings.Macros.Reset">
+    <value>Pulihkan makro bawaan</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Help">
+    <value>Warna baris di log pesan. Setiap baris juga menampilkan label teks, jadi warna tidak pernah menjadi satu-satunya petunjuk.</value>
+  </data>
+  <data name="Terminal.Settings.Colours.Reset">
+    <value>Pulihkan warna bawaan</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Enabled">
+    <value>Teruskan paket yang terdengar ke APRS-IS (iGate hanya terima)</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Server">
+    <value>Server</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Passcode">
+    <value>Passcode</value>
+  </data>
+  <data name="Terminal.Settings.AprsIs.Help">
+    <value>Paket bertanda NOGATE, RFONLY atau TCPIP tidak pernah diteruskan, dan duplikat dalam 30 detik dibuang. Tanpa passcode yang valid server menerima login tetapi mengabaikan paket.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Help">
+    <value>You Heard Me (UHM) di OscarWatch.org memberi tahu ketika stasiun yang Anda dengar juga melaporkan mendengar Anda. Terminal melaporkan stasiun yang memanggil Anda dan memeriksa mitra QSO Anda. Menggunakan token API OscarWatch.org dari Pengaturan.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.NoToken">
+    <value>Token API OscarWatch.org belum diatur. Tambahkan di Pengaturan, OscarWatch sebelum mengaktifkan UHM.</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Enabled">
+    <value>Aktifkan UHM</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel">
+    <value>Cocokkan dengan teks pesan</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
+    <value>Kirim juga teks hasil dekode saat pemeriksaan, agar UHM mengonfirmasi frame yang tepat, bukan hanya pasangan tanda panggil</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual">
+    <value>Catat saat UHM mengonfirmasi kontak timbal balik</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
+    <value>Menyimpan QSO setelah kedua pihak saling mendengar dan bertukar grid atau laporan, meski tanpa 73 terakhir</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Test">
+    <value>Uji koneksi</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.Testing">
+    <value>Memeriksa token…</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestOk">
+    <value>Token diterima. Tanda panggil akun OscarWatch.org: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.TestFailed">
+    <value>Pemeriksaan UHM gagal: {0}</value>
+  </data>
+  <data name="Terminal.Settings.Uhm.CallMismatch">
+    <value>Tanda panggil akun OscarWatch.org Anda ({0}) berbeda dengan tanda panggil Terminal ({1}). Laporan UHM mungkin tidak cocok.</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog">
+    <value>Catat kontak secara otomatis</value>
+  </data>
+  <data name="Terminal.Settings.AutoLog.Help">
+    <value>Kontak dicatat setelah tanda panggil dan grid atau laporan dipertukarkan dua arah dan roger atau 73 dikirim atau diterima. QSO memakai mode PKT dengan propagasi SAT dan diunggah ke Cloudlog jika sudah diatur.</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck">
+    <value>Konfirmasi pesan APRS bernomor</value>
+  </data>
+  <data name="Terminal.Settings.AprsAutoAck.Tip">
+    <value>Mengirim ack APRS lewat digipeater untuk pesan bernomor yang ditujukan kepada Anda. Biarkan mati saat lintasan ramai untuk menghemat digipeater.</value>
+  </data>
+  <data name="Terminal.Settings.FontSize">
+    <value>Ukuran teks log pesan</value>
+  </data>
+  <data name="Terminal.Station.Aos">
+    <value>AOS</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizon">
+    <value>{0} berada di bawah cakrawala. Frame yang dikirim sekarang tidak akan terdengar.</value>
+  </data>
+  <data name="Terminal.Warning.BelowHorizonAos">
+    <value>{0} berada di bawah cakrawala (AOS dalam {1}). Frame yang dikirim sekarang tidak akan terdengar.</value>
+  </data>
+  <data name="Terminal.Empty.Log">
+    <value>Belum ada frame. Paket yang terdekode muncul di sini saat satelit melintas.</value>
+  </data>
+  <data name="Terminal.Empty.Qso">
+    <value>Stasiun yang Anda panggil atau yang memanggil Anda muncul di sini.</value>
+  </data>
+  <data name="Terminal.Empty.Heard">
+    <value>Setiap stasiun yang terdengar di sesi ini muncul di sini. Klik untuk memasukkannya ke kotak Ke.</value>
+  </data>
+  <data name="Terminal.TextSmaller" xml:space="preserve">
+    <value>Teks lebih kecil (Ctrl+roda mouse)</value>
+  </data>
+  <data name="Terminal.TextLarger" xml:space="preserve">
+    <value>Teks lebih besar (Ctrl+roda mouse)</value>
+  </data>
+  <data name="Terminal.ColumnResize.Tip" xml:space="preserve">
+    <value>Seret untuk mengubah lebar kolom. Klik dua kali untuk mengatur ulang.</value>
+  </data>
+  <data name="Terminal.Station.Elevation" xml:space="preserve">
+    <value>Elevasi</value>
+  </data>
+  <data name="Terminal.Station.Azimuth" xml:space="preserve">
+    <value>Azimut</value>
+  </data>
+  <data name="Terminal.Station.CallGrid.Tip" xml:space="preserve">
+    <value>Callsign dan grid locator Anda</value>
+  </data>
+  <data name="Terminal.Station.ElevationBar.Tip" xml:space="preserve">
+    <value>Elevasi satelit, dari cakrawala (0°) hingga tepat di atas (90°)</value>
+  </data>
 </root>
