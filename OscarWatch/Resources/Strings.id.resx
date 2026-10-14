@@ -5378,12 +5378,6 @@ Terbaru: {1} ({2})</value>
   <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
     <value>Kirim juga teks hasil dekode saat pemeriksaan, agar UHM mengonfirmasi frame yang tepat, bukan hanya pasangan tanda panggil</value>
   </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual">
-    <value>Catat saat UHM mengonfirmasi kontak timbal balik</value>
-  </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
-    <value>Menyimpan QSO setelah kedua pihak saling mendengar dan bertukar grid atau laporan, meski tanpa 73 terakhir</value>
-  </data>
   <data name="Terminal.Settings.Uhm.Test">
     <value>Uji koneksi</value>
   </data>

@@ -126,7 +126,6 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
 
         _uhmEnabled = t.Uhm.Enabled;
         _uhmFrameLevelMatch = t.Uhm.FrameLevelMatch;
-        _uhmLogWhenMutual = t.Uhm.LogWhenMutual;
 
         _autoLog = t.AutoLog;
         _aprsAutoAck = t.AprsAutoAck;
@@ -179,7 +178,6 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
 
     [ObservableProperty] private bool _uhmEnabled;
     [ObservableProperty] private bool _uhmFrameLevelMatch;
-    [ObservableProperty] private bool _uhmLogWhenMutual;
     [ObservableProperty] private string _uhmTestText = "";
     [ObservableProperty] private string _uhmWarningText = "";
     [ObservableProperty] private bool _isTestingUhm;
@@ -383,7 +381,6 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         t.AprsIs.Passcode = AprsIsPasscode?.Trim() ?? "";
         t.Uhm.Enabled = UhmEnabled;
         t.Uhm.FrameLevelMatch = UhmFrameLevelMatch;
-        t.Uhm.LogWhenMutual = UhmLogWhenMutual;
         t.AutoLog = AutoLog;
         t.AprsAutoAck = AprsAutoAck;
         t.TxDelaySeconds = TxDelaySeconds;

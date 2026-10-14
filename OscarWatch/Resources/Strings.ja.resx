@@ -5374,12 +5374,6 @@
   <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
     <value>照合時にデコードした本文も送信し、コールサインの組だけでなくフレーム単位で確認します</value>
   </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual">
-    <value>UHM が相互受信を確認したら記録する</value>
-  </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
-    <value>双方が受信し合い、グリッドまたはレポートを交換した時点で、最後の 73 がなくても QSO を保存します</value>
-  </data>
   <data name="Terminal.Settings.Uhm.Test">
     <value>接続テスト</value>
   </data>

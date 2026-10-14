@@ -323,9 +323,6 @@
             <CheckBox Content="{loc:Localize Key=Terminal.Settings.Uhm.FrameLevel}" IsChecked="{Binding UhmFrameLevelMatch}"
                       IsEnabled="{Binding UhmEnabled}" />
             <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Uhm.FrameLevel.Tip}" />
-            <CheckBox Content="{loc:Localize Key=Terminal.Settings.Uhm.LogWhenMutual}" IsChecked="{Binding UhmLogWhenMutual}"
-                      IsEnabled="{Binding UhmEnabled}" />
-            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Uhm.LogWhenMutual.Tip}" />
             <Button Content="{loc:Localize Key=Terminal.Settings.Uhm.Test}"
                     Command="{Binding TestUhmCommand}"
                     IsEnabled="{Binding !IsTestingUhm}"

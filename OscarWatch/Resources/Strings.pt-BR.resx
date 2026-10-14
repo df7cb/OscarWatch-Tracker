@@ -5373,12 +5373,6 @@ Mais recente: {1} ({2})</value>
   <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
     <value>Envia também o texto decodificado nas verificações, para o UHM confirmar o quadro exato e não só o par de indicativos</value>
   </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual">
-    <value>Registrar quando o UHM confirmar contato mútuo</value>
-  </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
-    <value>Salva o QSO quando os dois lados se ouviram e um grid ou reporte foi trocado, mesmo sem o 73 final</value>
-  </data>
   <data name="Terminal.Settings.Uhm.Test">
     <value>Testar conexão</value>
   </data>

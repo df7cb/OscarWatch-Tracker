@@ -5373,12 +5373,6 @@ Latest: {1} ({2})</value>
   <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
     <value>Also send the decoded text on match checks, so UHM confirms the exact frame rather than just the callsign pair</value>
   </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual">
-    <value>Log when UHM confirms a mutual contact</value>
-  </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
-    <value>Saves the QSO once both sides heard each other and a grid or report was exchanged, even without a final 73</value>
-  </data>
   <data name="Terminal.Settings.Uhm.Test">
     <value>Test connection</value>
   </data>

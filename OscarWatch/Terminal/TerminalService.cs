@@ -611,7 +611,7 @@ public sealed class TerminalService : IAsyncDisposable
             return;
         bool ready;
         lock (_gate)
-            ready = TerminalQsoTracker.IsReadyToLog(station, _uhmMatches.IsMutual(station.Call), Settings.Uhm.LogWhenMutual);
+            ready = TerminalQsoTracker.IsReadyToLog(station);
         if (ready)
             await LogAsync(station.Call, manual: false).ConfigureAwait(false);
     }
@@ -786,16 +786,10 @@ public sealed class TerminalService : IAsyncDisposable
             if (!ApplyUhmResult(match.Result))
                 return;
 
-            TerminalStation? station;
             lock (_gate)
-            {
                 _uhmMatches.ApplyMatch(call, match.Matched, match.Mutual, DateTime.UtcNow);
-                station = _tracker.Get(call);
-            }
 
             Changed?.Invoke();
-            if (match.Mutual && station is not null && Settings.Uhm.LogWhenMutual)
-                await TryAutoLogAsync(station).ConfigureAwait(false);
         }
     }
 

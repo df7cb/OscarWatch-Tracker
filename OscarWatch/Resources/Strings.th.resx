@@ -5378,12 +5378,6 @@ LOS: {2}
   <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
     <value>ส่งข้อความที่ถอดรหัสไปด้วยเมื่อตรวจสอบ เพื่อให้ UHM ยืนยันเฟรมที่ตรงกันแทนที่จะเป็นแค่คู่สัญญาณเรียกขาน</value>
   </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual">
-    <value>บันทึกเมื่อ UHM ยืนยันการติดต่อทั้งสองฝ่าย</value>
-  </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
-    <value>บันทึก QSO เมื่อทั้งสองฝ่ายได้ยินกันและแลกกริดหรือรายงานแล้ว แม้ไม่มี 73 ปิดท้าย</value>
-  </data>
   <data name="Terminal.Settings.Uhm.Test">
     <value>ทดสอบการเชื่อมต่อ</value>
   </data>

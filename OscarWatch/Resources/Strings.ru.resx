@@ -5378,12 +5378,6 @@ LOS: {2}
   <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
     <value>Отправлять также декодированный текст, чтобы UHM подтверждал точный кадр, а не только пару позывных</value>
   </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual">
-    <value>Записывать, когда UHM подтверждает взаимную связь</value>
-  </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
-    <value>Сохраняет QSO, как только обе стороны услышали друг друга и обменялись локатором или рапортом, даже без финального 73</value>
-  </data>
   <data name="Terminal.Settings.Uhm.Test">
     <value>Проверить подключение</value>
   </data>

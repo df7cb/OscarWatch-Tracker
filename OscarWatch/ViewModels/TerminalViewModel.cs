@@ -67,7 +67,17 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         _logbook.QsosChanged += OnLogbookQsosChanged;
 
         _uiTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-        _uiTimer.Tick += (_, _) => RefreshTick();
+        _uiTimer.Tick += (_, _) =>
+        {
+            try
+            {
+                RefreshTick();
+            }
+            catch (Exception ex)
+            {
+                Log.Warning(ex, "Terminal refresh failed");
+            }
+        };
         StatusLine = _l.Get("Terminal.Status.Ready");
     }
 
@@ -178,15 +188,25 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
 
     public TerminalService Service => _service;
 
+    /// <summary>Fills the status line before the window's first layout, so the strip is not measured empty.</summary>
+    public void PrepareForShow() => RefreshTick();
+
     public void OnWindowOpened()
     {
         _windowOpen = true;
-        ResolveSatelliteContext();
-        if (_settings.Current.Terminal.Agwpe.AutoConnect)
-            _service.Start();
-        _ = RefreshWorkedSetsAsync();
-        RefreshTick();
         _uiTimer.Start();
+        try
+        {
+            ResolveSatelliteContext();
+            if (_settings.Current.Terminal.Agwpe.AutoConnect)
+                _service.Start();
+            _ = RefreshWorkedSetsAsync();
+            RefreshTick();
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Terminal window open refresh failed");
+        }
     }
 
     public void OnWindowClosed()

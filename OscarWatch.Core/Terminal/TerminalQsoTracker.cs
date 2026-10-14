@@ -169,11 +169,11 @@ public sealed class TerminalQsoTracker
     }
 
     /// <summary>Whether <paramref name="station"/> can be logged automatically.</summary>
-    public static bool IsReadyToLog(TerminalStation station, bool uhmMutual, bool logWhenMutual)
+    public static bool IsReadyToLog(TerminalStation station)
     {
         if (station.Logged || !station.ExchangesComplete)
             return false;
-        return station.HasRogerOrSignOff || (logWhenMutual && uhmMutual);
+        return station.HasRogerOrSignOff;
     }
 
     public void MarkLogged(string call) => SetLogged(call, true);

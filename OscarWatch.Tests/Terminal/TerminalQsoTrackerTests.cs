@@ -27,7 +27,7 @@ public sealed class TerminalQsoTrackerTests
         t.OnReceived(Rx("OK2ZC", Me, "R73", 10), Me);
         var s = t.Get("OK2ZC")!;
         Assert.Equal(TerminalStationState.Complete, s.State);
-        Assert.True(TerminalQsoTracker.IsReadyToLog(s, uhmMutual: false, logWhenMutual: false));
+        Assert.True(TerminalQsoTracker.IsReadyToLog(s));
         Assert.Equal("JN89", s.Grid);
     }
 
@@ -41,10 +41,10 @@ public sealed class TerminalQsoTrackerTests
         var s = t.Get("OZ9AAR")!;
         Assert.True(s.ExchangeSent);
         Assert.Equal(TerminalStationState.ReportsExchanged, s.State);
-        Assert.False(TerminalQsoTracker.IsReadyToLog(s, false, false));
+        Assert.False(TerminalQsoTracker.IsReadyToLog(s));
 
         t.OnSent("OZ9AAR", "R73", T0.AddSeconds(15));
-        Assert.True(TerminalQsoTracker.IsReadyToLog(s, false, false));
+        Assert.True(TerminalQsoTracker.IsReadyToLog(s));
     }
 
     [Fact]
@@ -57,15 +57,14 @@ public sealed class TerminalQsoTrackerTests
     }
 
     [Fact]
-    public void Mutual_can_replace_roger_when_enabled()
+    public void Exchange_without_roger_is_not_ready_to_log()
     {
         var t = new TerminalQsoTracker();
         t.OnSent("G0ABC", "IO85 599", T0);
         t.OnReceived(Rx("G0ABC", Me, "IO91 599", 5), Me);
         var s = t.Get("G0ABC")!;
 
-        Assert.False(TerminalQsoTracker.IsReadyToLog(s, uhmMutual: true, logWhenMutual: false));
-        Assert.True(TerminalQsoTracker.IsReadyToLog(s, uhmMutual: true, logWhenMutual: true));
+        Assert.False(TerminalQsoTracker.IsReadyToLog(s));
         Assert.Equal("599", s.RstSent);
         Assert.Equal("599", s.RstReceived);
     }
@@ -79,7 +78,7 @@ public sealed class TerminalQsoTrackerTests
         t.MarkLogged("G0ABC-7");
         var s = t.Get("G0ABC")!;
         Assert.Equal(TerminalStationState.Logged, s.State);
-        Assert.False(TerminalQsoTracker.IsReadyToLog(s, false, false));
+        Assert.False(TerminalQsoTracker.IsReadyToLog(s));
     }
 
     [Fact]

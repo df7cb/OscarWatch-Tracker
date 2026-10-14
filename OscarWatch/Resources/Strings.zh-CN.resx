@@ -5374,12 +5374,6 @@
   <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
     <value>检查匹配时同时发送解码文本,使 UHM 确认具体帧而不仅是呼号对</value>
   </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual">
-    <value>UHM 确认双向通联时记录</value>
-  </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
-    <value>双方互相听到并交换网格或报告后即保存 QSO,即使没有最后的 73</value>
-  </data>
   <data name="Terminal.Settings.Uhm.Test">
     <value>测试连接</value>
   </data>

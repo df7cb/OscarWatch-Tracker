@@ -2552,6 +2552,7 @@ public partial class MainViewModel : ViewModelBase
         }
 
         var vm = App.Services.GetRequiredService<TerminalViewModel>();
+        vm.PrepareForShow();
         var window = new TerminalWindow { DataContext = vm };
         window.Closed += (_, _) => _openTerminalWindow = null;
         _openTerminalWindow = window;

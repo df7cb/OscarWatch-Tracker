@@ -140,6 +140,54 @@
   </Window.Styles>
 
   <DockPanel Margin="10">
+    <!-- Status line and legend keep their height when the header is tall. -->
+    <Border DockPanel.Dock="Bottom"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="0,1,0,0"
+            Padding="0,6,0,0"
+            Margin="0,8,0,0"
+            MinHeight="28">
+      <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
+          <Ellipse Classes="term-dot" Fill="{Binding ModemDot}" />
+          <TextBlock Text="{Binding ModemStatusText}" FontSize="12" VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="{Binding ProfileText}" FontSize="12" Margin="0,0,18,0" VerticalAlignment="Center" />
+        <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
+          <Ellipse Classes="term-dot" Fill="{Binding AprsIsDot}" />
+          <TextBlock Text="{Binding AprsIsStatusText}" FontSize="12" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,0,18,0" ToolTip.Tip="{Binding UhmServerText}">
+          <Ellipse Classes="term-dot" Fill="{Binding UhmDot}" />
+          <TextBlock Text="{Binding UhmStatusText}" FontSize="12" VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="{Binding UhmServerText}" FontSize="12" Margin="0,0,18,0"
+                   IsVisible="{Binding UhmServerText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <TextBlock Text="{Binding UtcClockText}" FontSize="12" FontFamily="Consolas,Courier New,monospace"
+                   VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
+    <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="12">
+        <CheckBox Content="{loc:Localize Key=Terminal.ScrollToLast}" IsChecked="{Binding ScrollToLastLine}" />
+        <CheckBox Content="{loc:Localize Key=Terminal.ShowCallers}" IsChecked="{Binding ShowCallers}" />
+        <CheckBox Content="{loc:Localize Key=Terminal.ShowOwnOnly}" IsChecked="{Binding ShowOwnOnly}" />
+        <Button Content="{loc:Localize Key=Terminal.ClearLog}" Command="{Binding ClearLogCommand}" />
+      </StackPanel>
+      <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <TextBlock Text="{loc:Localize Key=Terminal.Legend}" Classes="term-label" Margin="0,0,8,0" />
+        <Border Classes="term-swatch" Background="{Binding LegendToMeBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
+        <TextBlock Text="{loc:Localize Key=Terminal.Tag.ToMe}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
+        <Border Classes="term-swatch" Background="{Binding LegendCqBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
+        <TextBlock Text="{loc:Localize Key=Terminal.Tag.Cq}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
+        <Border Classes="term-swatch" Background="{Binding LegendMyTxBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
+        <TextBlock Text="{loc:Localize Key=Terminal.Tag.MyTx}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
+        <Border Classes="term-swatch" Background="{Binding LegendMyDigipeatedBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
+        <TextBlock Text="{loc:Localize Key=Terminal.Tag.MyDigipeated}" FontSize="12" VerticalAlignment="Center" />
+      </WrapPanel>
+    </DockPanel>
+
     <!-- Top: shortcuts and send box, then one station and statistics panel -->
     <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" ColumnSpacing="8" Margin="0,0,0,8">
       <Border Grid.Column="0" Classes="term-panel">
@@ -353,53 +401,6 @@
         </Grid>
       </Border>
     </Grid>
-
-    <!-- Status bar -->
-    <Border DockPanel.Dock="Bottom"
-            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
-            BorderThickness="0,1,0,0"
-            Padding="0,6,0,0"
-            Margin="0,8,0,0">
-      <WrapPanel Orientation="Horizontal">
-        <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
-          <Ellipse Classes="term-dot" Fill="{Binding ModemDot}" />
-          <TextBlock Text="{Binding ModemStatusText}" FontSize="12" VerticalAlignment="Center" />
-        </StackPanel>
-        <TextBlock Text="{Binding ProfileText}" FontSize="12" Margin="0,0,18,0" VerticalAlignment="Center" />
-        <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
-          <Ellipse Classes="term-dot" Fill="{Binding AprsIsDot}" />
-          <TextBlock Text="{Binding AprsIsStatusText}" FontSize="12" VerticalAlignment="Center" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="0,0,18,0" ToolTip.Tip="{Binding UhmServerText}">
-          <Ellipse Classes="term-dot" Fill="{Binding UhmDot}" />
-          <TextBlock Text="{Binding UhmStatusText}" FontSize="12" VerticalAlignment="Center" />
-        </StackPanel>
-        <TextBlock Text="{Binding UhmServerText}" FontSize="12" Margin="0,0,18,0"
-                   IsVisible="{Binding UhmServerText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
-        <TextBlock Text="{Binding UtcClockText}" FontSize="12" FontFamily="Consolas,Courier New,monospace" />
-      </WrapPanel>
-    </Border>
-
-    <!-- Legend and view options -->
-    <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
-      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="12">
-        <CheckBox Content="{loc:Localize Key=Terminal.ScrollToLast}" IsChecked="{Binding ScrollToLastLine}" />
-        <CheckBox Content="{loc:Localize Key=Terminal.ShowCallers}" IsChecked="{Binding ShowCallers}" />
-        <CheckBox Content="{loc:Localize Key=Terminal.ShowOwnOnly}" IsChecked="{Binding ShowOwnOnly}" />
-        <Button Content="{loc:Localize Key=Terminal.ClearLog}" Command="{Binding ClearLogCommand}" />
-      </StackPanel>
-      <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-        <TextBlock Text="{loc:Localize Key=Terminal.Legend}" Classes="term-label" Margin="0,0,8,0" />
-        <Border Classes="term-swatch" Background="{Binding LegendToMeBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
-        <TextBlock Text="{loc:Localize Key=Terminal.Tag.ToMe}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
-        <Border Classes="term-swatch" Background="{Binding LegendCqBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
-        <TextBlock Text="{loc:Localize Key=Terminal.Tag.Cq}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
-        <Border Classes="term-swatch" Background="{Binding LegendMyTxBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
-        <TextBlock Text="{loc:Localize Key=Terminal.Tag.MyTx}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
-        <Border Classes="term-swatch" Background="{Binding LegendMyDigipeatedBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
-        <TextBlock Text="{loc:Localize Key=Terminal.Tag.MyDigipeated}" FontSize="12" VerticalAlignment="Center" />
-      </WrapPanel>
-    </DockPanel>
 
     <!-- Message log and station lists -->
     <Grid x:Name="BodyGrid" ColumnDefinitions="*,Auto,460">

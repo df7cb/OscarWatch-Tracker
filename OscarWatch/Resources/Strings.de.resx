@@ -5378,12 +5378,6 @@ Aktuell: {1} ({2})</value>
   <data name="Terminal.Settings.Uhm.FrameLevel.Tip">
     <value>Beim Abgleich auch den dekodierten Text senden, damit UHM den genauen Rahmen bestätigt und nicht nur das Rufzeichenpaar</value>
   </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual">
-    <value>Loggen, wenn UHM einen gegenseitigen Kontakt bestätigt</value>
-  </data>
-  <data name="Terminal.Settings.Uhm.LogWhenMutual.Tip">
-    <value>Speichert das QSO, sobald beide Seiten sich gehört und Locator oder Rapport getauscht haben, auch ohne abschließendes 73</value>
-  </data>
   <data name="Terminal.Settings.Uhm.Test">
     <value>Verbindung testen</value>
   </data>

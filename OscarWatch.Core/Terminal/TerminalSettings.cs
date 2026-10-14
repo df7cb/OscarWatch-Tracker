@@ -70,9 +70,6 @@ public sealed class TerminalUhmSettings
 
     /// <summary>Send the message text on match checks (frame-level confirmation). Off means callsign-pair only.</summary>
     public bool FrameLevelMatch { get; set; }
-
-    /// <summary>Log the contact when UHM reports mutual and both sides exchanged a grid or report.</summary>
-    public bool LogWhenMutual { get; set; }
 }
 
 /// <summary>OscarWatch Terminal (packet digipeater) settings.</summary>
