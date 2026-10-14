@@ -5357,6 +5357,9 @@ LOS: {2}
   <data name="Terminal.Settings.AprsIs.Passcode">
     <value>Пароль</value>
   </data>
+  <data name="Terminal.Settings.AprsIs.PasscodeLink">
+    <value>Получить пароль APRS</value>
+  </data>
   <data name="Terminal.Settings.AprsIs.Help">
     <value>Пакеты с NOGATE, RFONLY или TCPIP никогда не пересылаются, дубликаты в течение 30 секунд отбрасываются. Без верного пароля сервер принимает вход, но игнорирует пакеты.</value>
   </data>

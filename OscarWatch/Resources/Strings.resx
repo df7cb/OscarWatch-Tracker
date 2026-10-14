@@ -5352,6 +5352,9 @@ Latest: {1} ({2})</value>
   <data name="Terminal.Settings.AprsIs.Passcode">
     <value>Passcode</value>
   </data>
+  <data name="Terminal.Settings.AprsIs.PasscodeLink">
+    <value>Get your APRS passcode</value>
+  </data>
   <data name="Terminal.Settings.AprsIs.Help">
     <value>Packets marked NOGATE, RFONLY or TCPIP are never forwarded, and duplicates within 30 seconds are dropped. Without a valid passcode the server accepts the login but ignores gated packets.</value>
   </data>

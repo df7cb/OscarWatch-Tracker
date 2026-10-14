@@ -5353,6 +5353,9 @@
   <data name="Terminal.Settings.AprsIs.Passcode">
     <value>验证码</value>
   </data>
+  <data name="Terminal.Settings.AprsIs.PasscodeLink">
+    <value>获取 APRS 验证码</value>
+  </data>
   <data name="Terminal.Settings.AprsIs.Help">
     <value>标有 NOGATE、RFONLY 或 TCPIP 的数据包不会转发,30 秒内的重复包会被丢弃。没有有效验证码时服务器接受登录但忽略转发的数据包。</value>
   </data>

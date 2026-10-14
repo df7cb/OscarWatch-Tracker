@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OscarWatch.Core.Services;
@@ -69,6 +70,8 @@ public sealed partial class TerminalProfileEditViewModel : ObservableObject
 /// <summary>OscarWatch Terminal settings dialogue. Edits a working copy; <see cref="Save"/> writes it back.</summary>
 public sealed partial class TerminalSettingsViewModel : ViewModelBase
 {
+    private const string AprsPasscodeUrl = "https://apps.magicbug.co.uk/passcode/";
+
     private static readonly ILogger Log = Serilog.Log.ForContext<TerminalSettingsViewModel>();
 
     private readonly ISettingsService _settings;
@@ -341,6 +344,16 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         UhmErrorKind.RateLimited => _l.Get("Terminal.Uhm.Status.RateLimited"),
         _ => _l.Get("Terminal.Settings.Uhm.TestFailed", string.IsNullOrWhiteSpace(result.Message) ? result.Error.ToString() : result.Message),
     };
+
+    [RelayCommand]
+    private void OpenAprsPasscode()
+    {
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = AprsPasscodeUrl,
+            UseShellExecute = true,
+        });
+    }
 
     [RelayCommand]
     private void Save()

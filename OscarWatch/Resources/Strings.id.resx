@@ -5357,6 +5357,9 @@ Terbaru: {1} ({2})</value>
   <data name="Terminal.Settings.AprsIs.Passcode">
     <value>Passcode</value>
   </data>
+  <data name="Terminal.Settings.AprsIs.PasscodeLink">
+    <value>Dapatkan passcode APRS</value>
+  </data>
   <data name="Terminal.Settings.AprsIs.Help">
     <value>Paket bertanda NOGATE, RFONLY atau TCPIP tidak pernah diteruskan, dan duplikat dalam 30 detik dibuang. Tanpa passcode yang valid server menerima login tetapi mengabaikan paket.</value>
   </data>

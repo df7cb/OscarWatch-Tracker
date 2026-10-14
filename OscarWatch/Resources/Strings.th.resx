@@ -5357,6 +5357,9 @@ LOS: {2}
   <data name="Terminal.Settings.AprsIs.Passcode">
     <value>รหัสผ่าน</value>
   </data>
+  <data name="Terminal.Settings.AprsIs.PasscodeLink">
+    <value>รับรหัสผ่าน APRS ของคุณ</value>
+  </data>
   <data name="Terminal.Settings.AprsIs.Help">
     <value>แพ็กเก็ตที่มี NOGATE, RFONLY หรือ TCPIP จะไม่ถูกส่งต่อ และแพ็กเก็ตซ้ำภายใน 30 วินาทีจะถูกทิ้ง หากไม่มีรหัสผ่านที่ถูกต้อง เซิร์ฟเวอร์จะยอมรับการเข้าสู่ระบบแต่ไม่สนใจแพ็กเก็ต</value>
   </data>

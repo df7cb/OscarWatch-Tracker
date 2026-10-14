@@ -5352,6 +5352,9 @@ Mais recente: {1} ({2})</value>
   <data name="Terminal.Settings.AprsIs.Passcode">
     <value>Passcode</value>
   </data>
+  <data name="Terminal.Settings.AprsIs.PasscodeLink">
+    <value>Obter o seu passcode APRS</value>
+  </data>
   <data name="Terminal.Settings.AprsIs.Help">
     <value>Pacotes marcados NOGATE, RFONLY ou TCPIP nunca são encaminhados, e duplicados em 30 segundos são descartados. Sem um passcode válido o servidor aceita o login mas ignora os pacotes.</value>
   </data>

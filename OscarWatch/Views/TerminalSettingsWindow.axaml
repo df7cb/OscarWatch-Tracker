@@ -25,6 +25,26 @@
       <Setter Property="TextWrapping" Value="Wrap" />
       <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCautionBrush}" />
     </Style>
+    <Style Selector="Button.ts-link">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style Selector="Button.ts-link /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="Button.ts-link:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                     Button.ts-link:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="TabControl /template/ ItemsPresenter#PART_ItemsPresenter">
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
   </Window.Styles>
 
   <DockPanel Margin="0">
@@ -151,13 +171,13 @@
       <!-- Satellites -->
       <TabItem Header="{loc:Localize Key=Terminal.Settings.Tab.Satellites}">
         <DockPanel Margin="4,8,4,0">
-          <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,10">
+          <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,10" MaxWidth="420">
             <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Profiles.Help}" />
             <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Settings.Profiles.BuiltIn}" />
             <TextBlock Text="{Binding BuiltInProfilesText}" FontSize="12" TextWrapping="Wrap"
                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
           </StackPanel>
-          <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="8" Margin="0,10,0,8">
+          <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8" Margin="0,10,0,8">
             <Button Content="{loc:Localize Key=Terminal.Settings.Profiles.AddCurrent}" Command="{Binding AddCurrentSatelliteCommand}" />
             <Button Content="{loc:Localize Key=Terminal.Settings.Profiles.Remove}" Command="{Binding RemoveProfileCommand}" />
           </StackPanel>
@@ -196,7 +216,7 @@
       <!-- Macros -->
       <TabItem Header="{loc:Localize Key=Terminal.Settings.Tab.Macros}">
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,8,4,0">
-          <StackPanel Spacing="10" MaxWidth="600" HorizontalAlignment="Left">
+          <StackPanel Spacing="10" MaxWidth="600">
             <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Macros.Help}" />
             <Grid ColumnDefinitions="36,130,*,70" ColumnSpacing="8">
               <TextBlock Grid.Column="0" Text="{loc:Localize Key=Terminal.Settings.Macros.Key}" FontSize="12" />
@@ -279,6 +299,15 @@
             <TextBlock Text="{loc:Localize Key=Terminal.Settings.AprsIs.Passcode}" />
             <TextBox Text="{Binding AprsIsPasscode}" PasswordChar="•" IsEnabled="{Binding AprsIsEnabled}"
                      AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.AprsIs.Passcode}" />
+            <Button Classes="ts-link"
+                    Command="{Binding OpenAprsPasscodeCommand}"
+                    AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.AprsIs.PasscodeLink}">
+              <TextBlock Text="{loc:Localize Key=Terminal.Settings.AprsIs.PasscodeLink}"
+                         FontSize="12"
+                         FontWeight="Normal"
+                         TextDecorations="Underline"
+                         Foreground="{DynamicResource SystemAccentColorBrush}" />
+            </Button>
           </StackPanel>
         </ScrollViewer>
       </TabItem>

@@ -5352,6 +5352,9 @@ Está utilizando la versión {0}.
   <data name="Terminal.Settings.AprsIs.Passcode">
     <value>Código</value>
   </data>
+  <data name="Terminal.Settings.AprsIs.PasscodeLink">
+    <value>Obtén tu código APRS</value>
+  </data>
   <data name="Terminal.Settings.AprsIs.Help">
     <value>Los paquetes marcados NOGATE, RFONLY o TCPIP nunca se reenvían y los duplicados en 30 segundos se descartan. Sin un código válido el servidor acepta el acceso pero ignora los paquetes.</value>
   </data>

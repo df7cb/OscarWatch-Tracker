@@ -5353,6 +5353,9 @@
   <data name="Terminal.Settings.AprsIs.Passcode">
     <value>パスコード</value>
   </data>
+  <data name="Terminal.Settings.AprsIs.PasscodeLink">
+    <value>APRSパスコードを取得</value>
+  </data>
   <data name="Terminal.Settings.AprsIs.Help">
     <value>NOGATE、RFONLY、TCPIP の付いたパケットは転送せず、30 秒以内の重複は破棄します。有効なパスコードがないとサーバーはログインを受け付けますが、転送パケットを無視します。</value>
   </data>
