@@ -13,7 +13,7 @@
         <a href="index.html" class="brand-home" title="Home"><img src="oscarwatch-icon.png" alt="" class="brand-icon" width="56" height="56" /></a>
         <div class="brand-text">
           <h1>OscarWatch Terminal</h1>
-          <p class="tagline">Packet contacts through the ISS and IO-117 digipeaters</p>
+          <p class="tagline">Typed packet contacts through satellites such as the ISS</p>
         </div>
       </div>
       <nav aria-label="Help topics">
@@ -37,290 +37,503 @@
 
     <main>
       <p class="lead">
-        <strong>Tools → OscarWatch Terminal</strong> is a keyboard-to-keyboard packet window for working stations through
-        satellite digipeaters, in the style of GreenCube Terminal. It has its own 1200 baud soundmodem, or it can talk to
-        Direwolf or the UZ7HO soundmodem over AGWPE. It shows every frame heard, tracks your contacts and logs them for you.
+        <strong>Tools → OscarWatch Terminal</strong> lets you hold short typed contacts with other stations through a
+        satellite that relays packet radio, such as the ISS on 145.825 MHz. You type a call and a message, OscarWatch turns it
+        into tones, your radio sends it up, and the satellite repeats it back down for everyone in its footprint. Terminal shows
+        everything heard, keeps track of who you are working and logs the contacts for you. Everything you need is built in:
+        you do not need Direwolf or any other soundmodem application.
       </p>
 
-      <h2>What you need</h2>
-      <ul>
-        <li>A radio with its audio connected to the PC, and PTT handled by the soundmodem (VOX, CAT or a serial line).</li>
-        <li>For 1200 baud AFSK satellites such as the ISS, nothing else: the built-in soundmodem is used unless you choose
-          another connection.</li>
-        <li>For other modes, a soundmodem with its AGWPE server switched on:
-          <ul>
-            <li><strong>UZ7HO soundmodem:</strong> open <em>Settings → Devices</em>, tick the AGW server and leave the port on
-              <strong>8000</strong>. Use it for IO-117, which needs the <strong>BPSK AX.25 1200</strong> modem.</li>
-            <li><strong>Direwolf:</strong> add <code>AGWPORT 8000</code> to <code>direwolf.conf</code> (it is on by default in
-              most builds) and use <code>MODEM 1200</code> for the ISS.</li>
-          </ul>
-        </li>
-        <li>Your callsign and grid in <strong>Settings → Station</strong>.</li>
-      </ul>
+      <div class="subnav">
+        On this page:
+        <a href="#how-it-works">How it works</a> ·
+        <a href="#what-you-need">What you need</a> ·
+        <a href="#setup">First-time setup</a> ·
+        <a href="#first-pass">Your first pass</a> ·
+        <a href="#window">The window</a> ·
+        <a href="#waterfall">Waterfall</a> ·
+        <a href="#macros">Macros</a> ·
+        <a href="#formats">Message formats</a> ·
+        <a href="#positions">Positions and map</a> ·
+        <a href="#logging">Logging</a> ·
+        <a href="#uhm">UHM</a> ·
+        <a href="#aprs-is">APRS-IS</a> ·
+        <a href="#modem-settings">Modem settings explained</a> ·
+        <a href="#external-modem">Using Direwolf or UZ7HO</a> ·
+        <a href="#ft847">Yaesu FT-847</a> ·
+        <a href="#problems">Problems</a> ·
+        <a href="#words">Words used here</a>
+      </div>
+
+      <h2 id="how-it-works">How it works</h2>
       <p>
-        OscarWatch keeps tuning the radio for Doppler as usual. Terminal only sends and receives the packets, so keep CAT
-        tracking running for the satellite you are working.
+        Packet radio sends text as short bursts of two audio tones, 1200 Hz and 2200 Hz, at 1200 bits a second. Each burst is
+        called a <strong>frame</strong> and carries who it is from, who it is to and the message. A satellite with a
+        <strong>digipeater</strong> listens for frames and sends a copy straight back down. If you hear your own frame come
+        back, you know the satellite heard you.
       </p>
       <p>
-        The Yaesu FT-847 cannot hold separate receive and transmit frequencies on one band over CAT. For the ISS and IO-117,
-        OscarWatch moves the radio to the uplink frequency for each frame Terminal sends, then back to the downlink. Enter
-        your soundmodem's TXDELAY and TXTAIL as <strong>Modem TX delay</strong> and <strong>Modem TX tail</strong> in
-        <strong>Settings → Modem</strong>, so OscarWatch stays on the uplink for the whole transmission. Frames sent
-        from another application go out on the downlink frequency.
+        On the ISS the uplink and downlink are the same frequency (145.825 MHz). That means you cannot listen while you
+        transmit, so OscarWatch waits for a quiet moment, sends, then listens again. A typical contact is a CQ with your grid
+        square, a reply with theirs, a signal report each way and a 73. Each frame takes about half a second, so a whole
+        contact fits easily into a pass.
+      </p>
+      <p>
+        OscarWatch keeps tuning the radio for Doppler shift as usual while Terminal is open. Keep radio control (CAT)
+        tracking running for the satellite you are working, so the radio stays on the right frequency through the pass.
       </p>
 
-      <h2 id="built-in-modem">Built-in soundmodem</h2>
-      <p>
-        For 1200 baud AFSK satellites such as the ISS you do not need a separate soundmodem. <strong>Connection</strong> in
-        <strong>Settings → Modem</strong> is <strong>Built-in soundmodem (1200 AFSK)</strong> unless you have chosen
-        another; set it up on the <strong>Soundcard</strong> tab. The status bar shows the duplex mode, the input level and how
-        many frames have been decoded. The <strong>Q</strong> column in the message log shows the share of the modem's
-        decoders that copied each frame, which helps you compare antennas and levels.
-      </p>
-      <p>
-        The built-in modem decodes 1200 AFSK only. IO-117 uses BPSK and 9600 baud satellites use G3RUH, so for those
-        Terminal shows a warning and blocks sending. Use the UZ7HO soundmodem over AGWPE for them.
-      </p>
-      <h3>Soundcard and levels</h3>
+      <h2 id="what-you-need">What you need</h2>
       <ul>
-        <li>Use the radio's <strong>data port</strong> (often a 6-pin mini-DIN or a USB audio codec) where you can. The data
-          port has a fixed level; the speaker output changes with the volume knob and may be filtered.</li>
-        <li>Tick <strong>Monitor input</strong> and aim for 30 to 70% while packets are heard. Lower the level if it shows
-          clipping.</li>
-        <li>Use <strong>Test tone</strong> to set <strong>TX level</strong>. On an FM radio, about 3 kHz deviation is right.
-          Transmit into a dummy load or on a clear frequency.</li>
-        <li><strong>Decode WAV file</strong> runs a recording through the modem without transmitting. It is handy for
-          checking a pass you recorded or a track from the WA8LMF TNC Test CD. Never play the test CD over the air.</li>
-        <li>The <strong>Waterfall</strong> tab beside <strong>Station</strong> in the Terminal window shows the receive
-          audio from 300 to 3,000 Hz, with dashed markers at the 1200 Hz and 2200 Hz packet tones. A burst lighting up both
-          markers is a packet; a steady line elsewhere is usually a carrier or interference. It works with the built-in
-          soundmodem only.</li>
+        <li><strong>A 2 m FM radio</strong> connected to the PC for audio. A radio with a built-in USB sound interface (it
+          shows in Windows as something like <em>USB Audio CODEC</em>) is easiest. A separate USB sound interface, such as a
+          SignaLink or Digirig, works too.</li>
+        <li><strong>A way to key the transmitter</strong>: VOX in the radio or interface, radio control (CAT), or a serial
+          control line on the interface. See <a href="#ptt">Push to talk</a>.</li>
+        <li><strong>Your callsign and grid square</strong> in <strong>Settings → Station</strong> in the main window.</li>
+        <li><strong>Radio control</strong> set up in OscarWatch, so the radio follows Doppler. See
+          <a href="radio-rotator.html">Radio &amp; rotator</a>.</li>
       </ul>
-      <h3>Simplex and crossband satellites</h3>
-      <p>
-        Many packet satellites, including the ISS on 145.825 MHz, are <strong>simplex</strong>: uplink and downlink share
-        one frequency. The modem then runs <strong>half duplex</strong>. It waits for a clear channel, mutes its receiver
-        while transmitting, and leaves a short turnaround guard before listening again. Keep <strong>Modem TX tail</strong>
-        short (30 to 50 ms is usually enough), or you can miss the digipeated copy of your own frame.
-      </p>
-      <p>
-        On <strong>crossband</strong> satellites the uplink and downlink are on different bands, so the modem can run
-        <strong>full duplex</strong> and you hear your packet come back through the digipeater while you transmit.
-        <strong>Duplex</strong> on the Soundcard tab is automatic by default and follows the satellite's link type. You can
-        set the link type per satellite in the profile list.
-      </p>
-      <h3>Push to talk</h3>
-      <ul>
-        <li><strong>VOX:</strong> the radio keys from the transmit audio. Simple, but the first few milliseconds can be
-          lost, so allow some PTT lead time.</li>
-        <li><strong>CAT:</strong> OscarWatch keys the radio over the Rig control connection.</li>
-        <li><strong>CAT port RTS/DTR</strong> and <strong>Separate COM port:</strong> for USB interfaces that key the
-          radio with a serial control line.</li>
-      </ul>
-      <p>
-        A transmit watchdog stops any transmission that runs longer than the time set on the Soundcard tab (10 seconds by
-        default). Also set a <strong>transmit time-out timer</strong> on the radio itself as a hardware backstop. If
-        OscarWatch closes unexpectedly while keyed over CAT, it sends the radio a receive command the next time it
-        connects and tells you in the Terminal window.
-      </p>
-      <p>
-        By default the modem does not transmit while the satellite is below the horizon. Untick
-        <strong>Do not transmit while the satellite is below the horizon</strong> for terrestrial packet.
-      </p>
-      <h3>Yaesu FT-847 on simplex satellites</h3>
-      <p>
-        With the built-in modem, OscarWatch moves the FT-847 to the uplink frequency just before it keys, for exactly as long
-        as the transmission lasts, then returns to the downlink. If the radio cannot be moved, the frame is not sent and the
-        status line says so.
-      </p>
+      <div class="tip">
+        A modest station works. Many operators make ISS packet contacts with 25 to 50 W into a small vertical or a handheld
+        Yagi. More important than power is setting the audio levels well, which the next section walks through.
+      </div>
 
-      <h2>Getting started</h2>
+      <h2 id="setup">First-time setup</h2>
+      <p>
+        Open <strong>Tools → OscarWatch Terminal</strong>, then the <strong>Settings</strong> button at the top right of the
+        Terminal window. This opens <strong>OscarWatch Terminal settings</strong>, which has its own tabs separate from the main
+        OscarWatch Settings.
+      </p>
       <ol>
-        <li>Start the soundmodem and check it decodes packets.</li>
-        <li>Focus the ISS or IO-117 in the main window and open <strong>Tools → OscarWatch Terminal</strong>.</li>
-        <li>Terminal connects to <code>127.0.0.1:8000</code> on its own. The status bar shows the modem state. If your modem is
-          on another PC or port, change it in <strong>Settings → Modem</strong>; <strong>Test and list ports</strong> checks
-          the connection and fills in the radio port list.</li>
-        <li>When the satellite rises, frames appear in the message log. Press <strong>F1</strong> to call CQ.</li>
+        <li>
+          <strong>Modem tab.</strong> Check <strong>Connection</strong> says <strong>Built-in soundmodem (1200 AFSK)</strong>.
+          This is the default. Leave <strong>Callsign</strong> empty to use your station callsign, and leave
+          <strong>SSID</strong> on 0, which is what most satellite operators use.
+        </li>
+        <li>
+          <strong>Soundcard tab: choose the devices.</strong> Set <strong>Input (from the radio)</strong> and
+          <strong>Output (to the radio)</strong> to your radio's sound interface. They usually have the same name, for example
+          <em>Microphone (USB Audio CODEC)</em> and <em>Speakers (USB Audio CODEC)</em>. Click <strong>Refresh</strong> if you
+          plugged the radio in after opening the window.
+        </li>
+        <li>
+          <strong>Set the receive level.</strong> Tick <strong>Monitor input</strong>. Tune the radio to a busy packet
+          frequency, or open the squelch so you hear noise, and aim for 30 to 70% on the meter. The text under the meter says
+          whether the level is too low, good or clipping. Change the radio's data output level or the Windows recording level
+          to adjust it.
+        </li>
+        <li>
+          <strong>Choose push to talk.</strong> Pick how OscarWatch keys the radio under <strong>Push to talk</strong>. See
+          <a href="#ptt">Push to talk</a> below if you are not sure.
+        </li>
+        <li>
+          <strong>Set the transmit level.</strong> Connect a dummy load, or pick a clear frequency. Choose a test tone and
+          press <strong>Send</strong>. The radio transmits for 5 seconds. Adjust <strong>TX level</strong> so the radio's
+          deviation is about 3 kHz. Without a deviation meter, listen on a second receiver: the tones should sound clean and
+          about as loud as other packet stations, not distorted.
+        </li>
+        <li>
+          <strong>Save</strong>, then press <strong>Connect</strong> in the Terminal window if it has not connected on its own.
+        </li>
       </ol>
+      <div class="tip">
+        Use the radio's data port or USB audio rather than the speaker socket where you can. The data port level stays the
+        same whatever the volume knob is set to, and it skips the radio's audio filtering, which can blunt the packet tones.
+      </div>
+      <div class="warn">
+        Set a transmit time-out timer on the radio itself as well. OscarWatch has its own safety limit (see
+        <a href="#modem-settings">Transmit watchdog</a>), but a setting in the radio protects you even if the PC fails.
+      </div>
 
-      <h2>Message formats</h2>
+      <h3 id="ptt">Push to talk</h3>
+      <ul>
+        <li><strong>VOX / audio:</strong> the radio or interface keys itself when it hears audio from the PC. Simplest to set
+          up. Many USB interfaces such as the SignaLink work this way.</li>
+        <li><strong>CAT:</strong> OscarWatch keys the radio through the same radio control connection it uses for Doppler.
+          Good for radios with a USB lead that carries both control and audio.</li>
+        <li><strong>CAT port RTS/DTR:</strong> keys the radio with a control line on the radio control COM port.</li>
+        <li><strong>Separate COM port:</strong> keys the radio with a control line on another COM port, for interfaces such as
+          the Digirig that have their own. Choose the port and the line (RTS or DTR), and tick <strong>Invert</strong> if your
+          interface needs it.</li>
+      </ul>
       <p>
-        Each satellite has a message format and digipeater path. Terminal picks them from the focused satellite:
+        For anything other than VOX you can also set <strong>PTT lead (ms)</strong>, the pause between keying and sending
+        audio, and <strong>PTT tail (ms)</strong>, the pause after the audio before unkeying.
+      </p>
+      <p>
+        If OscarWatch closes unexpectedly while the radio is keyed over CAT, it sends the radio a receive command the next time
+        it starts, and the Terminal window shows a notice so you can check the radio is no longer transmitting.
+      </p>
+
+      <h2 id="first-pass">Your first pass</h2>
+      <ol>
+        <li>In the main window, focus the ISS (or another satellite with a packet digipeater) and make sure radio control is
+          tracking it.</li>
+        <li>Open <strong>Tools → OscarWatch Terminal</strong>. The status bar at the bottom shows
+          <em>Modem: OscarWatch 1200 AFSK</em> with the input level and how many frames have been decoded.</li>
+        <li>Before the satellite rises, a yellow notice says it is below the horizon. OscarWatch will not transmit while it is
+          below the horizon, so nobody on the ground is bothered by frames that the satellite cannot hear.</li>
+        <li>Once the satellite is up, frames start to appear in the message log. Listen for a minute to get a feel for who is
+          active.</li>
+        <li>Press <strong>F1</strong> to call CQ with your grid square, or click a station under <strong>Heard stations</strong>
+          to answer them, then use <strong>F2</strong> to send a report and <strong>F3</strong> or <strong>F4</strong> to finish.</li>
+        <li>When both of you have exchanged grids or reports and a roger or 73, OscarWatch logs the contact on its own.</li>
+      </ol>
+      <div class="tip">
+        Watch for <strong>MY DIGI</strong> rows in the message log. Each one is a copy of your own frame that came back through
+        the satellite, which proves your station is being heard. The statistics count them as <strong>Digipeated
+        frames</strong>.
+      </div>
+
+      <h2 id="window">The window</h2>
+      <h3>Top left: sending</h3>
+      <ul>
+        <li><strong>Shortcuts:</strong> buttons for F1 to F8 send your macros. <strong>F12 Log QSO</strong> logs the station
+          in the To box straight away.</li>
+        <li><strong>To</strong> and <strong>Message:</strong> type a callsign (or <code>CQ</code>) and some text, then press
+          Enter or <strong>Send</strong>. Messages can be up to 67 characters.</li>
+        <li><strong>TX delay (s):</strong> waits this many seconds before sending. Handy on a busy pass, so your frame does
+          not land on top of the station you are answering.</li>
+        <li><strong>Format:</strong> <strong>APRS</strong> or <strong>Plain text</strong>. See
+          <a href="#formats">Message formats</a>. Next to it, the last thing you sent.</li>
+        <li><strong>Send Position:</strong> sends your location as an APRS position. See
+          <a href="#send-position">Sending your position</a>.</li>
+        <li>At the very top: <strong>Connect</strong> or <strong>Disconnect</strong>, the globe button for the
+          <a href="#positions">Terminal Map</a>, and <strong>Settings</strong>.</li>
+      </ul>
+
+      <h3>Top right: Station and Waterfall</h3>
+      <p>
+        The <strong>Station</strong> tab shows your call and grid, the satellite, its elevation, azimuth and range, and the
+        time to LOS (or AOS while it is below the horizon), with a bar showing how high the satellite is. Underneath are the
+        pass statistics: unique callsigns heard, frames you sent and received, how many of yours came back through the
+        digipeater, the median time they took, and how many UHM users are active. <strong>Reset</strong> clears the statistics
+        and the QSO and Heard stations lists.
+      </p>
+      <p>
+        The <strong>Waterfall</strong> tab shows the receive audio. See <a href="#waterfall">Waterfall</a>.
+      </p>
+
+      <h3>Message log</h3>
+      <p>
+        Every frame heard, newest at the bottom, with the time in UTC, who sent it, who it is to and the message. Hover over a
+        row to see the raw frame, and double-click a row to put that station in the To box. The <strong>Type</strong> column
+        names each kind of row, and the row colour matches, so you never have to rely on colour alone:
       </p>
       <table>
-        <thead><tr><th>Satellite</th><th>Format</th><th>Path</th><th>Modem</th></tr></thead>
+        <thead><tr><th>Type</th><th>Meaning</th></tr></thead>
         <tbody>
-          <tr><td>ISS (25544)</td><td>APRS</td><td>ARISS</td><td>1200 AFSK</td></tr>
-          <tr><td>IO-117 GreenCube (53106)</td><td>Plain text</td><td>none</td><td>BPSK 1200 (UZ7HO only)</td></tr>
+          <tr><td>TO ME</td><td>A message addressed to you</td></tr>
+          <tr><td>CQ</td><td>Someone calling CQ</td></tr>
+          <tr><td>MY TX</td><td>A frame you sent</td></tr>
+          <tr><td>MY DIGI</td><td>Your own frame, heard back through the satellite</td></tr>
+          <tr><td>TLM</td><td>Telemetry (data from a satellite or station)</td></tr>
+          <tr><td>BEACON</td><td>An automatic beacon</td></tr>
         </tbody>
       </table>
       <p>
-        <strong>APRS</strong> sends a CQ as an APRS status (<code>&gt;CQ IO85</code>) and a message to a station as an APRS
-        message addressed to that call. <strong>Plain text</strong> puts the text straight in the frame with the To call as the
-        destination, which is how GreenCube operators work. Other satellites with a packet or APRS digipeater in the
-        satellite database get APRS with no path. Use the <strong>Format</strong> buttons in the window, or
-        <strong>Settings → Satellites</strong>, to change a satellite's format, path or the name used for UHM.
+        On <strong>MY DIGI</strong> rows, <strong>Delay</strong> shows how long your frame took to come back through the
+        satellite. <strong>Q</strong> shows
+        how cleanly the built-in modem copied each frame, as a percentage. A high figure means a strong, clean signal; a low
+        one means the frame only just made it, which helps you compare antennas or audio levels.
       </p>
 
-      <h2>The window</h2>
+      <h3>QSO and Heard stations</h3>
       <ul>
-        <li><strong>Shortcuts:</strong> F1 to F8 send your macros. F12 logs the station in the To box now.</li>
-        <li><strong>Send message:</strong> type a call in <strong>To</strong> (or <code>CQ</code>) and a message, then press
-          Enter or <strong>Send</strong>. <strong>TX delay</strong> waits a few seconds before sending, which helps on a busy
-          pass. Messages are limited to 67 characters.</li>
-        <li><strong>Station and statistics:</strong> one panel beside the shortcuts. Your call and grid, the satellite, then
-          elevation, azimuth, range and LOS (or AOS while it is below the horizon) in one row, with an elevation bar under that
-          row. Underneath are the pass counts: unique callsigns, frames you sent and received, how many of your frames came back
-          through the digipeater, the median round-trip delay, and how many UHM users are active. <strong>Reset</strong> clears
-          the statistics and the QSO and heard station lists.</li>
-        <li><strong>Message log:</strong> every frame heard, newest at the bottom. The <strong>Type</strong> column labels
-          each row (TO ME, CQ, MY TX, MY DIGI, TLM, BEACON) and the row colour matches the legend, so colour is never the only
-          cue. Hover a row to see the raw frame. Double-click a row to put that station in the To box.</li>
-        <li><strong>QSO:</strong> the stations you are working, with their state, UHM status and whether they are logged.</li>
-        <li><strong>Heard stations:</strong> everyone heard this session, with the time since last heard, CQ and frame counts,
-          the satellite's elevation from their grid, their distance and bearing from you, and whether they are a new call, a
-          new grid or already worked. Click a station to put it in the To box.</li>
+        <li><strong>QSO:</strong> the stations you are working, with how far each contact has got (for example
+          <em>Report sent</em> or <em>Complete</em>), their UHM status and whether they are logged.</li>
+        <li><strong>Heard stations:</strong> everyone heard this session, with how long ago, how many CQs and frames, the
+          satellite's elevation as seen from their grid, their distance from you, and whether they are a new callsign, a new
+          grid or already worked. Click a station to put it in the To box.</li>
       </ul>
-      <p id="gps">
-        <strong>Portable and mobile:</strong> Terminal uses your station location for your grid, the grid placeholders in
-        macros, the grid saved with logged QSOs, and the elevation and LOS figures. To follow a GPS, set it up in
-        <strong>Settings → GPS</strong> and turn on <strong>Automatically update station position from GPS fix</strong>.
-        When GPS is set up, a <strong>GPS</strong> or <strong>Saved</strong> label beside your grid shows which location is in
-        use; hover over it for details. Without a recent fix, Terminal keeps the last known location. When you cross into a new
-        four-character grid square, the status line says so, so you can check any macro with your grid typed in.
-      </p>
+
+      <h3>Along the bottom</h3>
+      <ul>
+        <li><strong>Legend:</strong> the row colours used in the message log.</li>
+        <li><strong>Scroll to last line:</strong> keeps the newest frame in view.</li>
+        <li><strong>Show stations:</strong> shows or hides the QSO and Heard stations boxes, giving the message log more room.</li>
+        <li><strong>Only my traffic:</strong> shows only frames to or from you.</li>
+        <li><strong>Clear log:</strong> empties the message log.</li>
+        <li>The status bar shows the modem, the message format and path, APRS-IS and UHM, and the UTC time.</li>
+      </ul>
+
+      <h3>Text size, columns and layout</h3>
       <p>
         The message log, QSO and Heard stations boxes each have <strong>A−</strong> and <strong>A+</strong> buttons to change
-        the text size. Hold Ctrl and turn the mouse wheel over a box for the same effect. The columns grow with the text, and
-        each box remembers its own size. Each box also has a <strong>Clear</strong> button.
-        On the message log it removes the decoded frames.
-        On QSO it takes those stations out of the QSO list and leaves them under Heard stations.
-        On Heard stations it removes every station, which also empties the QSO list.
-        Statistics stay as they are; use <strong>Reset</strong> beside the statistics to zero those counts.
+        the text size; holding Ctrl and turning the mouse wheel over a box does the same. Drag the lines between column
+        headings to change a column's width, and double-click one to put it back. You can also drag the gaps between the boxes.
+        OscarWatch remembers all of this for next time.
       </p>
       <p>
-        Drag the thin lines between the column headings to change a column's width. Double-click one to put that column back
-        to its default width. You can also drag the gap between the message log and the QSO and Heard stations boxes, and the gap
-        between those two boxes. OscarWatch remembers text sizes, column widths and these divider positions next time you open
-        the Terminal.
+        Each box has its own <strong>Clear</strong> button. On the message log it removes the frames. On QSO it moves those
+        stations back to Heard stations only. On Heard stations it removes everyone, which empties the QSO list too. None of
+        these reset the statistics; use <strong>Reset</strong> on the Station tab for that.
       </p>
 
-      <h2>Macros</h2>
+      <h3 id="gps">Portable and mobile</h3>
       <p>
-        Edit macros in <strong>Settings → Macros</strong>. These placeholders are filled in when you send:
+        Terminal uses your station location for your grid, the grid in macros and logged contacts, and the elevation and LOS
+        figures. To follow a GPS, set it up in <strong>Settings → GPS</strong> and turn on <strong>Automatically update station
+        position from GPS fix</strong>. A <strong>GPS</strong> or <strong>Saved</strong> label beside your grid shows which
+        location is in use. When you cross into a new grid square, the status line tells you, so you can check any macro where
+        you typed your grid by hand.
+      </p>
+
+      <h2 id="waterfall">Waterfall</h2>
+      <p>
+        The <strong>Waterfall</strong> tab shows the audio coming from the radio, from 300 to 3,000 Hz left to right, with
+        newer audio at the top. Dashed lines labelled 1200 and 2200 mark the two packet tones. A packet shows as a short bright
+        block covering both lines. A steady line somewhere else is usually a carrier or interference.
+      </p>
+      <p>
+        On FM with the squelch open, the waterfall shows a fine speckle of background noise. That is normal. When a strong
+        packet arrives, the noise drops away and the two tones stand out. The waterfall only works with the built-in
+        soundmodem, because other soundmodem applications keep the audio to themselves.
+      </p>
+
+      <h2 id="macros">Macros</h2>
+      <p>
+        The F1 to F8 buttons send macros, which you edit on the <strong>Macros</strong> tab of Terminal settings. These
+        placeholders are filled in when you send:
       </p>
       <ul>
-        <li><code>{CALL}</code>: the call in the To box</li>
+        <li><code>{CALL}</code>: the callsign in the To box</li>
         <li><code>{MYCALL}</code>: your callsign</li>
-        <li><code>{MYGRID}</code>: your full grid; <code>{MYGRID4}</code>: its first four characters</li>
+        <li><code>{MYGRID}</code>: your full grid square; <code>{MYGRID4}</code>: its first four characters</li>
       </ul>
       <p>
-        Tick <strong>To CQ</strong> for a macro that should always go to CQ (the default F1). The defaults are
-        <code>CQ {MYGRID4}</code>, <code>{MYGRID4} 599</code>, <code>R73</code> and <code>73 TU</code>.
-        A macro whose text is just <code>{POSITION}</code> sends your position instead of a message (see below).
+        The defaults are <code>CQ {MYGRID4}</code> (F1), <code>{MYGRID4} 599</code> (F2), <code>R73</code> (F3) and
+        <code>73 TU</code> (F4). Tick <strong>To CQ</strong> for a macro that should always go to CQ rather than the station in
+        the To box. A macro whose text is just <code>{POSITION}</code> sends your position instead of a message.
+        <strong>Restore default macros</strong> puts the defaults back.
+      </p>
+
+      <h2 id="formats">Message formats</h2>
+      <p>
+        Each satellite has a message format and a digipeater path, which Terminal picks for you from the satellite you have
+        focused. You rarely need to change them.
+      </p>
+      <table>
+        <thead><tr><th>Satellite</th><th>Format</th><th>Path</th></tr></thead>
+        <tbody>
+          <tr><td>ISS (25544)</td><td>APRS</td><td>ARISS</td></tr>
+          <tr><td>Other satellites with a packet digipeater</td><td>APRS</td><td>none</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><strong>APRS</strong> sends a CQ as an APRS status (it appears as <code>&gt;CQ IO85</code>) and a message to a
+          station as an APRS message addressed to them. This is what most stations on the ISS use, and it also shows up on
+          aprs.fi when an internet gateway hears it.</li>
+        <li><strong>Plain text</strong> puts your text straight into the frame, with the To callsign as the destination.</li>
+        <li>The <strong>path</strong> tells the satellite to repeat the frame. <strong>ARISS</strong> is the name the ISS
+          digipeater answers to.</li>
+      </ul>
+      <p>
+        Use the <strong>Format</strong> buttons in the window to switch for this session, or the <strong>Satellites</strong>
+        tab of Terminal settings to change a satellite's format, path, link type or the name used for UHM. <strong>Add focused
+        satellite</strong> adds the satellite you are tracking to that list.
       </p>
 
       <h2 id="positions">APRS positions and the Terminal Map</h2>
       <p>
-        Many stations on the ISS and IO-117 send APRS position reports. Terminal decodes uncompressed positions (with or
-        without a timestamp), compressed positions and Mic-E. The station's grid and its distance and bearing from you fill in
-        under Heard stations. A grid the station types in a message always takes priority over one worked out from its
-        position. For Mic-E, the radio's type characters are removed from the comment, the altitude is decoded, and a status
-        such as <strong>En route</strong> or <strong>Emergency</strong> is shown at the start of the message. Anything that
-        does not decode is shown as plain text, as before.
+        Many stations send APRS position reports. Terminal reads all the common kinds (plain, compressed and Mic-E) and fills in
+        the station's grid, distance and bearing under Heard stations. A grid a station types in a message always wins over one
+        worked out from its position. For Mic-E positions from mobile radios, the altitude and a status such as
+        <strong>En route</strong> or <strong>Emergency</strong> are shown too.
       </p>
       <p>
-        Press the globe button (<strong>Terminal Map</strong>) at the top of the Terminal to open a map of the heard stations that have a known
-        location, with your station and the focused satellite's footprint, so you can see who is in range now. A station with
-        an APRS position is drawn at that position, and one with only a grid is drawn at the grid square centre. Each station
-        is a square with its callsign beside it; hover over it for the grid, distance and time last heard, or click it to put
-        that station in the To box.
+        The globe button (<strong>Terminal Map</strong>) opens a map of heard stations with a known location, with your
+        station and the satellite's footprint, so you can see who is in range now. Hover over a station for its grid, distance
+        and when it was last heard, or click it to put it in the To box.
       </p>
       <ul>
-        <li><strong>This pass only:</strong> shows only stations heard since the current pass began, or since the start of the
-          most recent pass while the satellite is below the horizon.</li>
-        <li><strong>Fade after:</strong> stations not heard for this many minutes are drawn faded with a dashed outline, and
-          are removed after twice that time.</li>
-        <li><strong>Zoom:</strong> when an area such as Europe gets crowded, zoom in with the mouse wheel or the
-          <strong>+</strong> and <strong>−</strong> buttons, and drag the map to move around. With the map focused, the
-          + and − keys zoom, Shift and the arrow keys move the map, and 0 goes back to the whole world, as does
-          <strong>Whole world</strong>. Markers and callsigns stay the same size as you zoom, so close stations separate.</li>
+        <li><strong>This pass only:</strong> shows only stations heard during the current pass, or the last one while the
+          satellite is below the horizon.</li>
+        <li><strong>Fade after:</strong> stations not heard for this many minutes fade, and disappear after twice that time.</li>
+        <li><strong>Zoom:</strong> use the mouse wheel or the <strong>+</strong> and <strong>−</strong> buttons, and drag to
+          move around. <strong>Whole world</strong> (or the 0 key) zooms back out. Callsigns stay the same size as you zoom,
+          so crowded areas such as Europe spread out.</li>
         <li>Clearing the Heard stations list also clears the map.</li>
       </ul>
 
-      <h2 id="send-position">Sending your position</h2>
+      <h3 id="send-position">Sending your position</h3>
       <p>
-        <strong>Send Position</strong>, next to <strong>Send</strong>, transmits an APRS position report through the
-        satellite, so your station shows on maps such as aprs.fi when an iGate hears it. It only works with an APRS satellite
-        profile. Hover over the button to see the location it will send. OscarWatch takes your location from, in order:
+        <strong>Send Position</strong> transmits your location through the satellite, so you appear on maps such as aprs.fi
+        when a ground station gates it to the internet. It needs the APRS format. Hover over the button to see exactly what it
+        will send. OscarWatch uses a GPS fix less than two minutes old first, then the latitude and longitude in Settings, then
+        the centre of your grid square.
       </p>
-      <ol>
-        <li>a GPS fix less than two minutes old, when a GPS is set up in Settings;</li>
-        <li>the station latitude and longitude in Settings;</li>
-        <li>the centre of your station grid square.</li>
-      </ol>
       <p>
-        In <strong>Terminal settings → Position</strong> you can choose the precision, the APRS symbol and the comment.
-        <strong>About 2 km</strong> (the default) and <strong>About 20 km</strong> blank digits of the position, as APRS
-        allows, and <strong>Grid square centre</strong> sends the middle of your four-character grid square, so your exact
-        location is not shared. The comment can use <code>{MYGRID4}</code>, <code>{MYGRID}</code> and <code>{MYCALL}</code>.
-        To keep the satellite clear for everyone, you can send a position at most once a minute, and Terminal never beacons on
-        its own.
+        On the <strong>Position</strong> tab of Terminal settings you can choose how precise it is, the map symbol and a short
+        comment. <strong>About 2 km</strong> (the default) and <strong>About 20 km</strong> blur the position, and
+        <strong>Grid square centre</strong> sends only the middle of your four-character grid square, so your exact location
+        is not shared. To keep the satellite free for contacts, you can send a position at most once a minute, and Terminal
+        never sends one on its own.
       </p>
 
-      <h2>Logging</h2>
+      <h2 id="logging">Logging</h2>
       <p>
-        With <strong>Log contacts automatically</strong> on (the default), a contact is saved once you and the other station
-        have both sent a grid or report, and a roger or 73 has gone either way. It works whether you answered their CQ or they
-        answered yours. QSOs are saved to the current logbook with mode <strong>PKT</strong>, propagation mode
-        <strong>SAT</strong>, the satellite name and frequencies, and are uploaded to Cloudlog and sent over the satellite link
-        when those are set up. Press <strong>F12</strong> to log the station in the To box at any time.
+        With <strong>Log contacts automatically</strong> on (the default, on the <strong>Logging</strong> tab), a contact is
+        saved once you and the other station have both sent a grid or report, and a roger or 73 has gone either way. It works
+        whether you answered their CQ or they answered yours. Contacts are saved to the current logbook with mode
+        <strong>PKT</strong>, propagation mode <strong>SAT</strong> and the satellite name and frequencies, and are uploaded to
+        Cloudlog when that is set up. Press <strong>F12</strong> to log the station in the To box at any time.
+      </p>
+      <p>
+        <strong>Acknowledge numbered APRS messages</strong> sends an automatic acknowledgement for APRS messages to you that ask
+        for one. It is off by default because each acknowledgement uses satellite time on a busy pass.
       </p>
 
       <h2 id="uhm">You Heard Me (UHM)</h2>
       <p>
-        UHM on OscarWatch.org tells you when a station you heard has also reported hearing you, so you know the path works both
-        ways even if their reply was lost. To use it, save your OscarWatch.org API token in <strong>Settings → OscarWatch</strong>,
-        then tick <strong>Enable UHM</strong> in <strong>Terminal settings → UHM</strong>. <strong>Test connection</strong> checks
-        the token and warns you if the account callsign is not the one Terminal transmits.
+        On a busy pass a reply can be lost even though the other station heard you. UHM on OscarWatch.org fills that gap: it
+        tells you when a station you heard has also reported hearing you, through their own software. To use it, save your
+        OscarWatch.org API token in <strong>Settings → OscarWatch</strong>, then tick <strong>Enable UHM</strong> on the
+        <strong>UHM</strong> tab of Terminal settings. <strong>Test connection</strong> checks the token and warns you if the
+        account callsign differs from the one Terminal transmits.
       </p>
       <ul>
-        <li>Terminal reports stations whose frames are addressed to you. CQ calls, beacons, telemetry and your own echoes are
-          not reported, and the same station is reported at most once every 30 seconds.</li>
-        <li>For your QSO partners and the call in the To box, Terminal asks UHM every 7 seconds whether they heard you.
-          The UHM column then shows <strong>Wait</strong>, <strong>Heard me</strong>, <strong>Mutual</strong> or
-          <strong>Expired</strong>. <strong>User</strong> means the station uses UHM on this satellite.</li>
-        <li><strong>Match on message text</strong> also sends the decoded text, so UHM confirms the exact frame.</li>
+        <li>Terminal reports stations whose frames are addressed to you. It does not report CQs, beacons, telemetry or your own
+          frames, and reports the same station at most once every 30 seconds.</li>
+        <li>For the stations you are working, the UHM column shows <strong>Wait</strong>, <strong>Heard me</strong>,
+          <strong>Mutual</strong> (you both heard each other) or <strong>Expired</strong>. <strong>User</strong> means that
+          station uses UHM on this satellite.</li>
+        <li><strong>Match on message text</strong> also sends the text of the frame, so UHM confirms the exact message.</li>
       </ul>
-      <p>The UHM state and any message from the server appear in the status bar.</p>
 
-      <h2>APRS-IS gateway</h2>
+      <h2 id="aprs-is">APRS-IS gateway</h2>
       <p>
-        In <strong>Settings → APRS-IS</strong> you can forward the packets you hear to APRS-IS as a receive-only iGate, so they
-        show on sites such as aprs.fi. Enter your APRS-IS passcode; without a valid one the server accepts the login but drops
-        the packets. Position reports, including Mic-E and compressed positions, are forwarded just like messages, so stations
-        you hear through the satellite appear on the map at aprs.fi. Packets marked NOGATE, RFONLY or TCPIP are never
-        forwarded, and duplicates within 30 seconds are dropped. Terminal never transmits packets from the internet.
+        On the <strong>APRS-IS</strong> tab you can pass the packets you hear on to the APRS internet system, so they appear on
+        sites such as aprs.fi. This makes you a receive-only gateway (an <strong>iGate</strong>): Terminal never transmits
+        anything it gets from the internet. You need an APRS-IS passcode for your callsign; <strong>Get your APRS
+        passcode</strong> explains how. Without a valid passcode the server lets you log in but quietly drops what you send.
+        Packets marked NOGATE, RFONLY or TCPIP are never passed on, and repeats within 30 seconds are dropped.
       </p>
 
-      <h2>Problems?</h2>
+      <h2 id="modem-settings">Modem settings explained</h2>
+      <p>
+        The defaults suit the ISS and most stations. These notes explain what each setting does if you want to fine-tune.
+      </p>
+      <h3>Timing (Modem tab)</h3>
       <ul>
-        <li><strong>"Modem: cannot reach 127.0.0.1:8000":</strong> the soundmodem is not running, or its AGW server is off or on
-          another port.</li>
-        <li><strong>Connected but nothing appears:</strong> check the soundmodem decodes packets on its own, that the right
-          <strong>Radio port</strong> is chosen, and that the radio is tuned (Doppler) to the downlink.</li>
-        <li><strong>IO-117 shows nothing:</strong> Direwolf and the built-in modem have no BPSK modem; use the UZ7HO
-          soundmodem.</li>
-        <li><strong>"Not sent: the channel stayed busy":</strong> the built-in modem heard a signal for longer than the
-          maximum wait. Check the input level is not just noise, or raise <strong>Maximum wait</strong>.</li>
-        <li><strong>"Transmission stopped by the watchdog":</strong> PTT or the soundcard output stalled. Check the output
-          device and PTT method on the Soundcard tab.</li>
-        <li><strong>Your frames never come back:</strong> check PTT and transmit audio level in the soundmodem, and the uplink
-          frequency. The statistics panel shows how many of your frames were digipeated.</li>
+        <li><strong>Modem TX delay (ms):</strong> how long the modem sends a steady pattern after keying, before the message,
+          so your radio and the receiving station have settled. 300 ms suits most FM radios; with CAT keying or a fast data port,
+          150 to 200 ms is often enough.</li>
+        <li><strong>Modem TX tail (ms):</strong> a little extra after the message so the end is not cut off. On the ISS keep it
+          at 30 to 50 ms. A longer tail keeps you transmitting while the satellite is already repeating your frame, so you can
+          miss it. Terminal settings warns you if it is too long.</li>
+      </ul>
+      <h3>Channel access (Soundcard tab)</h3>
+      <ul>
+        <li><strong>Duplex:</strong> <strong>Automatic</strong> follows the satellite's link type, which is right almost every
+          time. <strong>Half duplex</strong> is for one-frequency satellites such as the ISS: the modem listens for a quiet
+          channel, mutes its own receiver while sending, and pauses briefly before listening again. <strong>Full
+          duplex</strong> is for satellites with the uplink and downlink on different bands, where you can hear your own frame
+          coming back while you send.</li>
+        <li><strong>Persistence</strong> and <strong>Slot time (ms):</strong> when the channel goes quiet, the modem does not
+          always send at once. In each slot it decides at random whether to go, so several stations waiting for the same quiet
+          moment do not all transmit together. Higher persistence means it sends sooner.</li>
+        <li><strong>Maximum wait (ms):</strong> how long the modem waits for a quiet channel before giving up on that frame.</li>
+        <li><strong>Turnaround guard (ms):</strong> the short pause after transmitting before the receiver listens again, so
+          the end of your own transmission is not mistaken for a signal.</li>
+        <li><strong>Wait for a clear channel in full duplex too:</strong> normally off, because in full duplex you hear
+          yourself and the channel would always seem busy.</li>
+      </ul>
+      <h3>Safety and decoding (Soundcard tab)</h3>
+      <ul>
+        <li><strong>Transmit watchdog (s):</strong> stops any transmission that runs longer than this (10 seconds by default).
+          A packet transmission is normally under a second, so this only trips if something has gone wrong.</li>
+        <li><strong>Bit fixing:</strong> a frame with one damaged bit would normally be thrown away. Bit fixing tries flipping
+          a bit and checks whether the frame then makes sense, which rescues some weak frames. <strong>Single bit</strong> is
+          the safe default.</li>
+        <li><strong>Do not transmit while the satellite is below the horizon:</strong> on by default. Untick it only for
+          ground-based packet.</li>
+        <li><strong>Decode WAV file:</strong> plays a recording through the modem without transmitting, for example a pass you
+          recorded. It is a good way to check the decoder works before your first live pass.</li>
+      </ul>
+      <p>
+        If the soundcard stops delivering audio (Windows sometimes does this when you change sound settings while OscarWatch is
+        running), OscarWatch notices within a few seconds and reopens it.
+      </p>
+
+      <h2 id="external-modem">Using Direwolf or UZ7HO instead</h2>
+      <p>
+        You can still use a separate soundmodem application if you prefer, or if a satellite needs a mode the built-in modem does
+        not have, such as 9600 baud. The built-in modem decodes 1200 baud AFSK only, and Terminal shows a warning and blocks
+        sending if the focused satellite needs something else.
+      </p>
+      <ol>
+        <li>Turn on the application's AGWPE server. In <strong>Direwolf</strong>, put <code>AGWPORT 8000</code> in
+          <code>direwolf.conf</code> (it is on by default in most builds). In the <strong>UZ7HO soundmodem</strong>, open
+          <em>Settings → Devices</em> and tick the AGW server, port 8000.</li>
+        <li>On the <strong>Modem</strong> tab of Terminal settings, set <strong>Connection</strong> to <strong>AGWPE (Direwolf,
+          UZ7HO soundmodem)</strong>. Leave the host as <code>127.0.0.1</code> if the application runs on the same PC.</li>
+        <li>Press <strong>Test and list ports</strong> to check the connection and choose the <strong>Radio port</strong>.</li>
+        <li>Enter the application's TXDELAY and TXTAIL as <strong>Modem TX delay</strong> and <strong>Modem TX tail</strong>, so
+          OscarWatch knows how long each transmission lasts.</li>
+      </ol>
+      <p>
+        With a separate application, its own settings handle the audio levels and push to talk, and the Soundcard tab, the
+        waterfall and the Q column are not used.
+      </p>
+
+      <h2 id="ft847">Yaesu FT-847</h2>
+      <p>
+        The FT-847 cannot hold separate receive and transmit frequencies on the same band over CAT, which the ISS needs. For
+        each frame Terminal sends, OscarWatch moves the radio to the uplink frequency just before keying, keeps it there for the
+        transmission, then returns to the downlink. If the radio cannot be moved, the frame is not sent and the status line says
+        so. Frames sent by another application go out on the downlink frequency. See <a href="radio-yaesu.html">Yaesu radios</a>
+        for more.
+      </p>
+
+      <h2 id="problems">Problems?</h2>
+      <ul>
+        <li><strong>Nothing appears in the message log:</strong> check the satellite is above the horizon and radio control is
+          tracking it. Look at the input level in the status bar: it should move while you hear noise or signals. Check the
+          Waterfall tab for packet bursts on the 1200 and 2200 lines.</li>
+        <li><strong>Input level stays near 0%:</strong> check <strong>Input (from the radio)</strong> is the radio's sound
+          interface, not the PC microphone or a webcam. Turn up the radio's data output or the Windows recording level. Some
+          radios only send audio to USB in data mode, or have a menu setting for the USB output level.</li>
+        <li><strong>Input level shows clipping:</strong> turn the radio's data output or the Windows recording level down until
+          it reads 30 to 70%.</li>
+        <li><strong>Packets on the waterfall but nothing decodes:</strong> the level may be too low or clipping, or the radio
+          may be off frequency. Check radio control is correcting for Doppler.</li>
+        <li><strong>Your frames never come back as MY DIGI:</strong> check the radio actually transmits (PTT method), the
+          transmit level with a test tone, and the uplink frequency. On the ISS, keep the TX tail at 30 to 50 ms.</li>
+        <li><strong>"Not sent: the satellite is below the horizon":</strong> wait for the satellite to rise. For ground-based
+          packet, untick the horizon setting on the Soundcard tab.</li>
+        <li><strong>"Not sent: the channel stayed busy":</strong> the modem heard a signal for longer than the maximum wait.
+          If the input is only noise, the receive level may be too high, or try a longer <strong>Maximum wait</strong>.</li>
+        <li><strong>"Transmission stopped by the watchdog":</strong> push to talk or the soundcard output got stuck. Check the
+          output device and the push to talk method on the Soundcard tab.</li>
+        <li><strong>"Modem: cannot reach 127.0.0.1:8000":</strong> only when using Direwolf or UZ7HO. The application is not
+          running, or its AGWPE server is off or on another port.</li>
         <li><strong>UHM says the token was not accepted:</strong> create a new token on OscarWatch.org and save it in
           Settings.</li>
       </ul>
+
+      <h2 id="words">Words used here</h2>
+      <table>
+        <thead><tr><th>Word</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>Packet</td><td>Sending text over radio in short bursts of tones that a computer decodes.</td></tr>
+          <tr><td>Frame</td><td>One packet burst, carrying who it is from, who it is to and the message.</td></tr>
+          <tr><td>Digipeater</td><td>A digital repeater, here on a satellite, that receives a frame and sends it straight back down.</td></tr>
+          <tr><td>AFSK, 1200 baud</td><td>The standard packet mode: two audio tones (1200 and 2200 Hz) sent at 1200 bits a second.</td></tr>
+          <tr><td>Soundmodem</td><td>Software that turns frames into tones and back, using the PC's sound interface. OscarWatch has one built in.</td></tr>
+          <tr><td>APRS</td><td>A widely used way of formatting packet messages, positions and status reports.</td></tr>
+          <tr><td>iGate</td><td>A station that passes heard APRS packets on to the internet.</td></tr>
+          <tr><td>SSID</td><td>A number after a callsign (as in MM9SQL-7) to tell apart several stations run by one operator. Use 0 for satellites.</td></tr>
+          <tr><td>PTT, VOX, CAT</td><td>Push to talk keys the transmitter. VOX keys it from audio. CAT is the radio's computer control connection.</td></tr>
+          <tr><td>Simplex, half duplex</td><td>Sending and receiving on one frequency, so you cannot listen while you transmit.</td></tr>
+          <tr><td>Crossband, full duplex</td><td>Uplink and downlink on different bands, so you can listen while you transmit.</td></tr>
+          <tr><td>Doppler</td><td>The frequency shift caused by the satellite's speed. OscarWatch corrects the radio for it.</td></tr>
+          <tr><td>AOS, LOS</td><td>Acquisition and loss of signal: when the satellite rises above and sets below your horizon.</td></tr>
+          <tr><td>Deviation</td><td>How far an FM signal swings in frequency, which sets how loud you sound. About 3 kHz suits packet.</td></tr>
+          <tr><td>AGWPE</td><td>A standard way for applications to talk to a separate soundmodem such as Direwolf or UZ7HO.</td></tr>
+        </tbody>
+      </table>
     </main>
 
     <footer>OscarWatch: help for satellite operators</footer>
