@@ -74,13 +74,23 @@ public sealed class TerminalMessageCodecTests
     }
 
     [Fact]
-    public void Outgoing_aprs_cq_becomes_status_with_cq_prefix()
+    public void Outgoing_aprs_cq_status_keeps_the_typed_text()
     {
-        var o = TerminalMessageCodec.BuildOutgoing(TerminalMessageFormat.Aprs, Me, "CQ", "IO85", Ax25Frame.ParsePath("ARISS"));
-        Assert.Equal(">CQ IO85", o.Frame.InfoText);
+        var o = TerminalMessageCodec.BuildOutgoing(TerminalMessageFormat.Aprs, Me, "CQ", "test", Ax25Frame.ParsePath("ARISS"));
+        Assert.Equal(">test", o.Frame.InfoText);
+        Assert.Equal("test", o.Text);
         Assert.Equal("CQ", o.To);
         Assert.Equal(AprsPayloadCodec.Tocall, o.Frame.Destination.Text);
         Assert.Equal("ARISS", o.Frame.Digipeaters[0].Text);
+    }
+
+    [Fact]
+    public void Outgoing_aprs_cq_keeps_a_cq_the_operator_typed()
+    {
+        var o = TerminalMessageCodec.BuildOutgoing(TerminalMessageFormat.Aprs, Me, "CQ", "CQ IO85", []);
+        Assert.Equal(">CQ IO85", o.Frame.InfoText);
+        Assert.Equal("CQ IO85", o.Text);
+        Assert.Equal("CQ", o.To);
     }
 
     [Fact]

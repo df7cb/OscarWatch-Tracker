@@ -91,8 +91,8 @@ public static class TerminalMessageCodec
     }
 
     /// <summary>
-    /// Builds an outgoing UI frame. APRS: CQ or empty To sends a status (prefixed with CQ when needed),
-    /// a callsign sends an APRS message. Plain text: To becomes the AX.25 destination.
+    /// Builds an outgoing UI frame. APRS: CQ, ALL or an empty To sends a status whose text is exactly
+    /// what was typed. A callsign sends an APRS message. Plain text: To becomes the AX.25 destination.
     /// </summary>
     public static TerminalOutgoingFrame BuildOutgoing(
         TerminalMessageFormat format,
@@ -111,10 +111,9 @@ public static class TerminalMessageCodec
             var dest = Ax25Address.Parse(AprsPayloadCodec.Tocall);
             if (broadcast)
             {
-                if (target == CqTo && !TerminalText.StartsWithCq(body))
-                    body = "CQ " + body;
                 var frame = Ax25Frame.CreateUi(dest, source, path, AprsPayloadCodec.BuildStatus(body));
-                return new TerminalOutgoingFrame(frame, TerminalText.StartsWithCq(body) ? CqTo : AllTo, body);
+                var shownTo = target == CqTo || TerminalText.StartsWithCq(body) ? CqTo : AllTo;
+                return new TerminalOutgoingFrame(frame, shownTo, body);
             }
 
             var msg = Ax25Frame.CreateUi(dest, source, path, AprsPayloadCodec.BuildMessage(target, body, aprsMessageNumber));
