@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Threading.Channels;
 using OscarWatch.Core.Ft4;
 using OscarWatch.Core.Hardware;
+using OscarWatch.Core.Recording;
 using OscarWatch.Core.Services;
 using OscarWatch.Core.Terminal;
 using OscarWatch.Core.Terminal.Modem;
@@ -208,41 +209,38 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
     public Task<IReadOnlyList<TerminalRadioPort>> GetRadioPortsAsync(CancellationToken cancellationToken) =>
         Task.FromResult<IReadOnlyList<TerminalRadioPort>>([new TerminalRadioPort(0, "OscarWatch 1200 AFSK")]);
 
-    /// <summary>
-    /// How long capture may deliver nothing before the soundcard is reopened. Windows can
-    /// invalidate a WASAPI stream (for example when the device format or level dialogue
-    /// changes) and PortAudio then stops calling back without reporting an error.
-    /// </summary>
-    internal TimeSpan CaptureStallTimeout { get; set; } = TimeSpan.FromSeconds(3);
+    internal TimeSpan CaptureStallTimeout
+    {
+        get => _stallWatch.Timeout;
+        set => _stallWatch.Timeout = value;
+    }
 
     internal int CaptureRestarts => Volatile.Read(ref _captureRestarts);
 
     private int _captureRestarts;
+    private readonly CaptureStallWatch _stallWatch = new(DateTime.UtcNow);
 
     private void ReceiveLoop(CancellationToken ct)
     {
         var receiver = new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix);
         var buffer = new float[4096];
         var frames = new List<AfskDecodedFrame>();
-        var lastAudio = Stopwatch.GetTimestamp();
+        _stallWatch.Reset(DateTime.UtcNow);
         try
         {
             while (!ct.IsCancellationRequested)
             {
                 receiver.Blanked = _rxBlank || Stopwatch.GetTimestamp() < Interlocked.Read(ref _blankUntilTimestamp);
-                if (!_audio.WaitForCapture(CaptureWait, ct))
+                var gotAudio = _audio.WaitForCapture(CaptureWait, ct);
+                if (_stallWatch.OnRead(DateTime.UtcNow, gotAudio, paused: _transmitting)
+                    && RestartAudioAfterStall())
                 {
-                    if (!_transmitting && Stopwatch.GetElapsedTime(lastAudio) >= CaptureStallTimeout)
-                    {
-                        if (RestartAudioAfterStall())
-                            receiver = new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix);
-                        lastAudio = Stopwatch.GetTimestamp();
-                    }
-
-                    continue;
+                    receiver = new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix);
                 }
 
-                lastAudio = Stopwatch.GetTimestamp();
+                if (!gotAudio)
+                    continue;
+
                 int n;
                 while ((n = _audio.ReadCapture(buffer)) > 0)
                 {

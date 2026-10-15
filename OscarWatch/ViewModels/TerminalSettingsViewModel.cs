@@ -113,8 +113,8 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
 
         TransportOptions =
         [
-            new(TerminalTransportKind.Agwpe, _l.Get("Terminal.Settings.Transport.Agwpe"), true),
             new(TerminalTransportKind.BuiltIn, _l.Get("Terminal.Settings.Transport.BuiltIn"), true),
+            new(TerminalTransportKind.Agwpe, _l.Get("Terminal.Settings.Transport.Agwpe"), true),
             new(TerminalTransportKind.KissTcp, _l.Get("Terminal.Settings.Transport.KissTcp"), false),
             new(TerminalTransportKind.KissSerial, _l.Get("Terminal.Settings.Transport.KissSerial"), false),
         ];

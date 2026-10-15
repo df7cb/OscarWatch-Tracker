@@ -203,7 +203,7 @@ public sealed class TerminalSettings
     public const int MinMapFadeMinutes = 1;
     public const int MaxMapFadeMinutes = 120;
 
-    public TerminalTransportKind Transport { get; set; } = TerminalTransportKind.Agwpe;
+    public TerminalTransportKind Transport { get; set; } = TerminalTransportKind.BuiltIn;
     public TerminalAgwpeSettings Agwpe { get; set; } = new();
     public TerminalKissTcpSettings KissTcp { get; set; } = new();
     public TerminalKissSerialSettings KissSerial { get; set; } = new();
@@ -317,7 +317,7 @@ public sealed class TerminalSettings
         BuiltIn ??= new TerminalBuiltInModemSettings();
         BuiltIn.Normalise();
         if (!Enum.IsDefined(Transport))
-            Transport = TerminalTransportKind.Agwpe;
+            Transport = TerminalTransportKind.BuiltIn;
         Callsign ??= "";
         Ssid = Math.Clamp(Ssid, 0, 15);
         SatelliteProfiles ??= [];

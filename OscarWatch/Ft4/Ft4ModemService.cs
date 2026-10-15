@@ -6,6 +6,7 @@ using OscarWatch.Core.Models;
 using OscarWatch.Core.Net;
 using OscarWatch.Core.Orbit;
 using OscarWatch.Core.PskReporter;
+using OscarWatch.Core.Recording;
 using OscarWatch.Core.Services;
 using OscarWatch.Hardware;
 using OscarWatch.Localization;
@@ -62,6 +63,7 @@ public sealed class Ft4ModemService : IDisposable
     private bool _decodeQueuedThisSlot;
     private bool? _deepDecodeActive;
     private readonly Ft4RxHealth _rxHealth = new(DateTime.UtcNow);
+    private readonly CaptureStallWatch _captureStall = new(DateTime.UtcNow);
     private readonly HashSet<string> _postedDecodeKeys = new(StringComparer.Ordinal);
     private readonly Ft4CallDt _callDt = new();
     private readonly Ft4LearnedCallsigns _learnedCalls = new();
@@ -355,6 +357,7 @@ public sealed class Ft4ModemService : IDisposable
         }
         _txWatchdogResetUtc = DateTime.UtcNow;
         _rxHealth.Reset(DateTime.UtcNow);
+        _captureStall.Reset(DateTime.UtcNow);
         RefreshClockFromGps();
 
         SyncSlotGate(sessionRunning: true);
@@ -1062,8 +1065,11 @@ public sealed class Ft4ModemService : IDisposable
                 }
 
                 var n = _audio.ReadCaptureSamples(scratch);
-                if (_rxHealth.OnCapture(DateTime.UtcNow, n > 0) is { } captureEvent)
+                var readUtc = DateTime.UtcNow;
+                if (_rxHealth.OnCapture(readUtc, n > 0) is { } captureEvent)
                     LogRxHealth(captureEvent);
+                if (_captureStall.OnRead(readUtc, n > 0))
+                    ReopenStalledCapture();
                 if (n <= 0)
                 {
                     await Task.Delay(15, ct).ConfigureAwait(false);
@@ -1092,6 +1098,21 @@ public sealed class Ft4ModemService : IDisposable
                 Changed?.Invoke();
                 await Task.Delay(500, ct).ConfigureAwait(false);
             }
+        }
+    }
+
+    private void ReopenStalledCapture()
+    {
+        var ft4 = _settings.Current.Ft4;
+        Log.Warning("FT4 reopening the soundcard '{Device}' after it stopped delivering audio", ft4.InputDeviceDisplayName);
+        try
+        {
+            _audio.StartCapture(ft4.InputDeviceId, ft4.InputDeviceDisplayName);
+            _deviceSampleRate = _audio.CaptureSampleRate;
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "FT4 could not reopen the soundcard");
         }
     }
 

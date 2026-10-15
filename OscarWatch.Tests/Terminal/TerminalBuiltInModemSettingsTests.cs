@@ -30,6 +30,25 @@ public sealed class TerminalBuiltInModemSettingsTests
     }
 
     [Fact]
+    public void Built_in_modem_is_the_default_transport()
+    {
+        Assert.Equal(TerminalTransportKind.BuiltIn, new TerminalSettings().Transport);
+        Assert.Equal(TerminalTransportKind.BuiltIn, JsonSerializer.Deserialize<TerminalSettings>("{}", Json)!.Transport);
+
+        var invalid = new TerminalSettings { Transport = (TerminalTransportKind)99 };
+        invalid.Normalise();
+        Assert.Equal(TerminalTransportKind.BuiltIn, invalid.Transport);
+    }
+
+    [Fact]
+    public void A_saved_external_modem_choice_is_kept()
+    {
+        var saved = JsonSerializer.Deserialize<TerminalSettings>("""{"transport":"agwpe"}""", Json)!;
+        saved.Normalise();
+        Assert.Equal(TerminalTransportKind.Agwpe, saved.Transport);
+    }
+
+    [Fact]
     public void Normalise_clamps_out_of_range_values()
     {
         var s = new TerminalBuiltInModemSettings
@@ -104,7 +123,7 @@ public sealed class TerminalBuiltInModemSettingsTests
     [Fact]
     public void Active_radio_port_is_zero_for_the_built_in_modem()
     {
-        var terminal = new TerminalSettings();
+        var terminal = new TerminalSettings { Transport = TerminalTransportKind.Agwpe };
         terminal.Agwpe.RadioPort = 2;
         Assert.Equal(2, terminal.ActiveRadioPort);
         terminal.Transport = TerminalTransportKind.BuiltIn;

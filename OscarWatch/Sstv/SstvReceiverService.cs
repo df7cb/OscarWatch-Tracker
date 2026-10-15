@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using OscarWatch.Core.Recording;
 using OscarWatch.Core.Sstv;
 using OscarWatch.Recording;
 using Serilog;
@@ -140,8 +141,10 @@ public sealed class SstvReceiverService : IDisposable
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
         var session = ++SessionId;
+        var inputId = settings.InputDeviceId;
+        var inputName = settings.InputDeviceDisplayName;
         _worker = Task.Factory.StartNew(
-            () => RunLive(rate, options, autoSave, wavPath, session, token),
+            () => RunLive(rate, options, autoSave, wavPath, session, inputId, inputName, token),
             token,
             TaskCreationOptions.LongRunning,
             TaskScheduler.Default);
@@ -189,7 +192,24 @@ public sealed class SstvReceiverService : IDisposable
         IsDecodingFile = false;
     }
 
-    private void RunLive(int rate, SstvDecoderOptions options, bool autoSave, string? wavPath, int session, CancellationToken token)
+    private bool ReopenStalledCapture(string? inputId, string? inputName)
+    {
+        Log.Warning("SSTV reopening the soundcard '{Device}' after it stopped delivering audio", inputName);
+        try
+        {
+            _audio.StartCapture(inputId, inputName);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "SSTV could not reopen the soundcard");
+            return false;
+        }
+    }
+
+    private void RunLive(
+        int rate, SstvDecoderOptions options, bool autoSave, string? wavPath, int session,
+        string? inputId, string? inputName, CancellationToken token)
     {
         WavWriter? wav = null;
         try
@@ -208,10 +228,22 @@ public sealed class SstvReceiverService : IDisposable
             var buffer = new float[ChunkSamples];
             var lastPreview = DateTime.MinValue;
             var tap = new SstvSpectrumTap(rate, SpectrumRowsPerSecond);
+            var stall = new CaptureStallWatch(DateTime.UtcNow);
             while (!token.IsCancellationRequested)
             {
                 RunCommands(decoder);
                 var n = _audio.ReadCaptureSamples(buffer);
+                if (stall.OnRead(DateTime.UtcNow, n > 0) && ReopenStalledCapture(inputId, inputName)
+                    && _audio.CaptureSampleRate != rate)
+                {
+                    Log.Information("SSTV capture reopened at {Rate} Hz (was {Old} Hz)", _audio.CaptureSampleRate, rate);
+                    rate = _audio.CaptureSampleRate;
+                    decoder = CreateDecoder(rate, options, autoSave, satelliteOverride: null, fileStart: null);
+                    tap = new SstvSpectrumTap(rate, SpectrumRowsPerSecond);
+                    if (wavResampler is not null)
+                        wavResampler = new SstvResampler(rate, SstvDecoder.InternalRate);
+                }
+
                 if (n == 0)
                 {
                     Thread.Sleep(20);

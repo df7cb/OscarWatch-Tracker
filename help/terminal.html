@@ -45,7 +45,9 @@
       <h2>What you need</h2>
       <ul>
         <li>A radio with its audio connected to the PC, and PTT handled by the soundmodem (VOX, CAT or a serial line).</li>
-        <li>A soundmodem with its AGWPE server switched on:
+        <li>For 1200 baud AFSK satellites such as the ISS, nothing else: the built-in soundmodem is used unless you choose
+          another connection.</li>
+        <li>For other modes, a soundmodem with its AGWPE server switched on:
           <ul>
             <li><strong>UZ7HO soundmodem:</strong> open <em>Settings → Devices</em>, tick the AGW server and leave the port on
               <strong>8000</strong>. Use it for IO-117, which needs the <strong>BPSK AX.25 1200</strong> modem.</li>
@@ -69,9 +71,9 @@
 
       <h2 id="built-in-modem">Built-in soundmodem</h2>
       <p>
-        For 1200 baud AFSK satellites such as the ISS you do not need a separate soundmodem. In
-        <strong>Settings → Modem</strong>, set <strong>Connection</strong> to <strong>Built-in soundmodem (1200 AFSK)</strong>,
-        then set it up on the <strong>Soundcard</strong> tab. The status bar shows the duplex mode, the input level and how
+        For 1200 baud AFSK satellites such as the ISS you do not need a separate soundmodem. <strong>Connection</strong> in
+        <strong>Settings → Modem</strong> is <strong>Built-in soundmodem (1200 AFSK)</strong> unless you have chosen
+        another; set it up on the <strong>Soundcard</strong> tab. The status bar shows the duplex mode, the input level and how
         many frames have been decoded. The <strong>Q</strong> column in the message log shows the share of the modem's
         decoders that copied each frame, which helps you compare antennas and levels.
       </p>
