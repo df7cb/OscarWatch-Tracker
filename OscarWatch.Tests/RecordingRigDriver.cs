@@ -91,11 +91,13 @@ internal sealed class RecordingRigDriver : IRigDriver
     }
     public int SetSplitOnCallCount { get; private set; }
     public bool? LastSplitOn { get; private set; }
+    public List<string> Commands { get; } = [];
 
     public void SetSplitOn(bool on)
     {
         SetSplitOnCallCount++;
         LastSplitOn = on;
+        Commands.Add(on ? "split-on" : "split-off");
     }
     public int SetSatelliteModeCallCount { get; private set; }
     public bool? LastSatelliteModeOn { get; private set; }
@@ -104,6 +106,7 @@ internal sealed class RecordingRigDriver : IRigDriver
     {
         SetSatelliteModeCallCount++;
         LastSatelliteModeOn = on;
+        Commands.Add(on ? "sat-on" : "sat-off");
     }
     public int ExchangeVfoCallCount { get; private set; }
 
@@ -111,6 +114,7 @@ internal sealed class RecordingRigDriver : IRigDriver
     {
         ExchangeVfoCallCount++;
         (MainHz, SubHz) = (SubHz, MainHz);
+        Commands.Add("exchange");
     }
     public RigVfo? LastToneOffVfo { get; private set; }
 

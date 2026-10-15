@@ -1356,6 +1356,164 @@ public class RigControllerTests
     }
 
     [Fact]
+    public void Icom910_uhf_simplex_puts_70cm_on_main_before_split()
+    {
+        var rig = new RecordingRigDriver { MainHz = 145_990_000, SubHz = 436_800_000 };
+        var controller = new RigController(_ => rig);
+        var settings = new RigSettings
+        {
+            Enabled = true,
+            Type = RigType.IcomIc910,
+            Port = "COM1",
+            CatDelayMs = 0
+        };
+
+        var mode = new SatelliteTransponderMode
+        {
+            Type = "Packet",
+            DownlinkKHz = 437_825,
+            UplinkKHz = 437_825,
+            DownlinkMode = "FM",
+            UplinkMode = "FM",
+            Doppler = "NOR"
+        };
+
+        controller.Update(settings, new RigTrackingContext
+        {
+            TrackState = new SatelliteTrackState
+            {
+                Name = "AO-91",
+                NoradId = "43017",
+                Subpoint = new GeoCoordinate(0, 0),
+                LookAngles = new LookAngles(180, 20, 800, 0)
+            },
+            Mode = mode,
+            Corrected = DopplerFrequencyCalculator.Compute(mode, 0, 0)
+        });
+        controller.DrainCommandQueueForTests();
+
+        Assert.False(rig.LastSatelliteModeOn);
+        Assert.True(rig.LastSplitOn);
+        Assert.Equal(437_825_000, rig.MainHz);
+        Assert.Equal(437_825_000, rig.SubHz);
+        var exchange = rig.Commands.IndexOf("exchange");
+        var splitOff = rig.Commands.IndexOf("split-off");
+        var splitOn = rig.Commands.IndexOf("split-on");
+        Assert.True(splitOff >= 0 && splitOff < exchange, string.Join(", ", rig.Commands));
+        Assert.True(exchange < splitOn, string.Join(", ", rig.Commands));
+    }
+
+    [Fact]
+    public void Icom910_uhf_simplex_does_not_exchange_when_70cm_is_already_main()
+    {
+        var rig = new RecordingRigDriver { MainHz = 436_800_000, SubHz = 145_990_000 };
+        var controller = new RigController(_ => rig);
+        var settings = new RigSettings
+        {
+            Enabled = true,
+            Type = RigType.IcomIc910,
+            Port = "COM1",
+            CatDelayMs = 0
+        };
+
+        var mode = new SatelliteTransponderMode
+        {
+            Type = "Packet",
+            DownlinkKHz = 437_825,
+            UplinkKHz = 437_825,
+            DownlinkMode = "FM",
+            UplinkMode = "FM",
+            Doppler = "NOR"
+        };
+
+        controller.Update(settings, new RigTrackingContext
+        {
+            TrackState = new SatelliteTrackState
+            {
+                Name = "AO-91",
+                NoradId = "43017",
+                Subpoint = new GeoCoordinate(0, 0),
+                LookAngles = new LookAngles(180, 20, 800, 0)
+            },
+            Mode = mode,
+            Corrected = DopplerFrequencyCalculator.Compute(mode, 0, 0)
+        });
+        controller.DrainCommandQueueForTests();
+
+        Assert.Equal(0, rig.ExchangeVfoCallCount);
+        Assert.Equal(437_825_000, rig.MainHz);
+        Assert.True(rig.LastSplitOn);
+    }
+
+    [Fact]
+    public void Icom910_cross_band_after_simplex_clears_split_before_satellite_mode()
+    {
+        var rig = new RecordingRigDriver { MainHz = 145_990_000, SubHz = 436_800_000 };
+        var controller = new RigController(_ => rig);
+        var settings = new RigSettings
+        {
+            Enabled = true,
+            Type = RigType.IcomIc910,
+            Port = "COM1",
+            CatDelayMs = 0
+        };
+
+        var simplex = new SatelliteTransponderMode
+        {
+            Type = "Packet",
+            DownlinkKHz = 437_825,
+            UplinkKHz = 437_825,
+            DownlinkMode = "FM",
+            UplinkMode = "FM",
+            Doppler = "NOR"
+        };
+
+        var crossBand = new SatelliteTransponderMode
+        {
+            Type = "SSB Transponder",
+            DownlinkKHz = 435_667,
+            UplinkKHz = 145_937.61,
+            DownlinkMode = "USB",
+            UplinkMode = "LSB",
+            Doppler = "REV"
+        };
+
+        var state = new SatelliteTrackState
+        {
+            Name = "RS-44",
+            NoradId = "44909",
+            Subpoint = new GeoCoordinate(0, 0),
+            LookAngles = new LookAngles(180, 20, 800, 0)
+        };
+
+        controller.Update(settings, new RigTrackingContext
+        {
+            TrackState = state,
+            Mode = simplex,
+            Corrected = DopplerFrequencyCalculator.Compute(simplex, 0, 0)
+        });
+        controller.DrainCommandQueueForTests();
+        Assert.True(rig.LastSplitOn);
+        Assert.False(rig.LastSatelliteModeOn);
+
+        controller.Update(settings, new RigTrackingContext
+        {
+            TrackState = state,
+            Mode = crossBand,
+            Corrected = DopplerFrequencyCalculator.Compute(crossBand, 0, 0)
+        });
+        controller.DrainCommandQueueForTests();
+
+        Assert.True(rig.LastSatelliteModeOn);
+        Assert.False(rig.LastSplitOn);
+        var satOn = rig.Commands.LastIndexOf("sat-on");
+        Assert.True(satOn > 0, string.Join(", ", rig.Commands));
+        Assert.Equal("split-off", rig.Commands[satOn - 1]);
+        Assert.InRange(rig.MainHz, 430_000_000, 440_000_000);
+        Assert.InRange(rig.SubHz, 145_000_000, 146_000_000);
+    }
+
+    [Fact]
     public void Icom9700_same_band_uhf_packet_437_437_swaps_vfo_when_starting_on_vhf()
     {
         // Issue #36: IC-9700 does not switch TX band to 437 MHz for a 437/437 MHz FM-data transponder

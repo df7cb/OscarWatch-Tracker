@@ -77,6 +77,11 @@ public sealed class RigController : IRigController, IDisposable
     private bool _interactive;
     private bool _useMainSub;
     private bool _isBeaconOnly;
+    /// <summary>
+    /// IC-910/9100/9700 same-band pass left split on. Satellite mode is refused while split is on,
+    /// and a band exchange is ignored until split is off.
+    /// </summary>
+    private bool _icomSplitActive;
     private RigVfo _receiveVfo = RigVfo.VfoA;
     private int _rxDialHistoryCount;
     private bool _vfoNotMoving;
@@ -1714,6 +1719,7 @@ public sealed class RigController : IRigController, IDisposable
             {
                 _driver.SetSatelliteMode(false);
                 _driver.SetSplitOn(false);
+                _icomSplitActive = false;
                 ClearCtcssLeavingSatelliteMode(settings, context);
                 EnsureBeaconDownlinkOnMain(context);
             }
@@ -1721,10 +1727,22 @@ public sealed class RigController : IRigController, IDisposable
         else if (!_useMainSub)
         {
             _driver.SetSatelliteMode(false);
-            _driver.SetSplitOn(true);
-            ClearCtcssLeavingSatelliteMode(settings, context);
             if (UsesIcomSplitAbLayout(settings, context))
+            {
+                // Split blocks the main/sub exchange, so the operating band is moved first.
+                // In normal mode the IC-910 transmits only on that band: 70 cm left on Sub never gets used.
+                _driver.SetSplitOn(false);
+                EnsureOperatingBandOnMain(context);
+                _driver.SetSplitOn(true);
                 _driver.SelectVfo(RigVfo.VfoA, force: true);
+                _icomSplitActive = true;
+            }
+            else
+            {
+                _driver.SetSplitOn(true);
+            }
+
+            ClearCtcssLeavingSatelliteMode(settings, context);
         }
         else
         {
@@ -1739,6 +1757,13 @@ public sealed class RigController : IRigController, IDisposable
             {
                 if (settings.Type == RigType.FlexSmartSdr && _driver is FlexRadioDriver flexBeforeSat)
                     flexBeforeSat.ConfigureAntennaPorts(settings);
+
+                if (_icomSplitActive)
+                {
+                    // 1A 07 01 is ignored while split is still on, which leaves the radio out of satellite mode.
+                    _driver.SetSplitOn(false);
+                    _icomSplitActive = false;
+                }
 
                 _driver.SetSatelliteMode(true);
                 if (settings.Type == RigType.KenwoodTs2000 && !_driver.IsSatelliteModeActive)
@@ -1954,6 +1979,11 @@ public sealed class RigController : IRigController, IDisposable
         if (_driver is null)
             return;
 
+        // Same-band layout already placed the operating band, with split off, before this runs.
+        // A second exchange here uses the satellite Main selector and can put 70 cm back on Sub.
+        if (UsesIcomSplitAbLayout(settings, context))
+            return;
+
         // TS-2000 SATL assigns downlink/uplink via FA/FB and SA P3 — not ICOM-style Main/Sub exchange.
         if (settings.Type == RigType.KenwoodTs2000)
             return;
@@ -2023,6 +2053,27 @@ public sealed class RigController : IRigController, IDisposable
             _receiveVfo = RigVfo.Main;
         else
             _receiveVfo = RigVfo.VfoA;
+    }
+
+    /// <summary>
+    /// Normal mode (satellite off): VFO A is the operating band, and that is the only band that transmits.
+    /// Satellite Main (07 D0) still addresses the satellite VFO, so it cannot be used for this check.
+    /// </summary>
+    private void EnsureOperatingBandOnMain(RigTrackingContext context)
+    {
+        if (_driver is null || !_driver.SupportsVfoExchange)
+            return;
+
+        _driver.SelectVfo(RigVfo.VfoA, force: true);
+        Thread.Sleep(50);
+        var operatingHz = _driver.ReadFrequencyHz(RigVfo.VfoA);
+        if (operatingHz is not > 0
+            || !RigSatModeHelper.NeedsMainSubBandSwap(operatingHz.Value, context.Mode.DownlinkKHz))
+        {
+            return;
+        }
+
+        _driver.ExchangeVfos();
     }
 
     private void EnsureBeaconDownlinkOnMain(RigTrackingContext context)
