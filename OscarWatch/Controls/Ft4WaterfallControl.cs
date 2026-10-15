@@ -50,6 +50,21 @@ public sealed class Ft4WaterfallControl : Control
     public static readonly StyledProperty<string?> StatusTextProperty =
         AvaloniaProperty.Register<Ft4WaterfallControl, string?>(nameof(StatusText));
 
+    /// <summary>False for display-only use (Terminal packet): no RX/TX brackets and clicks do not tune.</summary>
+    public static readonly StyledProperty<bool> ShowTuningBracketsProperty =
+        AvaloniaProperty.Register<Ft4WaterfallControl, bool>(nameof(ShowTuningBrackets), true);
+
+    /// <summary>Fixed tones drawn as labelled dashed lines, for example the 1200 and 2200 Hz AFSK tones.</summary>
+    public static readonly StyledProperty<IReadOnlyList<double>?> ToneMarkersHzProperty =
+        AvaloniaProperty.Register<Ft4WaterfallControl, IReadOnlyList<double>?>(nameof(ToneMarkersHz));
+
+    /// <summary>
+    /// Lowest level the automatic noise floor may follow. A near-silent input otherwise has its
+    /// soundcard hiss stretched across the whole colour range.
+    /// </summary>
+    public static readonly StyledProperty<double> MinNoiseFloorDbProperty =
+        AvaloniaProperty.Register<Ft4WaterfallControl, double>(nameof(MinNoiseFloorDb), double.NegativeInfinity);
+
     public static readonly DirectProperty<Ft4WaterfallControl, float[]?> SpectrumProperty =
         AvaloniaProperty.RegisterDirect<Ft4WaterfallControl, float[]?>(
             nameof(Spectrum),
@@ -68,7 +83,9 @@ public sealed class Ft4WaterfallControl : Control
             HoldTxFrequencyProperty,
             MinHzProperty,
             MaxHzProperty,
-            StatusTextProperty);
+            StatusTextProperty,
+            ShowTuningBracketsProperty,
+            ToneMarkersHzProperty);
         DisplayRangeDbProperty.Changed.AddClassHandler<Ft4WaterfallControl>((control, _) =>
             control.RepaintSpectrum());
         FocusableProperty.OverrideDefaultValue<Ft4WaterfallControl>(true);
@@ -122,6 +139,24 @@ public sealed class Ft4WaterfallControl : Control
         set => SetValue(StatusTextProperty, value);
     }
 
+    public bool ShowTuningBrackets
+    {
+        get => GetValue(ShowTuningBracketsProperty);
+        set => SetValue(ShowTuningBracketsProperty, value);
+    }
+
+    public IReadOnlyList<double>? ToneMarkersHz
+    {
+        get => GetValue(ToneMarkersHzProperty);
+        set => SetValue(ToneMarkersHzProperty, value);
+    }
+
+    public double MinNoiseFloorDb
+    {
+        get => GetValue(MinNoiseFloorDbProperty);
+        set => SetValue(MinNoiseFloorDbProperty, value);
+    }
+
     /// <summary>Decibels above the automatic noise floor painted on the waterfall.</summary>
     public double DisplayRangeDb
     {
@@ -132,7 +167,18 @@ public sealed class Ft4WaterfallControl : Control
     private void SetSpectrum(float[]? value)
     {
         SetAndRaise(SpectrumProperty, ref _spectrum, value);
-        if (value is null || value.Length == 0)
+        if (value is null)
+        {
+            _filledRows = 0;
+            _hasSpectrum = false;
+            _bitmap?.Dispose();
+            _bitmap = null;
+            _levelsPrimed = false;
+            InvalidateVisual();
+            return;
+        }
+
+        if (value.Length == 0)
             return;
 
         var n = Math.Min(SpectrumColumns, value.Length);
@@ -154,7 +200,7 @@ public sealed class Ft4WaterfallControl : Control
 
     private void UpdateLevels(ReadOnlySpan<float> bins)
     {
-        var floor = Ft4SpectrumAnalyzer.EstimateNoiseFloorDb(bins, percentile: 0.20f);
+        var floor = Math.Max(Ft4SpectrumAnalyzer.EstimateNoiseFloorDb(bins, percentile: 0.20f), MinNoiseFloorDb);
         if (!_levelsPrimed)
         {
             _noiseFloor = floor;
@@ -297,6 +343,9 @@ public sealed class Ft4WaterfallControl : Control
 
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        if (!ShowTuningBrackets)
+            return;
+
         var props = e.GetCurrentPoint(this).Properties;
         var right = props.IsRightButtonPressed;
         var left = props.IsLeftButtonPressed;
@@ -365,8 +414,32 @@ public sealed class Ft4WaterfallControl : Control
             context.DrawLine(pen, new Point(left, 0), new Point(right, 0));
         }
 
-        DrawBracket(greenPen, rxHz);
-        DrawBracket(redPen, txHz);
+        if (ShowTuningBrackets)
+        {
+            DrawBracket(greenPen, rxHz);
+            DrawBracket(redPen, txHz);
+        }
+
+        if (ToneMarkersHz is { } markers)
+        {
+            var markerPen = new Pen(new SolidColorBrush(Color.FromArgb(170, 255, 200, 80)), 1, new DashStyle([4, 3], 0));
+            var markerBrush = new SolidColorBrush(Color.FromRgb(255, 210, 110));
+            foreach (var hz in markers)
+            {
+                if (hz < MinHz || hz > MaxHz)
+                    continue;
+                var x = Ft4SpectrumAnalyzer.HzToPixel(hz, bounds.Width, MinHz, MaxHz);
+                context.DrawLine(markerPen, new Point(x, 0), new Point(x, bounds.Height - 16));
+                var label = new FormattedText(
+                    $"{hz:0}",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Consolas"),
+                    12,
+                    markerBrush);
+                context.DrawText(label, new Point(x + 3, 2));
+            }
+        }
 
         // Frequency ticks
         var labelBrush = new SolidColorBrush(Color.FromArgb(200, 220, 220, 220));

@@ -1,11 +1,13 @@
 using System.Collections.ObjectModel;
 using OscarWatch.Core.Ft4;
+using OscarWatch.Core.Hardware;
 using OscarWatch.Core.Logbook;
 using OscarWatch.Core.Models;
 using OscarWatch.Core.Net;
 using OscarWatch.Core.Orbit;
 using OscarWatch.Core.PskReporter;
 using OscarWatch.Core.Services;
+using OscarWatch.Hardware;
 using OscarWatch.Localization;
 using OscarWatch.Services;
 using OscarWatch.ViewModels;
@@ -29,7 +31,7 @@ public sealed class Ft4ModemService : IDisposable
     private readonly IGpsService _gps;
     private readonly LiveQsoLogger _qsoLogger;
     private readonly Ft4AudioService _audio = new();
-    private readonly Ft4PttKeyer _ptt;
+    private readonly PttKeyer _ptt;
     private readonly Ft4SlotRecorder _slotRecorder;
     private readonly PskReporterClient _pskReporter = new();
     private readonly OscarWatchSpotReporter _spotReporter;
@@ -94,7 +96,7 @@ public sealed class Ft4ModemService : IDisposable
         _l = localization;
         _recording = recording;
         _gps = gps;
-        _ptt = new Ft4PttKeyer(rig, settings);
+        _ptt = new PttKeyer(rig, () => _settings.Current.Ft4.ToPttOptions(), "FT4", DescribeSeparatePttConflict);
         _slotRecorder = new Ft4SlotRecorder(() => _settings.Current.Ft4.SaveSlotAudio);
         _pskReporter.Diagnostic += (message, ex) =>
         {
@@ -1379,8 +1381,13 @@ public sealed class Ft4ModemService : IDisposable
     private bool CatPttSharesRig()
     {
         var method = _settings.Current.Ft4.PttMethod;
-        return method is Ft4PttMethod.Cat or Ft4PttMethod.CatPortHandshake;
+        return method is PttMethod.Cat or PttMethod.CatPortHandshake;
     }
+
+    private string? DescribeSeparatePttConflict(string port) =>
+        SerialPortConflictHelper.TryDescribeFt4SeparatePttConflict(_settings.Current, port, out var message)
+            ? message
+            : null;
 
     /// <summary>
     /// True when this boundary is a CAT transmit slot, so a Doppler write must not take the rig port.

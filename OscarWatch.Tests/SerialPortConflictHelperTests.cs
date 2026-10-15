@@ -243,4 +243,18 @@ public class SerialPortConflictHelperTests
         Assert.False(SerialPortConflictHelper.TryDescribeFt4SeparatePttConflict(
             "COM7", rig, rotator, gps: null, out _));
     }
+
+    [Fact]
+    public void Terminal_and_ft4_cannot_share_a_separate_ptt_port()
+    {
+        var rig = new RigSettings { Enabled = false };
+        var rotator = new RotatorSettings { Enabled = false };
+
+        Assert.True(SerialPortConflictHelper.TryDescribeSeparatePttConflict(
+            "Terminal", "com8", rig, rotator, gps: null, "FT4", "COM8", out var message));
+        Assert.Contains("Terminal separate PTT and FT4 separate PTT", message, StringComparison.Ordinal);
+
+        Assert.False(SerialPortConflictHelper.TryDescribeSeparatePttConflict(
+            "Terminal", "COM8", rig, rotator, gps: null, "FT4", "COM9", out _));
+    }
 }

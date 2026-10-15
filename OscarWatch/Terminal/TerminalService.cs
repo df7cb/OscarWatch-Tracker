@@ -1,9 +1,11 @@
+using OscarWatch.Core.Hardware;
 using OscarWatch.Core.Models;
 using OscarWatch.Core.Net;
 using OscarWatch.Core.Orbit;
 using OscarWatch.Core.Services;
 using OscarWatch.Core.Terminal;
 using OscarWatch.Core.Terminal.Uhm;
+using OscarWatch.Hardware;
 using OscarWatch.Services;
 using Serilog;
 
@@ -19,7 +21,8 @@ public sealed record TerminalLogEntry(
     TimeSpan? Delay,
     string Path,
     string Monitor,
-    AprsMicEStatus? MicEStatus = null);
+    AprsMicEStatus? MicEStatus = null,
+    int? Quality = null);
 
 public sealed record TerminalStationSnapshot(
     string Call,
@@ -73,7 +76,22 @@ public enum TerminalSendResult
     EmptyMessage,
     Failed,
     NotAprs,
-    NoPosition
+    NoPosition,
+
+    /// <summary>Built-in modem: the focused satellite is below the horizon.</summary>
+    BelowHorizon,
+
+    /// <summary>Built-in modem: the satellite needs BPSK or 9600 baud.</summary>
+    UnsupportedModem,
+
+    /// <summary>Built-in modem, half duplex: the downlink stayed busy for the maximum channel wait.</summary>
+    ChannelBusy,
+
+    /// <summary>Built-in modem: the transmit watchdog dropped PTT.</summary>
+    Watchdog,
+
+    /// <summary>Built-in modem: the radio did not move to the uplink before keying.</summary>
+    UplinkHoldFailed
 }
 
 /// <summary>
@@ -123,6 +141,8 @@ public sealed class TerminalService : IAsyncDisposable
     private DateTime _passStartComputedUtc = DateTime.MinValue;
     private DateTime? _passStartCache;
 
+    private readonly Func<IPacketAudio> _createPacketAudio;
+
     public TerminalService(
         ISettingsService settings,
         LiveQsoLogger qsoLogger,
@@ -130,7 +150,8 @@ public sealed class TerminalService : IAsyncDisposable
         ILiveTrackingService tracking,
         UhmApiClient? uhm = null,
         IGpsService? gps = null,
-        IRigController? rig = null)
+        IRigController? rig = null,
+        Func<IPacketAudio>? createPacketAudio = null)
     {
         _settings = settings;
         _qsoLogger = qsoLogger;
@@ -139,7 +160,93 @@ public sealed class TerminalService : IAsyncDisposable
         _uhm = uhm ?? new UhmApiClient();
         _gps = gps;
         _rig = rig;
+        _createPacketAudio = createPacketAudio ?? (() => new PacketAudioService());
         _aprsIs.StateChanged += _ => Changed?.Invoke();
+    }
+
+    /// <summary>The built-in modem while it is the active transport, for level and decode counts.</summary>
+    public BuiltInModemTransport? BuiltInModem => _transport as BuiltInModemTransport;
+
+    /// <summary>The built-in modem is selected and the focused satellite needs BPSK or 9600 baud.</summary>
+    public bool ProfileUnsupportedByBuiltIn =>
+        Settings.Transport == TerminalTransportKind.BuiltIn
+        && Profile is { } profile
+        && !TerminalSatelliteProfiles.IsSupportedByBuiltIn(profile.ModemHint);
+
+    /// <summary>The built-in modem's TX block for a satellite below the horizon applies now.</summary>
+    public bool BlockedBelowHorizon =>
+        Settings.Transport == TerminalTransportKind.BuiltIn
+        && Settings.BuiltIn.BlockTxBelowHorizon
+        && Profile is not null
+        && CurrentLookAngles() is { ElevationDeg: < 0 };
+
+    private TerminalSendResult? CheckModemAllowsTransmit()
+    {
+        if (ProfileUnsupportedByBuiltIn)
+            return TerminalSendResult.UnsupportedModem;
+        if (BlockedBelowHorizon)
+            return TerminalSendResult.BelowHorizon;
+        return null;
+    }
+
+    private static TerminalSendResult? MapTransmitFailure(Exception ex) =>
+        ex is TerminalTransmitException t
+            ? t.Failure switch
+            {
+                TerminalTransmitFailure.ChannelBusy => TerminalSendResult.ChannelBusy,
+                TerminalTransmitFailure.Watchdog => TerminalSendResult.Watchdog,
+                TerminalTransmitFailure.UplinkHoldFailed => TerminalSendResult.UplinkHoldFailed,
+                _ => null
+            }
+            : null;
+
+    private BuiltInModemTransport CreateBuiltInModem()
+    {
+        if (_rig is null)
+            throw new InvalidOperationException("The built-in modem needs the rig controller for PTT.");
+
+        var marker = PttSessionMarker.ForTerminal(_settings.SettingsPath);
+        var ptt = new PttKeyer(
+            _rig,
+            () => Settings.BuiltIn.ToPttOptions(),
+            "Terminal",
+            port => SerialPortConflictHelper.TryDescribeTerminalSeparatePttConflict(_settings.Current, port, out var message)
+                ? message
+                : null,
+            marker);
+        var modem = new BuiltInModemTransport(_createPacketAudio(), ptt, () => Settings, _rig)
+        {
+            LinkType = Profile?.LinkType ?? TerminalLinkType.Unknown,
+            BeforeKey = HoldUplinkAtKeyAsync
+        };
+        return modem;
+    }
+
+    /// <summary>
+    /// Built-in modem: start the FT-847 same-band hold as PTT goes up. Only a radio that needs the hold
+    /// can fail it; other radios decline, which is fine.
+    /// </summary>
+    private async Task<bool> HoldUplinkAtKeyAsync(TimeSpan airtime, CancellationToken cancellationToken)
+    {
+        if (_rig is not { } rig)
+            return true;
+
+        var rigSettings = _settings.Current.Rig;
+        var needsHold = rigSettings is { Enabled: true, DualRadioEnabled: false, Type: RigType.YaesuFt847 }
+                        && Profile?.LinkType is TerminalLinkType.Simplex or TerminalLinkType.SameBand
+                        && !rigSettings.CatUpdatesPaused
+                        && rig.GetStatus().IsConnected;
+        try
+        {
+            var held = await Task.Run(() => rig.TryHoldSameBandTransmit(airtime, TimeSpan.FromSeconds(1)), cancellationToken)
+                .ConfigureAwait(false);
+            return held || !needsHold;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            Log.Debug(ex, "Same-band uplink hold failed");
+            return !needsHold;
+        }
     }
 
     /// <summary>A message row was added (received, digipeated own frame, or sent).</summary>
@@ -188,6 +295,8 @@ public sealed class TerminalService : IAsyncDisposable
             _profile = profile;
         }
 
+        if (_transport is BuiltInModemTransport modem)
+            modem.LinkType = profile?.LinkType ?? TerminalLinkType.Unknown;
         Changed?.Invoke();
     }
 
@@ -263,6 +372,8 @@ public sealed class TerminalService : IAsyncDisposable
         var transport = _transport;
         if (transport is null || transport.State != TerminalTransportState.Connected)
             return TerminalSendResult.NotConnected;
+        if (CheckModemAllowsTransmit() is { } blocked)
+            return blocked;
 
         var profile = Profile;
         var format = profile?.Format ?? TerminalMessageFormat.Aprs;
@@ -286,14 +397,14 @@ public sealed class TerminalService : IAsyncDisposable
         try
         {
             var bytes = outgoing.Frame.Encode();
-            await HoldUplinkForFrameAsync(bytes.Length).ConfigureAwait(false);
-            await transport.SendAsync(bytes, Settings.Agwpe.RadioPort, cancellationToken).ConfigureAwait(false);
+            await HoldUplinkForFrameAsync(transport, bytes.Length).ConfigureAwait(false);
+            await transport.SendAsync(bytes, Settings.ActiveRadioPort, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException or ObjectDisposedException
                                        or System.Net.Sockets.SocketException)
         {
             Log.Warning(ex, "Terminal send failed");
-            return TerminalSendResult.Failed;
+            return MapTransmitFailure(ex) ?? TerminalSendResult.Failed;
         }
 
         var utc = DateTime.UtcNow;
@@ -367,6 +478,8 @@ public sealed class TerminalService : IAsyncDisposable
         var transport = _transport;
         if (transport is null || transport.State != TerminalTransportState.Connected)
             return (TerminalSendResult.NotConnected, null);
+        if (CheckModemAllowsTransmit() is { } blocked)
+            return (blocked, null);
         var profile = Profile;
         if ((profile?.Format ?? TerminalMessageFormat.Aprs) != TerminalMessageFormat.Aprs)
             return (TerminalSendResult.NotAprs, null);
@@ -387,14 +500,14 @@ public sealed class TerminalService : IAsyncDisposable
         try
         {
             var bytes = frame.Encode();
-            await HoldUplinkForFrameAsync(bytes.Length).ConfigureAwait(false);
-            await transport.SendAsync(bytes, Settings.Agwpe.RadioPort, cancellationToken).ConfigureAwait(false);
+            await HoldUplinkForFrameAsync(transport, bytes.Length).ConfigureAwait(false);
+            await transport.SendAsync(bytes, Settings.ActiveRadioPort, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException or ObjectDisposedException
                                        or System.Net.Sockets.SocketException)
         {
             Log.Warning(ex, "Terminal position send failed");
-            return (TerminalSendResult.Failed, fix);
+            return (MapTransmitFailure(ex) ?? TerminalSendResult.Failed, fix);
         }
 
         var utc = DateTime.UtcNow;
@@ -617,7 +730,17 @@ public sealed class TerminalService : IAsyncDisposable
         var backoff = TimeSpan.FromSeconds(2);
         while (!ct.IsCancellationRequested)
         {
-            var transport = TerminalTransportFactory.Create(Settings, MyCall);
+            ITerminalModemTransport transport;
+            try
+            {
+                transport = TerminalTransportFactory.Create(Settings, MyCall, CreateBuiltInModem);
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or NotSupportedException)
+            {
+                LastConnectionError = ex.Message;
+                Changed?.Invoke();
+                return;
+            }
             transport.FrameReceived += OnFrameReceived;
             transport.StateChanged += OnTransportStateChanged;
             _transport = transport;
@@ -674,7 +797,7 @@ public sealed class TerminalService : IAsyncDisposable
 
     private void HandleFrame(TerminalReceivedFrame received)
     {
-        if (received.RadioPort != Settings.Agwpe.RadioPort)
+        if (received.RadioPort != Settings.ActiveRadioPort)
             return;
         if (!Ax25Frame.TryParse(received.Ax25, out var frame) || frame is null || !frame.IsUi)
             return;
@@ -715,7 +838,8 @@ public sealed class TerminalService : IAsyncDisposable
                 delay,
                 message.Path,
                 message.Monitor,
-                message.Aprs?.Position?.MicEStatus);
+                message.Aprs?.Position?.MicEStatus,
+                received.Quality);
         }
 
         MessageAdded?.Invoke(entry);
@@ -741,10 +865,11 @@ public sealed class TerminalService : IAsyncDisposable
     /// <summary>
     /// A single-VFO radio on a same-band satellite (FT-847) must be on the uplink before the
     /// modem keys it. Other radios have a real split and the rig controller declines.
+    /// The built-in modem takes the hold itself when PTT goes up, so this is for external modems.
     /// </summary>
-    private async Task HoldUplinkForFrameAsync(int frameBytes)
+    private async Task HoldUplinkForFrameAsync(ITerminalModemTransport transport, int frameBytes)
     {
-        if (_rig is not { } rig)
+        if (_rig is not { } rig || transport is BuiltInModemTransport)
             return;
 
         var settings = Settings;
@@ -767,7 +892,8 @@ public sealed class TerminalService : IAsyncDisposable
     private async Task SendAckAsync(string to, string number)
     {
         var transport = _transport;
-        if (transport is null || transport.State != TerminalTransportState.Connected)
+        if (transport is null || transport.State != TerminalTransportState.Connected
+            || CheckModemAllowsTransmit() is not null)
             return;
         try
         {
@@ -778,8 +904,8 @@ public sealed class TerminalService : IAsyncDisposable
                 Ax25Frame.ParsePath(Profile?.Path),
                 AprsPayloadCodec.BuildAck(to, number));
             var bytes = frame.Encode();
-            await HoldUplinkForFrameAsync(bytes.Length).ConfigureAwait(false);
-            await transport.SendAsync(bytes, Settings.Agwpe.RadioPort, CancellationToken.None).ConfigureAwait(false);
+            await HoldUplinkForFrameAsync(transport, bytes.Length).ConfigureAwait(false);
+            await transport.SendAsync(bytes, Settings.ActiveRadioPort, CancellationToken.None).ConfigureAwait(false);
             lock (_gate)
                 _stats.RecordSent(frame.InfoText, DateTime.UtcNow);
         }

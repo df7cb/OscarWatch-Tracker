@@ -38,8 +38,8 @@
     <main>
       <p class="lead">
         <strong>Tools → OscarWatch Terminal</strong> is a keyboard-to-keyboard packet window for working stations through
-        satellite digipeaters, in the style of GreenCube Terminal. It talks to a packet soundmodem (Direwolf or the UZ7HO
-        soundmodem) over AGWPE, shows every frame heard, tracks your contacts and logs them for you.
+        satellite digipeaters, in the style of GreenCube Terminal. It has its own 1200 baud soundmodem, or it can talk to
+        Direwolf or the UZ7HO soundmodem over AGWPE. It shows every frame heard, tracks your contacts and logs them for you.
       </p>
 
       <h2>What you need</h2>
@@ -65,6 +65,71 @@
         your soundmodem's TXDELAY and TXTAIL as <strong>Modem TX delay</strong> and <strong>Modem TX tail</strong> in
         <strong>Settings → Modem</strong>, so OscarWatch stays on the uplink for the whole transmission. Frames sent
         from another application go out on the downlink frequency.
+      </p>
+
+      <h2 id="built-in-modem">Built-in soundmodem</h2>
+      <p>
+        For 1200 baud AFSK satellites such as the ISS you do not need a separate soundmodem. In
+        <strong>Settings → Modem</strong>, set <strong>Connection</strong> to <strong>Built-in soundmodem (1200 AFSK)</strong>,
+        then set it up on the <strong>Soundcard</strong> tab. The status bar shows the duplex mode, the input level and how
+        many frames have been decoded. The <strong>Q</strong> column in the message log shows the share of the modem's
+        decoders that copied each frame, which helps you compare antennas and levels.
+      </p>
+      <p>
+        The built-in modem decodes 1200 AFSK only. IO-117 uses BPSK and 9600 baud satellites use G3RUH, so for those
+        Terminal shows a warning and blocks sending. Use the UZ7HO soundmodem over AGWPE for them.
+      </p>
+      <h3>Soundcard and levels</h3>
+      <ul>
+        <li>Use the radio's <strong>data port</strong> (often a 6-pin mini-DIN or a USB audio codec) where you can. The data
+          port has a fixed level; the speaker output changes with the volume knob and may be filtered.</li>
+        <li>Tick <strong>Monitor input</strong> and aim for 30 to 70% while packets are heard. Lower the level if it shows
+          clipping.</li>
+        <li>Use <strong>Test tone</strong> to set <strong>TX level</strong>. On an FM radio, about 3 kHz deviation is right.
+          Transmit into a dummy load or on a clear frequency.</li>
+        <li><strong>Decode WAV file</strong> runs a recording through the modem without transmitting. It is handy for
+          checking a pass you recorded or a track from the WA8LMF TNC Test CD. Never play the test CD over the air.</li>
+        <li>The <strong>Waterfall</strong> tab beside <strong>Station</strong> in the Terminal window shows the receive
+          audio from 300 to 3,000 Hz, with dashed markers at the 1200 Hz and 2200 Hz packet tones. A burst lighting up both
+          markers is a packet; a steady line elsewhere is usually a carrier or interference. It works with the built-in
+          soundmodem only.</li>
+      </ul>
+      <h3>Simplex and crossband satellites</h3>
+      <p>
+        Many packet satellites, including the ISS on 145.825 MHz, are <strong>simplex</strong>: uplink and downlink share
+        one frequency. The modem then runs <strong>half duplex</strong>. It waits for a clear channel, mutes its receiver
+        while transmitting, and leaves a short turnaround guard before listening again. Keep <strong>Modem TX tail</strong>
+        short (30 to 50 ms is usually enough), or you can miss the digipeated copy of your own frame.
+      </p>
+      <p>
+        On <strong>crossband</strong> satellites the uplink and downlink are on different bands, so the modem can run
+        <strong>full duplex</strong> and you hear your packet come back through the digipeater while you transmit.
+        <strong>Duplex</strong> on the Soundcard tab is automatic by default and follows the satellite's link type. You can
+        set the link type per satellite in the profile list.
+      </p>
+      <h3>Push to talk</h3>
+      <ul>
+        <li><strong>VOX:</strong> the radio keys from the transmit audio. Simple, but the first few milliseconds can be
+          lost, so allow some PTT lead time.</li>
+        <li><strong>CAT:</strong> OscarWatch keys the radio over the Rig control connection.</li>
+        <li><strong>CAT port RTS/DTR</strong> and <strong>Separate COM port:</strong> for USB interfaces that key the
+          radio with a serial control line.</li>
+      </ul>
+      <p>
+        A transmit watchdog stops any transmission that runs longer than the time set on the Soundcard tab (10 seconds by
+        default). Also set a <strong>transmit time-out timer</strong> on the radio itself as a hardware backstop. If
+        OscarWatch closes unexpectedly while keyed over CAT, it sends the radio a receive command the next time it
+        connects and tells you in the Terminal window.
+      </p>
+      <p>
+        By default the modem does not transmit while the satellite is below the horizon. Untick
+        <strong>Do not transmit while the satellite is below the horizon</strong> for terrestrial packet.
+      </p>
+      <h3>Yaesu FT-847 on simplex satellites</h3>
+      <p>
+        With the built-in modem, OscarWatch moves the FT-847 to the uplink frequency just before it keys, for exactly as long
+        as the transmission lasts, then returns to the downlink. If the radio cannot be moved, the frame is not sent and the
+        status line says so.
       </p>
 
       <h2>Getting started</h2>
@@ -243,7 +308,12 @@
           another port.</li>
         <li><strong>Connected but nothing appears:</strong> check the soundmodem decodes packets on its own, that the right
           <strong>Radio port</strong> is chosen, and that the radio is tuned (Doppler) to the downlink.</li>
-        <li><strong>IO-117 shows nothing:</strong> Direwolf has no BPSK modem; use the UZ7HO soundmodem.</li>
+        <li><strong>IO-117 shows nothing:</strong> Direwolf and the built-in modem have no BPSK modem; use the UZ7HO
+          soundmodem.</li>
+        <li><strong>"Not sent: the channel stayed busy":</strong> the built-in modem heard a signal for longer than the
+          maximum wait. Check the input level is not just noise, or raise <strong>Maximum wait</strong>.</li>
+        <li><strong>"Transmission stopped by the watchdog":</strong> PTT or the soundcard output stalled. Check the output
+          device and PTT method on the Soundcard tab.</li>
         <li><strong>Your frames never come back:</strong> check PTT and transmit audio level in the soundmodem, and the uplink
           frequency. The statistics panel shows how many of your frames were digipeated.</li>
         <li><strong>UHM says the token was not accepted:</strong> create a new token on OscarWatch.org and save it in

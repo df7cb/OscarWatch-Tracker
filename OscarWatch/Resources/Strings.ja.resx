@@ -5255,7 +5255,7 @@
     <value>KISS シリアル TNC (予定)</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>内蔵サウンドモデム (予定)</value>
+    <value>内蔵サウンドモデム (1200 AFSK)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} は今後のリリースで対応予定です。現在は AGWPE を使用します。</value>
@@ -5655,5 +5655,278 @@
   </data>
   <data name="Terminal.Status.GridChanged" xml:space="preserve">
     <value>グリッドが {0} から {1} に変わりました。マクロのグリッド置換は新しいグリッドを使います。グリッドを直接入力したマクロを確認してください。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRadio" xml:space="preserve">
+    <value>Terminal の個別 PTT と無線機が両方とも {0} を使用しています。別の COM ポートを使うか、どちらかのデバイスを無効にしてください。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndDownlink" xml:space="preserve">
+    <value>Terminal の個別 PTT とダウンリンク無線機が両方とも {0} を使用しています。別の COM ポートを使うか、どちらかのデバイスを無効にしてください。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndUplink" xml:space="preserve">
+    <value>Terminal の個別 PTT とアップリンク無線機が両方とも {0} を使用しています。別の COM ポートを使うか、どちらかのデバイスを無効にしてください。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRotator" xml:space="preserve">
+    <value>Terminal の個別 PTT とローテーターが両方とも {0} を使用しています。別の COM ポートを使うか、どちらかのデバイスを無効にしてください。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndGps" xml:space="preserve">
+    <value>Terminal の個別 PTT と GPS が両方とも {0} を使用しています。別の COM ポートを使うか、どちらかのデバイスを無効にしてください。</value>
+  </data>
+  <data name="ComPort.Ft4PttAndTerminalPtt" xml:space="preserve">
+    <value>FT4 の個別 PTT と Terminal の個別 PTT が両方とも {0} を使用しています。別の COM ポートを使うか、どちらかのデバイスを無効にしてください。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndFt4Ptt" xml:space="preserve">
+    <value>Terminal の個別 PTT と FT4 の個別 PTT が両方とも {0} を使用しています。別の COM ポートを使うか、どちらかのデバイスを無効にしてください。</value>
+  </data>
+  <data name="Terminal.Col.Quality" xml:space="preserve">
+    <value>品質</value>
+  </data>
+  <data name="Terminal.Col.Quality.Tip" xml:space="preserve">
+    <value>デコード品質: 内蔵モデムのデコーダーのうち、このフレームをエラーなく受信できた割合です。</value>
+  </data>
+  <data name="Terminal.LinkType" xml:space="preserve">
+    <value>リンク</value>
+  </data>
+  <data name="Terminal.LinkType.Auto" xml:space="preserve">
+    <value>自動</value>
+  </data>
+  <data name="Terminal.LinkType.Simplex" xml:space="preserve">
+    <value>シンプレックス (1 周波数)</value>
+  </data>
+  <data name="Terminal.LinkType.SameBand" xml:space="preserve">
+    <value>同一バンド</value>
+  </data>
+  <data name="Terminal.LinkType.Crossband" xml:space="preserve">
+    <value>クロスバンド</value>
+  </data>
+  <data name="Terminal.Modem.BitFix" xml:space="preserve">
+    <value>ビット修正</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Help" xml:space="preserve">
+    <value>チェックサムが合わないフレームを、1 ビット (または隣接する 2 ビット) を反転して再確認することで修復します。1 ビットが安全な既定値です。隣接ペアは弱いフレームをより多く救えますが、CPU 時間が増えます。</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Off" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Single" xml:space="preserve">
+    <value>1 ビット</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
+    <value>1 ビットと隣接ペア</value>
+  </data>
+  <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
+    <value>衛星が地平線より下にある間は送信しない</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
+    <value>モデム: OscarWatch 1200 AFSK、{0}、入力 {1}%、デコード {2} フレーム (修正 {3})</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
+    <value>サウンドカード</value>
+  </data>
+  <data name="Terminal.Modem.Channel" xml:space="preserve">
+    <value>チャンネルアクセス</value>
+  </data>
+  <data name="Terminal.Modem.Decode" xml:space="preserve">
+    <value>録音をデコード</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Button" xml:space="preserve">
+    <value>WAV ファイルをデコード</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Failed" xml:space="preserve">
+    <value>録音をデコードできませんでした: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Help" xml:space="preserve">
+    <value>送信せずに WAV 録音を内蔵モデムに通します。たとえば録音したパスや WA8LMF TNC Test CD のトラックです。テスト CD を電波に乗せて再生しないでください。</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerTitle" xml:space="preserve">
+    <value>WAV 録音を選択</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerType" xml:space="preserve">
+    <value>WAV オーディオ</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Running" xml:space="preserve">
+    <value>{0} をデコード中…</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Summary" xml:space="preserve">
+    <value>{2} 秒の音声から {3} 系統のデコーダーで {0} フレームをデコードしました (ビット修正 {1})。</value>
+  </data>
+  <data name="Terminal.Modem.Duplex" xml:space="preserve">
+    <value>デュプレックス</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Auto" xml:space="preserve">
+    <value>自動 (衛星のリンク種別から)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Full" xml:space="preserve">
+    <value>全二重 (送信中も受信)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.FullShort" xml:space="preserve">
+    <value>全二重</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Half" xml:space="preserve">
+    <value>半二重 (シンプレックスと同一バンド)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.HalfShort" xml:space="preserve">
+    <value>半二重</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
+    <value>ISS のようなシンプレックス衛星は 1 つの周波数を使うため、モデムは空きチャンネルを待ち、送信中は受信をミュートし、再び受信する前に短いガード時間を置きます。クロスバンド衛星は全二重で運用でき、デジピーター経由で戻る自局のパケットを聞けます。</value>
+  </data>
+  <data name="Terminal.Modem.Guard" xml:space="preserve">
+    <value>切替ガード (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Input" xml:space="preserve">
+    <value>入力 (無線機から)</value>
+  </data>
+  <data name="Terminal.Modem.Level" xml:space="preserve">
+    <value>入力レベル</value>
+  </data>
+  <data name="Terminal.Modem.Level.Clipping" xml:space="preserve">
+    <value>入力 {0}%: クリップしています。無線機のデータ出力か Windows の録音レベルを下げてください。</value>
+  </data>
+  <data name="Terminal.Modem.Level.Failed" xml:space="preserve">
+    <value>入力を開けませんでした: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Level.Help" xml:space="preserve">
+    <value>チャンネルが混んでいるときに 30 から 70% を目安にしてください。スピーカー出力は音量つまみで変わるため、できれば無線機のデータ端子を使ってください。</value>
+  </data>
+  <data name="Terminal.Modem.Level.Idle" xml:space="preserve">
+    <value>レベルを見るには「入力をモニター」にチェックを入れてください。</value>
+  </data>
+  <data name="Terminal.Modem.Level.Low" xml:space="preserve">
+    <value>入力 {0}%: 低すぎます。無線機のデータ出力か Windows の録音レベルを上げてください。</value>
+  </data>
+  <data name="Terminal.Modem.Level.Ok" xml:space="preserve">
+    <value>入力 {0}%: 良好です。</value>
+  </data>
+  <data name="Terminal.Modem.MaxWait" xml:space="preserve">
+    <value>最大待ち時間 (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Monitor" xml:space="preserve">
+    <value>入力をモニター</value>
+  </data>
+  <data name="Terminal.Modem.Output" xml:space="preserve">
+    <value>出力 (無線機へ)</value>
+  </data>
+  <data name="Terminal.Modem.Persist" xml:space="preserve">
+    <value>パーシステンス (0 から 255)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt" xml:space="preserve">
+    <value>送信 (PTT)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt.Help" xml:space="preserve">
+    <value>VOX は音声で無線機を送信状態にします。CAT はリグ制御の無線機接続を使います。個別 COM ポートは USB インターフェースの RTS または DTR を駆動します。ハードウェアの安全策として、無線機に送信タイムアウトタイマーを設定してください。</value>
+  </data>
+  <data name="Terminal.Modem.PttInvert" xml:space="preserve">
+    <value>反転</value>
+  </data>
+  <data name="Terminal.Modem.PttLead" xml:space="preserve">
+    <value>PTT 先行 (ms)</value>
+  </data>
+  <data name="Terminal.Modem.PttLine" xml:space="preserve">
+    <value>信号線</value>
+  </data>
+  <data name="Terminal.Modem.PttPort" xml:space="preserve">
+    <value>PTT COM ポート</value>
+  </data>
+  <data name="Terminal.Modem.PttTail" xml:space="preserve">
+    <value>PTT テール (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Refresh" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Terminal.Modem.SlotTime" xml:space="preserve">
+    <value>スロット時間 (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Soundcard" xml:space="preserve">
+    <value>サウンドカード</value>
+  </data>
+  <data name="Terminal.Modem.TestTone" xml:space="preserve">
+    <value>テストトーン</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Alternating" xml:space="preserve">
+    <value>1200 Hz と 2200 Hz を交互</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Done" xml:space="preserve">
+    <value>テストトーンが終了しました。</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
+    <value>テストトーンに失敗しました: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
+    <value>上の送信レベルで無線機を 5 秒間送信します。FM 機では約 3 kHz のデビエーションになるようレベルを合わせてください。ダミーロードか空き周波数で送信してください。</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Mark" xml:space="preserve">
+    <value>マーク (1200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Send" xml:space="preserve">
+    <value>送信</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Sending" xml:space="preserve">
+    <value>テストトーンを送信中…</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Space" xml:space="preserve">
+    <value>スペース (2200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stopped" xml:space="preserve">
+    <value>テストトーンを停止しました。</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel" xml:space="preserve">
+    <value>送信レベル</value>
+  </data>
+  <data name="Terminal.Modem.Unsupported" xml:space="preserve">
+    <value>{0} は {1} を使用します。内蔵モデムがデコードできるのは 1200 AFSK のみです。この衛星には AGWPE 経由で UZ7HO を使ってください。</value>
+  </data>
+  <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
+    <value>全二重でも空きチャンネルを待つ</value>
+  </data>
+  <data name="Terminal.Modem.Watchdog" xml:space="preserve">
+    <value>送信ウォッチドッグ (秒)</value>
+  </data>
+  <data name="Terminal.PttRecovered" xml:space="preserve">
+    <value>Terminal の送信中に OscarWatch が予期せず終了しました。無線機に CAT の受信コマンドを送りました。送信が止まっていることを確認してください。</value>
+  </data>
+  <data name="Terminal.PttRecovered.Dismiss" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
+    <value>内蔵モデムは無線機に接続したサウンドカードを使います。デバイス、レベル、PTT は「サウンドカード」タブで選んでください。</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
+    <value>半二重で TXTAIL が長すぎます: ISS のようなシンプレックス衛星では、50 ms を超えるテールは受信の再開を遅らせ、デジピートされたコピーを逃すことがあります。通常は 30 から 50 ms で十分です。</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Soundcard" xml:space="preserve">
+    <value>サウンドカード</value>
+  </data>
+  <data name="Terminal.Status.BelowHorizon" xml:space="preserve">
+    <value>未送信: 衛星が地平線より下にあります。地上パケットでは Terminal の設定で変更できます。</value>
+  </data>
+  <data name="Terminal.Status.ChannelBusy" xml:space="preserve">
+    <value>未送信: チャンネルが混雑したままでした。空いてから再試行してください。</value>
+  </data>
+  <data name="Terminal.Status.UplinkHoldFailed" xml:space="preserve">
+    <value>未送信: 同一バンド送信のためのアップリンク周波数を無線機が保持できませんでした。</value>
+  </data>
+  <data name="Terminal.Status.Watchdog" xml:space="preserve">
+    <value>{0} 秒のウォッチドッグにより送信を停止しました。PTT とサウンドカード出力を確認してください。</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.BuiltInHelp" xml:space="preserve">
+    <value>内蔵モデムは送信開始後、TX ディレイの間フラグを送り、最初のフレームまでに無線機と受信局を安定させます。最後のビットが切れないよう TX テールも付けます。多くの FM 機では 300 ms が適しています。CAT や応答の速いデータ端子なら 150 から 200 ms で足りることが多いです。ISS のようなシンプレックス衛星ではテールを 30 から 50 ms にしてください。</value>
+  </data>
+  <data name="Terminal.Waterfall" xml:space="preserve">
+    <value>ウォーターフォール</value>
+  </data>
+  <data name="Terminal.Waterfall.Tip" xml:space="preserve">
+    <value>内蔵サウンドモデムの受信音声 (300 から 3000 Hz) をリアルタイムで表示します。パケットは 1200 Hz と 2200 Hz の目印をまたぐバーストとして見えます。</value>
+  </data>
+  <data name="Terminal.Station.Tabs" xml:space="preserve">
+    <value>局情報とウォーターフォール</value>
+  </data>
+  <data name="Terminal.Waterfall.Idle" xml:space="preserve">
+    <value>受信音声を見るには内蔵サウンドモデムを接続してください。</value>
+  </data>
+  <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
+    <value>ウォーターフォールには内蔵サウンドモデムが必要です。AGWPE モデムは音声を共有しません。</value>
   </data>
 </root>

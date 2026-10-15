@@ -5259,7 +5259,7 @@ Terbaru: {1} ({2})</value>
     <value>TNC KISS serial (direncanakan)</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>Soundmodem bawaan (direncanakan)</value>
+    <value>Soundmodem bawaan (1200 AFSK)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} direncanakan untuk rilis mendatang. Untuk saat ini AGWPE digunakan.</value>
@@ -5659,5 +5659,278 @@ Terbaru: {1} ({2})</value>
   </data>
   <data name="Terminal.Status.GridChanged" xml:space="preserve">
     <value>Grid Anda berubah dari {0} ke {1}. Placeholder grid di makro memakai grid baru; periksa makro yang grid-nya diketik langsung.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRadio" xml:space="preserve">
+    <value>PTT terpisah Terminal dan radio sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndDownlink" xml:space="preserve">
+    <value>PTT terpisah Terminal dan radio downlink sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndUplink" xml:space="preserve">
+    <value>PTT terpisah Terminal dan radio uplink sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRotator" xml:space="preserve">
+    <value>PTT terpisah Terminal dan rotator sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndGps" xml:space="preserve">
+    <value>PTT terpisah Terminal dan GPS sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.Ft4PttAndTerminalPtt" xml:space="preserve">
+    <value>PTT terpisah FT4 dan PTT terpisah Terminal sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndFt4Ptt" xml:space="preserve">
+    <value>PTT terpisah Terminal dan PTT terpisah FT4 sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="Terminal.Col.Quality" xml:space="preserve">
+    <value>K</value>
+  </data>
+  <data name="Terminal.Col.Quality.Tip" xml:space="preserve">
+    <value>Kualitas dekode: porsi dekoder modem bawaan yang menerima frame ini tanpa galat.</value>
+  </data>
+  <data name="Terminal.LinkType" xml:space="preserve">
+    <value>Link</value>
+  </data>
+  <data name="Terminal.LinkType.Auto" xml:space="preserve">
+    <value>Otomatis</value>
+  </data>
+  <data name="Terminal.LinkType.Simplex" xml:space="preserve">
+    <value>Simpleks (satu frekuensi)</value>
+  </data>
+  <data name="Terminal.LinkType.SameBand" xml:space="preserve">
+    <value>Band sama</value>
+  </data>
+  <data name="Terminal.LinkType.Crossband" xml:space="preserve">
+    <value>Lintas band</value>
+  </data>
+  <data name="Terminal.Modem.BitFix" xml:space="preserve">
+    <value>Perbaikan bit</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Help" xml:space="preserve">
+    <value>Memperbaiki frame dengan checksum salah dengan membalik satu bit (atau dua bit bersebelahan) lalu memeriksa ulang. Satu bit adalah bawaan yang aman. Pasangan bersebelahan menyelamatkan lebih banyak frame lemah tetapi memakai lebih banyak prosesor.</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Off" xml:space="preserve">
+    <value>Mati</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Single" xml:space="preserve">
+    <value>Satu bit</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
+    <value>Satu bit dan pasangan bersebelahan</value>
+  </data>
+  <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
+    <value>Jangan memancar saat satelit di bawah cakrawala</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
+    <value>Modem: OscarWatch 1200 AFSK, {0}, input {1}%, {2} frame terdekode ({3} diperbaiki)</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
+    <value>kartu suara</value>
+  </data>
+  <data name="Terminal.Modem.Channel" xml:space="preserve">
+    <value>Akses kanal</value>
+  </data>
+  <data name="Terminal.Modem.Decode" xml:space="preserve">
+    <value>Dekode rekaman</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Button" xml:space="preserve">
+    <value>Dekode berkas WAV</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Failed" xml:space="preserve">
+    <value>Tidak dapat mendekode rekaman: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Help" xml:space="preserve">
+    <value>Menjalankan rekaman WAV melalui modem bawaan tanpa memancar, misalnya lintasan yang Anda rekam atau trek dari WA8LMF TNC Test CD. Jangan pernah memutar CD uji di udara.</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerTitle" xml:space="preserve">
+    <value>Pilih rekaman WAV</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerType" xml:space="preserve">
+    <value>Audio WAV</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Running" xml:space="preserve">
+    <value>Mendekode {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Summary" xml:space="preserve">
+    <value>{0} frame terdekode ({1} lewat perbaikan bit) dari {2} detik audio dengan {3} jalur dekoder.</value>
+  </data>
+  <data name="Terminal.Modem.Duplex" xml:space="preserve">
+    <value>Dupleks</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Auto" xml:space="preserve">
+    <value>Otomatis (dari jenis link satelit)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Full" xml:space="preserve">
+    <value>Dupleks penuh (mendengar saat memancar)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.FullShort" xml:space="preserve">
+    <value>dupleks penuh</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Half" xml:space="preserve">
+    <value>Setengah dupleks (simpleks dan band sama)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.HalfShort" xml:space="preserve">
+    <value>setengah dupleks</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
+    <value>Satelit simpleks seperti ISS memakai satu frekuensi, jadi modem menunggu kanal kosong, membisukan penerima saat memancar, dan memberi jeda singkat sebelum mendengar lagi. Satelit lintas band dapat berjalan dupleks penuh sehingga Anda mendengar paket sendiri kembali melalui digipeater.</value>
+  </data>
+  <data name="Terminal.Modem.Guard" xml:space="preserve">
+    <value>Jeda peralihan (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Input" xml:space="preserve">
+    <value>Input (dari radio)</value>
+  </data>
+  <data name="Terminal.Modem.Level" xml:space="preserve">
+    <value>Level input</value>
+  </data>
+  <data name="Terminal.Modem.Level.Clipping" xml:space="preserve">
+    <value>Input {0}%: terpotong. Turunkan output data radio atau level rekam Windows.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Failed" xml:space="preserve">
+    <value>Tidak dapat membuka input: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Level.Help" xml:space="preserve">
+    <value>Targetkan 30 hingga 70% saat kanal ramai. Gunakan port data radio bila bisa, karena output speaker berubah mengikuti kenop volume.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Idle" xml:space="preserve">
+    <value>Centang Pantau input untuk melihat level.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Low" xml:space="preserve">
+    <value>Input {0}%: terlalu rendah. Naikkan output data radio atau level rekam Windows.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Ok" xml:space="preserve">
+    <value>Input {0}%: baik.</value>
+  </data>
+  <data name="Terminal.Modem.MaxWait" xml:space="preserve">
+    <value>Tunggu maksimum (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Monitor" xml:space="preserve">
+    <value>Pantau input</value>
+  </data>
+  <data name="Terminal.Modem.Output" xml:space="preserve">
+    <value>Output (ke radio)</value>
+  </data>
+  <data name="Terminal.Modem.Persist" xml:space="preserve">
+    <value>Persistensi (0 sampai 255)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt" xml:space="preserve">
+    <value>Tekan untuk bicara (PTT)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt.Help" xml:space="preserve">
+    <value>VOX memancarkan radio dari audio. CAT memakai koneksi radio dari kontrol rig. Port COM terpisah menggerakkan RTS atau DTR pada antarmuka USB. Atur pembatas waktu pancar di radio sebagai pengaman perangkat keras.</value>
+  </data>
+  <data name="Terminal.Modem.PttInvert" xml:space="preserve">
+    <value>Balik</value>
+  </data>
+  <data name="Terminal.Modem.PttLead" xml:space="preserve">
+    <value>Jeda awal PTT (ms)</value>
+  </data>
+  <data name="Terminal.Modem.PttLine" xml:space="preserve">
+    <value>Jalur</value>
+  </data>
+  <data name="Terminal.Modem.PttPort" xml:space="preserve">
+    <value>Port COM PTT</value>
+  </data>
+  <data name="Terminal.Modem.PttTail" xml:space="preserve">
+    <value>Ekor PTT (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Refresh" xml:space="preserve">
+    <value>Muat ulang</value>
+  </data>
+  <data name="Terminal.Modem.SlotTime" xml:space="preserve">
+    <value>Waktu slot (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Soundcard" xml:space="preserve">
+    <value>Kartu suara</value>
+  </data>
+  <data name="Terminal.Modem.TestTone" xml:space="preserve">
+    <value>Nada uji</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Alternating" xml:space="preserve">
+    <value>Bergantian 1200 dan 2200 Hz</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Done" xml:space="preserve">
+    <value>Nada uji selesai.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
+    <value>Nada uji gagal: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
+    <value>Memancarkan radio selama 5 detik pada level TX di atas. Pada radio FM, atur level untuk deviasi sekitar 3 kHz. Pancarkan ke beban dummy atau pada frekuensi kosong.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Mark" xml:space="preserve">
+    <value>Mark (1200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Send" xml:space="preserve">
+    <value>Kirim</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Sending" xml:space="preserve">
+    <value>Mengirim nada uji…</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Space" xml:space="preserve">
+    <value>Space (2200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stop" xml:space="preserve">
+    <value>Berhenti</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stopped" xml:space="preserve">
+    <value>Nada uji dihentikan.</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel" xml:space="preserve">
+    <value>Level TX</value>
+  </data>
+  <data name="Terminal.Modem.Unsupported" xml:space="preserve">
+    <value>{0} memakai {1}. Modem bawaan hanya mendekode 1200 AFSK. Gunakan UZ7HO melalui AGWPE untuk satelit ini.</value>
+  </data>
+  <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
+    <value>Tunggu kanal kosong juga saat dupleks penuh</value>
+  </data>
+  <data name="Terminal.Modem.Watchdog" xml:space="preserve">
+    <value>Pengawas pancar (s)</value>
+  </data>
+  <data name="Terminal.PttRecovered" xml:space="preserve">
+    <value>OscarWatch tertutup tiba-tiba saat Terminal sedang memancar. Radio telah dikirimi perintah CAT terima. Periksa bahwa radio tidak lagi memancar.</value>
+  </data>
+  <data name="Terminal.PttRecovered.Dismiss" xml:space="preserve">
+    <value>Tutup</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
+    <value>Modem bawaan memakai kartu suara yang tersambung ke radio Anda. Pilih perangkat, level, dan PTT di tab Kartu suara.</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
+    <value>TXTAIL panjang pada setengah dupleks: pada satelit simpleks seperti ISS, ekor lebih dari 50 ms menunda penerima dan dapat melewatkan salinan digipeat. Biasanya 30 hingga 50 ms sudah cukup.</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Soundcard" xml:space="preserve">
+    <value>Kartu suara</value>
+  </data>
+  <data name="Terminal.Status.BelowHorizon" xml:space="preserve">
+    <value>Tidak terkirim: satelit di bawah cakrawala. Anda dapat mengubahnya di pengaturan Terminal untuk packet terestrial.</value>
+  </data>
+  <data name="Terminal.Status.ChannelBusy" xml:space="preserve">
+    <value>Tidak terkirim: kanal tetap sibuk. Coba lagi saat lebih sepi.</value>
+  </data>
+  <data name="Terminal.Status.UplinkHoldFailed" xml:space="preserve">
+    <value>Tidak terkirim: radio tidak dapat menahan frekuensi uplink untuk pancaran band sama.</value>
+  </data>
+  <data name="Terminal.Status.Watchdog" xml:space="preserve">
+    <value>Pancaran dihentikan oleh pengawas {0} detik. Periksa PTT dan output kartu suara.</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.BuiltInHelp" xml:space="preserve">
+    <value>Modem bawaan mengirim flag selama jeda TX setelah radio memancar, agar radio dan stasiun penerima stabil sebelum frame pertama, lalu menambahkan ekor TX agar bit terakhir tidak terpotong. Jeda 300 ms cocok untuk kebanyakan radio FM; dengan CAT atau port data yang cepat, 150 hingga 200 ms sering cukup. Jaga ekor pada 30 hingga 50 ms untuk satelit simpleks seperti ISS.</value>
+  </data>
+  <data name="Terminal.Waterfall" xml:space="preserve">
+    <value>Waterfall</value>
+  </data>
+  <data name="Terminal.Waterfall.Tip" xml:space="preserve">
+    <value>Audio terima langsung dari soundmodem bawaan, 300 hingga 3000 Hz. Paket tampak sebagai semburan di tanda 1200 dan 2200 Hz.</value>
+  </data>
+  <data name="Terminal.Station.Tabs" xml:space="preserve">
+    <value>Stasiun dan waterfall</value>
+  </data>
+  <data name="Terminal.Waterfall.Idle" xml:space="preserve">
+    <value>Sambungkan soundmodem bawaan untuk melihat audio terima.</value>
+  </data>
+  <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
+    <value>Waterfall memerlukan soundmodem bawaan. Modem AGWPE tidak membagikan audionya.</value>
   </data>
 </root>

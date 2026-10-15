@@ -15,6 +15,11 @@
       <Setter Property="TextWrapping" Value="Wrap" />
       <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
     </Style>
+    <Style Selector="TextBlock.ts-hint">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+    </Style>
     <Style Selector="TextBlock.ts-section">
       <Setter Property="FontSize" Value="13" />
       <Setter Property="FontWeight" Value="SemiBold" />
@@ -110,6 +115,9 @@
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
+            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Settings.BuiltIn.Help}"
+                       IsVisible="{Binding IsBuiltInSelected}" />
+            <StackPanel Spacing="10" IsVisible="{Binding IsAgwpeSelected}">
             <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Modem.Help}" />
             <Grid ColumnDefinitions="*,140" ColumnSpacing="8">
               <StackPanel Grid.Column="0" Spacing="4">
@@ -146,6 +154,7 @@
                        FontSize="12"
                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                        IsVisible="{Binding ModemTestText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            </StackPanel>
             <CheckBox Content="{loc:Localize Key=Terminal.Settings.AutoConnect}" IsChecked="{Binding AutoConnect}" />
             <Grid ColumnDefinitions="*,*" ColumnSpacing="8" IsVisible="{Binding ShowModemTiming}">
               <StackPanel Grid.Column="0" Spacing="4">
@@ -159,8 +168,10 @@
                                AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.ModemTxTail}" />
               </StackPanel>
             </Grid>
-            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.ModemTiming.Help}"
+            <TextBlock Classes="ts-note" Text="{Binding ModemTimingHelp}"
                        IsVisible="{Binding ShowModemTiming}" />
+            <TextBlock Classes="ts-warning" Text="{loc:Localize Key=Terminal.Settings.BuiltIn.LongTail}"
+                       IsVisible="{Binding ShowLongTailWarning}" />
 
             <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Station}" Margin="0,12,0,0" />
             <Grid ColumnDefinitions="*,140" ColumnSpacing="8">
@@ -178,6 +189,137 @@
               </StackPanel>
             </Grid>
             <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Callsign.Help}" />
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- Built-in soundcard modem -->
+      <TabItem Header="{loc:Localize Key=Terminal.Settings.Tab.Soundcard}" IsVisible="{Binding IsBuiltInSelected}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,8,4,0">
+          <StackPanel Spacing="10" MaxWidth="460" DataContext="{Binding BuiltIn}" x:DataType="vm:TerminalBuiltInModemViewModel">
+            <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Modem.Soundcard}" />
+            <TextBlock Text="{loc:Localize Key=Terminal.Modem.Input}" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+              <ComboBox Grid.Column="0" ItemsSource="{Binding InputDeviceOptions}" SelectedItem="{Binding SelectedInputDevice}"
+                        HorizontalAlignment="Stretch"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.Input}" />
+              <Button Grid.Column="1" Content="{loc:Localize Key=Terminal.Modem.Refresh}" Command="{Binding RefreshCommand}" />
+            </Grid>
+            <TextBlock Text="{loc:Localize Key=Terminal.Modem.Output}" />
+            <ComboBox ItemsSource="{Binding OutputDeviceOptions}" SelectedItem="{Binding SelectedOutputDevice}"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.Output}" />
+
+            <CheckBox Content="{loc:Localize Key=Terminal.Modem.Monitor}" IsChecked="{Binding IsMonitoring}" />
+            <ProgressBar Minimum="0" Maximum="100" Value="{Binding InputLevelPercent}" Height="12"
+                         AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.Level}" />
+            <TextBlock Text="{Binding InputLevelText}" TextWrapping="Wrap" />
+            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.Level.Help}" />
+
+            <TextBlock Text="{loc:Localize Key=Terminal.Modem.TxLevel}" />
+            <Grid ColumnDefinitions="*,70" ColumnSpacing="8">
+              <Slider Grid.Column="0" Minimum="1" Maximum="100" Value="{Binding TxLevelPercent}"
+                      TickFrequency="1" IsSnapToTickEnabled="True"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.TxLevel}" />
+              <NumericUpDown Grid.Column="1" Minimum="1" Maximum="100" Value="{Binding TxLevelPercent}" FormatString="F0"
+                             AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.TxLevel}" />
+            </Grid>
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+              <ComboBox Grid.Column="0" ItemsSource="{Binding TestToneOptions}" SelectedItem="{Binding SelectedTestTone}"
+                        HorizontalAlignment="Stretch"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.TestTone}" />
+              <Button Grid.Column="1" Content="{loc:Localize Key=Terminal.Modem.TestTone.Send}"
+                      Command="{Binding SendTestToneCommand}" IsEnabled="{Binding !IsSendingTestTone}" />
+              <Button Grid.Column="2" Content="{loc:Localize Key=Terminal.Modem.TestTone.Stop}"
+                      Command="{Binding StopTestToneCommand}" IsEnabled="{Binding IsSendingTestTone}" />
+            </Grid>
+            <TextBlock Text="{Binding TestToneText}" TextWrapping="Wrap"
+                       IsVisible="{Binding TestToneText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.TestTone.Help}" />
+
+            <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Modem.Ptt}" Margin="0,12,0,0" />
+            <ComboBox ItemsSource="{Binding PttMethodOptions}" SelectedItem="{Binding SelectedPttMethod}"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.Ptt}" />
+            <StackPanel Spacing="4" IsVisible="{Binding ShowSeparatePttPort}">
+              <TextBlock Text="{loc:Localize Key=Terminal.Modem.PttPort}" />
+              <ComboBox ItemsSource="{Binding PttPortOptions}" SelectedItem="{Binding SeparatePttPort}"
+                        HorizontalAlignment="Stretch"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.PttPort}" />
+            </StackPanel>
+            <TextBlock Classes="ts-warning" Text="{Binding SeparatePttConflictText}" IsVisible="{Binding ShowSeparatePttConflict}" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" IsVisible="{Binding ShowPttLine}">
+              <ComboBox Grid.Column="0" ItemsSource="{Binding PttLineOptions}" SelectedItem="{Binding SelectedPttLine}"
+                        HorizontalAlignment="Stretch"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.PttLine}" />
+              <CheckBox Grid.Column="1" Content="{loc:Localize Key=Terminal.Modem.PttInvert}" IsChecked="{Binding PttInvert}" />
+            </Grid>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8" IsVisible="{Binding ShowPttTiming}">
+              <StackPanel Grid.Column="0" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Modem.PttLead}" />
+                <NumericUpDown Value="{Binding PttLeadMs}" Minimum="0" Maximum="2000" Increment="10" FormatString="F0"
+                               AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.PttLead}" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Modem.PttTail}" />
+                <NumericUpDown Value="{Binding PttTailMs}" Minimum="0" Maximum="2000" Increment="10" FormatString="F0"
+                               AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.PttTail}" />
+              </StackPanel>
+            </Grid>
+            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.Ptt.Help}" />
+
+            <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Modem.Channel}" Margin="0,12,0,0" />
+            <TextBlock Text="{loc:Localize Key=Terminal.Modem.Duplex}" />
+            <ComboBox ItemsSource="{Binding DuplexOptions}" SelectedItem="{Binding SelectedDuplex}"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.Duplex}" />
+            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.Duplex.Help}" />
+            <CheckBox Content="{loc:Localize Key=Terminal.Modem.WaitClearFullDuplex}" IsChecked="{Binding WaitForClearChannelInFullDuplex}" />
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" IsVisible="{Binding ShowHalfDuplexOptions}">
+              <StackPanel Grid.Column="0" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Modem.Persist}" />
+                <NumericUpDown Value="{Binding Persist}" Minimum="0" Maximum="255" FormatString="F0"
+                               AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.Persist}" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Modem.SlotTime}" />
+                <NumericUpDown Value="{Binding SlotTimeMs}" Minimum="10" Maximum="1000" Increment="10" FormatString="F0"
+                               AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.SlotTime}" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Modem.MaxWait}" />
+                <NumericUpDown Value="{Binding MaxChannelWaitMs}" Minimum="0" Maximum="30000" Increment="500" FormatString="F0"
+                               AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.MaxWait}" />
+              </StackPanel>
+            </Grid>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+              <StackPanel Grid.Column="0" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Modem.Guard}" />
+                <NumericUpDown Value="{Binding TurnaroundGuardMs}" Minimum="0" Maximum="1000" Increment="10" FormatString="F0"
+                               AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.Guard}" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Modem.Watchdog}" />
+                <NumericUpDown Value="{Binding WatchdogSeconds}" Minimum="1" Maximum="60" FormatString="F0"
+                               AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.Watchdog}" />
+              </StackPanel>
+            </Grid>
+            <TextBlock Text="{loc:Localize Key=Terminal.Modem.BitFix}" />
+            <ComboBox ItemsSource="{Binding BitFixOptions}" SelectedItem="{Binding SelectedBitFix}"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.BitFix}" />
+            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.BitFix.Help}" />
+            <CheckBox Content="{loc:Localize Key=Terminal.Modem.BlockBelowHorizon}" IsChecked="{Binding BlockTxBelowHorizon}" />
+
+            <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Modem.Decode}" Margin="0,12,0,0" />
+            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.Decode.Help}" />
+            <Button Content="{loc:Localize Key=Terminal.Modem.Decode.Button}" Command="{Binding DecodeWavCommand}"
+                    IsEnabled="{Binding !IsDecodingWav}" HorizontalAlignment="Left" />
+            <TextBlock Text="{Binding DecodeSummary}" TextWrapping="Wrap"
+                       IsVisible="{Binding DecodeSummary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <ListBox ItemsSource="{Binding DecodedFrames}" MaxHeight="220" IsVisible="{Binding HasDecodedFrames}"
+                     FontFamily="Consolas,Courier New,monospace" FontSize="12"
+                     AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.Decode}" />
           </StackPanel>
         </ScrollViewer>
       </TabItem>
@@ -222,6 +364,15 @@
               <DataGridTextColumn Header="{loc:Localize Key=Terminal.Settings.Profiles.Path}" Binding="{Binding Path}" Width="100" />
               <DataGridTextColumn Header="{loc:Localize Key=Terminal.Settings.Profiles.UhmName}" Binding="{Binding UhmName}" Width="100" />
               <DataGridTextColumn Header="{loc:Localize Key=Terminal.Settings.Profiles.ModemHint}" Binding="{Binding ModemHint}" Width="*" />
+              <DataGridTemplateColumn Header="{loc:Localize Key=Terminal.LinkType}" Width="120">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate x:DataType="vm:TerminalProfileEditViewModel">
+                    <ComboBox ItemsSource="{Binding LinkTypes}" SelectedItem="{Binding SelectedLinkType}"
+                              HorizontalAlignment="Stretch" BorderThickness="0" FontSize="12"
+                              AutomationProperties.Name="{loc:Localize Key=Terminal.LinkType}" />
+                  </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
             </DataGrid.Columns>
           </DataGrid>
         </DockPanel>

@@ -34,6 +34,12 @@
       <Setter Property="FontWeight" Value="SemiBold" />
       <Setter Property="Margin" Value="0,0,0,6" />
     </Style>
+    <Style Selector="TabStrip.term-tabs TabStripItem">
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="MinHeight" Value="26" />
+      <Setter Property="Padding" Value="0,0,14,2" />
+    </Style>
     <Style Selector="TextBlock.term-label">
       <Setter Property="FontSize" Value="12" />
       <Setter Property="Opacity" Value="0.85" />
@@ -221,7 +227,7 @@
             <TextBlock Text="{loc:Localize Key=Terminal.Shortcuts}" Classes="term-heading" VerticalAlignment="Center" Margin="0" />
           </DockPanel>
           <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
-            <ItemsControl Grid.Column="0" ItemsSource="{Binding Macros}">
+            <ItemsControl Grid.Column="0" ItemsSource="{Binding Macros}" IsEnabled="{Binding !HasModemBanner}">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <UniformGrid Columns="4" />
@@ -273,6 +279,7 @@
             <Button Grid.Column="4"
                     Content="{loc:Localize Key=Terminal.SendButton}"
                     Command="{Binding SendCommand}"
+                    IsEnabled="{Binding !HasModemBanner}"
                     IsDefault="True"
                     Classes="accent"
                     MinWidth="96" />
@@ -314,13 +321,25 @@
           <Border Classes="term-warning" IsVisible="{Binding IsBelowHorizon}">
             <TextBlock Text="{Binding HorizonWarningText}" FontSize="12" TextWrapping="Wrap" />
           </Border>
+          <Border Classes="term-warning" IsVisible="{Binding HasModemBanner}">
+            <TextBlock Text="{Binding ModemBannerText}" FontSize="12" TextWrapping="Wrap" />
+          </Border>
+          <Border Classes="term-warning" IsVisible="{Binding HasPttRecoveryNotice}">
+            <DockPanel>
+              <Button DockPanel.Dock="Right"
+                      Content="{loc:Localize Key=Terminal.PttRecovered.Dismiss}"
+                      Command="{Binding DismissPttRecoveryNoticeCommand}"
+                      Padding="6,2" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center" />
+              <TextBlock Text="{loc:Localize Key=Terminal.PttRecovered}" FontSize="12" TextWrapping="Wrap"
+                         VerticalAlignment="Center" />
+            </DockPanel>
+          </Border>
         </StackPanel>
       </Border>
 
       <Border Grid.Column="1" Classes="term-panel" MinWidth="420">
-        <Grid RowDefinitions="Auto,Auto,*">
-          <StackPanel Spacing="6">
-            <DockPanel>
+        <DockPanel>
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,6">
               <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"
                           ToolTip.Tip="{loc:Localize Key=Terminal.Station.CallGrid.Tip}">
                 <TextBlock Text="{Binding MyCallText}" Classes="term-value" FontWeight="SemiBold" />
@@ -333,8 +352,16 @@
                   <TextBlock Text="{Binding GridSourceText}" FontSize="12" />
                 </Border>
               </StackPanel>
-              <TextBlock Text="{loc:Localize Key=Terminal.Station}" Classes="term-heading" VerticalAlignment="Center" Margin="0" />
+              <TabStrip Classes="term-tabs" SelectedIndex="{Binding StationTabIndex}" VerticalAlignment="Center"
+                        AutomationProperties.Name="{loc:Localize Key=Terminal.Station.Tabs}">
+                <TabStripItem Content="{loc:Localize Key=Terminal.Station}" />
+                <TabStripItem Content="{loc:Localize Key=Terminal.Waterfall}"
+                              ToolTip.Tip="{loc:Localize Key=Terminal.Waterfall.Tip}" />
+              </TabStrip>
             </DockPanel>
+        <Grid>
+        <Grid RowDefinitions="Auto,Auto,*" IsHitTestVisible="{Binding !IsWaterfallTab}">
+          <StackPanel Spacing="6">
             <TextBlock Text="{Binding SatelliteText}" FontSize="15" FontWeight="SemiBold"
                        TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding SatelliteText}" />
             <UniformGrid Columns="4">
@@ -427,6 +454,23 @@
             </Grid>
           </Grid>
         </Grid>
+        <ctl:Ft4WaterfallControl IsVisible="{Binding IsWaterfallTab}"
+                                 MinHeight="0"
+                                 Spectrum="{Binding PacketSpectrum}"
+                                 MinHz="{x:Static vm:TerminalViewModel.WaterfallMinHz}"
+                                 MaxHz="{x:Static vm:TerminalViewModel.WaterfallMaxHz}"
+                                 ShowTuningBrackets="False"
+                                 MinNoiseFloorDb="{x:Static vm:TerminalViewModel.WaterfallMinNoiseFloorDb}"
+                                 DisplayRangeDb="{x:Static vm:TerminalViewModel.WaterfallRangeDb}"
+                                 RenderOptions.BitmapInterpolationMode="HighQuality"
+                                 Cursor="Arrow"
+                                 Focusable="False"
+                                 ToneMarkersHz="{x:Static vm:TerminalViewModel.PacketToneMarkersHz}"
+                                 StatusText="{Binding WaterfallStatusText}"
+                                 AutomationProperties.Name="{loc:Localize Key=Terminal.Waterfall}"
+                                 AutomationProperties.HelpText="{loc:Localize Key=Terminal.Waterfall.Tip}" />
+        </Grid>
+        </DockPanel>
       </Border>
     </Grid>
 
@@ -451,18 +495,23 @@
                       AutomationProperties.Name="{loc:Localize Key=Terminal.TextLarger}" />
             </StackPanel>
             <ctl:ZoomDecorator Zoom="{Binding LogZoom}" VerticalAlignment="Bottom">
-              <Grid ColumnDefinitions="12,76,96,104,92,56,*" ctl:TableColumns.Layout="{Binding LogColumns}" Margin="4,0,4,0">
+              <Grid ColumnDefinitions="12,76,96,104,92,56,48,*" ctl:TableColumns.Layout="{Binding LogColumns}" Margin="4,0,4,0">
                 <TextBlock Grid.Column="1" Text="{loc:Localize Key=Terminal.Col.Time}" Classes="term-col" />
                 <TextBlock Grid.Column="2" Text="{loc:Localize Key=Terminal.Col.Type}" Classes="term-col" />
                 <TextBlock Grid.Column="3" Text="{loc:Localize Key=Terminal.Col.From}" Classes="term-col" />
                 <TextBlock Grid.Column="4" Text="{loc:Localize Key=Terminal.Col.To}" Classes="term-col" />
                 <TextBlock Grid.Column="5" Text="{loc:Localize Key=Terminal.Col.Delay}" Classes="term-col" />
-                <TextBlock Grid.Column="6" Text="{loc:Localize Key=Terminal.Col.Message}" Classes="term-col" />
+                <TextBlock Grid.Column="6" Text="{loc:Localize Key=Terminal.Col.Quality}" Classes="term-col"
+                           IsVisible="{Binding ShowQualityColumn}"
+                           ToolTip.Tip="{loc:Localize Key=Terminal.Col.Quality.Tip}" />
+                <TextBlock Grid.Column="7" Text="{loc:Localize Key=Terminal.Col.Message}" Classes="term-col" />
                 <Thumb Grid.Column="1" Classes="term-grip" Tag="log,1,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
                 <Thumb Grid.Column="2" Classes="term-grip" Tag="log,2,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
                 <Thumb Grid.Column="3" Classes="term-grip" Tag="log,3,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
                 <Thumb Grid.Column="4" Classes="term-grip" Tag="log,4,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
                 <Thumb Grid.Column="5" Classes="term-grip" Tag="log,5,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}" />
+                <Thumb Grid.Column="6" Classes="term-grip" Tag="log,6,+" DragDelta="OnColumnGripDragDelta" DoubleTapped="OnColumnGripDoubleTapped" ToolTip.Tip="{loc:Localize Key=Terminal.ColumnResize.Tip}"
+                       IsVisible="{Binding ShowQualityColumn}" />
               </Grid>
             </ctl:ZoomDecorator>
           </DockPanel>
@@ -482,7 +531,7 @@
                             Background="{Binding Background}"
                             ToolTip.Tip="{Binding Monitor}"
                             AutomationProperties.Name="{Binding AccessibleText}">
-                      <Grid ColumnDefinitions="12,76,96,104,92,56,*" ctl:TableColumns.Layout="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).LogColumns}">
+                      <Grid ColumnDefinitions="12,76,96,104,92,56,48,*" ctl:TableColumns.Layout="{Binding $parent[ListBox].((vm:TerminalViewModel)DataContext).LogColumns}">
                         <Border Grid.Column="0" Width="4" HorizontalAlignment="Left" CornerRadius="2"
                                 Background="{Binding Accent}" />
                         <TextBlock Grid.Column="1" Text="{Binding TimeText}" Opacity="0.8" VerticalAlignment="Center" />
@@ -493,7 +542,8 @@
                         <TextBlock Grid.Column="3" Text="{Binding From}" FontWeight="SemiBold" VerticalAlignment="Center" />
                         <TextBlock Grid.Column="4" Text="{Binding To}" VerticalAlignment="Center" />
                         <TextBlock Grid.Column="5" Text="{Binding DelayText}" Opacity="0.8" VerticalAlignment="Center" />
-                        <TextBlock Grid.Column="6" Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="6" Text="{Binding QualityText}" Opacity="0.8" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="7" Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Center" />
                       </Grid>
                     </Border>
                   </ctl:ZoomDecorator>

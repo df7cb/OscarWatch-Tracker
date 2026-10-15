@@ -5259,7 +5259,7 @@ LOS: {2}
     <value>KISS через последовательный порт (планируется)</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>Встроенный звуковой модем (планируется)</value>
+    <value>Встроенный звуковой модем (1200 AFSK)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} планируется в будущей версии. Пока используется AGWPE.</value>
@@ -5659,5 +5659,278 @@ LOS: {2}
   </data>
   <data name="Terminal.Status.GridChanged" xml:space="preserve">
     <value>Ваш локатор изменился с {0} на {1}. Подстановки локатора в макросах используют новый; проверьте макросы, где локатор введён вручную.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRadio" xml:space="preserve">
+    <value>Отдельный PTT Terminal и радиостанция используют {0}. Используйте разные COM-порты или отключите одно устройство.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndDownlink" xml:space="preserve">
+    <value>Отдельный PTT Terminal и радиостанция даунлинка используют {0}. Используйте разные COM-порты или отключите одно устройство.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndUplink" xml:space="preserve">
+    <value>Отдельный PTT Terminal и радиостанция аплинка используют {0}. Используйте разные COM-порты или отключите одно устройство.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRotator" xml:space="preserve">
+    <value>Отдельный PTT Terminal и поворотное устройство используют {0}. Используйте разные COM-порты или отключите одно устройство.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndGps" xml:space="preserve">
+    <value>Отдельный PTT Terminal и GPS используют {0}. Используйте разные COM-порты или отключите одно устройство.</value>
+  </data>
+  <data name="ComPort.Ft4PttAndTerminalPtt" xml:space="preserve">
+    <value>Отдельный PTT FT4 и отдельный PTT Terminal используют {0}. Используйте разные COM-порты или отключите одно устройство.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndFt4Ptt" xml:space="preserve">
+    <value>Отдельный PTT Terminal и отдельный PTT FT4 используют {0}. Используйте разные COM-порты или отключите одно устройство.</value>
+  </data>
+  <data name="Terminal.Col.Quality" xml:space="preserve">
+    <value>К</value>
+  </data>
+  <data name="Terminal.Col.Quality.Tip" xml:space="preserve">
+    <value>Качество декодирования: доля декодеров встроенного модема, принявших этот кадр без ошибок.</value>
+  </data>
+  <data name="Terminal.LinkType" xml:space="preserve">
+    <value>Канал</value>
+  </data>
+  <data name="Terminal.LinkType.Auto" xml:space="preserve">
+    <value>Автоматически</value>
+  </data>
+  <data name="Terminal.LinkType.Simplex" xml:space="preserve">
+    <value>Симплекс (одна частота)</value>
+  </data>
+  <data name="Terminal.LinkType.SameBand" xml:space="preserve">
+    <value>Один диапазон</value>
+  </data>
+  <data name="Terminal.LinkType.Crossband" xml:space="preserve">
+    <value>Кросс-диапазон</value>
+  </data>
+  <data name="Terminal.Modem.BitFix" xml:space="preserve">
+    <value>Исправление битов</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Help" xml:space="preserve">
+    <value>Восстанавливает кадры с неверной контрольной суммой, инвертируя один бит (или два соседних) и проверяя снова. Один бит является безопасным значением по умолчанию. Соседние пары спасают больше слабых кадров, но требуют больше процессорного времени.</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Off" xml:space="preserve">
+    <value>Выкл.</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Single" xml:space="preserve">
+    <value>Один бит</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
+    <value>Один бит и соседние пары</value>
+  </data>
+  <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
+    <value>Не передавать, пока спутник за горизонтом</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
+    <value>Модем: OscarWatch 1200 AFSK, {0}, вход {1}%, декодировано кадров: {2} (исправлено: {3})</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
+    <value>звуковая карта</value>
+  </data>
+  <data name="Terminal.Modem.Channel" xml:space="preserve">
+    <value>Доступ к каналу</value>
+  </data>
+  <data name="Terminal.Modem.Decode" xml:space="preserve">
+    <value>Декодировать запись</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Button" xml:space="preserve">
+    <value>Декодировать WAV-файл</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Failed" xml:space="preserve">
+    <value>Не удалось декодировать запись: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Help" xml:space="preserve">
+    <value>Пропускает WAV-запись через встроенный модем без передачи, например записанный пролёт или дорожку с WA8LMF TNC Test CD. Никогда не воспроизводите тестовый CD в эфир.</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerTitle" xml:space="preserve">
+    <value>Выберите WAV-запись</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerType" xml:space="preserve">
+    <value>Аудио WAV</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Running" xml:space="preserve">
+    <value>Декодирование {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Summary" xml:space="preserve">
+    <value>Декодировано кадров: {0} (исправлением битов: {1}) из {2} с аудио, путей декодера: {3}.</value>
+  </data>
+  <data name="Terminal.Modem.Duplex" xml:space="preserve">
+    <value>Дуплекс</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Auto" xml:space="preserve">
+    <value>Автоматически (по типу канала спутника)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Full" xml:space="preserve">
+    <value>Полный дуплекс (приём во время передачи)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.FullShort" xml:space="preserve">
+    <value>полный дуплекс</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Half" xml:space="preserve">
+    <value>Полудуплекс (симплекс и один диапазон)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.HalfShort" xml:space="preserve">
+    <value>полудуплекс</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
+    <value>Симплексные спутники, такие как МКС, используют одну частоту, поэтому модем ждёт свободного канала, глушит приёмник при передаче и выдерживает короткую паузу перед приёмом. Кросс-диапазонные спутники могут работать в полном дуплексе, и вы услышите свой пакет, вернувшийся через дигипитер.</value>
+  </data>
+  <data name="Terminal.Modem.Guard" xml:space="preserve">
+    <value>Пауза переключения (мс)</value>
+  </data>
+  <data name="Terminal.Modem.Input" xml:space="preserve">
+    <value>Вход (от радиостанции)</value>
+  </data>
+  <data name="Terminal.Modem.Level" xml:space="preserve">
+    <value>Уровень входа</value>
+  </data>
+  <data name="Terminal.Modem.Level.Clipping" xml:space="preserve">
+    <value>Вход {0}%: перегрузка. Уменьшите выход данных радиостанции или уровень записи Windows.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Failed" xml:space="preserve">
+    <value>Не удалось открыть вход: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Level.Help" xml:space="preserve">
+    <value>Стремитесь к 30 до 70% при активном канале. По возможности используйте разъём данных радиостанции, так как выход динамика зависит от регулятора громкости.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Idle" xml:space="preserve">
+    <value>Отметьте «Контроль входа», чтобы увидеть уровень.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Low" xml:space="preserve">
+    <value>Вход {0}%: слишком низкий. Увеличьте выход данных радиостанции или уровень записи Windows.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Ok" xml:space="preserve">
+    <value>Вход {0}%: хорошо.</value>
+  </data>
+  <data name="Terminal.Modem.MaxWait" xml:space="preserve">
+    <value>Максимальное ожидание (мс)</value>
+  </data>
+  <data name="Terminal.Modem.Monitor" xml:space="preserve">
+    <value>Контроль входа</value>
+  </data>
+  <data name="Terminal.Modem.Output" xml:space="preserve">
+    <value>Выход (на радиостанцию)</value>
+  </data>
+  <data name="Terminal.Modem.Persist" xml:space="preserve">
+    <value>Настойчивость (0 до 255)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt" xml:space="preserve">
+    <value>Передача (PTT)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt.Help" xml:space="preserve">
+    <value>VOX включает передачу по звуку. CAT использует подключение радиостанции из управления трансивером. Отдельный COM-порт управляет RTS или DTR на USB-интерфейсе. Установите на радиостанции таймер ограничения передачи как аппаратную защиту.</value>
+  </data>
+  <data name="Terminal.Modem.PttInvert" xml:space="preserve">
+    <value>Инвертировать</value>
+  </data>
+  <data name="Terminal.Modem.PttLead" xml:space="preserve">
+    <value>Опережение PTT (мс)</value>
+  </data>
+  <data name="Terminal.Modem.PttLine" xml:space="preserve">
+    <value>Линия</value>
+  </data>
+  <data name="Terminal.Modem.PttPort" xml:space="preserve">
+    <value>COM-порт PTT</value>
+  </data>
+  <data name="Terminal.Modem.PttTail" xml:space="preserve">
+    <value>Хвост PTT (мс)</value>
+  </data>
+  <data name="Terminal.Modem.Refresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="Terminal.Modem.SlotTime" xml:space="preserve">
+    <value>Время слота (мс)</value>
+  </data>
+  <data name="Terminal.Modem.Soundcard" xml:space="preserve">
+    <value>Звуковая карта</value>
+  </data>
+  <data name="Terminal.Modem.TestTone" xml:space="preserve">
+    <value>Тестовый тон</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Alternating" xml:space="preserve">
+    <value>Чередование 1200 и 2200 Гц</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Done" xml:space="preserve">
+    <value>Тестовый тон завершён.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
+    <value>Ошибка тестового тона: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
+    <value>Включает передачу на 5 секунд с указанным выше уровнем TX. Для ЧМ-радиостанции установите уровень для девиации около 3 кГц. Передавайте на эквивалент нагрузки или на свободной частоте.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Mark" xml:space="preserve">
+    <value>Mark (1200 Гц)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Send" xml:space="preserve">
+    <value>Передать</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Sending" xml:space="preserve">
+    <value>Передача тестового тона…</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Space" xml:space="preserve">
+    <value>Space (2200 Гц)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stop" xml:space="preserve">
+    <value>Стоп</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stopped" xml:space="preserve">
+    <value>Тестовый тон остановлен.</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel" xml:space="preserve">
+    <value>Уровень TX</value>
+  </data>
+  <data name="Terminal.Modem.Unsupported" xml:space="preserve">
+    <value>{0} использует {1}. Встроенный модем декодирует только 1200 AFSK. Для этого спутника используйте UZ7HO через AGWPE.</value>
+  </data>
+  <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
+    <value>Ждать свободного канала и в полном дуплексе</value>
+  </data>
+  <data name="Terminal.Modem.Watchdog" xml:space="preserve">
+    <value>Сторож передачи (с)</value>
+  </data>
+  <data name="Terminal.PttRecovered" xml:space="preserve">
+    <value>OscarWatch неожиданно закрылся во время передачи Terminal. Радиостанции отправлена CAT-команда приёма. Убедитесь, что она больше не передаёт.</value>
+  </data>
+  <data name="Terminal.PttRecovered.Dismiss" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
+    <value>Встроенный модем использует звуковую карту, подключённую к радиостанции. Устройства, уровни и PTT выберите на вкладке «Звуковая карта».</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
+    <value>Длинный TXTAIL в полудуплексе: на симплексных спутниках, таких как МКС, хвост длиннее 50 мс задерживает приёмник и может пропустить ретранслированную копию. Обычно достаточно 30 до 50 мс.</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Soundcard" xml:space="preserve">
+    <value>Звуковая карта</value>
+  </data>
+  <data name="Terminal.Status.BelowHorizon" xml:space="preserve">
+    <value>Не отправлено: спутник за горизонтом. Для наземного пакета это можно изменить в настройках Terminal.</value>
+  </data>
+  <data name="Terminal.Status.ChannelBusy" xml:space="preserve">
+    <value>Не отправлено: канал оставался занят. Повторите, когда станет тише.</value>
+  </data>
+  <data name="Terminal.Status.UplinkHoldFailed" xml:space="preserve">
+    <value>Не отправлено: радиостанция не смогла удержать частоту аплинка для передачи в том же диапазоне.</value>
+  </data>
+  <data name="Terminal.Status.Watchdog" xml:space="preserve">
+    <value>Передача остановлена сторожем ({0} с). Проверьте PTT и выход звуковой карты.</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.BuiltInHelp" xml:space="preserve">
+    <value>Встроенный модем после включения передачи посылает флаги в течение задержки TX, чтобы радиостанция и принимающая станция успели установиться до первого кадра, и добавляет хвост TX, чтобы не обрезать последние биты. Для большинства ЧМ-радиостанций подходит 300 мс; с CAT или быстрым разъёмом данных часто хватает 150 до 200 мс. На симплексных спутниках, таких как МКС, держите хвост 30 до 50 мс.</value>
+  </data>
+  <data name="Terminal.Waterfall" xml:space="preserve">
+    <value>Водопад</value>
+  </data>
+  <data name="Terminal.Waterfall.Tip" xml:space="preserve">
+    <value>Принимаемый звук встроенного звукового модема в реальном времени, 300 до 3000 Гц. Пакеты видны как всплески на отметках 1200 и 2200 Гц.</value>
+  </data>
+  <data name="Terminal.Station.Tabs" xml:space="preserve">
+    <value>Станция и водопад</value>
+  </data>
+  <data name="Terminal.Waterfall.Idle" xml:space="preserve">
+    <value>Подключите встроенный звуковой модем, чтобы видеть принимаемый звук.</value>
+  </data>
+  <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
+    <value>Для водопада нужен встроенный звуковой модем. Модемы AGWPE не передают свой звук.</value>
   </data>
 </root>

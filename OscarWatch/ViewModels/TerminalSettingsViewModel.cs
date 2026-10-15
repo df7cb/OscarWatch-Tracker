@@ -41,20 +41,33 @@ public sealed partial class TerminalMacroEditViewModel : ObservableObject
     public TerminalMacro ToMacro() => new() { Label = Label.Trim(), Text = Text.Trim(), SendsToCq = SendsToCq };
 }
 
+/// <summary>Link type choice for a profile; a null value works it out from the frequencies.</summary>
+public sealed record TerminalLinkTypeOption(TerminalLinkType? Value, string Label)
+{
+    public override string ToString() => Label;
+}
+
 public sealed partial class TerminalProfileEditViewModel : ObservableObject
 {
-    public TerminalProfileEditViewModel(TerminalSatelliteProfileSettings p, IReadOnlyList<TerminalFormatOption> formats)
+    public TerminalProfileEditViewModel(
+        TerminalSatelliteProfileSettings p,
+        IReadOnlyList<TerminalFormatOption> formats,
+        IReadOnlyList<TerminalLinkTypeOption> linkTypes)
     {
         Formats = formats;
+        LinkTypes = linkTypes;
         _noradId = p.NoradId;
         _name = p.Name;
         _path = p.Path;
         _uhmName = p.UhmName;
         _modemHint = p.ModemHint;
         _selectedFormat = formats.FirstOrDefault(f => f.Value == p.Format) ?? formats[0];
+        _selectedLinkType = linkTypes.FirstOrDefault(l => l.Value == p.LinkType) ?? linkTypes[0];
     }
 
     public IReadOnlyList<TerminalFormatOption> Formats { get; }
+    public IReadOnlyList<TerminalLinkTypeOption> LinkTypes { get; }
+    [ObservableProperty] private TerminalLinkTypeOption _selectedLinkType;
     [ObservableProperty] private string _noradId;
     [ObservableProperty] private string _name;
     [ObservableProperty] private string _path;
@@ -70,6 +83,7 @@ public sealed partial class TerminalProfileEditViewModel : ObservableObject
         Path = Path.Trim().ToUpperInvariant(),
         UhmName = UhmName.Trim(),
         ModemHint = ModemHint.Trim(),
+        LinkType = SelectedLinkType.Value,
     };
 }
 
@@ -85,7 +99,11 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
     private readonly TerminalService _service;
     private readonly UhmApiClient _uhm = new();
 
-    public TerminalSettingsViewModel(ISettingsService settings, ILocalizationService localization, TerminalService service)
+    public TerminalSettingsViewModel(
+        ISettingsService settings,
+        ILocalizationService localization,
+        TerminalService service,
+        IRigController? rig = null)
     {
         _settings = settings;
         _l = localization;
@@ -96,17 +114,26 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         TransportOptions =
         [
             new(TerminalTransportKind.Agwpe, _l.Get("Terminal.Settings.Transport.Agwpe"), true),
+            new(TerminalTransportKind.BuiltIn, _l.Get("Terminal.Settings.Transport.BuiltIn"), true),
             new(TerminalTransportKind.KissTcp, _l.Get("Terminal.Settings.Transport.KissTcp"), false),
             new(TerminalTransportKind.KissSerial, _l.Get("Terminal.Settings.Transport.KissSerial"), false),
-            new(TerminalTransportKind.BuiltIn, _l.Get("Terminal.Settings.Transport.BuiltIn"), false),
         ];
         FormatOptions =
         [
             new(TerminalMessageFormat.Aprs, _l.Get("Terminal.Format.Aprs")),
             new(TerminalMessageFormat.PlainText, _l.Get("Terminal.Format.Plain")),
         ];
+        LinkTypeOptions =
+        [
+            new(null, _l.Get("Terminal.LinkType.Auto")),
+            new(TerminalLinkType.Simplex, _l.Get("Terminal.LinkType.Simplex")),
+            new(TerminalLinkType.SameBand, _l.Get("Terminal.LinkType.SameBand")),
+            new(TerminalLinkType.Crossband, _l.Get("Terminal.LinkType.Crossband")),
+        ];
+        BuiltIn = new TerminalBuiltInModemViewModel(settings, localization, service, rig);
 
-        _selectedTransport = TransportOptions.First(o => o.Kind == TerminalTransportKind.Agwpe);
+        _selectedTransport = TransportOptions.FirstOrDefault(o => o.Kind == t.Transport && o.IsAvailable)
+                             ?? TransportOptions[0];
         _agwHost = t.Agwpe.Host;
         _agwPort = t.Agwpe.Port;
         _autoConnect = t.Agwpe.AutoConnect;
@@ -118,7 +145,7 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         for (var i = 0; i < t.Macros.Count; i++)
             Macros.Add(new TerminalMacroEditViewModel(i, t.Macros[i]));
         foreach (var p in t.SatelliteProfiles)
-            Profiles.Add(new TerminalProfileEditViewModel(p, FormatOptions));
+            Profiles.Add(new TerminalProfileEditViewModel(p, FormatOptions, LinkTypeOptions));
 
         _toMeColour = t.ToMeColour;
         _cqColour = t.CqColour;
@@ -138,8 +165,8 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         _txDelaySeconds = t.TxDelaySeconds;
         _modemTxDelayMs = t.ModemTxDelayMs;
         _modemTxTailMs = t.ModemTxTailMs;
-        var rig = settings.Current.Rig;
-        ShowModemTiming = rig is { Type: RigType.YaesuFt847, DualRadioEnabled: false };
+        var rigSettings = settings.Current.Rig;
+        _isSingleVfoFt847 = rigSettings is { Type: RigType.YaesuFt847, DualRadioEnabled: false };
         _fontSize = t.FontSize;
 
         PrecisionOptions = Enum.GetValues<TerminalPositionPrecision>()
@@ -234,17 +261,58 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
     [ObservableProperty] private int _modemTxDelayMs;
     [ObservableProperty] private int _modemTxTailMs;
 
-    /// <summary>Only the FT-847 (single radio) retunes around each transmit, so only it uses the modem timing.</summary>
-    public bool ShowModemTiming { get; }
+    private readonly bool _isSingleVfoFt847;
+
+    /// <summary>
+    /// TXDELAY and TXTAIL: the built-in modem sends them, and the FT-847 (single radio) retunes around
+    /// each transmit using them, so other setups do not need the fields.
+    /// </summary>
+    public bool ShowModemTiming => _isSingleVfoFt847 || IsBuiltInSelected;
+
+    public string ModemTimingHelp => _l.Get(IsBuiltInSelected
+        ? "Terminal.Settings.ModemTiming.BuiltInHelp"
+        : "Terminal.Settings.ModemTiming.Help");
+
     [ObservableProperty] private int _fontSize;
+
+    public TerminalBuiltInModemViewModel BuiltIn { get; }
+    public IReadOnlyList<TerminalLinkTypeOption> LinkTypeOptions { get; }
+
+    public bool IsAgwpeSelected => SelectedTransport.Kind == TerminalTransportKind.Agwpe;
+    public bool IsBuiltInSelected => SelectedTransport.Kind == TerminalTransportKind.BuiltIn;
+
+    /// <summary>A long TXTAIL delays hearing your own digipeat on a simplex satellite.</summary>
+    public bool ShowLongTailWarning =>
+        IsBuiltInSelected && ModemTxTailMs > TerminalBuiltInModemSettings.LongHalfDuplexTailMs;
+
+    partial void OnModemTxTailMsChanged(int value) => OnPropertyChanged(nameof(ShowLongTailWarning));
 
     partial void OnSelectedTransportChanged(TerminalTransportOption value)
     {
-        if (value.IsAvailable)
+        if (!value.IsAvailable)
+        {
+            ModemTestText = _l.Get("Terminal.Settings.Transport.Planned", value.Label);
+            SelectedTransport = TransportOptions[0];
             return;
-        ModemTestText = _l.Get("Terminal.Settings.Transport.Planned", value.Label);
-        SelectedTransport = TransportOptions[0];
+        }
+
+        OnPropertyChanged(nameof(IsAgwpeSelected));
+        OnPropertyChanged(nameof(IsBuiltInSelected));
+        OnPropertyChanged(nameof(ShowModemTiming));
+        OnPropertyChanged(nameof(ModemTimingHelp));
+        OnPropertyChanged(nameof(ShowLongTailWarning));
+        if (value.Kind == TerminalTransportKind.BuiltIn && BuiltIn.InputDeviceOptions.Count == 0)
+            BuiltIn.Refresh();
     }
+
+    /// <summary>The window calls this once shown, so listing soundcards does not hold up opening it.</summary>
+    public void OnOpened()
+    {
+        if (IsBuiltInSelected)
+            BuiltIn.Refresh();
+    }
+
+    public void OnClosed() => BuiltIn.Dispose();
 
     private string RadioPortLabel(int index, string? description) =>
         string.IsNullOrWhiteSpace(description)
@@ -315,7 +383,7 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
             return;
         }
 
-        var row = new TerminalProfileEditViewModel(source, FormatOptions);
+        var row = new TerminalProfileEditViewModel(source, FormatOptions, LinkTypeOptions);
         Profiles.Add(row);
         SelectedProfile = row;
     }
@@ -437,6 +505,7 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         t.TxDelaySeconds = TxDelaySeconds;
         t.ModemTxDelayMs = Math.Clamp(ModemTxDelayMs, 0, TerminalSettings.MaxModemTimingMs);
         t.ModemTxTailMs = Math.Clamp(ModemTxTailMs, 0, TerminalSettings.MaxModemTimingMs);
+        BuiltIn.ApplyTo(t.BuiltIn);
         t.FontSize = FontSize;
         t.PositionPrecision = SelectedPrecision.Value;
         t.PositionSymbol = PositionSymbol ?? "";

@@ -40,6 +40,7 @@ public sealed class TerminalMessageRowViewModel
     public string To => Entry.To;
     public string Text { get; }
     public string DelayText => Entry.Delay is { } d ? $"{d.TotalSeconds:0.0} s" : "";
+    public string QualityText => Entry.Quality is { } q ? $"{q}%" : "";
     public string Monitor => Entry.Monitor;
     public IBrush Background { get; }
     public IBrush Accent { get; }
@@ -47,7 +48,9 @@ public sealed class TerminalMessageRowViewModel
     public bool IsOwn => Kind is TerminalMessageKind.MyTx or TerminalMessageKind.MyDigipeated;
     public bool InvolvesMe => IsOwn || Kind == TerminalMessageKind.ToMe;
 
-    public string AccessibleText => $"{TimeText} {Tag} {From} {To} {Text}";
+    public string AccessibleText => Entry.Quality is { } q
+        ? $"{TimeText} {Tag} {From} {To} {q}% {Text}"
+        : $"{TimeText} {Tag} {From} {To} {Text}";
 }
 
 /// <summary>Heard station or QSO partner row; updated in place on every refresh.</summary>

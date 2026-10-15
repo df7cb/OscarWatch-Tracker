@@ -5259,7 +5259,7 @@ LOS: {2}
     <value>KISS อนุกรม TNC (วางแผนไว้)</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>ซาวด์โมเด็มในตัว (วางแผนไว้)</value>
+    <value>ซาวด์โมเด็มในตัว (1200 AFSK)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} วางแผนไว้สำหรับรุ่นถัดไป ขณะนี้ใช้ AGWPE</value>
@@ -5659,5 +5659,278 @@ LOS: {2}
   </data>
   <data name="Terminal.Status.GridChanged" xml:space="preserve">
     <value>กริดของคุณเปลี่ยนจาก {0} เป็น {1} ตัวแทนกริดในมาโครจะใช้กริดใหม่ โปรดตรวจสอบมาโครที่พิมพ์กริดไว้เอง</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRadio" xml:space="preserve">
+    <value>PTT แยกของ Terminal และวิทยุใช้ {0} ทั้งคู่ ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.TerminalPttAndDownlink" xml:space="preserve">
+    <value>PTT แยกของ Terminal และวิทยุดาวน์ลิงก์ใช้ {0} ทั้งคู่ ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.TerminalPttAndUplink" xml:space="preserve">
+    <value>PTT แยกของ Terminal และวิทยุอัปลิงก์ใช้ {0} ทั้งคู่ ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRotator" xml:space="preserve">
+    <value>PTT แยกของ Terminal และโรเตเตอร์ใช้ {0} ทั้งคู่ ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.TerminalPttAndGps" xml:space="preserve">
+    <value>PTT แยกของ Terminal และ GPS ใช้ {0} ทั้งคู่ ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.Ft4PttAndTerminalPtt" xml:space="preserve">
+    <value>PTT แยกของ FT4 และ PTT แยกของ Terminal ใช้ {0} ทั้งคู่ ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.TerminalPttAndFt4Ptt" xml:space="preserve">
+    <value>PTT แยกของ Terminal และ PTT แยกของ FT4 ใช้ {0} ทั้งคู่ ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="Terminal.Col.Quality" xml:space="preserve">
+    <value>คุณภาพ</value>
+  </data>
+  <data name="Terminal.Col.Quality.Tip" xml:space="preserve">
+    <value>คุณภาพการถอดรหัส: สัดส่วนของตัวถอดรหัสในโมเด็มในตัวที่รับเฟรมนี้ได้โดยไม่มีข้อผิดพลาด</value>
+  </data>
+  <data name="Terminal.LinkType" xml:space="preserve">
+    <value>ลิงก์</value>
+  </data>
+  <data name="Terminal.LinkType.Auto" xml:space="preserve">
+    <value>อัตโนมัติ</value>
+  </data>
+  <data name="Terminal.LinkType.Simplex" xml:space="preserve">
+    <value>ซิมเพล็กซ์ (ความถี่เดียว)</value>
+  </data>
+  <data name="Terminal.LinkType.SameBand" xml:space="preserve">
+    <value>แบนด์เดียวกัน</value>
+  </data>
+  <data name="Terminal.LinkType.Crossband" xml:space="preserve">
+    <value>ข้ามแบนด์</value>
+  </data>
+  <data name="Terminal.Modem.BitFix" xml:space="preserve">
+    <value>การแก้บิต</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Help" xml:space="preserve">
+    <value>ซ่อมเฟรมที่เช็กซัมผิดโดยกลับค่าหนึ่งบิต (หรือสองบิตที่ติดกัน) แล้วตรวจใหม่ หนึ่งบิตเป็นค่าเริ่มต้นที่ปลอดภัย คู่บิตที่ติดกันช่วยกู้เฟรมสัญญาณอ่อนได้มากขึ้นแต่ใช้หน่วยประมวลผลมากขึ้น</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Off" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Single" xml:space="preserve">
+    <value>หนึ่งบิต</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
+    <value>หนึ่งบิตและคู่ที่ติดกัน</value>
+  </data>
+  <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
+    <value>ไม่ส่งขณะดาวเทียมอยู่ใต้ขอบฟ้า</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
+    <value>โมเด็ม: OscarWatch 1200 AFSK, {0}, อินพุต {1}%, ถอดรหัสได้ {2} เฟรม (แก้ไข {3})</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
+    <value>การ์ดเสียง</value>
+  </data>
+  <data name="Terminal.Modem.Channel" xml:space="preserve">
+    <value>การเข้าถึงช่องสัญญาณ</value>
+  </data>
+  <data name="Terminal.Modem.Decode" xml:space="preserve">
+    <value>ถอดรหัสไฟล์บันทึก</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Button" xml:space="preserve">
+    <value>ถอดรหัสไฟล์ WAV</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Failed" xml:space="preserve">
+    <value>ไม่สามารถถอดรหัสไฟล์บันทึก: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Help" xml:space="preserve">
+    <value>ส่งไฟล์บันทึก WAV ผ่านโมเด็มในตัวโดยไม่ส่งออกอากาศ เช่น รอบผ่านที่คุณบันทึกไว้หรือแทร็กจาก WA8LMF TNC Test CD ห้ามเล่นซีดีทดสอบออกอากาศ</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerTitle" xml:space="preserve">
+    <value>เลือกไฟล์บันทึก WAV</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerType" xml:space="preserve">
+    <value>เสียง WAV</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Running" xml:space="preserve">
+    <value>กำลังถอดรหัส {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Summary" xml:space="preserve">
+    <value>ถอดรหัสได้ {0} เฟรม (จากการแก้บิต {1}) จากเสียง {2} วินาที โดยใช้เส้นทางถอดรหัส {3} เส้นทาง</value>
+  </data>
+  <data name="Terminal.Modem.Duplex" xml:space="preserve">
+    <value>ดูเพล็กซ์</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Auto" xml:space="preserve">
+    <value>อัตโนมัติ (ตามชนิดลิงก์ของดาวเทียม)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Full" xml:space="preserve">
+    <value>ฟูลดูเพล็กซ์ (ฟังขณะส่ง)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.FullShort" xml:space="preserve">
+    <value>ฟูลดูเพล็กซ์</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Half" xml:space="preserve">
+    <value>ฮาล์ฟดูเพล็กซ์ (ซิมเพล็กซ์และแบนด์เดียวกัน)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.HalfShort" xml:space="preserve">
+    <value>ฮาล์ฟดูเพล็กซ์</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
+    <value>ดาวเทียมซิมเพล็กซ์อย่าง ISS ใช้ความถี่เดียว โมเด็มจึงรอช่องว่าง ปิดเสียงเครื่องรับขณะส่ง และเว้นช่วงสั้น ๆ ก่อนฟังอีกครั้ง ดาวเทียมข้ามแบนด์ทำงานแบบฟูลดูเพล็กซ์ได้ คุณจึงได้ยินแพ็กเก็ตของตัวเองกลับมาผ่านดิจิพีทเตอร์</value>
+  </data>
+  <data name="Terminal.Modem.Guard" xml:space="preserve">
+    <value>ช่วงกันสลับ (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Input" xml:space="preserve">
+    <value>อินพุต (จากวิทยุ)</value>
+  </data>
+  <data name="Terminal.Modem.Level" xml:space="preserve">
+    <value>ระดับอินพุต</value>
+  </data>
+  <data name="Terminal.Modem.Level.Clipping" xml:space="preserve">
+    <value>อินพุต {0}%: ล้น ลดเอาต์พุตข้อมูลของวิทยุหรือระดับบันทึกของ Windows</value>
+  </data>
+  <data name="Terminal.Modem.Level.Failed" xml:space="preserve">
+    <value>ไม่สามารถเปิดอินพุต: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Level.Help" xml:space="preserve">
+    <value>ตั้งเป้า 30 ถึง 70% เมื่อช่องสัญญาณคึกคัก ใช้พอร์ตข้อมูลของวิทยุถ้าทำได้ เพราะเอาต์พุตลำโพงเปลี่ยนตามปุ่มปรับเสียง</value>
+  </data>
+  <data name="Terminal.Modem.Level.Idle" xml:space="preserve">
+    <value>เลือก ตรวจอินพุต เพื่อดูระดับ</value>
+  </data>
+  <data name="Terminal.Modem.Level.Low" xml:space="preserve">
+    <value>อินพุต {0}%: ต่ำเกินไป เพิ่มเอาต์พุตข้อมูลของวิทยุหรือระดับบันทึกของ Windows</value>
+  </data>
+  <data name="Terminal.Modem.Level.Ok" xml:space="preserve">
+    <value>อินพุต {0}%: ดี</value>
+  </data>
+  <data name="Terminal.Modem.MaxWait" xml:space="preserve">
+    <value>รอนานสุด (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Monitor" xml:space="preserve">
+    <value>ตรวจอินพุต</value>
+  </data>
+  <data name="Terminal.Modem.Output" xml:space="preserve">
+    <value>เอาต์พุต (ไปยังวิทยุ)</value>
+  </data>
+  <data name="Terminal.Modem.Persist" xml:space="preserve">
+    <value>Persistence (0 ถึง 255)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt" xml:space="preserve">
+    <value>กดเพื่อพูด (PTT)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt.Help" xml:space="preserve">
+    <value>VOX สั่งส่งวิทยุจากเสียง CAT ใช้การเชื่อมต่อวิทยุจากการควบคุมริก พอร์ต COM แยกจะขับ RTS หรือ DTR บนอินเทอร์เฟซ USB ตั้งตัวจับเวลาหยุดส่งบนวิทยุไว้เป็นการป้องกันด้วยฮาร์ดแวร์</value>
+  </data>
+  <data name="Terminal.Modem.PttInvert" xml:space="preserve">
+    <value>กลับขั้ว</value>
+  </data>
+  <data name="Terminal.Modem.PttLead" xml:space="preserve">
+    <value>PTT นำหน้า (ms)</value>
+  </data>
+  <data name="Terminal.Modem.PttLine" xml:space="preserve">
+    <value>สาย</value>
+  </data>
+  <data name="Terminal.Modem.PttPort" xml:space="preserve">
+    <value>พอร์ต COM ของ PTT</value>
+  </data>
+  <data name="Terminal.Modem.PttTail" xml:space="preserve">
+    <value>PTT ท้าย (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Refresh" xml:space="preserve">
+    <value>รีเฟรช</value>
+  </data>
+  <data name="Terminal.Modem.SlotTime" xml:space="preserve">
+    <value>เวลาสล็อต (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Soundcard" xml:space="preserve">
+    <value>การ์ดเสียง</value>
+  </data>
+  <data name="Terminal.Modem.TestTone" xml:space="preserve">
+    <value>เสียงทดสอบ</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Alternating" xml:space="preserve">
+    <value>สลับ 1200 และ 2200 Hz</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Done" xml:space="preserve">
+    <value>เสียงทดสอบเสร็จแล้ว</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
+    <value>เสียงทดสอบล้มเหลว: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
+    <value>สั่งส่งวิทยุ 5 วินาทีที่ระดับ TX ด้านบน สำหรับวิทยุ FM ให้ตั้งระดับให้ดีวิเอชันประมาณ 3 kHz ส่งเข้าดัมมีโหลดหรือบนความถี่ที่ว่าง</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Mark" xml:space="preserve">
+    <value>Mark (1200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Send" xml:space="preserve">
+    <value>ส่ง</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Sending" xml:space="preserve">
+    <value>กำลังส่งเสียงทดสอบ…</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Space" xml:space="preserve">
+    <value>Space (2200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stop" xml:space="preserve">
+    <value>หยุด</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stopped" xml:space="preserve">
+    <value>หยุดเสียงทดสอบแล้ว</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel" xml:space="preserve">
+    <value>ระดับ TX</value>
+  </data>
+  <data name="Terminal.Modem.Unsupported" xml:space="preserve">
+    <value>{0} ใช้ {1} โมเด็มในตัวถอดรหัสได้เฉพาะ 1200 AFSK ใช้ UZ7HO ผ่าน AGWPE สำหรับดาวเทียมนี้</value>
+  </data>
+  <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
+    <value>รอช่องว่างแม้ในฟูลดูเพล็กซ์</value>
+  </data>
+  <data name="Terminal.Modem.Watchdog" xml:space="preserve">
+    <value>ตัวเฝ้าการส่ง (วินาที)</value>
+  </data>
+  <data name="Terminal.PttRecovered" xml:space="preserve">
+    <value>OscarWatch ปิดโดยไม่คาดคิดขณะ Terminal กำลังส่ง ได้ส่งคำสั่ง CAT ให้วิทยุกลับไปรับแล้ว โปรดตรวจว่าวิทยุไม่ได้ส่งอยู่</value>
+  </data>
+  <data name="Terminal.PttRecovered.Dismiss" xml:space="preserve">
+    <value>ปิด</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
+    <value>โมเด็มในตัวใช้การ์ดเสียงที่ต่อกับวิทยุของคุณ เลือกอุปกรณ์ ระดับ และ PTT ในแท็บ การ์ดเสียง</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
+    <value>TXTAIL ยาวในฮาล์ฟดูเพล็กซ์: บนดาวเทียมซิมเพล็กซ์อย่าง ISS ท้ายที่ยาวกว่า 50 ms จะหน่วงเครื่องรับและอาจพลาดสำเนาที่ดิจิพีทกลับมา ปกติ 30 ถึง 50 ms ก็พอ</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Soundcard" xml:space="preserve">
+    <value>การ์ดเสียง</value>
+  </data>
+  <data name="Terminal.Status.BelowHorizon" xml:space="preserve">
+    <value>ไม่ได้ส่ง: ดาวเทียมอยู่ใต้ขอบฟ้า คุณเปลี่ยนได้ในการตั้งค่า Terminal สำหรับแพ็กเก็ตภาคพื้นดิน</value>
+  </data>
+  <data name="Terminal.Status.ChannelBusy" xml:space="preserve">
+    <value>ไม่ได้ส่ง: ช่องสัญญาณยังไม่ว่าง ลองอีกครั้งเมื่อเงียบลง</value>
+  </data>
+  <data name="Terminal.Status.UplinkHoldFailed" xml:space="preserve">
+    <value>ไม่ได้ส่ง: วิทยุไม่สามารถคงความถี่อัปลิงก์สำหรับการส่งในแบนด์เดียวกัน</value>
+  </data>
+  <data name="Terminal.Status.Watchdog" xml:space="preserve">
+    <value>การส่งถูกหยุดโดยตัวเฝ้า {0} วินาที ตรวจ PTT และเอาต์พุตการ์ดเสียง</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.BuiltInHelp" xml:space="preserve">
+    <value>โมเด็มในตัวจะส่งแฟล็กตลอดช่วงหน่วง TX หลังเริ่มส่ง เพื่อให้วิทยุและสถานีรับนิ่งก่อนเฟรมแรก และเพิ่มช่วงท้าย TX เพื่อไม่ให้บิตสุดท้ายถูกตัด 300 ms เหมาะกับวิทยุ FM ส่วนใหญ่ หากใช้ CAT หรือพอร์ตข้อมูลที่ตอบสนองเร็ว 150 ถึง 200 ms มักเพียงพอ บนดาวเทียมซิมเพล็กซ์อย่าง ISS ให้ตั้งช่วงท้ายไว้ 30 ถึง 50 ms</value>
+  </data>
+  <data name="Terminal.Waterfall" xml:space="preserve">
+    <value>วอเตอร์ฟอลล์</value>
+  </data>
+  <data name="Terminal.Waterfall.Tip" xml:space="preserve">
+    <value>เสียงรับสดจากซาวด์โมเด็มในตัว 300 ถึง 3000 Hz แพ็กเก็ตจะปรากฏเป็นช่วงสัญญาณพาดผ่านเครื่องหมาย 1200 และ 2200 Hz</value>
+  </data>
+  <data name="Terminal.Station.Tabs" xml:space="preserve">
+    <value>สถานีและวอเตอร์ฟอลล์</value>
+  </data>
+  <data name="Terminal.Waterfall.Idle" xml:space="preserve">
+    <value>เชื่อมต่อซาวด์โมเด็มในตัวเพื่อดูเสียงรับ</value>
+  </data>
+  <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
+    <value>วอเตอร์ฟอลล์ต้องใช้ซาวด์โมเด็มในตัว โมเด็ม AGWPE ไม่แบ่งปันเสียง</value>
   </data>
 </root>

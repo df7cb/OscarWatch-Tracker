@@ -19,6 +19,6 @@ See [building radio drivers](documents/building-radio-drivers.md) for adding rig
 - [x] Native SSTV receive (Tools → OscarWatch SSTV): Robot, Scottie, Martin, Wraase SC2-180 and PD modes, auto mode, slant correction, AFC, decode recordings
 - [x] Built-in packet interface (Tools → OscarWatch Terminal): AGWPE to Direwolf and UZ7HO, APRS and plain text per satellite, macros, QSO tracking and auto-log, statistics, UHM, APRS-IS gateway
 - [ ] OscarWatch Terminal: KISS over TCP and KISS serial transports
-- [ ] OscarWatch Terminal: built-in 1200 baud AFSK soundmodem
+- [x] OscarWatch Terminal: built-in 1200 baud AFSK soundmodem (half and full duplex, CSMA, shared PTT keyer, watchdog, FT-847 same-band hold, WAV decode)
 
 ---

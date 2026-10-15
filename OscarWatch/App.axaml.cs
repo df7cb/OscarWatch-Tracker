@@ -118,6 +118,9 @@ public partial class App : Application
         services.AddTransient<LogbookSettingsViewModel>();
         services.AddSingleton<LiveQsoLogger>();
         services.AddSingleton<Ft4ModemService>();
+        services.AddSingleton(sp => new OscarWatch.Hardware.PttCrashRecovery(
+            sp.GetRequiredService<IRigController>(),
+            OscarWatch.Hardware.PttSessionMarker.ForTerminal(sp.GetRequiredService<ISettingsService>().SettingsPath)));
         services.AddSingleton(sp => new OscarWatch.Terminal.TerminalService(
             sp.GetRequiredService<ISettingsService>(),
             sp.GetRequiredService<LiveQsoLogger>(),
@@ -140,6 +143,7 @@ public partial class App : Application
         settingsService.Load();
 
         Services.GetRequiredService<SstvPictureUploader>().Start();
+        Services.GetRequiredService<OscarWatch.Hardware.PttCrashRecovery>().Start();
 
         LocalizationCulture.ApplyFromSettings(settingsService);
         AppThemeManager.Apply(AppThemeManager.ReadPreferenceFromDisk());

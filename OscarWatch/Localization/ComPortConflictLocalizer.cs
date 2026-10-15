@@ -79,6 +79,41 @@ public static class ComPortConflictLocalizer
             return l.Get("ComPort.GpsAndUplink", port);
         }
 
+        const string terminalPrefix = "Terminal separate PTT and ";
+        const string deviceSuffix = " both use ";
+        const string disableSuffix = ". Use different COM ports or disable one device.";
+        if (message.StartsWith(terminalPrefix, StringComparison.Ordinal)
+            && message.EndsWith(disableSuffix, StringComparison.Ordinal))
+        {
+            var rest = message[terminalPrefix.Length..^disableSuffix.Length];
+            var split = rest.IndexOf(deviceSuffix, StringComparison.Ordinal);
+            if (split > 0)
+            {
+                var key = rest[..split] switch
+                {
+                    "radio" => "ComPort.TerminalPttAndRadio",
+                    "downlink radio" => "ComPort.TerminalPttAndDownlink",
+                    "uplink radio" => "ComPort.TerminalPttAndUplink",
+                    "rotator" => "ComPort.TerminalPttAndRotator",
+                    "GPS" => "ComPort.TerminalPttAndGps",
+                    _ => null
+                };
+                if (key is not null)
+                    return l.Get(key, rest[(split + deviceSuffix.Length)..]);
+            }
+        }
+
+        const string sharedSuffix = ". Use different COM ports, or key one of them another way.";
+        if (message.EndsWith(sharedSuffix, StringComparison.Ordinal))
+        {
+            const string ft4Terminal = "FT4 separate PTT and Terminal separate PTT both use ";
+            const string terminalFt4 = "Terminal separate PTT and FT4 separate PTT both use ";
+            if (message.StartsWith(ft4Terminal, StringComparison.Ordinal))
+                return l.Get("ComPort.Ft4PttAndTerminalPtt", message[ft4Terminal.Length..^sharedSuffix.Length]);
+            if (message.StartsWith(terminalFt4, StringComparison.Ordinal))
+                return l.Get("ComPort.TerminalPttAndFt4Ptt", message[terminalFt4.Length..^sharedSuffix.Length]);
+        }
+
         const string ft4RadioPrefix = "FT4 separate PTT and radio both use ";
         if (message.StartsWith(ft4RadioPrefix, StringComparison.Ordinal)
             && message.EndsWith(". Use different COM ports or disable one device.", StringComparison.Ordinal))

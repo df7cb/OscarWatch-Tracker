@@ -1,33 +1,50 @@
 using System.IO.Ports;
-using OscarWatch.Core.Ft4;
 using OscarWatch.Core.Hardware;
 using OscarWatch.Core.Services;
-using OscarWatch.Rig;
 using Serilog;
 
-namespace OscarWatch.Ft4;
+namespace OscarWatch.Hardware;
 
-/// <summary>Keys the uplink for FT4 using CAT, handshake lines, VOX, or a manual prompt.</summary>
-public sealed class Ft4PttKeyer : IDisposable
+/// <summary>
+/// Keys the uplink using CAT, handshake lines, VOX or a manual prompt. FT4 and the Terminal built-in
+/// modem each own one, with their own <see cref="PttOptions"/>.
+/// </summary>
+public sealed class PttKeyer : IDisposable
 {
-    private static readonly ILogger Log = Serilog.Log.ForContext<Ft4PttKeyer>();
+    private static readonly ILogger Log = Serilog.Log.ForContext<PttKeyer>();
 
     private readonly IRigController _rig;
-    private readonly ISettingsService _settings;
+    private readonly Func<PttOptions> _options;
+    private readonly string _label;
+    private readonly Func<string, string?>? _describePortConflict;
+    private readonly PttSessionMarker? _marker;
     private readonly object _portGate = new();
     private SerialPort? _separatePort;
-    private bool _keyed;
+    private volatile bool _keyed;
     private Action<string>? _manualPrompt;
 
-    public Ft4PttKeyer(IRigController rig, ISettingsService settings)
+    /// <param name="label">Feature name for logs, for example <c>FT4</c> or <c>Terminal</c>.</param>
+    /// <param name="describePortConflict">Returns a message when the separate PTT port is in use elsewhere.</param>
+    /// <param name="marker">Records that PTT is up, so a crash while keyed is noticed at the next start.</param>
+    public PttKeyer(
+        IRigController rig,
+        Func<PttOptions> options,
+        string label,
+        Func<string, string?>? describePortConflict = null,
+        PttSessionMarker? marker = null)
     {
         _rig = rig;
-        _settings = settings;
+        _options = options;
+        _label = label;
+        _describePortConflict = describePortConflict;
+        _marker = marker;
     }
 
     public void SetManualPromptHandler(Action<string>? handler) => _manualPrompt = handler;
 
-    public Ft4PttMethod Method => _settings.Current.Ft4.PttMethod;
+    public PttMethod Method => _options().Method;
+
+    public bool IsKeyed => _keyed;
 
     /// <summary>
     /// Assert PTT without the lead-in wait. CAT and the CAT-port handshake line share the
@@ -43,7 +60,7 @@ public sealed class Ft4PttKeyer : IDisposable
 
         // VOX keys from the audio itself. The lead wait is for CAT and hardware lines,
         // and TryAssert already returned false for VOX on a fresh key (see below).
-        var lead = Math.Clamp(_settings.Current.Ft4.PttLeadMs, 0, 2000);
+        var lead = _options().ClampedLeadMs;
         if (lead > 0)
             await Task.Delay(lead, cancellationToken).ConfigureAwait(false);
     }
@@ -54,30 +71,33 @@ public sealed class Ft4PttKeyer : IDisposable
         if (_keyed)
             return false;
 
-        var ft4 = _settings.Current.Ft4;
-        switch (ft4.PttMethod)
+        var options = _options();
+        if (options.Method != PttMethod.Vox)
+            _marker?.MarkKeyed(_label, options.Method);
+
+        switch (options.Method)
         {
-            case Ft4PttMethod.Vox:
+            case PttMethod.Vox:
                 _keyed = true;
                 return false;
 
-            case Ft4PttMethod.Cat:
+            case PttMethod.Cat:
                 _rig.SetPtt(true);
                 break;
 
-            case Ft4PttMethod.CatPortHandshake:
-                _rig.SetHandshakePtt(ft4.PttLine == Ft4PttLine.Rts, assert: !ft4.PttInvert);
+            case PttMethod.CatPortHandshake:
+                _rig.SetHandshakePtt(options.Line == PttLine.Rts, assert: !options.Invert);
                 break;
 
-            case Ft4PttMethod.SeparateComPort:
+            case PttMethod.SeparateComPort:
                 lock (_portGate)
                 {
-                    EnsureSeparatePort(ft4);
-                    SetLine(_separatePort!, ft4.PttLine, assert: !ft4.PttInvert);
+                    EnsureSeparatePort(options);
+                    SetLine(_separatePort!, options.Line, assert: !options.Invert);
                 }
                 break;
 
-            case Ft4PttMethod.Manual:
+            case PttMethod.Manual:
                 _manualPrompt?.Invoke("key");
                 break;
         }
@@ -91,8 +111,7 @@ public sealed class Ft4PttKeyer : IDisposable
         if (!_keyed)
             return;
 
-        var ft4 = _settings.Current.Ft4;
-        var tail = Math.Clamp(ft4.PttTailMs, 0, 2000);
+        var tail = _options().ClampedTailMs;
         if (tail > 0)
         {
             try
@@ -111,61 +130,93 @@ public sealed class Ft4PttKeyer : IDisposable
     /// <summary>Drop PTT at once, without the tail delay. Used when the operator stops a transmission.</summary>
     public void UnkeyNow() => DropPtt();
 
+    /// <summary>
+    /// Send an unkey whatever this keyer thinks the state is. Covers a radio left transmitting by a
+    /// crash: called when the Terminal modem starts and whenever the rig reconnects. VOX and Manual
+    /// have nothing to send.
+    /// </summary>
+    public void ForceOff()
+    {
+        var options = _options();
+        try
+        {
+            switch (options.Method)
+            {
+                case PttMethod.Cat:
+                    _rig.SetPtt(false);
+                    break;
+                case PttMethod.CatPortHandshake:
+                    _rig.SetHandshakePtt(options.Line == PttLine.Rts, assert: options.Invert);
+                    break;
+                case PttMethod.SeparateComPort:
+                    lock (_portGate)
+                    {
+                        if (_separatePort is { IsOpen: true })
+                            SetLine(_separatePort, options.Line, assert: options.Invert);
+                    }
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "{Label} PTT force off failed", _label);
+        }
+        finally
+        {
+            _keyed = false;
+            _marker?.Clear();
+        }
+    }
+
     private void DropPtt()
     {
         if (!_keyed)
             return;
 
-        var ft4 = _settings.Current.Ft4;
+        var options = _options();
         try
         {
-            switch (ft4.PttMethod)
+            switch (options.Method)
             {
-                case Ft4PttMethod.Vox:
+                case PttMethod.Vox:
                     break;
-                case Ft4PttMethod.Cat:
+                case PttMethod.Cat:
                     _rig.SetPtt(false);
                     break;
-                case Ft4PttMethod.CatPortHandshake:
-                    _rig.SetHandshakePtt(ft4.PttLine == Ft4PttLine.Rts, assert: ft4.PttInvert);
+                case PttMethod.CatPortHandshake:
+                    _rig.SetHandshakePtt(options.Line == PttLine.Rts, assert: options.Invert);
                     break;
-                case Ft4PttMethod.SeparateComPort:
+                case PttMethod.SeparateComPort:
                     lock (_portGate)
                     {
                         if (_separatePort is { IsOpen: true })
-                            SetLine(_separatePort, ft4.PttLine, assert: ft4.PttInvert);
+                            SetLine(_separatePort, options.Line, assert: options.Invert);
                     }
                     break;
-                case Ft4PttMethod.Manual:
+                case PttMethod.Manual:
                     _manualPrompt?.Invoke("unkey");
                     break;
             }
         }
         catch (Exception ex)
         {
-            Log.Warning(ex, "FT4 PTT unkey failed");
+            Log.Warning(ex, "{Label} PTT unkey failed", _label);
         }
         finally
         {
             _keyed = false;
+            _marker?.Clear();
         }
     }
 
-    private void EnsureSeparatePort(Ft4Settings ft4)
+    private void EnsureSeparatePort(PttOptions options)
     {
-        var portName = ft4.SeparatePttPort?.Trim() ?? "";
+        var portName = options.SeparatePort?.Trim() ?? "";
         if (portName.Length == 0)
             throw new InvalidOperationException("Separate PTT COM port is not configured.");
 
-        if (SerialPortConflictHelper.TryDescribeFt4SeparatePttConflict(
-                portName,
-                _settings.Current.Rig,
-                _settings.Current.Rotator,
-                _settings.Current.Gps,
-                out var conflict))
-        {
+        if (_describePortConflict?.Invoke(portName) is { Length: > 0 } conflict)
             throw new InvalidOperationException(conflict);
-        }
 
         if (_separatePort is { IsOpen: true }
             && string.Equals(_separatePort.PortName, portName, StringComparison.OrdinalIgnoreCase))
@@ -181,9 +232,9 @@ public sealed class Ft4PttKeyer : IDisposable
         _separatePort.Open();
     }
 
-    private static void SetLine(SerialPort port, Ft4PttLine line, bool assert)
+    private static void SetLine(SerialPort port, PttLine line, bool assert)
     {
-        if (line == Ft4PttLine.Rts)
+        if (line == PttLine.Rts)
             port.RtsEnable = assert;
         else
             port.DtrEnable = assert;
@@ -206,13 +257,13 @@ public sealed class Ft4PttKeyer : IDisposable
     /// </summary>
     public void ReleaseUnusedPort()
     {
-        var ft4 = _settings.Current.Ft4;
+        var options = _options();
         lock (_portGate)
         {
             if (_separatePort is null)
                 return;
-            if (ft4.PttMethod == Ft4PttMethod.SeparateComPort
-                && string.Equals(_separatePort.PortName, ft4.SeparatePttPort?.Trim(), StringComparison.OrdinalIgnoreCase))
+            if (options.Method == PttMethod.SeparateComPort
+                && string.Equals(_separatePort.PortName, options.SeparatePort?.Trim(), StringComparison.OrdinalIgnoreCase))
                 return;
 
             ClosePort();
@@ -229,11 +280,11 @@ public sealed class Ft4PttKeyer : IDisposable
         try
         {
             port.Dispose();
-            Log.Information("FT4 released PTT port {Port}", port.PortName);
+            Log.Information("{Label} released PTT port {Port}", _label, port.PortName);
         }
         catch (Exception ex)
         {
-            Log.Warning(ex, "FT4 PTT port close failed");
+            Log.Warning(ex, "{Label} PTT port close failed", _label);
         }
     }
 

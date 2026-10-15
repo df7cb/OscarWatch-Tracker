@@ -44,5 +44,8 @@ native/ft8_lib/decode_ft8
 native/ft8_lib/gen_ft8
 native/ft8_lib/test_ft8
 
+# Modem benchmark audio (WA8LMF TNC Test CD, pass recording clips): large and not ours to redistribute
+testdata/
+
 # Dave, G4DPZ Exclusions
 .kiro/

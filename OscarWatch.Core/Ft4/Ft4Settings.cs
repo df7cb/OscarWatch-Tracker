@@ -1,3 +1,4 @@
+using OscarWatch.Core.Hardware;
 using OscarWatch.Core.PskReporter;
 
 namespace OscarWatch.Core.Ft4;
@@ -13,14 +14,14 @@ public sealed class Ft4Settings
     /// </summary>
     public bool ApEnabled { get; set; } = true;
 
-    public Ft4PttMethod PttMethod { get; set; } = Ft4PttMethod.Vox;
+    public PttMethod PttMethod { get; set; } = PttMethod.Vox;
 
-    public Ft4PttLine PttLine { get; set; } = Ft4PttLine.Rts;
+    public PttLine PttLine { get; set; } = PttLine.Rts;
 
     /// <summary>When true, the handshake line is inverted (active-low interfaces).</summary>
     public bool PttInvert { get; set; }
 
-    /// <summary>COM port for <see cref="Ft4PttMethod.SeparateComPort"/>.</summary>
+    /// <summary>COM port for <see cref="PttMethod.SeparateComPort"/>.</summary>
     public string SeparatePttPort { get; set; } = "";
 
     /// <summary>Milliseconds to assert PTT before audio starts.</summary>
@@ -28,6 +29,9 @@ public sealed class Ft4Settings
 
     /// <summary>Milliseconds to keep PTT after audio ends.</summary>
     public int PttTailMs { get; set; } = 100;
+
+    public PttOptions ToPttOptions() =>
+        new(PttMethod, PttLine, PttInvert, SeparatePttPort ?? "", PttLeadMs, PttTailMs);
 
     /// <summary>Durable PortAudio device name for capture (not a volatile enumeration index). Empty = system default.</summary>
     public string InputDeviceId { get; set; } = "";

@@ -5259,7 +5259,7 @@ Aktuell: {1} ({2})</value>
     <value>KISS seriell (TNC, geplant)</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>Eingebautes Soundmodem (geplant)</value>
+    <value>Eingebautes Soundmodem (1200 AFSK)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} ist für eine spätere Version geplant. Vorerst wird AGWPE verwendet.</value>
@@ -5659,5 +5659,278 @@ Aktuell: {1} ({2})</value>
   </data>
   <data name="Terminal.Status.GridChanged" xml:space="preserve">
     <value>Ihr Locator hat sich von {0} zu {1} geändert. Locator-Platzhalter in Makros verwenden den neuen Locator; prüfen Sie Makros mit fest eingetipptem Locator.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRadio" xml:space="preserve">
+    <value>Separate PTT von Terminal und Funkgerät verwenden beide {0}. Verwenden Sie unterschiedliche COM-Ports oder deaktivieren Sie ein Gerät.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndDownlink" xml:space="preserve">
+    <value>Separate PTT von Terminal und Downlink-Funkgerät verwenden beide {0}. Verwenden Sie unterschiedliche COM-Ports oder deaktivieren Sie ein Gerät.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndUplink" xml:space="preserve">
+    <value>Separate PTT von Terminal und Uplink-Funkgerät verwenden beide {0}. Verwenden Sie unterschiedliche COM-Ports oder deaktivieren Sie ein Gerät.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRotator" xml:space="preserve">
+    <value>Separate PTT von Terminal und Rotor verwenden beide {0}. Verwenden Sie unterschiedliche COM-Ports oder deaktivieren Sie ein Gerät.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndGps" xml:space="preserve">
+    <value>Separate PTT von Terminal und GPS verwenden beide {0}. Verwenden Sie unterschiedliche COM-Ports oder deaktivieren Sie ein Gerät.</value>
+  </data>
+  <data name="ComPort.Ft4PttAndTerminalPtt" xml:space="preserve">
+    <value>Separate PTT von FT4 und separate PTT von Terminal verwenden beide {0}. Verwenden Sie unterschiedliche COM-Ports oder deaktivieren Sie ein Gerät.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndFt4Ptt" xml:space="preserve">
+    <value>Separate PTT von Terminal und separate PTT von FT4 verwenden beide {0}. Verwenden Sie unterschiedliche COM-Ports oder deaktivieren Sie ein Gerät.</value>
+  </data>
+  <data name="Terminal.Col.Quality" xml:space="preserve">
+    <value>Q</value>
+  </data>
+  <data name="Terminal.Col.Quality.Tip" xml:space="preserve">
+    <value>Dekodierqualität: Anteil der Dekoder des eingebauten Modems, die diesen Rahmen fehlerfrei empfangen haben.</value>
+  </data>
+  <data name="Terminal.LinkType" xml:space="preserve">
+    <value>Verbindung</value>
+  </data>
+  <data name="Terminal.LinkType.Auto" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="Terminal.LinkType.Simplex" xml:space="preserve">
+    <value>Simplex (eine Frequenz)</value>
+  </data>
+  <data name="Terminal.LinkType.SameBand" xml:space="preserve">
+    <value>Gleiches Band</value>
+  </data>
+  <data name="Terminal.LinkType.Crossband" xml:space="preserve">
+    <value>Crossband</value>
+  </data>
+  <data name="Terminal.Modem.BitFix" xml:space="preserve">
+    <value>Bitkorrektur</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Help" xml:space="preserve">
+    <value>Repariert Rahmen mit falscher Prüfsumme, indem ein Bit (oder zwei benachbarte Bits) gekippt und erneut geprüft wird. Einzelbit ist die sichere Voreinstellung. Benachbarte Paare retten mehr schwache Rahmen, brauchen aber mehr Rechenzeit.</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Off" xml:space="preserve">
+    <value>Aus</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Single" xml:space="preserve">
+    <value>Einzelbit</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
+    <value>Einzelbit und benachbarte Paare</value>
+  </data>
+  <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
+    <value>Nicht senden, solange der Satellit unter dem Horizont ist</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
+    <value>Modem: OscarWatch 1200 AFSK, {0}, Eingang {1}%, {2} Rahmen dekodiert ({3} korrigiert)</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
+    <value>Soundkarte</value>
+  </data>
+  <data name="Terminal.Modem.Channel" xml:space="preserve">
+    <value>Kanalzugriff</value>
+  </data>
+  <data name="Terminal.Modem.Decode" xml:space="preserve">
+    <value>Aufnahme dekodieren</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Button" xml:space="preserve">
+    <value>WAV-Datei dekodieren</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Failed" xml:space="preserve">
+    <value>Die Aufnahme konnte nicht dekodiert werden: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Help" xml:space="preserve">
+    <value>Spielt eine WAV-Aufnahme ohne Senden durch das eingebaute Modem, zum Beispiel einen aufgenommenen Überflug oder einen Titel der WA8LMF TNC Test CD. Spielen Sie die Test-CD niemals über Funk ab.</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerTitle" xml:space="preserve">
+    <value>WAV-Aufnahme auswählen</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerType" xml:space="preserve">
+    <value>WAV-Audio</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Running" xml:space="preserve">
+    <value>{0} wird dekodiert…</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Summary" xml:space="preserve">
+    <value>{0} Rahmen dekodiert ({1} durch Bitkorrektur) aus {2} Sekunden Audio mit {3} Dekoderpfaden.</value>
+  </data>
+  <data name="Terminal.Modem.Duplex" xml:space="preserve">
+    <value>Duplex</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Auto" xml:space="preserve">
+    <value>Automatisch (nach Verbindungsart des Satelliten)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Full" xml:space="preserve">
+    <value>Vollduplex (während des Sendens hören)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.FullShort" xml:space="preserve">
+    <value>Vollduplex</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Half" xml:space="preserve">
+    <value>Halbduplex (Simplex und gleiches Band)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.HalfShort" xml:space="preserve">
+    <value>Halbduplex</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
+    <value>Simplex-Satelliten wie die ISS nutzen eine Frequenz. Das Modem wartet daher auf einen freien Kanal, schaltet den Empfang beim Senden stumm und lässt eine kurze Schutzzeit, bevor es wieder hört. Crossband-Satelliten können im Vollduplex laufen, sodass Sie Ihr eigenes Paket über den Digipeater zurückhören.</value>
+  </data>
+  <data name="Terminal.Modem.Guard" xml:space="preserve">
+    <value>Umschalt-Schutzzeit (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Input" xml:space="preserve">
+    <value>Eingang (vom Funkgerät)</value>
+  </data>
+  <data name="Terminal.Modem.Level" xml:space="preserve">
+    <value>Eingangspegel</value>
+  </data>
+  <data name="Terminal.Modem.Level.Clipping" xml:space="preserve">
+    <value>Eingang {0}%: übersteuert. Datenausgang des Funkgeräts oder Windows-Aufnahmepegel verringern.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Failed" xml:space="preserve">
+    <value>Eingang konnte nicht geöffnet werden: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Level.Help" xml:space="preserve">
+    <value>Zielen Sie auf 30 bis 70% bei belebtem Kanal. Verwenden Sie wenn möglich den Datenanschluss des Funkgeräts, da sich der Lautsprecherausgang mit dem Lautstärkeregler ändert.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Idle" xml:space="preserve">
+    <value>Eingang überwachen ankreuzen, um den Pegel zu sehen.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Low" xml:space="preserve">
+    <value>Eingang {0}%: zu niedrig. Datenausgang des Funkgeräts oder Windows-Aufnahmepegel erhöhen.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Ok" xml:space="preserve">
+    <value>Eingang {0}%: gut.</value>
+  </data>
+  <data name="Terminal.Modem.MaxWait" xml:space="preserve">
+    <value>Maximale Wartezeit (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Monitor" xml:space="preserve">
+    <value>Eingang überwachen</value>
+  </data>
+  <data name="Terminal.Modem.Output" xml:space="preserve">
+    <value>Ausgang (zum Funkgerät)</value>
+  </data>
+  <data name="Terminal.Modem.Persist" xml:space="preserve">
+    <value>Persistenz (0 bis 255)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt" xml:space="preserve">
+    <value>Sendetaste (PTT)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt.Help" xml:space="preserve">
+    <value>VOX tastet das Funkgerät über das Audiosignal. CAT nutzt die Funkgeräteverbindung aus der Rig-Steuerung. Ein separater COM-Port schaltet RTS oder DTR an einem USB-Interface. Stellen Sie am Funkgerät einen Sendezeitbegrenzer als Hardware-Absicherung ein.</value>
+  </data>
+  <data name="Terminal.Modem.PttInvert" xml:space="preserve">
+    <value>Invertieren</value>
+  </data>
+  <data name="Terminal.Modem.PttLead" xml:space="preserve">
+    <value>PTT-Vorlauf (ms)</value>
+  </data>
+  <data name="Terminal.Modem.PttLine" xml:space="preserve">
+    <value>Leitung</value>
+  </data>
+  <data name="Terminal.Modem.PttPort" xml:space="preserve">
+    <value>PTT-COM-Port</value>
+  </data>
+  <data name="Terminal.Modem.PttTail" xml:space="preserve">
+    <value>PTT-Nachlauf (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Refresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="Terminal.Modem.SlotTime" xml:space="preserve">
+    <value>Slotzeit (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Soundcard" xml:space="preserve">
+    <value>Soundkarte</value>
+  </data>
+  <data name="Terminal.Modem.TestTone" xml:space="preserve">
+    <value>Testton</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Alternating" xml:space="preserve">
+    <value>Wechselnd 1200 und 2200 Hz</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Done" xml:space="preserve">
+    <value>Testton beendet.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
+    <value>Testton fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
+    <value>Tastet das Funkgerät 5 Sekunden lang mit dem obigen Sendepegel. Bei FM etwa 3 kHz Hub einstellen. In eine Kunstantenne oder auf einer freien Frequenz senden.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Mark" xml:space="preserve">
+    <value>Mark (1200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Send" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Sending" xml:space="preserve">
+    <value>Testton wird gesendet…</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Space" xml:space="preserve">
+    <value>Space (2200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stop" xml:space="preserve">
+    <value>Stopp</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stopped" xml:space="preserve">
+    <value>Testton gestoppt.</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel" xml:space="preserve">
+    <value>Sendepegel</value>
+  </data>
+  <data name="Terminal.Modem.Unsupported" xml:space="preserve">
+    <value>{0} verwendet {1}. Das eingebaute Modem dekodiert nur 1200 AFSK. Verwenden Sie für diesen Satelliten UZ7HO über AGWPE.</value>
+  </data>
+  <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
+    <value>Auch im Vollduplex auf freien Kanal warten</value>
+  </data>
+  <data name="Terminal.Modem.Watchdog" xml:space="preserve">
+    <value>Sende-Watchdog (s)</value>
+  </data>
+  <data name="Terminal.PttRecovered" xml:space="preserve">
+    <value>OscarWatch wurde unerwartet beendet, während Terminal sendete. An das Funkgerät wurde ein CAT-Empfangsbefehl gesendet. Prüfen Sie, dass es nicht mehr sendet.</value>
+  </data>
+  <data name="Terminal.PttRecovered.Dismiss" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
+    <value>Das eingebaute Modem nutzt eine mit dem Funkgerät verbundene Soundkarte. Geräte, Pegel und PTT wählen Sie im Reiter Soundkarte.</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
+    <value>Langer TXTAIL im Halbduplex: Bei Simplex-Satelliten wie der ISS verzögert ein Nachlauf über 50 ms den Empfang und kann die digipeatete Kopie verpassen. 30 bis 50 ms reichen meist.</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Soundcard" xml:space="preserve">
+    <value>Soundkarte</value>
+  </data>
+  <data name="Terminal.Status.BelowHorizon" xml:space="preserve">
+    <value>Nicht gesendet: Der Satellit ist unter dem Horizont. Für terrestrisches Packet können Sie dies in den Terminal-Einstellungen ändern.</value>
+  </data>
+  <data name="Terminal.Status.ChannelBusy" xml:space="preserve">
+    <value>Nicht gesendet: Der Kanal blieb belegt. Versuchen Sie es erneut, wenn es ruhiger ist.</value>
+  </data>
+  <data name="Terminal.Status.UplinkHoldFailed" xml:space="preserve">
+    <value>Nicht gesendet: Das Funkgerät konnte die Uplink-Frequenz für eine Sendung im gleichen Band nicht halten.</value>
+  </data>
+  <data name="Terminal.Status.Watchdog" xml:space="preserve">
+    <value>Sendung durch den {0}-Sekunden-Watchdog beendet. Prüfen Sie PTT und Soundkartenausgang.</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.BuiltInHelp" xml:space="preserve">
+    <value>Das eingebaute Modem sendet nach dem Tasten Flags für die TX-Verzögerung, damit sich Funkgerät und Gegenstation vor dem ersten Rahmen einschwingen, und hängt den TX-Nachlauf an, damit die letzten Bits nicht abgeschnitten werden. 300 ms passen für die meisten FM-Geräte; mit CAT oder schnellem Datenanschluss reichen oft 150 bis 200 ms. Halten Sie den Nachlauf bei Simplex-Satelliten wie der ISS bei 30 bis 50 ms.</value>
+  </data>
+  <data name="Terminal.Waterfall" xml:space="preserve">
+    <value>Wasserfall</value>
+  </data>
+  <data name="Terminal.Waterfall.Tip" xml:space="preserve">
+    <value>Live-Empfangsaudio vom eingebauten Soundmodem, 300 bis 3000 Hz. Pakete erscheinen als Bursts über den Markierungen bei 1200 und 2200 Hz.</value>
+  </data>
+  <data name="Terminal.Station.Tabs" xml:space="preserve">
+    <value>Station und Wasserfall</value>
+  </data>
+  <data name="Terminal.Waterfall.Idle" xml:space="preserve">
+    <value>Verbinden Sie das eingebaute Soundmodem, um das Empfangsaudio zu sehen.</value>
+  </data>
+  <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
+    <value>Der Wasserfall braucht das eingebaute Soundmodem. AGWPE-Modems geben ihr Audio nicht weiter.</value>
   </data>
 </root>

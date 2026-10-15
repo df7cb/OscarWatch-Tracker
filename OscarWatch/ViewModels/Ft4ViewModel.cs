@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -54,17 +54,17 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
 
         PttMethodOptions =
         [
-            new Ft4PttMethodOption(Ft4PttMethod.Vox, _l.Get("Ft4.Ptt.Vox")),
-            new Ft4PttMethodOption(Ft4PttMethod.Cat, _l.Get("Ft4.Ptt.Cat")),
-            new Ft4PttMethodOption(Ft4PttMethod.CatPortHandshake, _l.Get("Ft4.Ptt.CatPortHandshake")),
-            new Ft4PttMethodOption(Ft4PttMethod.SeparateComPort, _l.Get("Ft4.Ptt.SeparateComPort")),
-            new Ft4PttMethodOption(Ft4PttMethod.Manual, _l.Get("Ft4.Ptt.Manual")),
+            new PttMethodOption(PttMethod.Vox, _l.Get("Ft4.Ptt.Vox")),
+            new PttMethodOption(PttMethod.Cat, _l.Get("Ft4.Ptt.Cat")),
+            new PttMethodOption(PttMethod.CatPortHandshake, _l.Get("Ft4.Ptt.CatPortHandshake")),
+            new PttMethodOption(PttMethod.SeparateComPort, _l.Get("Ft4.Ptt.SeparateComPort")),
+            new PttMethodOption(PttMethod.Manual, _l.Get("Ft4.Ptt.Manual")),
         ];
 
         PttLineOptions =
         [
-            new Ft4PttLineOption(Ft4PttLine.Rts, _l.Get("Ft4.Ptt.Rts")),
-            new Ft4PttLineOption(Ft4PttLine.Dtr, _l.Get("Ft4.Ptt.Dtr")),
+            new PttLineOption(PttLine.Rts, _l.Get("Ft4.Ptt.Rts")),
+            new PttLineOption(PttLine.Dtr, _l.Get("Ft4.Ptt.Dtr")),
         ];
 
         var ft4 = _settings.Current.Ft4;
@@ -151,9 +151,9 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
 
     public ObservableCollection<string> EchoCalibrationSatelliteOptions { get; } = [];
 
-    public IReadOnlyList<Ft4PttMethodOption> PttMethodOptions { get; }
+    public IReadOnlyList<PttMethodOption> PttMethodOptions { get; }
 
-    public IReadOnlyList<Ft4PttLineOption> PttLineOptions { get; }
+    public IReadOnlyList<PttLineOption> PttLineOptions { get; }
 
     public string StationCallsign =>
         Ft4MessageCodec.NormalizeCall(_settings.Current.GroundStation.Callsign ?? "");
@@ -161,7 +161,7 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
     public string StationGrid =>
         (_settings.Current.GroundStation.GridSquare ?? "").Trim().ToUpperInvariant();
 
-    /// <summary>Example CQ using Settings → Station (not the old CALL/GRID placeholders).</summary>
+    /// <summary>Example CQ using Settings â†’ Station (not the old CALL/GRID placeholders).</summary>
     public string TxMessageWatermark
     {
         get
@@ -175,10 +175,10 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
     }
 
     public bool ShowHandshakePttOptions =>
-        SelectedPttMethod?.Value is Ft4PttMethod.CatPortHandshake or Ft4PttMethod.SeparateComPort;
+        SelectedPttMethod?.Value is PttMethod.CatPortHandshake or PttMethod.SeparateComPort;
 
     public bool ShowSeparatePttPort =>
-        SelectedPttMethod?.Value == Ft4PttMethod.SeparateComPort;
+        SelectedPttMethod?.Value == PttMethod.SeparateComPort;
 
     public bool ShowSeparatePttConflict =>
         ShowSeparatePttPort && !string.IsNullOrWhiteSpace(SeparatePttConflictText);
@@ -248,8 +248,8 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private bool _isTuning;
     [ObservableProperty] private bool _pttInvert;
     [ObservableProperty] private string _separatePttPort = "";
-    [ObservableProperty] private Ft4PttMethodOption? _selectedPttMethod;
-    [ObservableProperty] private Ft4PttLineOption? _selectedPttLine;
+    [ObservableProperty] private PttMethodOption? _selectedPttMethod;
+    [ObservableProperty] private PttLineOption? _selectedPttLine;
     [ObservableProperty] private Ft4AudioDeviceOption? _selectedInputDevice;
     [ObservableProperty] private Ft4AudioDeviceOption? _selectedOutputDevice;
     [ObservableProperty] private Ft4DecodeRowViewModel? _selectedDecode;
@@ -688,7 +688,7 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
             _modem.Sequencer.PreferEvenSlot = value;
     }
 
-    partial void OnSelectedPttMethodChanged(Ft4PttMethodOption? value)
+    partial void OnSelectedPttMethodChanged(PttMethodOption? value)
     {
         if (value is null)
             return;
@@ -700,7 +700,7 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
         RefreshSeparatePttConflict();
     }
 
-    partial void OnSelectedPttLineChanged(Ft4PttLineOption? value)
+    partial void OnSelectedPttLineChanged(PttLineOption? value)
     {
         if (value is null)
             return;
@@ -734,10 +734,8 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
         }
 
         if (SerialPortConflictHelper.TryDescribeFt4SeparatePttConflict(
+                _settings.Current,
                 SeparatePttPort,
-                _settings.Current.Rig,
-                _settings.Current.Rotator,
-                _settings.Current.Gps,
                 out var message))
         {
             SeparatePttConflictText = ComPortConflictLocalizer.Localize(message, _l);
@@ -999,7 +997,7 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void StartCq()
     {
-        // Rebuild from Settings → Station so portable callsigns (e.g. MM9SQL/M) pack correctly.
+        // Rebuild from Settings â†’ Station so portable callsigns (e.g. MM9SQL/M) pack correctly.
         _modem.SetAutoReply(AutoReply);
         _modem.StartCq(PreferEvenSlot);
         // The text box is two-way. Losing focus to this button can push the previous
@@ -1305,13 +1303,13 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
         var snap = _tracker.GetCurrent();
         if (!string.IsNullOrWhiteSpace(snap.SatelliteName)
             && snap.SatelliteName != "-"
-            && snap.SatelliteName != "—")
+            && snap.SatelliteName != "â€”")
             return snap.SatelliteName.Trim();
 
         var overlay = _frequencyOverlay.SatelliteName?.Trim();
         if (!string.IsNullOrWhiteSpace(overlay)
             && overlay != "-"
-            && overlay != "—")
+            && overlay != "â€”")
             return overlay;
 
         return null;
@@ -1607,12 +1605,12 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
     }
 }
 
-public sealed record Ft4PttMethodOption(Ft4PttMethod Value, string Label)
+public sealed record PttMethodOption(PttMethod Value, string Label)
 {
     public override string ToString() => Label;
 }
 
-public sealed record Ft4PttLineOption(Ft4PttLine Value, string Label)
+public sealed record PttLineOption(PttLine Value, string Label)
 {
     public override string ToString() => Label;
 }

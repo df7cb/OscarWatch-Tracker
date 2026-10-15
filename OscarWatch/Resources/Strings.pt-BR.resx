@@ -5254,7 +5254,7 @@ Mais recente: {1} ({2})</value>
     <value>TNC KISS serial (previsto)</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>Soundmodem integrado (previsto)</value>
+    <value>Soundmodem integrado (1200 AFSK)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} está previsto para uma versão futura. Por enquanto usa-se AGWPE.</value>
@@ -5654,5 +5654,278 @@ Mais recente: {1} ({2})</value>
   </data>
   <data name="Terminal.Status.GridChanged" xml:space="preserve">
     <value>Seu grid mudou de {0} para {1}. Os marcadores de grid nas macros usam o novo grid; verifique macros com o grid digitado.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRadio" xml:space="preserve">
+    <value>O PTT separado do Terminal e o rádio usam {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndDownlink" xml:space="preserve">
+    <value>O PTT separado do Terminal e o rádio de downlink usam {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndUplink" xml:space="preserve">
+    <value>O PTT separado do Terminal e o rádio de uplink usam {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRotator" xml:space="preserve">
+    <value>O PTT separado do Terminal e o rotor usam {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndGps" xml:space="preserve">
+    <value>O PTT separado do Terminal e o GPS usam {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.Ft4PttAndTerminalPtt" xml:space="preserve">
+    <value>O PTT separado do FT4 e o PTT separado do Terminal usam {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.TerminalPttAndFt4Ptt" xml:space="preserve">
+    <value>O PTT separado do Terminal e o PTT separado do FT4 usam {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="Terminal.Col.Quality" xml:space="preserve">
+    <value>Q</value>
+  </data>
+  <data name="Terminal.Col.Quality.Tip" xml:space="preserve">
+    <value>Qualidade de decodificação: parcela dos decodificadores do modem integrado que copiaram este quadro sem erros.</value>
+  </data>
+  <data name="Terminal.LinkType" xml:space="preserve">
+    <value>Enlace</value>
+  </data>
+  <data name="Terminal.LinkType.Auto" xml:space="preserve">
+    <value>Automático</value>
+  </data>
+  <data name="Terminal.LinkType.Simplex" xml:space="preserve">
+    <value>Simplex (uma frequência)</value>
+  </data>
+  <data name="Terminal.LinkType.SameBand" xml:space="preserve">
+    <value>Mesma banda</value>
+  </data>
+  <data name="Terminal.LinkType.Crossband" xml:space="preserve">
+    <value>Banda cruzada</value>
+  </data>
+  <data name="Terminal.Modem.BitFix" xml:space="preserve">
+    <value>Correção de bits</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Help" xml:space="preserve">
+    <value>Repara quadros com checksum incorreto invertendo um bit (ou dois bits vizinhos) e verificando de novo. Um bit é o padrão seguro. Pares vizinhos recuperam mais quadros fracos, mas usam mais processador.</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Off" xml:space="preserve">
+    <value>Desligada</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Single" xml:space="preserve">
+    <value>Um bit</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
+    <value>Um bit e pares vizinhos</value>
+  </data>
+  <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
+    <value>Não transmitir enquanto o satélite estiver abaixo do horizonte</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
+    <value>Modem: OscarWatch 1200 AFSK, {0}, entrada {1}%, {2} quadros decodificados ({3} corrigidos)</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
+    <value>placa de som</value>
+  </data>
+  <data name="Terminal.Modem.Channel" xml:space="preserve">
+    <value>Acesso ao canal</value>
+  </data>
+  <data name="Terminal.Modem.Decode" xml:space="preserve">
+    <value>Decodificar uma gravação</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Button" xml:space="preserve">
+    <value>Decodificar arquivo WAV</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Failed" xml:space="preserve">
+    <value>Não foi possível decodificar a gravação: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Help" xml:space="preserve">
+    <value>Passa uma gravação WAV pelo modem integrado sem transmitir, por exemplo uma passagem que você gravou ou uma faixa do WA8LMF TNC Test CD. Nunca toque o CD de teste no ar.</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerTitle" xml:space="preserve">
+    <value>Escolha uma gravação WAV</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerType" xml:space="preserve">
+    <value>Áudio WAV</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Running" xml:space="preserve">
+    <value>Decodificando {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Summary" xml:space="preserve">
+    <value>{0} quadros decodificados ({1} por correção de bits) em {2} segundos de áudio com {3} caminhos de decodificação.</value>
+  </data>
+  <data name="Terminal.Modem.Duplex" xml:space="preserve">
+    <value>Duplex</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Auto" xml:space="preserve">
+    <value>Automático (pelo tipo de enlace do satélite)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Full" xml:space="preserve">
+    <value>Full duplex (ouvir enquanto transmite)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.FullShort" xml:space="preserve">
+    <value>full duplex</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Half" xml:space="preserve">
+    <value>Half duplex (simplex e mesma banda)</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.HalfShort" xml:space="preserve">
+    <value>half duplex</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
+    <value>Satélites simplex como a ISS usam uma só frequência, então o modem espera o canal livre, silencia o receptor ao transmitir e deixa uma pequena pausa antes de ouvir de novo. Satélites de banda cruzada podem operar em full duplex, para você ouvir seu próprio pacote voltar pelo digipeater.</value>
+  </data>
+  <data name="Terminal.Modem.Guard" xml:space="preserve">
+    <value>Pausa de comutação (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Input" xml:space="preserve">
+    <value>Entrada (do rádio)</value>
+  </data>
+  <data name="Terminal.Modem.Level" xml:space="preserve">
+    <value>Nível de entrada</value>
+  </data>
+  <data name="Terminal.Modem.Level.Clipping" xml:space="preserve">
+    <value>Entrada {0}%: saturando. Abaixe a saída de dados do rádio ou o nível de gravação do Windows.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Failed" xml:space="preserve">
+    <value>Não foi possível abrir a entrada: {0}</value>
+  </data>
+  <data name="Terminal.Modem.Level.Help" xml:space="preserve">
+    <value>Mire em 30 a 70% com o canal movimentado. Use a porta de dados do rádio quando possível, pois a saída do alto-falante muda com o volume.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Idle" xml:space="preserve">
+    <value>Marque Monitorar entrada para ver o nível.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Low" xml:space="preserve">
+    <value>Entrada {0}%: baixa demais. Aumente a saída de dados do rádio ou o nível de gravação do Windows.</value>
+  </data>
+  <data name="Terminal.Modem.Level.Ok" xml:space="preserve">
+    <value>Entrada {0}%: boa.</value>
+  </data>
+  <data name="Terminal.Modem.MaxWait" xml:space="preserve">
+    <value>Espera máxima (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Monitor" xml:space="preserve">
+    <value>Monitorar entrada</value>
+  </data>
+  <data name="Terminal.Modem.Output" xml:space="preserve">
+    <value>Saída (para o rádio)</value>
+  </data>
+  <data name="Terminal.Modem.Persist" xml:space="preserve">
+    <value>Persistência (0 a 255)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt" xml:space="preserve">
+    <value>Pressionar para falar (PTT)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt.Help" xml:space="preserve">
+    <value>VOX aciona o rádio pelo áudio. CAT usa a conexão do rádio do controle de rig. Uma porta COM separada aciona RTS ou DTR numa interface USB. Configure no rádio um temporizador de transmissão como proteção de hardware.</value>
+  </data>
+  <data name="Terminal.Modem.PttInvert" xml:space="preserve">
+    <value>Inverter</value>
+  </data>
+  <data name="Terminal.Modem.PttLead" xml:space="preserve">
+    <value>Antecipação do PTT (ms)</value>
+  </data>
+  <data name="Terminal.Modem.PttLine" xml:space="preserve">
+    <value>Linha</value>
+  </data>
+  <data name="Terminal.Modem.PttPort" xml:space="preserve">
+    <value>Porta COM do PTT</value>
+  </data>
+  <data name="Terminal.Modem.PttTail" xml:space="preserve">
+    <value>Cauda do PTT (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Refresh" xml:space="preserve">
+    <value>Atualizar</value>
+  </data>
+  <data name="Terminal.Modem.SlotTime" xml:space="preserve">
+    <value>Tempo de slot (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Soundcard" xml:space="preserve">
+    <value>Placa de som</value>
+  </data>
+  <data name="Terminal.Modem.TestTone" xml:space="preserve">
+    <value>Tom de teste</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Alternating" xml:space="preserve">
+    <value>Alternado 1200 e 2200 Hz</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Done" xml:space="preserve">
+    <value>Tom de teste concluído.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
+    <value>Falha no tom de teste: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
+    <value>Aciona o rádio por 5 segundos com o nível de TX acima. Num rádio FM, ajuste o nível para cerca de 3 kHz de desvio. Transmita numa carga fantasma ou numa frequência livre.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Mark" xml:space="preserve">
+    <value>Mark (1200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Send" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Sending" xml:space="preserve">
+    <value>Enviando tom de teste…</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Space" xml:space="preserve">
+    <value>Space (2200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stop" xml:space="preserve">
+    <value>Parar</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stopped" xml:space="preserve">
+    <value>Tom de teste interrompido.</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel" xml:space="preserve">
+    <value>Nível de TX</value>
+  </data>
+  <data name="Terminal.Modem.Unsupported" xml:space="preserve">
+    <value>{0} usa {1}. O modem integrado decodifica apenas 1200 AFSK. Use o UZ7HO via AGWPE para este satélite.</value>
+  </data>
+  <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
+    <value>Esperar canal livre também em full duplex</value>
+  </data>
+  <data name="Terminal.Modem.Watchdog" xml:space="preserve">
+    <value>Vigia de transmissão (s)</value>
+  </data>
+  <data name="Terminal.PttRecovered" xml:space="preserve">
+    <value>O OscarWatch fechou inesperadamente enquanto o Terminal transmitia. Foi enviado ao rádio um comando CAT de recepção. Verifique se ele não está mais transmitindo.</value>
+  </data>
+  <data name="Terminal.PttRecovered.Dismiss" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
+    <value>O modem integrado usa uma placa de som ligada ao seu rádio. Escolha dispositivos, níveis e PTT na aba Placa de som.</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
+    <value>TXTAIL longo em half duplex: em satélites simplex como a ISS, uma cauda acima de 50 ms atrasa o receptor e pode perder a cópia digipeated. Normalmente 30 a 50 ms bastam.</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Soundcard" xml:space="preserve">
+    <value>Placa de som</value>
+  </data>
+  <data name="Terminal.Status.BelowHorizon" xml:space="preserve">
+    <value>Não enviado: o satélite está abaixo do horizonte. Você pode mudar isso nas configurações do Terminal para packet terrestre.</value>
+  </data>
+  <data name="Terminal.Status.ChannelBusy" xml:space="preserve">
+    <value>Não enviado: o canal continuou ocupado. Tente de novo quando estiver mais calmo.</value>
+  </data>
+  <data name="Terminal.Status.UplinkHoldFailed" xml:space="preserve">
+    <value>Não enviado: o rádio não conseguiu manter a frequência de uplink para uma transmissão na mesma banda.</value>
+  </data>
+  <data name="Terminal.Status.Watchdog" xml:space="preserve">
+    <value>Transmissão interrompida pelo vigia de {0} segundos. Verifique o PTT e a saída da placa de som.</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.BuiltInHelp" xml:space="preserve">
+    <value>O modem integrado envia flags durante o atraso de TX após acionar o rádio, para que o rádio e a estação receptora se estabilizem antes do primeiro quadro, e acrescenta a cauda de TX para não cortar os últimos bits. 300 ms servem para a maioria dos rádios FM; com CAT ou uma porta de dados rápida, 150 a 200 ms costumam bastar. Mantenha a cauda em 30 a 50 ms em satélites simplex como a ISS.</value>
+  </data>
+  <data name="Terminal.Waterfall" xml:space="preserve">
+    <value>Cascata</value>
+  </data>
+  <data name="Terminal.Waterfall.Tip" xml:space="preserve">
+    <value>Áudio de recepção ao vivo do soundmodem integrado, 300 a 3000 Hz. Os pacotes aparecem como rajadas sobre as marcas de 1200 e 2200 Hz.</value>
+  </data>
+  <data name="Terminal.Station.Tabs" xml:space="preserve">
+    <value>Estação e cascata</value>
+  </data>
+  <data name="Terminal.Waterfall.Idle" xml:space="preserve">
+    <value>Conecte o soundmodem integrado para ver o áudio de recepção.</value>
+  </data>
+  <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
+    <value>A cascata precisa do soundmodem integrado. Modems AGWPE não compartilham o áudio.</value>
   </data>
 </root>

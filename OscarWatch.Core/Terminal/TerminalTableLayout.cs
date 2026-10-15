@@ -16,8 +16,21 @@ public static class TerminalTableLayout
     public const double MinQsoShare = 0.1;
     public const double MaxQsoShare = 0.9;
 
-    /// <summary>Accent bar, Time, Type, From, To, Delay, Message.</summary>
-    public static IReadOnlyList<double> DefaultLogColumns { get; } = [12, 76, 96, 104, 92, 56, 0];
+    /// <summary>Accent bar, Time, Type, From, To, Delay, Quality, Message.</summary>
+    public static IReadOnlyList<double> DefaultLogColumns { get; } = [12, 76, 96, 104, 92, 56, 48, 0];
+
+    public const int QualityColumnIndex = 6;
+
+    /// <summary>Inserts the Quality column into log widths saved before it existed, keeping the other widths.</summary>
+    public static List<double>? MigrateLogColumns(IReadOnlyList<double>? widths)
+    {
+        if (widths is null)
+            return null;
+        var list = widths.ToList();
+        if (list.Count == DefaultLogColumns.Count - 1)
+            list.Insert(QualityColumnIndex, DefaultLogColumns[QualityColumnIndex]);
+        return list;
+    }
 
     /// <summary>Call, Grid, El, State, UHM, Logged.</summary>
     public static IReadOnlyList<double> DefaultQsoColumns { get; } = [88, 60, 44, 0, 72, 60];
@@ -60,8 +73,10 @@ public static class TerminalTableLayout
     }
 
     /// <summary>Grid column definitions text, for example <c>88,60,44,*,72,60</c>.</summary>
-    public static string ToColumnDefinitions(IReadOnlyList<double> widths) =>
-        string.Join(",", widths.Select(w => w == 0 ? "*" : w.ToString("0", CultureInfo.InvariantCulture)));
+    public static string ToColumnDefinitions(IReadOnlyList<double> widths, int? collapsedIndex = null) =>
+        string.Join(",", widths.Select((w, i) => i == collapsedIndex ? "0"
+            : w == 0 ? "*"
+            : w.ToString("0", CultureInfo.InvariantCulture)));
 
     public static double ClampCallersWidth(double width) =>
         double.IsFinite(width) && width > 0 ? Math.Clamp(width, MinCallersWidth, MaxCallersWidth) : DefaultCallersWidth;

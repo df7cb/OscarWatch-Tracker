@@ -1,6 +1,10 @@
+using System.Text.Json.Serialization;
+using OscarWatch.Core.Hardware;
+using OscarWatch.Core.Terminal.Modem;
+
 namespace OscarWatch.Core.Terminal;
 
-/// <summary>How OscarWatch Terminal reaches the packet modem. Only <see cref="Agwpe"/> is implemented today.</summary>
+/// <summary>How OscarWatch Terminal reaches the packet modem: AGWPE or the built-in soundcard modem today.</summary>
 public enum TerminalTransportKind
 {
     Agwpe,
@@ -21,6 +25,105 @@ public sealed class TerminalAgwpeSettings
 
     /// <summary>Connect when the Terminal window opens.</summary>
     public bool AutoConnect { get; set; } = true;
+}
+
+/// <summary>Whether the built-in modem may receive while it transmits.</summary>
+public enum TerminalDuplexMode
+{
+    /// <summary>Half duplex for simplex and same-band satellites (and no satellite), full duplex for crossband.</summary>
+    Auto,
+    Half,
+    Full
+}
+
+/// <summary>OscarWatch Terminal built-in 1200 baud AFSK soundcard modem.</summary>
+public sealed class TerminalBuiltInModemSettings
+{
+    public const double DefaultTxLevel = 0.5;
+    public const int DefaultPersist = 63;
+    public const int DefaultSlotTimeMs = 100;
+    public const int DefaultMaxChannelWaitMs = 5000;
+    public const int MaxChannelWaitLimitMs = 30000;
+    public const int DefaultTurnaroundGuardMs = 150;
+    public const int MaxTurnaroundGuardMs = 1000;
+    public const int DefaultWatchdogSeconds = 10;
+    public const int MinWatchdogSeconds = 1;
+    public const int MaxWatchdogSeconds = 60;
+
+    /// <summary>A longer TXTAIL than this delays hearing the digipeat on a simplex satellite.</summary>
+    public const int LongHalfDuplexTailMs = 50;
+
+    /// <summary>Durable PortAudio device names; empty uses the system default.</summary>
+    public string InputDeviceId { get; set; } = "";
+    public string InputDeviceDisplayName { get; set; } = "";
+    public string OutputDeviceId { get; set; } = "";
+    public string OutputDeviceDisplayName { get; set; } = "";
+
+    /// <summary>Output level, 0.01 to 1. Set so the radio deviates about 3 kHz.</summary>
+    public double TxLevel { get; set; } = DefaultTxLevel;
+
+    public TerminalDuplexMode Duplex { get; set; } = TerminalDuplexMode.Auto;
+
+    /// <summary>In full duplex, still wait for a clear downlink before keying (off by default on crossband).</summary>
+    public bool WaitForClearChannelInFullDuplex { get; set; }
+
+    /// <summary>p-persistence (0 to 255): chance out of 256 of keying in each clear slot. Half duplex only.</summary>
+    public int Persist { get; set; } = DefaultPersist;
+
+    public int SlotTimeMs { get; set; } = DefaultSlotTimeMs;
+
+    /// <summary>Give up on a busy channel after this long and report it, rather than wait for the whole pass.</summary>
+    public int MaxChannelWaitMs { get; set; } = DefaultMaxChannelWaitMs;
+
+    /// <summary>Half duplex: ignore receive audio for this long after unkeying (soundcard latency and the radio's TX to RX switch).</summary>
+    public int TurnaroundGuardMs { get; set; } = DefaultTurnaroundGuardMs;
+
+    public AfskBitFixMode BitFix { get; set; } = AfskBitFixMode.SingleBit;
+
+    /// <summary>Unkey after this long on the air whatever is still queued.</summary>
+    public int WatchdogSeconds { get; set; } = DefaultWatchdogSeconds;
+
+    /// <summary>Refuse to transmit while the focused satellite is below the horizon.</summary>
+    public bool BlockTxBelowHorizon { get; set; } = true;
+
+    public PttMethod PttMethod { get; set; } = PttMethod.Vox;
+    public PttLine PttLine { get; set; } = PttLine.Rts;
+    public bool PttInvert { get; set; }
+    public string SeparatePttPort { get; set; } = "";
+
+    /// <summary>Extra wait after PTT before audio; the TXDELAY flags already cover the radio's key-up time.</summary>
+    public int PttLeadMs { get; set; }
+
+    /// <summary>Extra PTT hold after the audio has drained; TXTAIL flags already cover the end of the frame.</summary>
+    public int PttTailMs { get; set; }
+
+    public PttOptions ToPttOptions() =>
+        new(PttMethod, PttLine, PttInvert, SeparatePttPort ?? "", PttLeadMs, PttTailMs);
+
+    public void Normalise()
+    {
+        InputDeviceId ??= "";
+        InputDeviceDisplayName ??= "";
+        OutputDeviceId ??= "";
+        OutputDeviceDisplayName ??= "";
+        SeparatePttPort = (SeparatePttPort ?? "").Trim();
+        TxLevel = double.IsFinite(TxLevel) ? Math.Clamp(TxLevel, 0.01, 1.0) : DefaultTxLevel;
+        if (!Enum.IsDefined(Duplex))
+            Duplex = TerminalDuplexMode.Auto;
+        if (!Enum.IsDefined(BitFix))
+            BitFix = AfskBitFixMode.SingleBit;
+        if (!Enum.IsDefined(PttMethod))
+            PttMethod = PttMethod.Vox;
+        if (!Enum.IsDefined(PttLine))
+            PttLine = PttLine.Rts;
+        Persist = Math.Clamp(Persist, 0, 255);
+        SlotTimeMs = Math.Clamp(SlotTimeMs, 10, 1000);
+        MaxChannelWaitMs = Math.Clamp(MaxChannelWaitMs, 0, MaxChannelWaitLimitMs);
+        TurnaroundGuardMs = Math.Clamp(TurnaroundGuardMs, 0, MaxTurnaroundGuardMs);
+        WatchdogSeconds = Math.Clamp(WatchdogSeconds, MinWatchdogSeconds, MaxWatchdogSeconds);
+        PttLeadMs = Math.Clamp(PttLeadMs, 0, PttOptions.MaxTimingMs);
+        PttTailMs = Math.Clamp(PttTailMs, 0, PttOptions.MaxTimingMs);
+    }
 }
 
 /// <summary>Reserved for the KISS over TCP transport.</summary>
@@ -45,6 +148,9 @@ public sealed class TerminalSatelliteProfileSettings
     public string Path { get; set; } = "";
     public string UhmName { get; set; } = "";
     public string ModemHint { get; set; } = "";
+
+    /// <summary>Forces the link type; null works it out from the satellite's frequencies.</summary>
+    public TerminalLinkType? LinkType { get; set; }
 }
 
 public sealed class TerminalMacro
@@ -101,6 +207,11 @@ public sealed class TerminalSettings
     public TerminalAgwpeSettings Agwpe { get; set; } = new();
     public TerminalKissTcpSettings KissTcp { get; set; } = new();
     public TerminalKissSerialSettings KissSerial { get; set; } = new();
+    public TerminalBuiltInModemSettings BuiltIn { get; set; } = new();
+
+    /// <summary>Zero-based radio port frames are sent to and accepted from: the AGWPE port, or 0 for the built-in modem.</summary>
+    [JsonIgnore]
+    public int ActiveRadioPort => Transport == TerminalTransportKind.Agwpe ? Agwpe.RadioPort : 0;
 
     /// <summary>Terminal callsign; empty uses the ground station callsign.</summary>
     public string Callsign { get; set; } = "";
@@ -118,6 +229,9 @@ public sealed class TerminalSettings
     public bool AutoLog { get; set; } = true;
     public bool ScrollToLastLine { get; set; } = true;
     public bool ShowCallers { get; set; } = true;
+
+    /// <summary>The station panel shows the audio waterfall tab instead of station info.</summary>
+    public bool ShowWaterfall { get; set; }
     public int TxDelaySeconds { get; set; }
 
     public const int DefaultModemTxDelayMs = 300;
@@ -200,6 +314,10 @@ public sealed class TerminalSettings
         Agwpe.RadioPort = Math.Clamp(Agwpe.RadioPort, 0, 255);
         KissTcp ??= new TerminalKissTcpSettings();
         KissSerial ??= new TerminalKissSerialSettings();
+        BuiltIn ??= new TerminalBuiltInModemSettings();
+        BuiltIn.Normalise();
+        if (!Enum.IsDefined(Transport))
+            Transport = TerminalTransportKind.Agwpe;
         Callsign ??= "";
         Ssid = Math.Clamp(Ssid, 0, 15);
         SatelliteProfiles ??= [];
@@ -222,7 +340,8 @@ public sealed class TerminalSettings
         FontSize = ClampFontSize(FontSize, DefaultLogFontSize);
         QsoFontSize = ClampFontSize(QsoFontSize, DefaultStationFontSize);
         HeardFontSize = ClampFontSize(HeardFontSize, DefaultStationFontSize);
-        LogColumnWidths = TerminalTableLayout.Normalise(LogColumnWidths, TerminalTableLayout.DefaultLogColumns);
+        LogColumnWidths = TerminalTableLayout.Normalise(
+            TerminalTableLayout.MigrateLogColumns(LogColumnWidths), TerminalTableLayout.DefaultLogColumns);
         QsoColumnWidths = TerminalTableLayout.Normalise(QsoColumnWidths, TerminalTableLayout.DefaultQsoColumns);
         HeardColumnWidths = TerminalTableLayout.Normalise(
             TerminalTableLayout.MigrateHeardColumns(HeardColumnWidths), TerminalTableLayout.DefaultHeardColumns);

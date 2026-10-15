@@ -1,3 +1,4 @@
+using OscarWatch.Core.Models;
 using OscarWatch.Core.Terminal;
 
 namespace OscarWatch.Tests.Terminal;
@@ -99,6 +100,55 @@ public sealed class TerminalTextAndProfileTests
         Assert.Equal("ISS", p.UhmName);
         Assert.False(p.IsBuiltIn);
     }
+
+    [Theory]
+    [InlineData(145825, 145825, TerminalLinkType.Simplex)]
+    [InlineData(145850, 145825, TerminalLinkType.SameBand)]
+    [InlineData(435300, 437400, TerminalLinkType.SameBand)]
+    [InlineData(145990, 437800, TerminalLinkType.Crossband)]
+    [InlineData(1268000, 435000, TerminalLinkType.Crossband)]
+    [InlineData(0, 145825, TerminalLinkType.Unknown)]
+    public void Link_type_from_uplink_and_downlink(double uplinkKHz, double downlinkKHz, TerminalLinkType expected) =>
+        Assert.Equal(expected, TerminalSatelliteProfiles.ClassifyLink(uplinkKHz, downlinkKHz));
+
+    [Fact]
+    public void Link_type_prefers_the_packet_mode_over_voice()
+    {
+        var modes = new[]
+        {
+            new SatelliteTransponderMode { Type = "FM Voice", UplinkKHz = 145990, DownlinkKHz = 437800 },
+            new SatelliteTransponderMode { Type = "APRS", UplinkKHz = 145825, DownlinkKHz = 145825 }
+        };
+        Assert.Equal(TerminalLinkType.Simplex, TerminalSatelliteProfiles.ClassifyLink(modes));
+        Assert.Equal(TerminalLinkType.Unknown, TerminalSatelliteProfiles.ClassifyLink([]));
+    }
+
+    [Fact]
+    public void Profile_carries_the_link_type_and_an_override_can_force_it()
+    {
+        var generic = TerminalSatelliteProfiles.Resolve("62391", "SAT-X", ["Packet"], null, TerminalLinkType.Crossband);
+        Assert.Equal(TerminalLinkType.Crossband, generic!.LinkType);
+
+        var iss = TerminalSatelliteProfiles.Resolve("25544", "ISS", ["Packet"], null);
+        Assert.Equal(TerminalLinkType.Simplex, iss!.LinkType);
+
+        var overrides = new List<TerminalSatelliteProfileSettings>
+        {
+            new() { NoradId = "62391", LinkType = TerminalLinkType.SameBand }
+        };
+        var forced = TerminalSatelliteProfiles.Resolve("62391", "SAT-X", ["Packet"], overrides, TerminalLinkType.Crossband);
+        Assert.Equal(TerminalLinkType.SameBand, forced!.LinkType);
+    }
+
+    [Theory]
+    [InlineData(TerminalSatelliteProfiles.ModemHintAfsk1200, true)]
+    [InlineData("", true)]
+    [InlineData(null, true)]
+    [InlineData(TerminalSatelliteProfiles.ModemHintBpsk1200, false)]
+    [InlineData(TerminalSatelliteProfiles.ModemHintG3ruh9600, false)]
+    [InlineData("9k6 GMSK", false)]
+    public void Built_in_modem_supports_1200_afsk_only(string? hint, bool expected) =>
+        Assert.Equal(expected, TerminalSatelliteProfiles.IsSupportedByBuiltIn(hint));
 
     [Fact]
     public void Settings_normalise_pads_macros_and_clamps()

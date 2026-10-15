@@ -1,4 +1,7 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using OscarWatch.Core.Ft4;
+using OscarWatch.Core.Hardware;
 
 namespace OscarWatch.Tests.Ft4;
 
@@ -25,8 +28,8 @@ public sealed class Ft4SettingsTests
         var settings = new Ft4Settings();
         Assert.True(settings.SkipRrr);
         Assert.True(settings.ApEnabled);
-        Assert.Equal(Ft4PttMethod.Vox, settings.PttMethod);
-        Assert.Equal(Ft4PttLine.Rts, settings.PttLine);
+        Assert.Equal(PttMethod.Vox, settings.PttMethod);
+        Assert.Equal(PttLine.Rts, settings.PttLine);
         Assert.Equal(200, settings.PttLeadMs);
         Assert.Equal(100, settings.PttTailMs);
         Assert.True(settings.HoldTxFrequency);
@@ -85,6 +88,28 @@ public sealed class Ft4SettingsTests
 
         Assert.Equal("CABLE Output (VB-Audio Virtual Cable)", settings.InputDeviceId);
         Assert.Equal("Speakers (Realtek)", settings.OutputDeviceId);
+    }
+
+    [Theory]
+    [InlineData("vox", PttMethod.Vox)]
+    [InlineData("cat", PttMethod.Cat)]
+    [InlineData("catPortHandshake", PttMethod.CatPortHandshake)]
+    [InlineData("separateComPort", PttMethod.SeparateComPort)]
+    [InlineData("manual", PttMethod.Manual)]
+    public void Ptt_settings_saved_with_the_old_ft4_enums_still_load(string savedMethod, PttMethod expected)
+    {
+        var json = $$"""{ "pttMethod": "{{savedMethod}}", "pttLine": "dtr", "pttInvert": true }""";
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+        };
+
+        var settings = JsonSerializer.Deserialize<Ft4Settings>(json, options)!;
+
+        Assert.Equal(expected, settings.PttMethod);
+        Assert.Equal(PttLine.Dtr, settings.PttLine);
+        Assert.True(settings.ToPttOptions().Invert);
     }
 
     [Fact]

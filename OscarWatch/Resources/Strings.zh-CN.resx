@@ -5255,7 +5255,7 @@
     <value>KISS 串口 TNC(计划中)</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>内置声卡调制解调器(计划中)</value>
+    <value>内置声卡调制解调器 (1200 AFSK)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} 计划在后续版本提供。目前使用 AGWPE。</value>
@@ -5655,5 +5655,278 @@
   </data>
   <data name="Terminal.Status.GridChanged" xml:space="preserve">
     <value>您的网格已从 {0} 变为 {1}。宏中的网格占位符会使用新网格；请检查手动输入了网格的宏。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRadio" xml:space="preserve">
+    <value>Terminal 独立 PTT 与电台都使用 {0}。请使用不同的 COM 端口或禁用其中一个设备。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndDownlink" xml:space="preserve">
+    <value>Terminal 独立 PTT 与下行电台都使用 {0}。请使用不同的 COM 端口或禁用其中一个设备。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndUplink" xml:space="preserve">
+    <value>Terminal 独立 PTT 与上行电台都使用 {0}。请使用不同的 COM 端口或禁用其中一个设备。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndRotator" xml:space="preserve">
+    <value>Terminal 独立 PTT 与旋转器都使用 {0}。请使用不同的 COM 端口或禁用其中一个设备。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndGps" xml:space="preserve">
+    <value>Terminal 独立 PTT 与 GPS 都使用 {0}。请使用不同的 COM 端口或禁用其中一个设备。</value>
+  </data>
+  <data name="ComPort.Ft4PttAndTerminalPtt" xml:space="preserve">
+    <value>FT4 独立 PTT 与 Terminal 独立 PTT 都使用 {0}。请使用不同的 COM 端口或禁用其中一个设备。</value>
+  </data>
+  <data name="ComPort.TerminalPttAndFt4Ptt" xml:space="preserve">
+    <value>Terminal 独立 PTT 与 FT4 独立 PTT 都使用 {0}。请使用不同的 COM 端口或禁用其中一个设备。</value>
+  </data>
+  <data name="Terminal.Col.Quality" xml:space="preserve">
+    <value>质量</value>
+  </data>
+  <data name="Terminal.Col.Quality.Tip" xml:space="preserve">
+    <value>解码质量：内置调制解调器中无误接收此帧的解码器所占比例。</value>
+  </data>
+  <data name="Terminal.LinkType" xml:space="preserve">
+    <value>链路</value>
+  </data>
+  <data name="Terminal.LinkType.Auto" xml:space="preserve">
+    <value>自动</value>
+  </data>
+  <data name="Terminal.LinkType.Simplex" xml:space="preserve">
+    <value>单工（同一频率）</value>
+  </data>
+  <data name="Terminal.LinkType.SameBand" xml:space="preserve">
+    <value>同频段</value>
+  </data>
+  <data name="Terminal.LinkType.Crossband" xml:space="preserve">
+    <value>跨频段</value>
+  </data>
+  <data name="Terminal.Modem.BitFix" xml:space="preserve">
+    <value>位纠错</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Help" xml:space="preserve">
+    <value>对校验和错误的帧翻转一位（或相邻两位）后重新校验以修复。单位是安全的默认值。相邻位对能救回更多弱帧，但占用更多处理器时间。</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Off" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Single" xml:space="preserve">
+    <value>单位</value>
+  </data>
+  <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
+    <value>单位和相邻位对</value>
+  </data>
+  <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
+    <value>卫星在地平线以下时不发射</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
+    <value>调制解调器：OscarWatch 1200 AFSK，{0}，输入 {1}%，已解码 {2} 帧（纠错 {3}）</value>
+  </data>
+  <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
+    <value>声卡</value>
+  </data>
+  <data name="Terminal.Modem.Channel" xml:space="preserve">
+    <value>信道接入</value>
+  </data>
+  <data name="Terminal.Modem.Decode" xml:space="preserve">
+    <value>解码录音</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Button" xml:space="preserve">
+    <value>解码 WAV 文件</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Failed" xml:space="preserve">
+    <value>无法解码录音：{0}</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Help" xml:space="preserve">
+    <value>在不发射的情况下用内置调制解调器解码 WAV 录音，例如您录制的过境或 WA8LMF TNC Test CD 中的音轨。切勿通过电台播放测试 CD。</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerTitle" xml:space="preserve">
+    <value>选择 WAV 录音</value>
+  </data>
+  <data name="Terminal.Modem.Decode.PickerType" xml:space="preserve">
+    <value>WAV 音频</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Running" xml:space="preserve">
+    <value>正在解码 {0}…</value>
+  </data>
+  <data name="Terminal.Modem.Decode.Summary" xml:space="preserve">
+    <value>使用 {3} 条解码路径，从 {2} 秒音频中解码 {0} 帧（位纠错 {1} 帧）。</value>
+  </data>
+  <data name="Terminal.Modem.Duplex" xml:space="preserve">
+    <value>双工</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Auto" xml:space="preserve">
+    <value>自动（根据卫星链路类型）</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Full" xml:space="preserve">
+    <value>全双工（发射时接收）</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.FullShort" xml:space="preserve">
+    <value>全双工</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Half" xml:space="preserve">
+    <value>半双工（单工和同频段）</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.HalfShort" xml:space="preserve">
+    <value>半双工</value>
+  </data>
+  <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
+    <value>ISS 等单工卫星使用同一频率，因此调制解调器会等待信道空闲，发射时静音接收，并在重新接收前留出短暂保护时间。跨频段卫星可以全双工运行，您能听到自己的数据包经数字中继返回。</value>
+  </data>
+  <data name="Terminal.Modem.Guard" xml:space="preserve">
+    <value>收发切换保护 (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Input" xml:space="preserve">
+    <value>输入（来自电台）</value>
+  </data>
+  <data name="Terminal.Modem.Level" xml:space="preserve">
+    <value>输入电平</value>
+  </data>
+  <data name="Terminal.Modem.Level.Clipping" xml:space="preserve">
+    <value>输入 {0}%：削波。请调低电台数据输出或 Windows 录音电平。</value>
+  </data>
+  <data name="Terminal.Modem.Level.Failed" xml:space="preserve">
+    <value>无法打开输入：{0}</value>
+  </data>
+  <data name="Terminal.Modem.Level.Help" xml:space="preserve">
+    <value>在信道繁忙时以 30 到 70% 为目标。尽量使用电台的数据接口，因为扬声器输出会随音量旋钮变化。</value>
+  </data>
+  <data name="Terminal.Modem.Level.Idle" xml:space="preserve">
+    <value>勾选“监视输入”以查看电平。</value>
+  </data>
+  <data name="Terminal.Modem.Level.Low" xml:space="preserve">
+    <value>输入 {0}%：过低。请调高电台数据输出或 Windows 录音电平。</value>
+  </data>
+  <data name="Terminal.Modem.Level.Ok" xml:space="preserve">
+    <value>输入 {0}%：良好。</value>
+  </data>
+  <data name="Terminal.Modem.MaxWait" xml:space="preserve">
+    <value>最长等待 (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Monitor" xml:space="preserve">
+    <value>监视输入</value>
+  </data>
+  <data name="Terminal.Modem.Output" xml:space="preserve">
+    <value>输出（到电台）</value>
+  </data>
+  <data name="Terminal.Modem.Persist" xml:space="preserve">
+    <value>坚持度（0 到 255）</value>
+  </data>
+  <data name="Terminal.Modem.Ptt" xml:space="preserve">
+    <value>按键发射 (PTT)</value>
+  </data>
+  <data name="Terminal.Modem.Ptt.Help" xml:space="preserve">
+    <value>VOX 根据音频控制发射。CAT 使用电台控制中的电台连接。独立 COM 端口驱动 USB 接口上的 RTS 或 DTR。请在电台上设置发射超时定时器作为硬件保护。</value>
+  </data>
+  <data name="Terminal.Modem.PttInvert" xml:space="preserve">
+    <value>反相</value>
+  </data>
+  <data name="Terminal.Modem.PttLead" xml:space="preserve">
+    <value>PTT 提前 (ms)</value>
+  </data>
+  <data name="Terminal.Modem.PttLine" xml:space="preserve">
+    <value>信号线</value>
+  </data>
+  <data name="Terminal.Modem.PttPort" xml:space="preserve">
+    <value>PTT COM 端口</value>
+  </data>
+  <data name="Terminal.Modem.PttTail" xml:space="preserve">
+    <value>PTT 拖尾 (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="Terminal.Modem.SlotTime" xml:space="preserve">
+    <value>时隙 (ms)</value>
+  </data>
+  <data name="Terminal.Modem.Soundcard" xml:space="preserve">
+    <value>声卡</value>
+  </data>
+  <data name="Terminal.Modem.TestTone" xml:space="preserve">
+    <value>测试音</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Alternating" xml:space="preserve">
+    <value>1200 与 2200 Hz 交替</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Done" xml:space="preserve">
+    <value>测试音已结束。</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
+    <value>测试音失败：{0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
+    <value>以上方的发射电平让电台发射 5 秒。FM 电台请将电平调至约 3 kHz 频偏。请发射到假负载或空闲频率上。</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Mark" xml:space="preserve">
+    <value>传号 (1200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Send" xml:space="preserve">
+    <value>发送</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Sending" xml:space="preserve">
+    <value>正在发送测试音…</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Space" xml:space="preserve">
+    <value>空号 (2200 Hz)</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.Stopped" xml:space="preserve">
+    <value>测试音已停止。</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel" xml:space="preserve">
+    <value>发射电平</value>
+  </data>
+  <data name="Terminal.Modem.Unsupported" xml:space="preserve">
+    <value>{0} 使用 {1}。内置调制解调器仅解码 1200 AFSK。此卫星请通过 AGWPE 使用 UZ7HO。</value>
+  </data>
+  <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
+    <value>全双工时也等待信道空闲</value>
+  </data>
+  <data name="Terminal.Modem.Watchdog" xml:space="preserve">
+    <value>发射看门狗（秒）</value>
+  </data>
+  <data name="Terminal.PttRecovered" xml:space="preserve">
+    <value>Terminal 发射期间 OscarWatch 意外关闭。已向电台发送 CAT 接收命令。请确认电台已停止发射。</value>
+  </data>
+  <data name="Terminal.PttRecovered.Dismiss" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
+    <value>内置调制解调器使用连接到电台的声卡。请在“声卡”选项卡中选择设备、电平和 PTT。</value>
+  </data>
+  <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
+    <value>半双工下 TXTAIL 过长：在 ISS 等单工卫星上，超过 50 ms 的拖尾会延迟接收，可能错过数字中继返回的副本。通常 30 到 50 ms 就足够。</value>
+  </data>
+  <data name="Terminal.Settings.Tab.Soundcard" xml:space="preserve">
+    <value>声卡</value>
+  </data>
+  <data name="Terminal.Status.BelowHorizon" xml:space="preserve">
+    <value>未发送：卫星在地平线以下。地面数据包通信可在 Terminal 设置中更改此项。</value>
+  </data>
+  <data name="Terminal.Status.ChannelBusy" xml:space="preserve">
+    <value>未发送：信道一直繁忙。请在较空闲时重试。</value>
+  </data>
+  <data name="Terminal.Status.UplinkHoldFailed" xml:space="preserve">
+    <value>未发送：电台无法为同频段发射保持上行频率。</value>
+  </data>
+  <data name="Terminal.Status.Watchdog" xml:space="preserve">
+    <value>发射被 {0} 秒看门狗停止。请检查 PTT 和声卡输出。</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.BuiltInHelp" xml:space="preserve">
+    <value>内置调制解调器在开始发射后的 TX 延迟期间发送标志，让电台和接收站在第一帧之前稳定，并加上 TX 拖尾以免截断最后几位。300 ms 适合大多数 FM 电台；使用 CAT 或响应快的数据接口时，150 到 200 ms 通常就够。在 ISS 等单工卫星上，请将拖尾保持在 30 到 50 ms。</value>
+  </data>
+  <data name="Terminal.Waterfall" xml:space="preserve">
+    <value>瀑布图</value>
+  </data>
+  <data name="Terminal.Waterfall.Tip" xml:space="preserve">
+    <value>内置声卡调制解调器的实时接收音频，300 到 3000 Hz。数据包显示为跨越 1200 和 2200 Hz 标记的突发信号。</value>
+  </data>
+  <data name="Terminal.Station.Tabs" xml:space="preserve">
+    <value>电台信息和瀑布图</value>
+  </data>
+  <data name="Terminal.Waterfall.Idle" xml:space="preserve">
+    <value>连接内置声卡调制解调器以查看接收音频。</value>
+  </data>
+  <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
+    <value>瀑布图需要内置声卡调制解调器。AGWPE 调制解调器不共享其音频。</value>
   </data>
 </root>

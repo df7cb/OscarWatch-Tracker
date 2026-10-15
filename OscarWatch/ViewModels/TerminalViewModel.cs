@@ -8,6 +8,7 @@ using OscarWatch.Core.Models;
 using OscarWatch.Core.Services;
 using OscarWatch.Core.Terminal;
 using OscarWatch.Core.Terminal.Uhm;
+using OscarWatch.Hardware;
 using OscarWatch.Localization;
 using OscarWatch.Terminal;
 using Serilog;
@@ -25,6 +26,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
     private readonly ILocalizationService _l;
     private readonly TerminalService _service;
     private readonly IQsoLogbookRepository _logbook;
+    private readonly PttCrashRecovery? _pttRecovery;
     private readonly DispatcherTimer _uiTimer;
     private readonly List<TerminalMessageRowViewModel> _allRows = [];
     private IReadOnlySet<string> _workedCalls = new HashSet<string>(StringComparer.Ordinal);
@@ -39,7 +41,8 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         FrequencyOverlayViewModel frequencyOverlay,
         ILocalizationService localization,
         TerminalService service,
-        IQsoLogbookRepository logbook)
+        IQsoLogbookRepository logbook,
+        PttCrashRecovery? pttRecovery = null)
     {
         _settings = settings;
         _tracker = tracker;
@@ -47,6 +50,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         _l = localization;
         _service = service;
         _logbook = logbook;
+        _pttRecovery = pttRecovery;
 
         var terminal = _settings.Current.Terminal;
         _scrollToLastLine = terminal.ScrollToLastLine;
@@ -78,7 +82,107 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
                 Log.Warning(ex, "Terminal refresh failed");
             }
         };
+        _waterfallTimer = new DispatcherTimer { Interval = WaterfallInterval };
+        _waterfallTimer.Tick += (_, _) => RefreshWaterfall();
+        _stationTabIndex = terminal.ShowWaterfall ? WaterfallTab : 0;
+        _waterfallStatusText = _l.Get("Terminal.Waterfall.Idle");
+
         StatusLine = _l.Get("Terminal.Status.Ready");
+    }
+
+    private const int WaterfallTab = 1;
+    private static readonly TimeSpan WaterfallInterval = TimeSpan.FromMilliseconds(100);
+    private readonly DispatcherTimer _waterfallTimer;
+    private bool _waterfallHasPicture;
+    private float[]? _smoothedSpectrum;
+    private const float WaterfallSmoothing = 0.7f;
+
+    /// <summary>Narrower than the FT4 default so flat FM hiss shows as texture rather than plain dark blue.</summary>
+    public const double WaterfallRangeDb = 25;
+
+    /// <summary>Silence and soundcard hiss stay dark below this; a received packet is tens of dB above it.</summary>
+    public const double WaterfallMinNoiseFloorDb = -105;
+
+    public static IReadOnlyList<double> PacketToneMarkersHz { get; } = [1200, 2200];
+
+    public const double WaterfallMinHz = 300;
+    public const double WaterfallMaxHz = 3000;
+
+    [ObservableProperty] private float[]? _packetSpectrum;
+    [ObservableProperty] private string _waterfallStatusText;
+
+    /// <summary>0: station info, 1: audio waterfall.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsWaterfallTab))]
+    private int _stationTabIndex;
+
+    public bool IsWaterfallTab => StationTabIndex == WaterfallTab;
+
+    partial void OnStationTabIndexChanged(int value)
+    {
+        if (value == WaterfallTab)
+            RefreshWaterfall();
+        _settings.Current.Terminal.ShowWaterfall = value == WaterfallTab;
+        _settings.RequestSave();
+        UpdateWaterfallTimer();
+    }
+
+    private void UpdateWaterfallTimer()
+    {
+        if (_windowOpen && StationTabIndex == WaterfallTab)
+            _waterfallTimer.Start();
+        else
+            _waterfallTimer.Stop();
+    }
+
+    private void RefreshWaterfall()
+    {
+        try
+        {
+            var modem = _service.BuiltInModem;
+            if (modem is null || !IsConnected)
+            {
+                WaterfallStatusText = _l.Get(_settings.Current.Terminal.Transport == TerminalTransportKind.BuiltIn
+                    ? "Terminal.Waterfall.Idle"
+                    : "Terminal.Waterfall.NeedsBuiltIn");
+                if (_waterfallHasPicture)
+                {
+                    PacketSpectrum = null;
+                    _waterfallHasPicture = false;
+                    _smoothedSpectrum = null;
+                }
+
+                return;
+            }
+
+            var bins = new float[Controls.Ft4WaterfallControl.SpectrumColumns];
+            if (modem.TryBuildSpectrum(bins, WaterfallMinHz, WaterfallMaxHz))
+            {
+                PacketSpectrum = SmoothSpectrum(bins);
+                _waterfallHasPicture = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Terminal waterfall refresh failed");
+        }
+    }
+
+    /// <summary>
+    /// Light time smoothing so clicks do not paint whole white rows. Kept short so FM hiss
+    /// still shows as moving texture and a packet burst stays a sharp block.
+    /// </summary>
+    internal float[] SmoothSpectrum(float[] bins)
+    {
+        if (_smoothedSpectrum is null || _smoothedSpectrum.Length != bins.Length)
+        {
+            _smoothedSpectrum = (float[])bins.Clone();
+            return bins;
+        }
+
+        for (var i = 0; i < bins.Length; i++)
+            _smoothedSpectrum[i] += (bins[i] - _smoothedSpectrum[i]) * WaterfallSmoothing;
+        return (float[])_smoothedSpectrum.Clone();
     }
 
     public ObservableCollection<TerminalMessageRowViewModel> Rows { get; } = [];
@@ -142,6 +246,24 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private bool _isRunning;
     [ObservableProperty] private bool _hasProfile;
 
+    /// <summary>Connected, and the modem can work the focused satellite.</summary>
+    [ObservableProperty] private bool _canTransmit;
+    [ObservableProperty] private string _modemBannerText = "";
+    [ObservableProperty] private bool _hasModemBanner;
+    [ObservableProperty] private bool _hasPttRecoveryNotice;
+
+    /// <summary>The built-in modem reports how many of its decoders copied each frame.</summary>
+    [ObservableProperty] private bool _showQualityColumn;
+
+    partial void OnShowQualityColumnChanged(bool value) => RefreshColumnLayouts();
+
+    [RelayCommand]
+    private void DismissPttRecoveryNotice()
+    {
+        _pttRecovery?.AcknowledgeNotice();
+        HasPttRecoveryNotice = false;
+    }
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsPlainFormat))]
     private bool _isAprsFormat = true;
@@ -199,6 +321,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
     {
         _windowOpen = true;
         _uiTimer.Start();
+        UpdateWaterfallTimer();
         try
         {
             ResolveSatelliteContext();
@@ -217,6 +340,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
     {
         _windowOpen = false;
         _uiTimer.Stop();
+        UpdateWaterfallTimer();
         _ = StopServiceAsync();
     }
 
@@ -302,11 +426,13 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
     private void RefreshColumnLayouts()
     {
         var t = _settings.Current.Terminal;
-        t.LogColumnWidths = TerminalTableLayout.Normalise(t.LogColumnWidths, TerminalTableLayout.DefaultLogColumns);
+        t.LogColumnWidths = TerminalTableLayout.Normalise(
+            TerminalTableLayout.MigrateLogColumns(t.LogColumnWidths), TerminalTableLayout.DefaultLogColumns);
         t.QsoColumnWidths = TerminalTableLayout.Normalise(t.QsoColumnWidths, TerminalTableLayout.DefaultQsoColumns);
         t.HeardColumnWidths = TerminalTableLayout.Normalise(
             TerminalTableLayout.MigrateHeardColumns(t.HeardColumnWidths), TerminalTableLayout.DefaultHeardColumns);
-        LogColumns = TerminalTableLayout.ToColumnDefinitions(t.LogColumnWidths);
+        LogColumns = TerminalTableLayout.ToColumnDefinitions(t.LogColumnWidths,
+            ShowQualityColumn ? null : TerminalTableLayout.QualityColumnIndex);
         QsoColumns = TerminalTableLayout.ToColumnDefinitions(t.QsoColumnWidths);
         HeardColumns = TerminalTableLayout.ToColumnDefinitions(t.HeardColumnWidths);
     }
@@ -438,11 +564,28 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
                 TerminalSendResult.NoCallsign => _l.Get("Terminal.Status.NoCallsign"),
                 TerminalSendResult.NotAprs => _l.Get("Terminal.Status.PositionNeedsAprs"),
                 TerminalSendResult.NoPosition => _l.Get("Terminal.Status.PositionUnknown"),
-                _ => _l.Get("Terminal.Status.SendFailed"),
+                _ => ModemSendFailureText(result) ?? _l.Get("Terminal.Status.SendFailed"),
             };
         }
 
         RefreshSendPosition(DateTime.UtcNow);
+    }
+
+    /// <summary>Messages for the built-in modem's transmit blocks and failures.</summary>
+    private string? ModemSendFailureText(TerminalSendResult result) => result switch
+    {
+        TerminalSendResult.BelowHorizon => _l.Get("Terminal.Status.BelowHorizon"),
+        TerminalSendResult.UnsupportedModem => UnsupportedModemText(),
+        TerminalSendResult.ChannelBusy => _l.Get("Terminal.Status.ChannelBusy"),
+        TerminalSendResult.Watchdog => _l.Get("Terminal.Status.Watchdog", _settings.Current.Terminal.BuiltIn.WatchdogSeconds),
+        TerminalSendResult.UplinkHoldFailed => _l.Get("Terminal.Status.UplinkHoldFailed"),
+        _ => null
+    };
+
+    private string UnsupportedModemText()
+    {
+        var profile = _service.Profile;
+        return _l.Get("Terminal.Modem.Unsupported", profile?.Name ?? "-", profile?.ModemHint ?? "-");
     }
 
     private string DescribePosition(TerminalPositionFix fix)
@@ -455,7 +598,13 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
     private void RefreshSendPosition(DateTime now)
     {
         var cooling = now < _positionCooldownUntilUtc;
-        CanSendPosition = IsConnected && IsAprsFormat && HasProfile && !cooling;
+        CanSendPosition = CanTransmit && IsAprsFormat && HasProfile && !cooling;
+        if (HasModemBanner)
+        {
+            SendPositionTip = ModemBannerText;
+            return;
+        }
+
         if (cooling)
         {
             SendPositionTip = _l.Get("Terminal.SendPosition.Cooldown", Math.Ceiling((_positionCooldownUntilUtc - now).TotalSeconds));
@@ -605,7 +754,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
             TerminalSendResult.NoCallsign => _l.Get("Terminal.Status.NoCallsign"),
             TerminalSendResult.InvalidDestination => _l.Get("Terminal.Status.InvalidDestination"),
             TerminalSendResult.EmptyMessage => _l.Get("Terminal.Status.EmptyMessage"),
-            _ => _l.Get("Terminal.Status.SendFailed"),
+            _ => ModemSendFailureText(result) ?? _l.Get("Terminal.Status.SendFailed"),
         };
         if (result == TerminalSendResult.Sent && clearMessage)
             MessageText = "";
@@ -638,7 +787,8 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         var snapshot = _tracker.GetCurrent();
         var name = string.IsNullOrWhiteSpace(snapshot.SatelliteName) ? _frequencyOverlay.SatelliteName : snapshot.SatelliteName;
         var modeTypes = _frequencyOverlay.AvailableModes.Select(m => m.Type ?? "").Append(snapshot.ModeType).ToList();
-        var profile = TerminalSatelliteProfiles.Resolve(norad, name, modeTypes, _settings.Current.Terminal.SatelliteProfiles);
+        var linkType = TerminalSatelliteProfiles.ClassifyLink(_frequencyOverlay.AvailableModes);
+        var profile = TerminalSatelliteProfiles.Resolve(norad, name, modeTypes, _settings.Current.Terminal.SatelliteProfiles, linkType);
         _service.SetSatelliteContext(profile);
 
         HasProfile = profile is not null;
@@ -850,10 +1000,26 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
     {
         IsRunning = _service.IsRunning;
         IsConnected = _service.TransportState == TerminalTransportState.Connected;
-        var agw = _settings.Current.Terminal.Agwpe;
-        var endpoint = $"{agw.Host}:{agw.Port}";
+        var unsupported = _service.ProfileUnsupportedByBuiltIn;
+        ModemBannerText = unsupported ? UnsupportedModemText() : "";
+        HasModemBanner = unsupported;
+        CanTransmit = IsConnected && !unsupported;
+        HasPttRecoveryNotice = _pttRecovery?.HasNotice == true;
+        ShowQualityColumn = _service.BuiltInModem is not null;
+
+        var terminal = _settings.Current.Terminal;
+        var agw = terminal.Agwpe;
+        var endpoint = terminal.Transport == TerminalTransportKind.BuiltIn
+            ? _l.Get("Terminal.Modem.BuiltIn.Endpoint")
+            : $"{agw.Host}:{agw.Port}";
         ModemStatusText = _service.TransportState switch
         {
+            TerminalTransportState.Connected when _service.BuiltInModem is { } modem => _l.Get(
+                "Terminal.Modem.BuiltIn.Connected",
+                _l.Get(modem.IsHalfDuplex ? "Terminal.Modem.Duplex.HalfShort" : "Terminal.Modem.Duplex.FullShort"),
+                Math.Round(modem.InputLevel * 100),
+                modem.DecodedFrames,
+                modem.FixedFrames),
             TerminalTransportState.Connected => _l.Get("Terminal.Modem.Connected", endpoint,
                 string.IsNullOrWhiteSpace(_service.ModemDescription) ? "AGWPE" : _service.ModemDescription),
             TerminalTransportState.Connecting => _l.Get("Terminal.Modem.Connecting", endpoint),
@@ -1004,6 +1170,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
             return;
         _disposed = true;
         _uiTimer.Stop();
+        _waterfallTimer.Stop();
         _service.MessageAdded -= OnMessageAdded;
         _service.Changed -= OnServiceChanged;
         _service.Logged -= OnServiceLogged;

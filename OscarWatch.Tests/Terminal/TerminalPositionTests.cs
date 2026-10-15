@@ -159,4 +159,20 @@ public sealed class TerminalPositionTests
         Assert.Equal(72, migrated[6]);
         Assert.Null(TerminalTableLayout.MigrateHeardColumns(null));
     }
+
+    [Fact]
+    public void Old_log_layout_gains_quality_column_and_keeps_widths()
+    {
+        List<double> old = [30, 80, 96, 110, 92, 60, 0];
+        var migrated = TerminalTableLayout.Normalise(
+            TerminalTableLayout.MigrateLogColumns(old), TerminalTableLayout.DefaultLogColumns);
+        Assert.Equal([30, 80, 96, 110, 92, 60, 48, 0], migrated);
+    }
+
+    [Fact]
+    public void Collapsed_quality_column_has_zero_width()
+    {
+        Assert.Equal("12,76,96,104,92,56,0,*", TerminalTableLayout.ToColumnDefinitions(
+            TerminalTableLayout.DefaultLogColumns, TerminalTableLayout.QualityColumnIndex));
+    }
 }
