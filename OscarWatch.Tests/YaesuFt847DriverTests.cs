@@ -271,6 +271,51 @@ public sealed class YaesuFt847DriverTests
     }
 
     [Fact]
+    public void Pass_init_same_band_packet_stays_in_satellite_mode()
+    {
+        var transport = new RecordingYaesuCatTransport();
+        var controller = new RigController(_ => new YaesuFt847Driver(transport));
+        var settings = new RigSettings
+        {
+            Enabled = true,
+            Type = RigType.YaesuFt847,
+            Port = "COM1",
+            CatDelayMs = 0
+        };
+
+        var mode = new SatelliteTransponderMode
+        {
+            Type = "Packet",
+            DownlinkKHz = 145_825,
+            UplinkKHz = 145_825,
+            DownlinkMode = "FM",
+            UplinkMode = "FM",
+            Doppler = "NOR"
+        };
+
+        controller.Update(settings, new RigTrackingContext
+        {
+            TrackState = new SatelliteTrackState
+            {
+                Name = "ISS",
+                NoradId = "25544",
+                Subpoint = new GeoCoordinate(0, 0),
+                LookAngles = new LookAngles(180, 20, 800, 0)
+            },
+            Mode = mode,
+            Corrected = DopplerFrequencyCalculator.Compute(mode, 0, 0)
+        });
+
+        Assert.Contains(transport.SentFrames, f => f.SequenceEqual(YaesuFt847CatCodec.SatelliteModeOn.ToArray()));
+        Assert.DoesNotContain(transport.SentFrames, f => f.SequenceEqual(YaesuFt847CatCodec.SatelliteModeOff.ToArray()));
+
+        var rx = transport.SentFrames.Where(f => f.Length == 5 && f[4] == 0x11).ToList();
+        var tx = transport.SentFrames.Where(f => f.Length == 5 && f[4] == 0x21).ToList();
+        Assert.Contains(rx, f => YaesuFt847CatCodec.DecodeFrequency10Hz(f) == 145_825_000);
+        Assert.Contains(tx, f => YaesuFt847CatCodec.DecodeFrequency10Hz(f) == 145_825_000);
+    }
+
+    [Fact]
     public void SupportsVfoExchange_is_false()
     {
         var driver = new YaesuFt847Driver(new RecordingYaesuCatTransport());
