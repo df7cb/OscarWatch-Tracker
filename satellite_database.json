@@ -109,6 +109,14 @@
         "doppler": "NOR"
       },
       {
+        "type": "UHF Packet",
+        "downlink": 437550,
+        "uplink": 437550,
+        "downlink_mode": "FM",
+        "uplink_mode": "FM",
+        "doppler": "NOR"
+      },
+      {
         "type": "SSTV (VHF)",
         "downlink": 145800,
         "uplink": 0,
