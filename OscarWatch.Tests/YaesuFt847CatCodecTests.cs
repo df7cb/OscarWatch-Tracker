@@ -22,6 +22,21 @@ public sealed class YaesuFt847CatCodecTests
     }
 
     [Fact]
+    public void BuildRepeaterOffsetCommand_matches_manual_5MHz_example()
+    {
+        var cmd = YaesuFt847CatCodec.BuildRepeaterOffsetCommand(5_000_000);
+        Assert.Equal(new byte[] { 0x00, 0x50, 0x00, 0x00, 0xF9 }, cmd);
+    }
+
+    [Fact]
+    public void BuildRepeaterShiftCommand_uses_manual_direction_bytes()
+    {
+        Assert.Equal(new byte[] { 0x09, 0x00, 0x00, 0x00, 0x09 }, YaesuFt847CatCodec.BuildRepeaterShiftCommand(-1));
+        Assert.Equal(new byte[] { 0x49, 0x00, 0x00, 0x00, 0x09 }, YaesuFt847CatCodec.BuildRepeaterShiftCommand(1));
+        Assert.Equal(new byte[] { 0x89, 0x00, 0x00, 0x00, 0x09 }, YaesuFt847CatCodec.BuildRepeaterShiftCommand(0));
+    }
+
+    [Fact]
     public void ApplyVfoTarget_sat_tx_uses_opcode_21()
     {
         var cmd = YaesuFt847CatCodec.BuildSetFrequencyCommand(145_900_000, YaesuFt847VfoTarget.SatTx, satelliteMode: true);

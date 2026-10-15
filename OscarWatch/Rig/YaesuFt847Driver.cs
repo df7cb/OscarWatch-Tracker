@@ -15,6 +15,11 @@ public sealed class YaesuFt847Driver : IRigDriver
     private readonly IYaesuCatTransport _transport;
     private readonly int _catDelayMs;
     private bool _satelliteMode;
+    private bool _repeaterSplit;
+    private long _repeaterRxHz;
+    private long _repeaterTxHz;
+    private long _appliedOffsetHz = -1;
+    private int _appliedShift = int.MinValue;
     private RigVfo _currentVfo = RigVfo.Main;
     private long _lastMainHz;
     private long _lastSubHz;
@@ -81,6 +86,27 @@ public sealed class YaesuFt847Driver : IRigDriver
         var uplink = _currentVfo is RigVfo.Sub or RigVfo.VfoB;
         StoreFrequencyHz(_currentVfo, rounded);
 
+        if (_repeaterSplit && !_satelliteMode)
+        {
+            if (uplink)
+                _repeaterTxHz = rounded;
+            else
+                _repeaterRxHz = rounded;
+
+            if (!_transport.IsOpen)
+                return true;
+
+            var wroteRx = true;
+            if (!uplink)
+            {
+                var rx = YaesuFt847CatCodec.BuildSetFrequencyCommand(rounded, YaesuFt847VfoTarget.Main, satelliteMode: false);
+                wroteRx = _transport.SendFrame(rx, _catDelayMs);
+            }
+
+            ApplyRepeaterShift();
+            return wroteRx;
+        }
+
         if (!_transport.IsOpen)
             return true;
 
@@ -104,11 +130,26 @@ public sealed class YaesuFt847Driver : IRigDriver
 
     public void SetSplitOn(bool on)
     {
-        // Satellite layout uses SAT mode instead of split.
+        // Same-band Doppler. Satellite mode rejects transmit when SAT RX and SAT TX
+        // are on one band (the radio shows Error and beeps). The main VFO is receive,
+        // and the uplink sits on a repeater shift.
+        _repeaterSplit = on;
+        if (on)
+            return;
+
+        _repeaterRxHz = 0;
+        _repeaterTxHz = 0;
+        _appliedOffsetHz = -1;
+        _appliedShift = int.MinValue;
+        if (_transport.IsOpen && !_satelliteMode)
+            _transport.SendFrame(YaesuFt847CatCodec.BuildRepeaterShiftCommand(0), _catDelayMs);
     }
 
     public void SetSatelliteMode(bool on)
     {
+        if (on && _repeaterSplit)
+            SetSplitOn(false);
+
         _satelliteMode = on;
         if (!_transport.IsOpen)
             return;
@@ -116,6 +157,29 @@ public sealed class YaesuFt847Driver : IRigDriver
         _transport.SendFrame(
             on ? YaesuFt847CatCodec.SatelliteModeOn : YaesuFt847CatCodec.SatelliteModeOff,
             _catDelayMs);
+    }
+
+    /// <summary>
+    /// Transmit frequency minus receive frequency. Plus shift when the uplink is above
+    /// the downlink, minus when it is below, simplex when CAT cannot tell them apart.
+    /// </summary>
+    private void ApplyRepeaterShift()
+    {
+        if (!_transport.IsOpen || _repeaterRxHz <= 0 || _repeaterTxHz <= 0)
+            return;
+
+        var delta = _repeaterTxHz - _repeaterRxHz;
+        var shift = Math.Abs(delta) < 10 ? 0 : Math.Sign(delta);
+        var offset = shift == 0 ? 0 : Math.Abs(delta);
+        if (shift == _appliedShift && offset == _appliedOffsetHz)
+            return;
+
+        if (shift != 0)
+            _transport.SendFrame(YaesuFt847CatCodec.BuildRepeaterOffsetCommand(offset), _catDelayMs);
+
+        _transport.SendFrame(YaesuFt847CatCodec.BuildRepeaterShiftCommand(shift), _catDelayMs);
+        _appliedShift = shift;
+        _appliedOffsetHz = offset;
     }
 
     public void ExchangeVfos()

@@ -2037,10 +2037,7 @@ public sealed class RigController : IRigController, IDisposable
             ? context.Mode.DownlinkKHz > 0 && context.Mode.UplinkKHz > 0
             : UsesMainSubSatelliteLayout(settings.Type)
               && (RigSatModeHelper.UseMainSubLayout(context.Mode.DownlinkKHz, context.Mode.UplinkKHz)
-                  || UsesIcomSatelliteOnlyLayout(settings.Type)
-                  // FT-847 SetSplitOn is a no-op. Same-band packet stays in SAT so RX and TX
-                  // are the SAT VFOs (0x11 / 0x21) instead of both landing on Main.
-                  || settings.Type == RigType.YaesuFt847);
+                  || UsesIcomSatelliteOnlyLayout(settings.Type));
 
     private static bool UsesIcomSplitAbLayout(RigSettings settings, RigTrackingContext context) =>
         IsIcomSatelliteLayoutRig(settings.Type)
