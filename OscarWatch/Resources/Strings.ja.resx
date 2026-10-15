@@ -5249,10 +5249,10 @@
     <value>AGWPE (Direwolf、UZ7HO soundmodem)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissTcp">
-    <value>KISS over TCP (予定)</value>
+    <value>KISS over TCP (Direwolf)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissSerial">
-    <value>KISS シリアル TNC (予定)</value>
+    <value>KISS シリアル TNC</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
     <value>内蔵サウンドモデム (1200 AFSK)</value>
@@ -5927,6 +5927,57 @@
     <value>受信音声を見るには内蔵サウンドモデムを接続してください。</value>
   </data>
   <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
-    <value>ウォーターフォールには内蔵サウンドモデムが必要です。AGWPE モデムは音声を共有しません。</value>
+    <value>ウォーターフォールには内蔵サウンドモデムが必要です。AGWPE や KISS のモデムは音声を共有しません。</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TcpHelp" xml:space="preserve">
+    <value>Direwolf は KISS over TCP を通常ポート 8001 で提供します (direwolf.conf に KISSPORT 8001)。ネットワーク経由で KISS を提供する他のモデムや TNC も同じように使えます。</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.SerialHelp" xml:space="preserve">
+    <value>COM ポートに接続したハードウェア TNC や TNC 内蔵無線機 (Mobilinkd、NinoTNC、Kenwood TH-D74 や TM-D710 など) 用です。先に TNC を KISS モードにしてください。OscarWatch は KISS モードの開始や終了を行いません。</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ComPort" xml:space="preserve">
+    <value>COM ポート</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Baud" xml:space="preserve">
+    <value>ボーレート</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Port" xml:space="preserve">
+    <value>KISS ポート (0~15)</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.FullDuplex" xml:space="preserve">
+    <value>全二重</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ParametersHelp" xml:space="preserve">
+    <value>接続するたびに、下のモデム TX ディレイとモデム TX テールと一緒に TNC に送信されます。ポートが 1 つの TNC ではポート 0 を使います。空きチャンネルを待たずに送信させる場合以外は全二重をオフのままにしてください。</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Test" xml:space="preserve">
+    <value>接続をテスト</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TestOk" xml:space="preserve">
+    <value>{0}: {1} を開き、パラメーターを送信しました。KISS は応答しないため、メッセージログで受信フレームを確認してください。</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.KissHelp" xml:space="preserve">
+    <value>KISS の TXDELAY と TXTAIL として TNC に送信されます。ほとんどの FM 無線機では 300 ms のディレイが適しています。ISS のようなシンプレックス衛星ではテールを 30~50 ms にしてください。同一バンド衛星で FT-847 を使う場合、OscarWatch はこの値で無線機をアップリンクに保持します。</value>
+  </data>
+  <data name="Terminal.Modem.Kiss.NoComPort" xml:space="preserve">
+    <value>COM ポート未選択</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRadio" xml:space="preserve">
+    <value>Terminal の KISS TNC と無線機が両方とも {0} を使用しています。別の COM ポートを使うか、どちらかの機器を無効にしてください。</value>
+  </data>
+  <data name="ComPort.TerminalKissAndDownlink" xml:space="preserve">
+    <value>Terminal の KISS TNC とダウンリンク無線機が両方とも {0} を使用しています。別の COM ポートを使うか、どちらかの機器を無効にしてください。</value>
+  </data>
+  <data name="ComPort.TerminalKissAndUplink" xml:space="preserve">
+    <value>Terminal の KISS TNC とアップリンク無線機が両方とも {0} を使用しています。別の COM ポートを使うか、どちらかの機器を無効にしてください。</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRotator" xml:space="preserve">
+    <value>Terminal の KISS TNC とローテーターが両方とも {0} を使用しています。別の COM ポートを使うか、どちらかの機器を無効にしてください。</value>
+  </data>
+  <data name="ComPort.TerminalKissAndGps" xml:space="preserve">
+    <value>Terminal の KISS TNC とGPSが両方とも {0} を使用しています。別の COM ポートを使うか、どちらかの機器を無効にしてください。</value>
+  </data>
+  <data name="ComPort.TerminalKissAndFt4Ptt" xml:space="preserve">
+    <value>Terminal の KISS TNC とFT4 の個別 PTTが両方とも {0} を使用しています。別の COM ポートを使うか、どちらかの機器を無効にしてください。</value>
   </data>
 </root>

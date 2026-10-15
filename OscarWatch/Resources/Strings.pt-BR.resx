@@ -5248,10 +5248,10 @@ Mais recente: {1} ({2})</value>
     <value>AGWPE (Direwolf, UZ7HO soundmodem)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissTcp">
-    <value>KISS sobre TCP (previsto)</value>
+    <value>KISS sobre TCP (Direwolf)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissSerial">
-    <value>TNC KISS serial (previsto)</value>
+    <value>TNC KISS serial</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
     <value>Soundmodem integrado (1200 AFSK)</value>
@@ -5926,6 +5926,57 @@ Mais recente: {1} ({2})</value>
     <value>Conecte o soundmodem integrado para ver o áudio de recepção.</value>
   </data>
   <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
-    <value>A cascata precisa do soundmodem integrado. Modems AGWPE não compartilham o áudio.</value>
+    <value>A cascata precisa do modem de som integrado. Modems AGWPE e KISS não compartilham o áudio.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TcpHelp" xml:space="preserve">
+    <value>O Direwolf oferece KISS sobre TCP, normalmente na porta 8001 (KISSPORT 8001 no direwolf.conf). Outros modems e TNCs que servem KISS pela rede funcionam da mesma forma.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.SerialHelp" xml:space="preserve">
+    <value>Para um TNC de hardware ou um rádio com TNC integrado numa porta COM, como Mobilinkd, NinoTNC ou Kenwood TH-D74 ou TM-D710. Coloque o TNC em modo KISS antes: o OscarWatch não liga nem desliga o modo KISS.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ComPort" xml:space="preserve">
+    <value>Porta COM</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Baud" xml:space="preserve">
+    <value>Taxa (baud)</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Port" xml:space="preserve">
+    <value>Porta KISS (0 a 15)</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.FullDuplex" xml:space="preserve">
+    <value>Full duplex</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ParametersHelp" xml:space="preserve">
+    <value>Enviados ao TNC a cada conexão, junto com o atraso TX e a cauda TX do modem abaixo. A porta 0 serve para TNCs de uma porta. Deixe o full duplex desligado, a menos que o TNC deva transmitir sem esperar o canal livre.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Test" xml:space="preserve">
+    <value>Testar conexão</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TestOk" xml:space="preserve">
+    <value>{0}: {1} aberto e parâmetros enviados. O KISS não responde, então verifique no registro de mensagens se chegam quadros.</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.KissHelp" xml:space="preserve">
+    <value>Enviados ao TNC como TXDELAY e TXTAIL do KISS. Atraso de 300 ms serve para a maioria dos rádios FM. Mantenha a cauda em 30 a 50 ms em satélites simplex como a ISS. Com um FT-847 num satélite da mesma banda, o OscarWatch também os usa para manter o rádio no uplink.</value>
+  </data>
+  <data name="Terminal.Modem.Kiss.NoComPort" xml:space="preserve">
+    <value>nenhuma porta COM escolhida</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRadio" xml:space="preserve">
+    <value>O TNC KISS do Terminal e o rádio usam ambos {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndDownlink" xml:space="preserve">
+    <value>O TNC KISS do Terminal e o rádio de downlink usam ambos {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndUplink" xml:space="preserve">
+    <value>O TNC KISS do Terminal e o rádio de uplink usam ambos {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRotator" xml:space="preserve">
+    <value>O TNC KISS do Terminal e o rotor usam ambos {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndGps" xml:space="preserve">
+    <value>O TNC KISS do Terminal e o GPS usam ambos {0}. Use portas COM diferentes ou desative um dispositivo.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndFt4Ptt" xml:space="preserve">
+    <value>O TNC KISS do Terminal e o PTT separado do FT4 usam ambos {0}. Use portas COM diferentes ou desative um dispositivo.</value>
   </data>
 </root>

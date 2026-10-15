@@ -5253,10 +5253,10 @@ LOS: {2}
     <value>AGWPE (Direwolf, UZ7HO soundmodem)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissTcp">
-    <value>KISS через TCP (планируется)</value>
+    <value>KISS через TCP (Direwolf)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissSerial">
-    <value>KISS через последовательный порт (планируется)</value>
+    <value>KISS TNC через последовательный порт</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
     <value>Встроенный звуковой модем (1200 AFSK)</value>
@@ -5931,6 +5931,57 @@ LOS: {2}
     <value>Подключите встроенный звуковой модем, чтобы видеть принимаемый звук.</value>
   </data>
   <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
-    <value>Для водопада нужен встроенный звуковой модем. Модемы AGWPE не передают свой звук.</value>
+    <value>Для водопада нужен встроенный звуковой модем. Модемы AGWPE и KISS не передают свой звук.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TcpHelp" xml:space="preserve">
+    <value>Direwolf предоставляет KISS через TCP, обычно на порту 8001 (KISSPORT 8001 в direwolf.conf). Другие модемы и TNC, отдающие KISS по сети, работают так же.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.SerialHelp" xml:space="preserve">
+    <value>Для аппаратного TNC или радиостанции со встроенным TNC на COM-порту, например Mobilinkd, NinoTNC, Kenwood TH-D74 или TM-D710. Сначала переведите TNC в режим KISS: OscarWatch не включает и не выключает KISS.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ComPort" xml:space="preserve">
+    <value>COM-порт</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Baud" xml:space="preserve">
+    <value>Скорость (бод)</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Port" xml:space="preserve">
+    <value>Порт KISS (от 0 до 15)</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.FullDuplex" xml:space="preserve">
+    <value>Полный дуплекс</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ParametersHelp" xml:space="preserve">
+    <value>Отправляются в TNC при каждом подключении вместе с задержкой TX и хвостом TX модема ниже. Для TNC с одним портом подходит порт 0. Не включайте полный дуплекс, если TNC не должен передавать, не дожидаясь свободного канала.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Test" xml:space="preserve">
+    <value>Проверить подключение</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TestOk" xml:space="preserve">
+    <value>{0}: {1} открыт, параметры отправлены. KISS не отвечает, поэтому смотрите принятые кадры в журнале сообщений.</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.KissHelp" xml:space="preserve">
+    <value>Отправляются в TNC как KISS TXDELAY и TXTAIL. Задержка 300 мс подходит для большинства FM-радиостанций. Для симплексных спутников, таких как МКС, держите хвост от 30 до 50 мс. С FT-847 на однодиапазонном спутнике OscarWatch также использует их, чтобы держать радиостанцию на частоте uplink.</value>
+  </data>
+  <data name="Terminal.Modem.Kiss.NoComPort" xml:space="preserve">
+    <value>COM-порт не выбран</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRadio" xml:space="preserve">
+    <value>KISS TNC терминала и радиостанция используют {0}. Выберите разные COM-порты или отключите одно из устройств.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndDownlink" xml:space="preserve">
+    <value>KISS TNC терминала и радиостанция downlink используют {0}. Выберите разные COM-порты или отключите одно из устройств.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndUplink" xml:space="preserve">
+    <value>KISS TNC терминала и радиостанция uplink используют {0}. Выберите разные COM-порты или отключите одно из устройств.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRotator" xml:space="preserve">
+    <value>KISS TNC терминала и поворотное устройство используют {0}. Выберите разные COM-порты или отключите одно из устройств.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndGps" xml:space="preserve">
+    <value>KISS TNC терминала и GPS используют {0}. Выберите разные COM-порты или отключите одно из устройств.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndFt4Ptt" xml:space="preserve">
+    <value>KISS TNC терминала и отдельный PTT FT4 используют {0}. Выберите разные COM-порты или отключите одно из устройств.</value>
   </data>
 </root>

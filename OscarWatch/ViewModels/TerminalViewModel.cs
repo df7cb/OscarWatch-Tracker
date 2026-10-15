@@ -1008,10 +1008,15 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         ShowQualityColumn = _service.BuiltInModem is not null;
 
         var terminal = _settings.Current.Terminal;
-        var agw = terminal.Agwpe;
-        var endpoint = terminal.Transport == TerminalTransportKind.BuiltIn
-            ? _l.Get("Terminal.Modem.BuiltIn.Endpoint")
-            : $"{agw.Host}:{agw.Port}";
+        var endpoint = terminal.Transport switch
+        {
+            TerminalTransportKind.BuiltIn => _l.Get("Terminal.Modem.BuiltIn.Endpoint"),
+            TerminalTransportKind.KissTcp => $"{terminal.KissTcp.Host}:{terminal.KissTcp.Port}",
+            TerminalTransportKind.KissSerial => string.IsNullOrWhiteSpace(terminal.KissSerial.PortName)
+                ? _l.Get("Terminal.Modem.Kiss.NoComPort")
+                : terminal.KissSerial.PortName,
+            _ => $"{terminal.Agwpe.Host}:{terminal.Agwpe.Port}",
+        };
         ModemStatusText = _service.TransportState switch
         {
             TerminalTransportState.Connected when _service.BuiltInModem is { } modem => _l.Get(

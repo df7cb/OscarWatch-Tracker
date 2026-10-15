@@ -5253,10 +5253,10 @@ Terbaru: {1} ({2})</value>
     <value>AGWPE (Direwolf, UZ7HO soundmodem)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissTcp">
-    <value>KISS lewat TCP (direncanakan)</value>
+    <value>KISS lewat TCP (Direwolf)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissSerial">
-    <value>TNC KISS serial (direncanakan)</value>
+    <value>TNC KISS serial</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
     <value>Soundmodem bawaan (1200 AFSK)</value>
@@ -5931,6 +5931,57 @@ Terbaru: {1} ({2})</value>
     <value>Sambungkan soundmodem bawaan untuk melihat audio terima.</value>
   </data>
   <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
-    <value>Waterfall memerlukan soundmodem bawaan. Modem AGWPE tidak membagikan audionya.</value>
+    <value>Waterfall memerlukan soundmodem bawaan. Modem AGWPE dan KISS tidak membagikan audionya.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TcpHelp" xml:space="preserve">
+    <value>Direwolf menyediakan KISS lewat TCP, biasanya di port 8001 (KISSPORT 8001 di direwolf.conf). Modem dan TNC lain yang menyediakan KISS lewat jaringan bekerja dengan cara yang sama.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.SerialHelp" xml:space="preserve">
+    <value>Untuk TNC perangkat keras atau radio dengan TNC bawaan di port COM, misalnya Mobilinkd, NinoTNC, atau Kenwood TH-D74 atau TM-D710. Masukkan TNC ke mode KISS terlebih dahulu: OscarWatch tidak menyalakan atau mematikan mode KISS.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ComPort" xml:space="preserve">
+    <value>Port COM</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Baud" xml:space="preserve">
+    <value>Baud rate</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Port" xml:space="preserve">
+    <value>Port KISS (0 sampai 15)</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.FullDuplex" xml:space="preserve">
+    <value>Full duplex</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ParametersHelp" xml:space="preserve">
+    <value>Dikirim ke TNC setiap kali terhubung, bersama TX delay dan TX tail modem di bawah. Port 0 cocok untuk TNC satu port. Biarkan full duplex mati kecuali TNC harus memancar tanpa menunggu kanal kosong.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Test" xml:space="preserve">
+    <value>Uji koneksi</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TestOk" xml:space="preserve">
+    <value>{0}: {1} dibuka dan parameter dikirim. KISS tidak membalas, jadi periksa log pesan untuk frame yang diterima.</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.KissHelp" xml:space="preserve">
+    <value>Dikirim ke TNC sebagai TXDELAY dan TXTAIL KISS. Delay 300 ms cocok untuk sebagian besar radio FM. Jaga tail di 30 sampai 50 ms pada satelit simplex seperti ISS. Dengan FT-847 pada satelit satu band, OscarWatch juga memakainya untuk menahan radio di frekuensi uplink.</value>
+  </data>
+  <data name="Terminal.Modem.Kiss.NoComPort" xml:space="preserve">
+    <value>belum ada port COM dipilih</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRadio" xml:space="preserve">
+    <value>TNC KISS Terminal dan radio sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndDownlink" xml:space="preserve">
+    <value>TNC KISS Terminal dan radio downlink sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndUplink" xml:space="preserve">
+    <value>TNC KISS Terminal dan radio uplink sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRotator" xml:space="preserve">
+    <value>TNC KISS Terminal dan rotator sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndGps" xml:space="preserve">
+    <value>TNC KISS Terminal dan GPS sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndFt4Ptt" xml:space="preserve">
+    <value>TNC KISS Terminal dan PTT terpisah FT4 sama-sama memakai {0}. Gunakan port COM berbeda atau nonaktifkan salah satu perangkat.</value>
   </data>
 </root>

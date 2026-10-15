@@ -60,6 +60,7 @@
         <a href="#aprs-is">APRS-IS</a> ·
         <a href="#modem-settings">Modem settings explained</a> ·
         <a href="#external-modem">Using Direwolf or UZ7HO</a> ·
+        <a href="#kiss">KISS modems and TNCs</a> ·
         <a href="#ft847">Yaesu FT-847</a> ·
         <a href="#problems">Problems</a> ·
         <a href="#words">Words used here</a>
@@ -478,6 +479,49 @@
         waterfall and the Q column are not used.
       </p>
 
+      <h2 id="kiss">Using a KISS modem or TNC</h2>
+      <p>
+        KISS is a simple way of passing packet frames between an application and a modem. Direwolf offers it over the
+        network, and many hardware TNCs and radios with a built-in TNC offer it on a serial port. Terminal can use either.
+      </p>
+      <h3>KISS over TCP (Direwolf)</h3>
+      <ol>
+        <li>In <code>direwolf.conf</code>, put <code>KISSPORT 8001</code> (it is on by default in most builds).</li>
+        <li>On the <strong>Modem</strong> tab of Terminal settings, set <strong>Connection</strong> to <strong>KISS over TCP
+          (Direwolf)</strong>. Leave the host as <code>127.0.0.1</code> and the port as <code>8001</code> if Direwolf runs on
+          the same PC.</li>
+        <li>Press <strong>Test connection</strong>. KISS sends nothing back, so a successful test means the connection
+          opened. Check the message log for received frames during a pass.</li>
+      </ol>
+      <h3>KISS serial TNC</h3>
+      <p>
+        This suits hardware TNCs such as the Mobilinkd and NinoTNC, and radios with a built-in TNC such as the Kenwood TH-D74
+        and TM-D710. <strong>Put the TNC in KISS mode before connecting.</strong> OscarWatch does not send any command to switch
+        the TNC into KISS or back out of it, so a TNC that starts in its own command mode must be switched by its own menu or
+        software first.
+      </p>
+      <ol>
+        <li>Set <strong>Connection</strong> to <strong>KISS serial TNC</strong>.</li>
+        <li>Choose the <strong>COM port</strong> and <strong>Baud rate</strong> of the TNC (often 9600, or 57600 or 115200
+          for USB TNCs). If the port is also used by the radio, rotator, GPS or FT4 push to talk, a warning shows and Terminal
+          will not open it.</li>
+        <li>Press <strong>Test connection</strong>.</li>
+      </ol>
+      <h3>KISS settings</h3>
+      <ul>
+        <li><strong>KISS port:</strong> 0 for a TNC with one radio port. Dual-port TNCs use 1 for the second port.</li>
+        <li><strong>Persistence</strong> and <strong>Slot time:</strong> how eagerly the TNC transmits on a busy channel. The
+          defaults (63 and 100 ms) suit most stations.</li>
+        <li><strong>Full duplex:</strong> leave off unless the TNC should transmit without waiting for a clear channel, for
+          example on a crossband satellite where you hear your own downlink.</li>
+        <li><strong>Modem TX delay</strong> and <strong>Modem TX tail</strong> are sent to the TNC as its TXDELAY and TXTAIL.
+          Keep the tail at 30 to 50 ms on simplex satellites such as the ISS.</li>
+      </ul>
+      <p>
+        These settings are sent to the TNC each time Terminal connects. If the connection drops, Terminal reconnects on its
+        own, as it does with AGWPE.
+      </p>
+
       <h2 id="ft847">Yaesu FT-847</h2>
       <p>
         The FT-847 cannot hold separate receive and transmit frequencies on the same band over CAT, which the ISS needs. For
@@ -508,7 +552,10 @@
         <li><strong>"Transmission stopped by the watchdog":</strong> push to talk or the soundcard output got stuck. Check the
           output device and the push to talk method on the Soundcard tab.</li>
         <li><strong>"Modem: cannot reach 127.0.0.1:8000":</strong> only when using Direwolf or UZ7HO. The application is not
-          running, or its AGWPE server is off or on another port.</li>
+          running, or its AGWPE server is off or on another port. For KISS over TCP the same message means Direwolf's
+          KISSPORT is off or on another port.</li>
+        <li><strong>KISS serial connects but nothing decodes or sends:</strong> the TNC is probably not in KISS mode, or the
+          baud rate is wrong. Switch the TNC to KISS with its own menu or software and check the baud rate.</li>
         <li><strong>UHM says the token was not accepted:</strong> create a new token on OscarWatch.org and save it in
           Settings.</li>
       </ul>
@@ -532,6 +579,7 @@
           <tr><td>AOS, LOS</td><td>Acquisition and loss of signal: when the satellite rises above and sets below your horizon.</td></tr>
           <tr><td>Deviation</td><td>How far an FM signal swings in frequency, which sets how loud you sound. About 3 kHz suits packet.</td></tr>
           <tr><td>AGWPE</td><td>A standard way for applications to talk to a separate soundmodem such as Direwolf or UZ7HO.</td></tr>
+          <tr><td>KISS, TNC</td><td>A TNC (terminal node controller) is a hardware packet modem. KISS is the simple framing many TNCs, and Direwolf, use to pass frames to an application.</td></tr>
         </tbody>
       </table>
     </main>

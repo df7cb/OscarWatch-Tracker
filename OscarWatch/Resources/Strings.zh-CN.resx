@@ -5249,10 +5249,10 @@
     <value>AGWPE(Direwolf、UZ7HO soundmodem)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissTcp">
-    <value>KISS over TCP(计划中)</value>
+    <value>KISS over TCP(Direwolf)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissSerial">
-    <value>KISS 串口 TNC(计划中)</value>
+    <value>KISS 串口 TNC</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
     <value>内置声卡调制解调器 (1200 AFSK)</value>
@@ -5927,6 +5927,57 @@
     <value>连接内置声卡调制解调器以查看接收音频。</value>
   </data>
   <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
-    <value>瀑布图需要内置声卡调制解调器。AGWPE 调制解调器不共享其音频。</value>
+    <value>瀑布图需要内置声卡调制解调器。AGWPE 和 KISS 调制解调器不共享其音频。</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TcpHelp" xml:space="preserve">
+    <value>Direwolf 提供 KISS over TCP,通常在 8001 端口(在 direwolf.conf 中设置 KISSPORT 8001)。其他通过网络提供 KISS 的调制解调器和 TNC 用法相同。</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.SerialHelp" xml:space="preserve">
+    <value>用于连接在 COM 端口上的硬件 TNC 或内置 TNC 的电台,例如 Mobilinkd、NinoTNC、Kenwood TH-D74 或 TM-D710。请先将 TNC 切换到 KISS 模式:OscarWatch 不会让它进入或退出 KISS。</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ComPort" xml:space="preserve">
+    <value>COM 端口</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Baud" xml:space="preserve">
+    <value>波特率</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Port" xml:space="preserve">
+    <value>KISS 端口(0 到 15)</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.FullDuplex" xml:space="preserve">
+    <value>全双工</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ParametersHelp" xml:space="preserve">
+    <value>每次连接时与下方的调制解调器 TX 延迟和 TX 尾音一起发送给 TNC。单端口 TNC 使用端口 0。除非希望 TNC 不等待信道空闲就发射,否则请保持全双工关闭。</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Test" xml:space="preserve">
+    <value>测试连接</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TestOk" xml:space="preserve">
+    <value>{0}:已打开 {1} 并发送参数。KISS 不会回复,请在消息日志中查看是否收到帧。</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.KissHelp" xml:space="preserve">
+    <value>作为 KISS TXDELAY 和 TXTAIL 发送给 TNC。300 ms 延迟适合大多数 FM 电台。在 ISS 等单工卫星上,尾音保持在 30 到 50 ms。在同频段卫星上使用 FT-847 时,OscarWatch 也会用这些值让电台停留在上行频率。</value>
+  </data>
+  <data name="Terminal.Modem.Kiss.NoComPort" xml:space="preserve">
+    <value>未选择 COM 端口</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRadio" xml:space="preserve">
+    <value>Terminal KISS TNC 与电台都使用 {0}。请使用不同的 COM 端口或停用其中一个设备。</value>
+  </data>
+  <data name="ComPort.TerminalKissAndDownlink" xml:space="preserve">
+    <value>Terminal KISS TNC 与下行电台都使用 {0}。请使用不同的 COM 端口或停用其中一个设备。</value>
+  </data>
+  <data name="ComPort.TerminalKissAndUplink" xml:space="preserve">
+    <value>Terminal KISS TNC 与上行电台都使用 {0}。请使用不同的 COM 端口或停用其中一个设备。</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRotator" xml:space="preserve">
+    <value>Terminal KISS TNC 与旋转器都使用 {0}。请使用不同的 COM 端口或停用其中一个设备。</value>
+  </data>
+  <data name="ComPort.TerminalKissAndGps" xml:space="preserve">
+    <value>Terminal KISS TNC 与 GPS 都使用 {0}。请使用不同的 COM 端口或停用其中一个设备。</value>
+  </data>
+  <data name="ComPort.TerminalKissAndFt4Ptt" xml:space="preserve">
+    <value>Terminal KISS TNC 与FT4 独立 PTT都使用 {0}。请使用不同的 COM 端口或停用其中一个设备。</value>
   </data>
 </root>

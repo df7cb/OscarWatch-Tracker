@@ -5248,10 +5248,10 @@ Latest: {1} ({2})</value>
     <value>AGWPE (Direwolf, UZ7HO soundmodem)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissTcp">
-    <value>KISS over TCP (planned)</value>
+    <value>KISS over TCP (Direwolf)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissSerial">
-    <value>KISS serial TNC (planned)</value>
+    <value>KISS serial TNC</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
     <value>Built-in soundmodem (1200 AFSK)</value>
@@ -5926,6 +5926,57 @@ Latest: {1} ({2})</value>
     <value>Connect the built-in soundmodem to see the receive audio.</value>
   </data>
   <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
-    <value>The waterfall needs the built-in soundmodem. AGWPE modems keep the audio to themselves.</value>
+    <value>The waterfall needs the built-in soundmodem. AGWPE and KISS modems keep the audio to themselves.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TcpHelp" xml:space="preserve">
+    <value>Direwolf offers KISS over TCP, normally on port 8001 (KISSPORT 8001 in direwolf.conf). Other modems and TNCs that serve KISS over the network work the same way.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.SerialHelp" xml:space="preserve">
+    <value>For a hardware TNC or a radio with a built-in TNC on a COM port, such as a Mobilinkd, a NinoTNC, or a Kenwood TH-D74 or TM-D710. Put the TNC in KISS mode first: OscarWatch does not switch it in or out of KISS.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ComPort" xml:space="preserve">
+    <value>COM port</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Baud" xml:space="preserve">
+    <value>Baud rate</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Port" xml:space="preserve">
+    <value>KISS port (0 to 15)</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.FullDuplex" xml:space="preserve">
+    <value>Full duplex</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ParametersHelp" xml:space="preserve">
+    <value>Sent to the TNC on every connect, with the Modem TX delay and Modem TX tail below. Port 0 suits single-port TNCs. Leave full duplex off unless the TNC should transmit without waiting for a clear channel.</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Test" xml:space="preserve">
+    <value>Test connection</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TestOk" xml:space="preserve">
+    <value>{0}: opened {1} and sent the parameters. KISS does not reply, so check the message log for received frames.</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.KissHelp" xml:space="preserve">
+    <value>Sent to the TNC as KISS TXDELAY and TXTAIL. 300 ms delay suits most FM radios. Keep the tail at 30 to 50 ms on simplex satellites such as the ISS. With an FT-847 on a same-band satellite, OscarWatch also uses these to hold the radio on the uplink.</value>
+  </data>
+  <data name="Terminal.Modem.Kiss.NoComPort" xml:space="preserve">
+    <value>no COM port chosen</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRadio" xml:space="preserve">
+    <value>Terminal KISS TNC and radio both use {0}. Use different COM ports or disable one device.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndDownlink" xml:space="preserve">
+    <value>Terminal KISS TNC and downlink radio both use {0}. Use different COM ports or disable one device.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndUplink" xml:space="preserve">
+    <value>Terminal KISS TNC and uplink radio both use {0}. Use different COM ports or disable one device.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRotator" xml:space="preserve">
+    <value>Terminal KISS TNC and rotator both use {0}. Use different COM ports or disable one device.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndGps" xml:space="preserve">
+    <value>Terminal KISS TNC and GPS both use {0}. Use different COM ports or disable one device.</value>
+  </data>
+  <data name="ComPort.TerminalKissAndFt4Ptt" xml:space="preserve">
+    <value>Terminal KISS TNC and FT4 separate PTT both use {0}. Use different COM ports or disable one device.</value>
   </data>
 </root>

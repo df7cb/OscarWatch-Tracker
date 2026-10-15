@@ -28,7 +28,7 @@ public sealed record TerminalReceivedFrame(
 public sealed record TerminalRadioPort(int Index, string Description);
 
 /// <summary>
-/// Frame-level link to a packet modem. AGWPE today; KISS TCP, KISS serial and a built-in modem implement
+/// Frame-level link to a packet modem. AGWPE, KISS TCP, KISS serial and the built-in modem implement
 /// the same contract so <see cref="TerminalService"/>, the codecs and the UI do not change.
 /// </summary>
 public interface ITerminalModemTransport : IAsyncDisposable

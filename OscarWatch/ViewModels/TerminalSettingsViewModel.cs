@@ -2,11 +2,13 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OscarWatch.Core.Hardware;
 using OscarWatch.Core.Models;
 using OscarWatch.Core.Services;
 using OscarWatch.Core.Terminal;
 using OscarWatch.Core.Terminal.Uhm;
 using OscarWatch.Localization;
+using OscarWatch.Rotator;
 using OscarWatch.Terminal;
 using Serilog;
 
@@ -115,8 +117,8 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         [
             new(TerminalTransportKind.BuiltIn, _l.Get("Terminal.Settings.Transport.BuiltIn"), true),
             new(TerminalTransportKind.Agwpe, _l.Get("Terminal.Settings.Transport.Agwpe"), true),
-            new(TerminalTransportKind.KissTcp, _l.Get("Terminal.Settings.Transport.KissTcp"), false),
-            new(TerminalTransportKind.KissSerial, _l.Get("Terminal.Settings.Transport.KissSerial"), false),
+            new(TerminalTransportKind.KissTcp, _l.Get("Terminal.Settings.Transport.KissTcp"), true),
+            new(TerminalTransportKind.KissSerial, _l.Get("Terminal.Settings.Transport.KissSerial"), true),
         ];
         FormatOptions =
         [
@@ -137,6 +139,17 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         _agwHost = t.Agwpe.Host;
         _agwPort = t.Agwpe.Port;
         _autoConnect = t.Agwpe.AutoConnect;
+        _kissHost = t.KissTcp.Host;
+        _kissTcpPort = t.KissTcp.Port;
+        _kissSerialPort = t.KissSerial.PortName;
+        _kissBaudRate = t.KissSerial.BaudRate;
+        KissBaudOptions = TerminalKissSerialSettings.CommonBaudRates.Contains(t.KissSerial.BaudRate)
+            ? TerminalKissSerialSettings.CommonBaudRates
+            : [.. TerminalKissSerialSettings.CommonBaudRates.Append(t.KissSerial.BaudRate).Order()];
+        _kissPort = t.Kiss.Port;
+        _kissPersistence = t.Kiss.Persistence;
+        _kissSlotTimeMs = t.Kiss.SlotTimeMs;
+        _kissFullDuplex = t.Kiss.FullDuplex;
         _callsign = t.Callsign;
         _ssid = t.Ssid;
         RadioPorts.Add(new TerminalRadioPortOption(t.Agwpe.RadioPort, RadioPortLabel(t.Agwpe.RadioPort, null)));
@@ -232,6 +245,15 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
     [ObservableProperty] private string _agwHost;
     [ObservableProperty] private int _agwPort;
     [ObservableProperty] private bool _autoConnect;
+    [ObservableProperty] private string _kissHost;
+    [ObservableProperty] private int _kissTcpPort;
+    [ObservableProperty] private string _kissSerialPort;
+    [ObservableProperty] private int _kissBaudRate;
+    [ObservableProperty] private int _kissPort;
+    [ObservableProperty] private int _kissPersistence;
+    [ObservableProperty] private int _kissSlotTimeMs;
+    [ObservableProperty] private bool _kissFullDuplex;
+    [ObservableProperty] private string _kissSerialConflictText = "";
     [ObservableProperty] private TerminalRadioPortOption? _selectedRadioPort;
     [ObservableProperty] private string _modemTestText = "";
     [ObservableProperty] private bool _isTestingModem;
@@ -267,11 +289,13 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
     /// TXDELAY and TXTAIL: the built-in modem sends them, and the FT-847 (single radio) retunes around
     /// each transmit using them, so other setups do not need the fields.
     /// </summary>
-    public bool ShowModemTiming => _isSingleVfoFt847 || IsBuiltInSelected;
+    public bool ShowModemTiming => _isSingleVfoFt847 || IsBuiltInSelected || IsKissSelected;
 
     public string ModemTimingHelp => _l.Get(IsBuiltInSelected
         ? "Terminal.Settings.ModemTiming.BuiltInHelp"
-        : "Terminal.Settings.ModemTiming.Help");
+        : IsKissSelected
+            ? "Terminal.Settings.ModemTiming.KissHelp"
+            : "Terminal.Settings.ModemTiming.Help");
 
     [ObservableProperty] private int _fontSize;
 
@@ -280,6 +304,36 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
 
     public bool IsAgwpeSelected => SelectedTransport.Kind == TerminalTransportKind.Agwpe;
     public bool IsBuiltInSelected => SelectedTransport.Kind == TerminalTransportKind.BuiltIn;
+    public bool IsKissTcpSelected => SelectedTransport.Kind == TerminalTransportKind.KissTcp;
+    public bool IsKissSerialSelected => SelectedTransport.Kind == TerminalTransportKind.KissSerial;
+    public bool IsKissSelected => IsKissTcpSelected || IsKissSerialSelected;
+    public bool ShowKissSerialConflict => IsKissSerialSelected && KissSerialConflictText.Length > 0;
+
+    public ObservableCollection<string> KissSerialPortOptions { get; } = [];
+    public IReadOnlyList<int> KissBaudOptions { get; }
+
+    partial void OnKissSerialPortChanged(string value) => RefreshKissSerialConflict();
+
+    partial void OnKissSerialConflictTextChanged(string value) => OnPropertyChanged(nameof(ShowKissSerialConflict));
+
+    private void RefreshKissSerialConflict() =>
+        KissSerialConflictText = SerialPortConflictHelper.TryDescribeKissSerialConflict(_settings.Current, KissSerialPort, out var message)
+            ? ComPortConflictLocalizer.Localize(message, _l)
+            : "";
+
+    /// <summary>Lists COM ports for the KISS TNC, keeping the saved port even when it is not plugged in.</summary>
+    [RelayCommand]
+    private void RefreshKissSerialPorts()
+    {
+        var saved = KissSerialPort?.Trim() ?? "";
+        KissSerialPortOptions.Clear();
+        foreach (var port in SerialPortDiscovery.GetAvailablePorts(forceRefresh: true))
+            KissSerialPortOptions.Add(port);
+        if (saved.Length > 0 && !KissSerialPortOptions.Contains(saved, StringComparer.OrdinalIgnoreCase))
+            KissSerialPortOptions.Insert(0, saved);
+        KissSerialPort = saved;
+        RefreshKissSerialConflict();
+    }
 
     /// <summary>A long TXTAIL delays hearing your own digipeat on a simplex satellite.</summary>
     public bool ShowLongTailWarning =>
@@ -298,11 +352,17 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
 
         OnPropertyChanged(nameof(IsAgwpeSelected));
         OnPropertyChanged(nameof(IsBuiltInSelected));
+        OnPropertyChanged(nameof(IsKissTcpSelected));
+        OnPropertyChanged(nameof(IsKissSerialSelected));
+        OnPropertyChanged(nameof(IsKissSelected));
+        OnPropertyChanged(nameof(ShowKissSerialConflict));
         OnPropertyChanged(nameof(ShowModemTiming));
         OnPropertyChanged(nameof(ModemTimingHelp));
         OnPropertyChanged(nameof(ShowLongTailWarning));
         if (value.Kind == TerminalTransportKind.BuiltIn && BuiltIn.InputDeviceOptions.Count == 0)
             BuiltIn.Refresh();
+        if (value.Kind == TerminalTransportKind.KissSerial && KissSerialPortOptions.Count == 0)
+            RefreshKissSerialPorts();
     }
 
     /// <summary>The window calls this once shown, so listing soundcards does not hold up opening it.</summary>
@@ -310,6 +370,8 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
     {
         if (IsBuiltInSelected)
             BuiltIn.Refresh();
+        if (IsKissSerialSelected)
+            RefreshKissSerialPorts();
     }
 
     public void OnClosed() => BuiltIn.Dispose();
@@ -352,6 +414,61 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
                                        or TimeoutException or InvalidOperationException or InvalidDataException)
         {
             Log.Information(ex, "Terminal AGWPE test failed");
+            ModemTestText = _l.Get("Terminal.Settings.Modem.TestFailed", ex.Message);
+        }
+        finally
+        {
+            IsTestingModem = false;
+        }
+    }
+
+    /// <summary>Opens the KISS link, sends the parameters and closes it again. KISS has no reply, so success means the link opened.</summary>
+    [RelayCommand]
+    private async Task TestKissAsync()
+    {
+        if (IsTestingModem)
+            return;
+        IsTestingModem = true;
+        ModemTestText = _l.Get("Terminal.Settings.Modem.Testing");
+        try
+        {
+            var parameters = new KissParameters(
+                Math.Clamp(KissPort, 0, KissCodec.MaxPort),
+                Math.Clamp(ModemTxDelayMs, 0, TerminalSettings.MaxModemTimingMs),
+                Math.Clamp(KissPersistence, 0, 255),
+                Math.Clamp(KissSlotTimeMs, 0, TerminalKissSettings.MaxTimingMs),
+                Math.Clamp(ModemTxTailMs, 0, TerminalSettings.MaxModemTimingMs),
+                KissFullDuplex);
+            string endpoint;
+            KissTransport transport;
+            if (IsKissSerialSelected)
+            {
+                endpoint = KissSerialPort?.Trim() ?? "";
+                transport = KissTransport.Serial(endpoint, KissBaudRate, parameters,
+                    port => SerialPortConflictHelper.TryDescribeKissSerialConflict(_settings.Current, port, out var m)
+                        ? ComPortConflictLocalizer.Localize(m, _l)
+                        : null);
+            }
+            else
+            {
+                var host = string.IsNullOrWhiteSpace(KissHost) ? "127.0.0.1" : KissHost.Trim();
+                var port = KissTcpPort is > 0 and <= 65535 ? KissTcpPort : TerminalKissTcpSettings.DefaultPort;
+                endpoint = $"{host}:{port}";
+                transport = KissTransport.Tcp(host, port, parameters);
+            }
+
+            await using (transport)
+            {
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+                await transport.ConnectAsync(cts.Token).ConfigureAwait(true);
+                ModemTestText = _l.Get("Terminal.Settings.Kiss.TestOk", transport.ModemDescription ?? "KISS", endpoint);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or System.Net.Sockets.SocketException or OperationCanceledException
+                                       or TimeoutException or InvalidOperationException or UnauthorizedAccessException
+                                       or ArgumentException)
+        {
+            Log.Information(ex, "Terminal KISS test failed");
             ModemTestText = _l.Get("Terminal.Settings.Modem.TestFailed", ex.Message);
         }
         finally
@@ -481,6 +598,14 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         t.Agwpe.Port = AgwPort;
         t.Agwpe.AutoConnect = AutoConnect;
         t.Agwpe.RadioPort = SelectedRadioPort?.Index ?? 0;
+        t.KissTcp.Host = KissHost?.Trim() ?? "";
+        t.KissTcp.Port = KissTcpPort;
+        t.KissSerial.PortName = KissSerialPort?.Trim() ?? "";
+        t.KissSerial.BaudRate = KissBaudRate;
+        t.Kiss.Port = KissPort;
+        t.Kiss.Persistence = KissPersistence;
+        t.Kiss.SlotTimeMs = KissSlotTimeMs;
+        t.Kiss.FullDuplex = KissFullDuplex;
         t.Callsign = TerminalText.BaseCallsign(Callsign);
         t.Ssid = Ssid;
         t.Macros = Macros.Select(m => m.ToMacro()).ToList();

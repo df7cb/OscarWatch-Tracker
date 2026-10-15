@@ -257,4 +257,19 @@ public class SerialPortConflictHelperTests
         Assert.False(SerialPortConflictHelper.TryDescribeSeparatePttConflict(
             "Terminal", "COM8", rig, rotator, gps: null, "FT4", "COM9", out _));
     }
+
+    [Fact]
+    public void Kiss_serial_port_conflicts_with_radio_port()
+    {
+        var settings = new AppSettings
+        {
+            Rig = new RigSettings { Enabled = true, Type = RigType.IcomIc910, Port = "COM3" },
+            Rotator = new RotatorSettings { Enabled = false }
+        };
+
+        Assert.True(SerialPortConflictHelper.TryDescribeKissSerialConflict(settings, "com3", out var message));
+        Assert.Contains("Terminal KISS TNC and radio", message, StringComparison.Ordinal);
+        Assert.False(SerialPortConflictHelper.TryDescribeKissSerialConflict(settings, "COM6", out _));
+        Assert.False(SerialPortConflictHelper.TryDescribeKissSerialConflict(settings, "", out _));
+    }
 }

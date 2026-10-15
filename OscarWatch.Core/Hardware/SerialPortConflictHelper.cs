@@ -152,6 +152,36 @@ public static class SerialPortConflictHelper
             : null;
     }
 
+    /// <summary>
+    /// True when the Terminal KISS serial TNC port is also the radio, rotator or GPS port, or the FT4 separate
+    /// PTT port. The built-in modem's PTT port is not checked: only one Terminal transport is open at a time.
+    /// </summary>
+    public static bool TryDescribeKissSerialConflict(AppSettings settings, string? kissPort, out string message)
+    {
+        message = "";
+        var kiss = kissPort?.Trim() ?? "";
+        if (kiss.Length == 0)
+            return false;
+
+        foreach (var (port, label) in EnumerateOccupiedPorts(settings.Rig, settings.Rotator, settings.Gps))
+        {
+            if (!string.Equals(kiss, port, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            message = $"Terminal KISS TNC and {label} both use {kiss}. Use different COM ports or disable one device.";
+            return true;
+        }
+
+        var ft4 = Ft4SeparatePttPort(settings)?.Trim() ?? "";
+        if (string.Equals(kiss, ft4, StringComparison.OrdinalIgnoreCase))
+        {
+            message = $"Terminal KISS TNC and FT4 separate PTT both use {kiss}. Use different COM ports or disable one device.";
+            return true;
+        }
+
+        return false;
+    }
+
     /// <summary>The COM port FT4 keys on, or null when it does not use one.</summary>
     public static string? Ft4SeparatePttPort(AppSettings settings) =>
         settings.Ft4.PttMethod == PttMethod.SeparateComPort ? settings.Ft4.SeparatePttPort : null;

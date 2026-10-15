@@ -5253,10 +5253,10 @@ LOS: {2}
     <value>AGWPE (Direwolf, UZ7HO soundmodem)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissTcp">
-    <value>KISS ผ่าน TCP (วางแผนไว้)</value>
+    <value>KISS ผ่าน TCP (Direwolf)</value>
   </data>
   <data name="Terminal.Settings.Transport.KissSerial">
-    <value>KISS อนุกรม TNC (วางแผนไว้)</value>
+    <value>TNC KISS แบบอนุกรม</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
     <value>ซาวด์โมเด็มในตัว (1200 AFSK)</value>
@@ -5931,6 +5931,57 @@ LOS: {2}
     <value>เชื่อมต่อซาวด์โมเด็มในตัวเพื่อดูเสียงรับ</value>
   </data>
   <data name="Terminal.Waterfall.NeedsBuiltIn" xml:space="preserve">
-    <value>วอเตอร์ฟอลล์ต้องใช้ซาวด์โมเด็มในตัว โมเด็ม AGWPE ไม่แบ่งปันเสียง</value>
+    <value>วอเตอร์ฟอลล์ต้องใช้ซาวด์โมเด็มในตัว โมเด็ม AGWPE และ KISS ไม่แบ่งเสียงให้</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TcpHelp" xml:space="preserve">
+    <value>Direwolf ให้บริการ KISS ผ่าน TCP ปกติที่พอร์ต 8001 (KISSPORT 8001 ใน direwolf.conf) โมเด็มและ TNC อื่นที่ให้บริการ KISS ผ่านเครือข่ายก็ใช้งานได้แบบเดียวกัน</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.SerialHelp" xml:space="preserve">
+    <value>สำหรับ TNC ฮาร์ดแวร์หรือวิทยุที่มี TNC ในตัวบนพอร์ต COM เช่น Mobilinkd, NinoTNC หรือ Kenwood TH-D74 หรือ TM-D710 ให้ตั้ง TNC เป็นโหมด KISS ก่อน OscarWatch จะไม่สั่งเข้าหรือออกจากโหมด KISS</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ComPort" xml:space="preserve">
+    <value>พอร์ต COM</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Baud" xml:space="preserve">
+    <value>อัตราบอด</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Port" xml:space="preserve">
+    <value>พอร์ต KISS (0 ถึง 15)</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.FullDuplex" xml:space="preserve">
+    <value>ฟูลดูเพล็กซ์</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.ParametersHelp" xml:space="preserve">
+    <value>ส่งไปยัง TNC ทุกครั้งที่เชื่อมต่อ พร้อมกับ TX delay และ TX tail ของโมเด็มด้านล่าง พอร์ต 0 เหมาะกับ TNC ที่มีพอร์ตเดียว ปิดฟูลดูเพล็กซ์ไว้ เว้นแต่ต้องการให้ TNC ส่งโดยไม่รอช่องว่าง</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.Test" xml:space="preserve">
+    <value>ทดสอบการเชื่อมต่อ</value>
+  </data>
+  <data name="Terminal.Settings.Kiss.TestOk" xml:space="preserve">
+    <value>{0}: เปิด {1} และส่งพารามิเตอร์แล้ว KISS ไม่ตอบกลับ จึงควรดูเฟรมที่รับได้ในบันทึกข้อความ</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.KissHelp" xml:space="preserve">
+    <value>ส่งไปยัง TNC เป็น TXDELAY และ TXTAIL ของ KISS ดีเลย์ 300 ms เหมาะกับวิทยุ FM ส่วนใหญ่ สำหรับดาวเทียมซิมเพล็กซ์อย่าง ISS ให้ตั้ง tail ไว้ 30 ถึง 50 ms เมื่อใช้ FT-847 กับดาวเทียมย่านเดียวกัน OscarWatch ยังใช้ค่านี้เพื่อคงวิทยุไว้ที่ความถี่อัปลิงก์</value>
+  </data>
+  <data name="Terminal.Modem.Kiss.NoComPort" xml:space="preserve">
+    <value>ยังไม่ได้เลือกพอร์ต COM</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRadio" xml:space="preserve">
+    <value>TNC KISS ของ Terminal และวิทยุใช้ {0} เหมือนกัน ให้ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.TerminalKissAndDownlink" xml:space="preserve">
+    <value>TNC KISS ของ Terminal และวิทยุดาวน์ลิงก์ใช้ {0} เหมือนกัน ให้ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.TerminalKissAndUplink" xml:space="preserve">
+    <value>TNC KISS ของ Terminal และวิทยุอัปลิงก์ใช้ {0} เหมือนกัน ให้ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.TerminalKissAndRotator" xml:space="preserve">
+    <value>TNC KISS ของ Terminal และโรเทเตอร์ใช้ {0} เหมือนกัน ให้ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.TerminalKissAndGps" xml:space="preserve">
+    <value>TNC KISS ของ Terminal และ GPS ใช้ {0} เหมือนกัน ให้ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
+  </data>
+  <data name="ComPort.TerminalKissAndFt4Ptt" xml:space="preserve">
+    <value>TNC KISS ของ Terminal และPTT แยกของ FT4ใช้ {0} เหมือนกัน ให้ใช้พอร์ต COM ต่างกันหรือปิดอุปกรณ์หนึ่ง</value>
   </data>
 </root>

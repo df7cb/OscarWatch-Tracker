@@ -4,7 +4,7 @@ using OscarWatch.Core.Terminal.Modem;
 
 namespace OscarWatch.Core.Terminal;
 
-/// <summary>How OscarWatch Terminal reaches the packet modem: AGWPE or the built-in soundcard modem today.</summary>
+/// <summary>How OscarWatch Terminal reaches the packet modem: AGWPE, KISS over TCP, a KISS serial TNC, or the built-in soundcard modem.</summary>
 public enum TerminalTransportKind
 {
     Agwpe,
@@ -126,18 +126,48 @@ public sealed class TerminalBuiltInModemSettings
     }
 }
 
-/// <summary>Reserved for the KISS over TCP transport.</summary>
+/// <summary>KISS over TCP, for example Direwolf's <c>KISSPORT</c>.</summary>
 public sealed class TerminalKissTcpSettings
 {
+    public const int DefaultPort = 8001;
+
     public string Host { get; set; } = "127.0.0.1";
-    public int Port { get; set; } = 8001;
+    public int Port { get; set; } = DefaultPort;
 }
 
-/// <summary>Reserved for the KISS serial transport.</summary>
+/// <summary>KISS serial TNC on a COM port (8 data bits, no parity, one stop bit).</summary>
 public sealed class TerminalKissSerialSettings
 {
+    public const int DefaultBaudRate = 9600;
+    public static readonly IReadOnlyList<int> CommonBaudRates = [1200, 4800, 9600, 19200, 38400, 57600, 115200];
+
     public string PortName { get; set; } = "";
-    public int BaudRate { get; set; } = 9600;
+    public int BaudRate { get; set; } = DefaultBaudRate;
+}
+
+/// <summary>KISS parameters sent on connect, shared by KISS TCP and KISS serial.</summary>
+public sealed class TerminalKissSettings
+{
+    public const int DefaultPersistence = 63;
+    public const int DefaultSlotTimeMs = 100;
+    public const int MaxTimingMs = 2550;
+
+    /// <summary>KISS port nibble (0 to 15) frames are sent to and accepted from.</summary>
+    public int Port { get; set; }
+
+    /// <summary>p-persistence (0 to 255): chance out of 256 of keying in each clear slot.</summary>
+    public int Persistence { get; set; } = DefaultPersistence;
+
+    public int SlotTimeMs { get; set; } = DefaultSlotTimeMs;
+
+    public bool FullDuplex { get; set; }
+
+    public void Normalise()
+    {
+        Port = Math.Clamp(Port, 0, KissCodec.MaxPort);
+        Persistence = Math.Clamp(Persistence, 0, 255);
+        SlotTimeMs = Math.Clamp(SlotTimeMs, 0, MaxTimingMs);
+    }
 }
 
 public sealed class TerminalSatelliteProfileSettings
@@ -207,11 +237,20 @@ public sealed class TerminalSettings
     public TerminalAgwpeSettings Agwpe { get; set; } = new();
     public TerminalKissTcpSettings KissTcp { get; set; } = new();
     public TerminalKissSerialSettings KissSerial { get; set; } = new();
+    public TerminalKissSettings Kiss { get; set; } = new();
     public TerminalBuiltInModemSettings BuiltIn { get; set; } = new();
 
-    /// <summary>Zero-based radio port frames are sent to and accepted from: the AGWPE port, or 0 for the built-in modem.</summary>
+    /// <summary>Zero-based radio port frames are sent to and accepted from: the AGWPE port, the KISS port, or 0 for the built-in modem.</summary>
     [JsonIgnore]
-    public int ActiveRadioPort => Transport == TerminalTransportKind.Agwpe ? Agwpe.RadioPort : 0;
+    public int ActiveRadioPort => Transport switch
+    {
+        TerminalTransportKind.Agwpe => Agwpe.RadioPort,
+        TerminalTransportKind.KissTcp or TerminalTransportKind.KissSerial => Kiss.Port,
+        _ => 0
+    };
+
+    [JsonIgnore]
+    public bool IsKissTransport => Transport is TerminalTransportKind.KissTcp or TerminalTransportKind.KissSerial;
 
     /// <summary>Terminal callsign; empty uses the ground station callsign.</summary>
     public string Callsign { get; set; } = "";
@@ -313,7 +352,15 @@ public sealed class TerminalSettings
         Agwpe.Port = Agwpe.Port is > 0 and <= 65535 ? Agwpe.Port : TerminalAgwpeSettings.DefaultPort;
         Agwpe.RadioPort = Math.Clamp(Agwpe.RadioPort, 0, 255);
         KissTcp ??= new TerminalKissTcpSettings();
+        KissTcp.Host = string.IsNullOrWhiteSpace(KissTcp.Host) ? "127.0.0.1" : KissTcp.Host.Trim();
+        KissTcp.Port = KissTcp.Port is > 0 and <= 65535 ? KissTcp.Port : TerminalKissTcpSettings.DefaultPort;
         KissSerial ??= new TerminalKissSerialSettings();
+        KissSerial.PortName = (KissSerial.PortName ?? "").Trim();
+        KissSerial.BaudRate = KissSerial.BaudRate is >= 300 and <= 921600
+            ? KissSerial.BaudRate
+            : TerminalKissSerialSettings.DefaultBaudRate;
+        Kiss ??= new TerminalKissSettings();
+        Kiss.Normalise();
         BuiltIn ??= new TerminalBuiltInModemSettings();
         BuiltIn.Normalise();
         if (!Enum.IsDefined(Transport))

@@ -733,7 +733,13 @@ public sealed class TerminalService : IAsyncDisposable
             ITerminalModemTransport transport;
             try
             {
-                transport = TerminalTransportFactory.Create(Settings, MyCall, CreateBuiltInModem);
+                transport = TerminalTransportFactory.Create(
+                    Settings,
+                    MyCall,
+                    CreateBuiltInModem,
+                    port => SerialPortConflictHelper.TryDescribeKissSerialConflict(_settings.Current, port, out var message)
+                        ? message
+                        : null);
             }
             catch (Exception ex) when (ex is InvalidOperationException or NotSupportedException)
             {

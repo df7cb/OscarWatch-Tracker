@@ -103,6 +103,29 @@ public static class ComPortConflictLocalizer
             }
         }
 
+        const string kissPrefix = "Terminal KISS TNC and ";
+        if (message.StartsWith(kissPrefix, StringComparison.Ordinal)
+            && message.EndsWith(disableSuffix, StringComparison.Ordinal))
+        {
+            var rest = message[kissPrefix.Length..^disableSuffix.Length];
+            var split = rest.IndexOf(deviceSuffix, StringComparison.Ordinal);
+            if (split > 0)
+            {
+                var key = rest[..split] switch
+                {
+                    "radio" => "ComPort.TerminalKissAndRadio",
+                    "downlink radio" => "ComPort.TerminalKissAndDownlink",
+                    "uplink radio" => "ComPort.TerminalKissAndUplink",
+                    "rotator" => "ComPort.TerminalKissAndRotator",
+                    "GPS" => "ComPort.TerminalKissAndGps",
+                    "FT4 separate PTT" => "ComPort.TerminalKissAndFt4Ptt",
+                    _ => null
+                };
+                if (key is not null)
+                    return l.Get(key, rest[(split + deviceSuffix.Length)..]);
+            }
+        }
+
         const string sharedSuffix = ". Use different COM ports, or key one of them another way.";
         if (message.EndsWith(sharedSuffix, StringComparison.Ordinal))
         {
