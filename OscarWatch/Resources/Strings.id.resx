@@ -4874,6 +4874,15 @@ Terbaru: {1} ({2})</value>
   <data name="Terminal.SendButton">
     <value>Kirim</value>
   </data>
+  <data name="Terminal.Settings.ModemTxDelay">
+    <value>Tunda TX modem (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTxTail">
+    <value>Ekor TX modem (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.Help">
+    <value>Masukkan nilai TXDELAY dan TXTAIL dari soundmodem Anda. Dengan FT-847 pada satelit satu pita, OscarWatch memindahkan radio ke frekuensi uplink untuk setiap frame dan menahannya selama waktu ini ditambah durasi frame.</value>
+  </data>
   <data name="Terminal.TxDelay">
     <value>Tunda TX (d)</value>
   </data>

@@ -119,6 +119,18 @@ public sealed class TerminalSettings
     public bool ScrollToLastLine { get; set; } = true;
     public bool ShowCallers { get; set; } = true;
     public int TxDelaySeconds { get; set; }
+
+    public const int DefaultModemTxDelayMs = 300;
+    public const int DefaultModemTxTailMs = 100;
+    public const int MaxModemTimingMs = 2000;
+
+    /// <summary>
+    /// The modem's own TXDELAY and TXTAIL. A single-VFO radio on a same-band satellite (FT-847)
+    /// stays on the uplink for this long plus the frame's airtime.
+    /// </summary>
+    public int ModemTxDelayMs { get; set; } = DefaultModemTxDelayMs;
+    public int ModemTxTailMs { get; set; } = DefaultModemTxTailMs;
+
     public const int MinFontSize = 10;
     public const int MaxFontSize = 28;
     public const int DefaultLogFontSize = 13;
@@ -205,6 +217,8 @@ public sealed class TerminalSettings
         }
 
         TxDelaySeconds = Math.Clamp(TxDelaySeconds, 0, 60);
+        ModemTxDelayMs = Math.Clamp(ModemTxDelayMs, 0, MaxModemTimingMs);
+        ModemTxTailMs = Math.Clamp(ModemTxTailMs, 0, MaxModemTimingMs);
         FontSize = ClampFontSize(FontSize, DefaultLogFontSize);
         QsoFontSize = ClampFontSize(QsoFontSize, DefaultStationFontSize);
         HeardFontSize = ClampFontSize(HeardFontSize, DefaultStationFontSize);

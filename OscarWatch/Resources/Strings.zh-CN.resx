@@ -4870,6 +4870,15 @@
   <data name="Terminal.SendButton">
     <value>发送</value>
   </data>
+  <data name="Terminal.Settings.ModemTxDelay">
+    <value>调制解调器发射延时 (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTxTail">
+    <value>调制解调器发射拖尾 (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.Help">
+    <value>填写声卡调制解调器中的 TXDELAY 和 TXTAIL 值。FT-847 在同频段卫星上工作时，OscarWatch 会在每帧发送前把电台切换到上行频率，并保持这段时间加上该帧的发送时长。</value>
+  </data>
   <data name="Terminal.TxDelay">
     <value>发射延迟 (秒)</value>
   </data>

@@ -59,6 +59,13 @@
         OscarWatch keeps tuning the radio for Doppler as usual. Terminal only sends and receives the packets, so keep CAT
         tracking running for the satellite you are working.
       </p>
+      <p>
+        The Yaesu FT-847 cannot hold separate receive and transmit frequencies on one band over CAT. For the ISS and IO-117,
+        OscarWatch moves the radio to the uplink frequency for each frame Terminal sends, then back to the downlink. Enter
+        your soundmodem's TXDELAY and TXTAIL as <strong>Modem TX delay</strong> and <strong>Modem TX tail</strong> in
+        <strong>Settings → Modem</strong>, so OscarWatch stays on the uplink for the whole transmission. Frames sent
+        from another application go out on the downlink frequency.
+      </p>
 
       <h2>Getting started</h2>
       <ol>

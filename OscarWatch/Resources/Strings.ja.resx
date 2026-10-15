@@ -4870,6 +4870,15 @@
   <data name="Terminal.SendButton">
     <value>送信</value>
   </data>
+  <data name="Terminal.Settings.ModemTxDelay">
+    <value>モデム送信遅延 (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTxTail">
+    <value>モデム送信テール (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.Help">
+    <value>サウンドモデムの TXDELAY と TXTAIL の値を入力してください。同一バンドの衛星で FT-847 を使う場合、OscarWatch はフレームごとに無線機をアップリンク周波数に切り替え、この時間とフレームの送信時間の間そのまま保持します。</value>
+  </data>
   <data name="Terminal.TxDelay">
     <value>送信遅延 (秒)</value>
   </data>

@@ -4874,6 +4874,15 @@ LOS: {2}
   <data name="Terminal.SendButton">
     <value>ส่ง</value>
   </data>
+  <data name="Terminal.Settings.ModemTxDelay">
+    <value>หน่วงเวลา TX ของโมเด็ม (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTxTail">
+    <value>หาง TX ของโมเด็ม (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.Help">
+    <value>ใส่ค่า TXDELAY และ TXTAIL จากซาวด์โมเด็มของคุณ เมื่อใช้ FT-847 กับดาวเทียมที่รับและส่งในย่านเดียวกัน OscarWatch จะปรับวิทยุไปที่ความถี่ขาขึ้นสำหรับแต่ละเฟรม และคงไว้ตามเวลานี้บวกกับเวลาส่งของเฟรม</value>
+  </data>
   <data name="Terminal.TxDelay">
     <value>หน่วงเวลา TX (วินาที)</value>
   </data>

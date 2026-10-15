@@ -111,6 +111,8 @@ public sealed class RigController : IRigController, IDisposable
     private DateTime? _ft4DopplerInstantUtc;
     /// <summary>Set when CAT PTT (or handshake PTT) interrupts a Doppler write. Skip further CI-V.</summary>
     private bool _dopplerPreempted;
+    /// <summary>FT-847 same-band: when the dial returns from the uplink to the downlink.</summary>
+    private DateTime _sameBandHoldUntilUtc = DateTime.MinValue;
     private readonly object _urgentLock = new();
     private const int UrgentNone = 0;
     private const int UrgentPttOn = 1;
@@ -252,6 +254,25 @@ public sealed class RigController : IRigController, IDisposable
         }
 
         return done.Wait(timeout);
+    }
+
+    public bool TryHoldSameBandTransmit(TimeSpan hold, TimeSpan timeout)
+    {
+        if (hold <= TimeSpan.Zero || timeout <= TimeSpan.Zero)
+            return false;
+
+        var command = new RigCommand(RigCommandKind.HoldSameBandTransmit) { Hold = hold };
+        try
+        {
+            EnqueueAndWait(command, timeout);
+        }
+        catch (Exception ex) when (ex is TimeoutException or ObjectDisposedException)
+        {
+            Log.Debug(ex, "Same-band transmit hold did not start in time");
+            return false;
+        }
+
+        return command.Succeeded;
     }
 
     public bool TryGetUplinkRfPowerWatts(out double watts)
@@ -402,6 +423,7 @@ public sealed class RigController : IRigController, IDisposable
 
                 try
                 {
+                    EndSameBandTransmitHold(force: false);
                     RunLoopIteration(ignoreDopplerSuspend: false);
                 }
                 catch (Exception ex)
@@ -489,6 +511,10 @@ public sealed class RigController : IRigController, IDisposable
                             _ft4DopplerInstantUtc = null;
                         }
                     }
+                    break;
+
+                case RigCommandKind.HoldSameBandTransmit:
+                    command.Succeeded = BeginSameBandTransmitHoldOnWorker(command.Hold);
                     break;
 
                 case RigCommandKind.ReadUplinkRfPower:
@@ -795,6 +821,54 @@ public sealed class RigController : IRigController, IDisposable
         _kenwoodFaFbFailCount = 0;
         // The hold belongs to the FT4 session, which does not resend it after a reconnect.
         _ft4ForceDopplerStep = false;
+        EndSameBandTransmitHold(force: true);
+    }
+
+    private bool BeginSameBandTransmitHoldOnWorker(TimeSpan hold)
+    {
+        if (_cachedSettings.DualRadioEnabled
+            || _driver is not YaesuFt847Driver { UsesSameBandTransmitHold: true } ft847
+            || !_isTracking
+            || _isBeaconOnly
+            || _cachedContext is not { } context
+            || (_cachedCatPausedOverride ?? _cachedSettings.CatUpdatesPaused))
+        {
+            return false;
+        }
+
+        var until = DateTime.UtcNow + hold;
+        if (ft847.IsTransmitHoldActive)
+        {
+            if (until > _sameBandHoldUntilUtc)
+                _sameBandHoldUntilUtc = until;
+            return true;
+        }
+
+        // TX fixed leaves the uplink where pass init put it.
+        var txHz = context.DopplerStrategy == DopplerStrategy.DownlinkOnly && _lastRigTxHz > 0
+            ? _lastRigTxHz
+            : ToHz(ComputeDoppler(context).RadioTransmitKHz);
+        if (!ft847.BeginTransmitHold(txHz))
+            return false;
+
+        _sameBandHoldUntilUtc = until;
+        Log.Information(
+            "FT-847 same-band transmit: dial on the uplink {TxHz} Hz for {HoldMs} ms",
+            txHz,
+            (int)hold.TotalMilliseconds);
+        return true;
+    }
+
+    private void EndSameBandTransmitHold(bool force)
+    {
+        if (_driver is not YaesuFt847Driver { IsTransmitHoldActive: true } ft847)
+            return;
+        if (!force && DateTime.UtcNow < _sameBandHoldUntilUtc)
+            return;
+
+        ft847.EndTransmitHold();
+        _sameBandHoldUntilUtc = DateTime.MinValue;
+        Log.Debug("FT-847 same-band transmit: dial back on the downlink");
     }
 
     private void RunLoopIteration(bool ignoreDopplerSuspend = false)
@@ -3225,6 +3299,7 @@ public sealed class RigController : IRigController, IDisposable
         SetHandshakePtt,
         SetFt4SlotGatedDoppler,
         ForceFt4DopplerStep,
+        HoldSameBandTransmit,
         ReadUplinkRfPower,
         SetUplinkRfPower,
         Disconnect,
@@ -3268,6 +3343,7 @@ public sealed class RigController : IRigController, IDisposable
         public int Generation { get; set; }
         public DateTime? DopplerAtUtc { get; set; }
         public double? RfPowerWatts { get; set; }
+        public TimeSpan Hold { get; set; }
         public bool Succeeded { get; set; }
         public ManualResetEventSlim? Completed { get; set; }
     }

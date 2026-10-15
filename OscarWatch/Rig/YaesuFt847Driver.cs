@@ -15,11 +15,10 @@ public sealed class YaesuFt847Driver : IRigDriver
     private readonly IYaesuCatTransport _transport;
     private readonly int _catDelayMs;
     private bool _satelliteMode;
-    private bool _repeaterSplit;
-    private long _repeaterRxHz;
-    private long _repeaterTxHz;
-    private long _appliedOffsetHz = -1;
-    private int _appliedShift = int.MinValue;
+    private bool _sameBandSplit;
+    private bool _transmitHold;
+    private long _sameBandRxHz;
+    private long _sameBandTxHz;
     private RigVfo _currentVfo = RigVfo.Main;
     private long _lastMainHz;
     private long _lastSubHz;
@@ -66,7 +65,9 @@ public sealed class YaesuFt847Driver : IRigDriver
     {
         var target = ResolveTarget(vfo, uplink: vfo is RigVfo.Sub or RigVfo.VfoB);
         var cached = CachedFrequencyHz(vfo);
-        if (!_transport.IsOpen)
+        // The dial shows the uplink during a transmit hold. Reporting it as the receive
+        // frequency would look like the operator retuned.
+        if (!_transport.IsOpen || _transmitHold)
             return cached > 0 ? cached : null;
 
         var poll = YaesuFt847CatCodec.BuildPollCommand(target, _satelliteMode);
@@ -86,25 +87,19 @@ public sealed class YaesuFt847Driver : IRigDriver
         var uplink = _currentVfo is RigVfo.Sub or RigVfo.VfoB;
         StoreFrequencyHz(_currentVfo, rounded);
 
-        if (_repeaterSplit && !_satelliteMode)
+        if (UsesSameBandTransmitHold)
         {
             if (uplink)
-                _repeaterTxHz = rounded;
+                _sameBandTxHz = rounded;
             else
-                _repeaterRxHz = rounded;
+                _sameBandRxHz = rounded;
 
-            if (!_transport.IsOpen)
+            // The main VFO carries the downlink, or the uplink during a transmit hold.
+            // The other frequency is kept for when the hold starts or ends.
+            if (uplink != _transmitHold || !_transport.IsOpen)
                 return true;
 
-            var wroteRx = true;
-            if (!uplink)
-            {
-                var rx = YaesuFt847CatCodec.BuildSetFrequencyCommand(rounded, YaesuFt847VfoTarget.Main, satelliteMode: false);
-                wroteRx = _transport.SendFrame(rx, _catDelayMs);
-            }
-
-            ApplyRepeaterShift();
-            return wroteRx;
+            return WriteMainHz(rounded);
         }
 
         if (!_transport.IsOpen)
@@ -130,24 +125,21 @@ public sealed class YaesuFt847Driver : IRigDriver
 
     public void SetSplitOn(bool on)
     {
-        // Same-band Doppler. Satellite mode rejects transmit when SAT RX and SAT TX
-        // are on one band (the radio shows Error and beeps). The main VFO is receive,
-        // and the uplink sits on a repeater shift.
-        _repeaterSplit = on;
-        if (on)
-            return;
-
-        _repeaterRxHz = 0;
-        _repeaterTxHz = 0;
-        _appliedOffsetHz = -1;
-        _appliedShift = int.MinValue;
-        if (_transport.IsOpen && !_satelliteMode)
+        // Same-band Doppler. Satellite mode rejects transmit when SAT RX and SAT TX are on
+        // one band (the radio shows Error and beeps), and CAT cannot set the Sub VFO outside
+        // it. The main VFO carries the downlink, and moves to the uplink for each transmit.
+        _transmitHold = false;
+        _sameBandSplit = on;
+        _sameBandRxHz = 0;
+        _sameBandTxHz = 0;
+        // The uplink is on the main VFO itself, so a repeater shift would move it again.
+        if (on && _transport.IsOpen && !_satelliteMode)
             _transport.SendFrame(YaesuFt847CatCodec.BuildRepeaterShiftCommand(0), _catDelayMs);
     }
 
     public void SetSatelliteMode(bool on)
     {
-        if (on && _repeaterSplit)
+        if (on && _sameBandSplit)
             SetSplitOn(false);
 
         _satelliteMode = on;
@@ -159,27 +151,48 @@ public sealed class YaesuFt847Driver : IRigDriver
             _catDelayMs);
     }
 
+    /// <summary>Same-band pass with satellite mode off: one VFO for both directions.</summary>
+    public bool UsesSameBandTransmitHold => _sameBandSplit && !_satelliteMode;
+
+    public bool IsTransmitHoldActive => _transmitHold;
+
     /// <summary>
-    /// Transmit frequency minus receive frequency. Plus shift when the uplink is above
-    /// the downlink, minus when it is below, simplex when CAT cannot tell them apart.
+    /// Put the main VFO on the uplink before the modem keys the radio. Doppler writes keep
+    /// the uplink current until <see cref="EndTransmitHold"/>.
     /// </summary>
-    private void ApplyRepeaterShift()
+    public bool BeginTransmitHold(long uplinkHz)
     {
-        if (!_transport.IsOpen || _repeaterRxHz <= 0 || _repeaterTxHz <= 0)
+        if (!UsesSameBandTransmitHold || !_transport.IsOpen)
+            return false;
+
+        if (uplinkHz > 0)
+            _sameBandTxHz = RoundToCatHz(uplinkHz);
+        if (_sameBandTxHz <= 0)
+            return false;
+
+        if (!WriteMainHz(_sameBandTxHz))
+            return false;
+
+        _transmitHold = true;
+        return true;
+    }
+
+    /// <summary>Return the main VFO to the downlink.</summary>
+    public void EndTransmitHold()
+    {
+        if (!_transmitHold)
             return;
 
-        var delta = _repeaterTxHz - _repeaterRxHz;
-        var shift = Math.Abs(delta) < 10 ? 0 : Math.Sign(delta);
-        var offset = shift == 0 ? 0 : Math.Abs(delta);
-        if (shift == _appliedShift && offset == _appliedOffsetHz)
-            return;
+        _transmitHold = false;
+        if (_sameBandRxHz > 0 && _transport.IsOpen)
+            WriteMainHz(_sameBandRxHz);
+    }
 
-        if (shift != 0)
-            _transport.SendFrame(YaesuFt847CatCodec.BuildRepeaterOffsetCommand(offset), _catDelayMs);
-
-        _transport.SendFrame(YaesuFt847CatCodec.BuildRepeaterShiftCommand(shift), _catDelayMs);
-        _appliedShift = shift;
-        _appliedOffsetHz = offset;
+    private bool WriteMainHz(long hz)
+    {
+        StoreFrequencyHz(RigVfo.Main, hz);
+        var cmd = YaesuFt847CatCodec.BuildSetFrequencyCommand(hz, YaesuFt847VfoTarget.Main, satelliteMode: false);
+        return _transport.SendFrame(cmd, _catDelayMs);
     }
 
     public void ExchangeVfos()

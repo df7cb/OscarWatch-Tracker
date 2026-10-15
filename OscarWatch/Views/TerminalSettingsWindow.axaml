@@ -147,6 +147,20 @@
                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                        IsVisible="{Binding ModemTestText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
             <CheckBox Content="{loc:Localize Key=Terminal.Settings.AutoConnect}" IsChecked="{Binding AutoConnect}" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8" IsVisible="{Binding ShowModemTiming}">
+              <StackPanel Grid.Column="0" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Settings.ModemTxDelay}" />
+                <NumericUpDown Value="{Binding ModemTxDelayMs}" Minimum="0" Maximum="2000" Increment="10" FormatString="F0"
+                               AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.ModemTxDelay}" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Settings.ModemTxTail}" />
+                <NumericUpDown Value="{Binding ModemTxTailMs}" Minimum="0" Maximum="2000" Increment="10" FormatString="F0"
+                               AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.ModemTxTail}" />
+              </StackPanel>
+            </Grid>
+            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.ModemTiming.Help}"
+                       IsVisible="{Binding ShowModemTiming}" />
 
             <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Station}" Margin="0,12,0,0" />
             <Grid ColumnDefinitions="*,140" ColumnSpacing="8">

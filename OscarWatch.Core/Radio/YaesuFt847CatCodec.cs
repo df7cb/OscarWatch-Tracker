@@ -86,18 +86,6 @@ public static class YaesuFt847CatCodec
     }
 
     /// <summary>
-    /// Repeater offset amount (opcode F9). The operating manual's 5 MHz example is
-    /// <c>00 50 00 00 F9</c>.
-    /// </summary>
-    public static byte[] BuildRepeaterOffsetCommand(long offsetHz)
-    {
-        var cmd = new byte[] { 0x00, 0x00, 0x00, 0x00, 0xF9 };
-        EncodeFrequency10Hz(Math.Abs(offsetHz), cmd);
-        cmd[4] = 0xF9;
-        return cmd;
-    }
-
-    /// <summary>
     /// Repeater direction (opcode 09). D1 is 09 minus, 49 plus, or 89 simplex.
     /// </summary>
     public static byte[] BuildRepeaterShiftCommand(int direction) =>

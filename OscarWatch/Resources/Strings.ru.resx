@@ -4874,6 +4874,15 @@ LOS: {2}
   <data name="Terminal.SendButton">
     <value>Отправить</value>
   </data>
+  <data name="Terminal.Settings.ModemTxDelay">
+    <value>Задержка TX модема (мс)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTxTail">
+    <value>Хвост TX модема (мс)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.Help">
+    <value>Укажите значения TXDELAY и TXTAIL из звукового модема. С FT-847 на спутнике, где приём и передача в одном диапазоне, OscarWatch перестраивает трансивер на частоту аплинка для каждого кадра и держит её это время плюс длительность кадра.</value>
+  </data>
   <data name="Terminal.TxDelay">
     <value>Задержка TX (с)</value>
   </data>

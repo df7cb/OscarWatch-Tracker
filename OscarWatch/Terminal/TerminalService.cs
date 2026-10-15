@@ -106,6 +106,9 @@ public sealed class TerminalService : IAsyncDisposable
     private readonly Dictionary<string, string> _lastTextSentTo = new(StringComparer.Ordinal);
     private readonly string _clientId = $"OscarWatch-Tracker/{OscarWatchHttpClients.GetProductVersion()}";
 
+    private readonly IRigController? _rig;
+    private readonly TerminalTransmitWindow _transmitWindow = new();
+
     private CancellationTokenSource? _runCts;
     private Task? _connectionTask;
     private Task? _uhmTask;
@@ -126,7 +129,8 @@ public sealed class TerminalService : IAsyncDisposable
         IOrbitPropagator propagator,
         ILiveTrackingService tracking,
         UhmApiClient? uhm = null,
-        IGpsService? gps = null)
+        IGpsService? gps = null,
+        IRigController? rig = null)
     {
         _settings = settings;
         _qsoLogger = qsoLogger;
@@ -134,6 +138,7 @@ public sealed class TerminalService : IAsyncDisposable
         _tracking = tracking;
         _uhm = uhm ?? new UhmApiClient();
         _gps = gps;
+        _rig = rig;
         _aprsIs.StateChanged += _ => Changed?.Invoke();
     }
 
@@ -280,7 +285,9 @@ public sealed class TerminalService : IAsyncDisposable
 
         try
         {
-            await transport.SendAsync(outgoing.Frame.Encode(), Settings.Agwpe.RadioPort, cancellationToken).ConfigureAwait(false);
+            var bytes = outgoing.Frame.Encode();
+            await HoldUplinkForFrameAsync(bytes.Length).ConfigureAwait(false);
+            await transport.SendAsync(bytes, Settings.Agwpe.RadioPort, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException or ObjectDisposedException
                                        or System.Net.Sockets.SocketException)
@@ -379,7 +386,9 @@ public sealed class TerminalService : IAsyncDisposable
 
         try
         {
-            await transport.SendAsync(frame.Encode(), Settings.Agwpe.RadioPort, cancellationToken).ConfigureAwait(false);
+            var bytes = frame.Encode();
+            await HoldUplinkForFrameAsync(bytes.Length).ConfigureAwait(false);
+            await transport.SendAsync(bytes, Settings.Agwpe.RadioPort, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException or ObjectDisposedException
                                        or System.Net.Sockets.SocketException)
@@ -729,6 +738,32 @@ public sealed class TerminalService : IAsyncDisposable
             _ = TryAutoLogAsync(station);
     }
 
+    /// <summary>
+    /// A single-VFO radio on a same-band satellite (FT-847) must be on the uplink before the
+    /// modem keys it. Other radios have a real split and the rig controller declines.
+    /// </summary>
+    private async Task HoldUplinkForFrameAsync(int frameBytes)
+    {
+        if (_rig is not { } rig)
+            return;
+
+        var settings = Settings;
+        var hold = _transmitWindow.Add(
+            frameBytes,
+            TerminalTransmitWindow.BaudForModemHint(Profile?.ModemHint),
+            settings.ModemTxDelayMs,
+            settings.ModemTxTailMs,
+            DateTime.UtcNow);
+        try
+        {
+            await Task.Run(() => rig.TryHoldSameBandTransmit(hold, TimeSpan.FromSeconds(1))).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Debug(ex, "Same-band uplink hold failed");
+        }
+    }
+
     private async Task SendAckAsync(string to, string number)
     {
         var transport = _transport;
@@ -742,7 +777,9 @@ public sealed class TerminalService : IAsyncDisposable
                 source,
                 Ax25Frame.ParsePath(Profile?.Path),
                 AprsPayloadCodec.BuildAck(to, number));
-            await transport.SendAsync(frame.Encode(), Settings.Agwpe.RadioPort, CancellationToken.None).ConfigureAwait(false);
+            var bytes = frame.Encode();
+            await HoldUplinkForFrameAsync(bytes.Length).ConfigureAwait(false);
+            await transport.SendAsync(bytes, Settings.Agwpe.RadioPort, CancellationToken.None).ConfigureAwait(false);
             lock (_gate)
                 _stats.RecordSent(frame.InfoText, DateTime.UtcNow);
         }

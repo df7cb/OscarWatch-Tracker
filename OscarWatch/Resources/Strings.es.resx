@@ -4869,6 +4869,15 @@ Está utilizando la versión {0}.
   <data name="Terminal.SendButton">
     <value>Enviar</value>
   </data>
+  <data name="Terminal.Settings.ModemTxDelay">
+    <value>Retardo TX del módem (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTxTail">
+    <value>Cola TX del módem (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.Help">
+    <value>Introduce los valores TXDELAY y TXTAIL de tu soundmodem. Con un FT-847 en un satélite de la misma banda, OscarWatch pasa la radio a la frecuencia de subida en cada trama y la mantiene ahí durante este tiempo más la duración de la trama.</value>
+  </data>
   <data name="Terminal.TxDelay">
     <value>Retardo TX (s)</value>
   </data>

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OscarWatch.Core.Models;
 using OscarWatch.Core.Services;
 using OscarWatch.Core.Terminal;
 using OscarWatch.Core.Terminal.Uhm;
@@ -135,6 +136,10 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         _autoLog = t.AutoLog;
         _aprsAutoAck = t.AprsAutoAck;
         _txDelaySeconds = t.TxDelaySeconds;
+        _modemTxDelayMs = t.ModemTxDelayMs;
+        _modemTxTailMs = t.ModemTxTailMs;
+        var rig = settings.Current.Rig;
+        ShowModemTiming = rig is { Type: RigType.YaesuFt847, DualRadioEnabled: false };
         _fontSize = t.FontSize;
 
         PrecisionOptions = Enum.GetValues<TerminalPositionPrecision>()
@@ -226,6 +231,11 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
     [ObservableProperty] private bool _autoLog;
     [ObservableProperty] private bool _aprsAutoAck;
     [ObservableProperty] private int _txDelaySeconds;
+    [ObservableProperty] private int _modemTxDelayMs;
+    [ObservableProperty] private int _modemTxTailMs;
+
+    /// <summary>Only the FT-847 (single radio) retunes around each transmit, so only it uses the modem timing.</summary>
+    public bool ShowModemTiming { get; }
     [ObservableProperty] private int _fontSize;
 
     partial void OnSelectedTransportChanged(TerminalTransportOption value)
@@ -425,6 +435,8 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         t.AutoLog = AutoLog;
         t.AprsAutoAck = AprsAutoAck;
         t.TxDelaySeconds = TxDelaySeconds;
+        t.ModemTxDelayMs = Math.Clamp(ModemTxDelayMs, 0, TerminalSettings.MaxModemTimingMs);
+        t.ModemTxTailMs = Math.Clamp(ModemTxTailMs, 0, TerminalSettings.MaxModemTimingMs);
         t.FontSize = FontSize;
         t.PositionPrecision = SelectedPrecision.Value;
         t.PositionSymbol = PositionSymbol ?? "";

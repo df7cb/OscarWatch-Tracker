@@ -22,13 +22,6 @@ public sealed class YaesuFt847CatCodecTests
     }
 
     [Fact]
-    public void BuildRepeaterOffsetCommand_matches_manual_5MHz_example()
-    {
-        var cmd = YaesuFt847CatCodec.BuildRepeaterOffsetCommand(5_000_000);
-        Assert.Equal(new byte[] { 0x00, 0x50, 0x00, 0x00, 0xF9 }, cmd);
-    }
-
-    [Fact]
     public void BuildRepeaterShiftCommand_uses_manual_direction_bytes()
     {
         Assert.Equal(new byte[] { 0x09, 0x00, 0x00, 0x00, 0x09 }, YaesuFt847CatCodec.BuildRepeaterShiftCommand(-1));

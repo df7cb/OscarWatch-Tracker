@@ -4874,6 +4874,15 @@ Aktuell: {1} ({2})</value>
   <data name="Terminal.SendButton">
     <value>Senden</value>
   </data>
+  <data name="Terminal.Settings.ModemTxDelay">
+    <value>Modem-TX-Verzögerung (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTxTail">
+    <value>Modem-TX-Nachlauf (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.Help">
+    <value>Die Werte TXDELAY und TXTAIL aus dem Soundmodem eintragen. Mit einem FT-847 an einem Satelliten im selben Band schaltet OscarWatch das Funkgerät für jeden Frame auf die Uplink-Frequenz und hält sie so lange plus die Sendedauer des Frames.</value>
+  </data>
   <data name="Terminal.TxDelay">
     <value>TX-Verzögerung (s)</value>
   </data>

@@ -41,6 +41,14 @@ public interface IRigController
     bool TryForceFt4DopplerStep(DateTime frequencyAtUtc, TimeSpan timeout);
 
     /// <summary>
+    /// Single-VFO radio on a same-band satellite (FT-847): move the dial to the Doppler uplink
+    /// before the modem keys, and back to the downlink after <paramref name="hold"/>. A call
+    /// during a hold extends it. Returns true once the dial is on the uplink; false when the
+    /// radio does not need this or the rig thread did not finish within <paramref name="timeout"/>.
+    /// </summary>
+    bool TryHoldSameBandTransmit(TimeSpan hold, TimeSpan timeout) => false;
+
+    /// <summary>
     /// Read the uplink radio’s set RF power in approximate watts when the driver supports it
     /// (e.g. ICOM CI-V 0x14 0x0A mapped via band maximum). Returns false when unsupported,
     /// disconnected, or the read failed.

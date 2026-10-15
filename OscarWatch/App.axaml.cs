@@ -123,7 +123,8 @@ public partial class App : Application
             sp.GetRequiredService<LiveQsoLogger>(),
             sp.GetRequiredService<IOrbitPropagator>(),
             sp.GetRequiredService<ILiveTrackingService>(),
-            gps: sp.GetRequiredService<IGpsService>()));
+            gps: sp.GetRequiredService<IGpsService>(),
+            rig: sp.GetRequiredService<IRigController>()));
         services.AddSingleton<Ft4ViewModel>();
         services.AddSingleton<ISstvPictureShareService, SstvPictureShareService>();
         services.AddSingleton(CreateSstvPictureUploader);

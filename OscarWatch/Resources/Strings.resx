@@ -4869,6 +4869,15 @@ Latest: {1} ({2})</value>
   <data name="Terminal.SendButton">
     <value>Send</value>
   </data>
+  <data name="Terminal.Settings.ModemTxDelay">
+    <value>Modem TX delay (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTxTail">
+    <value>Modem TX tail (ms)</value>
+  </data>
+  <data name="Terminal.Settings.ModemTiming.Help">
+    <value>Enter the TXDELAY and TXTAIL values from your soundmodem. With an FT-847 on a same-band satellite, OscarWatch moves the radio to the uplink frequency for each frame and keeps it there for this long plus the frame's airtime.</value>
+  </data>
   <data name="Terminal.TxDelay">
     <value>TX delay (s)</value>
   </data>
