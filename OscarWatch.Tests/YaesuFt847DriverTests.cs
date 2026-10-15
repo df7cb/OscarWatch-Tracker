@@ -7,6 +7,21 @@ namespace OscarWatch.Tests;
 public sealed class YaesuFt847DriverTests
 {
     [Fact]
+    public void Handshake_ptt_toggles_the_cat_port_line()
+    {
+        var transport = new RecordingYaesuCatTransport();
+        var driver = new YaesuFt847Driver(transport);
+
+        Assert.False(driver.TrySetHandshakeLine(useRts: true, assert: true));
+
+        driver.Open();
+        Assert.True(driver.TrySetHandshakeLine(useRts: true, assert: true));
+        Assert.True(driver.TrySetHandshakeLine(useRts: false, assert: false));
+
+        Assert.Equal([(true, true), (false, false)], transport.HandshakeLines);
+    }
+
+    [Fact]
     public void Open_sends_cat_on()
     {
         var transport = new RecordingYaesuCatTransport();

@@ -5210,6 +5210,15 @@ Aktuell: {1} ({2})</value>
   <data name="Terminal.Status.SendFailed">
     <value>Nicht gesendet: Das Modem hat den Rahmen abgelehnt.</value>
   </data>
+  <data name="Terminal.Status.SendFailedDetail">
+    <value>Nicht gesendet: {0}</value>
+  </data>
+  <data name="Ptt.PortBusy">
+    <value>Serielle Schnittstelle belegt ({0}). Schließen Sie das andere Programm, das sie verwendet, oder wählen Sie einen anderen Port.</value>
+  </data>
+  <data name="Ptt.PortNotFound">
+    <value>Serielle Schnittstelle nicht gefunden ({0}). Prüfen Sie das USB-Kabel und aktualisieren Sie die Portliste.</value>
+  </data>
   <data name="Terminal.Status.MacroEmpty">
     <value>{0} hat keinen Makrotext. Bitte in den Einstellungen ergänzen.</value>
   </data>

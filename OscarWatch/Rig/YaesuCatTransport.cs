@@ -107,6 +107,17 @@ internal sealed class YaesuCatTransport : IYaesuCatTransport
         }
     }
 
+    public void SetHandshakeLine(bool useRts, bool assert)
+    {
+        if (!_port.IsOpen)
+            return;
+
+        if (useRts)
+            _port.RtsEnable = assert;
+        else
+            _port.DtrEnable = assert;
+    }
+
     public void Dispose()
     {
         try

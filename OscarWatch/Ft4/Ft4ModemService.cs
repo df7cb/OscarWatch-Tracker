@@ -206,6 +206,8 @@ public sealed class Ft4ModemService : IDisposable
     private readonly object _slotGateLock = new();
     private volatile bool _slotGateHeld;
     private volatile bool _windowOpen;
+    private Task? _txTask;
+    private Task? _tuneTask;
 
     public IReadOnlyList<AudioInputDevice> GetInputDevices() => _audio.GetInputDevices();
 
@@ -374,7 +376,7 @@ public sealed class Ft4ModemService : IDisposable
         Changed?.Invoke();
     }
 
-    /// <summary>The FT4 window is on screen. The session keeps running after it closes.</summary>
+    /// <summary>Whether the FT4 window is on screen. The session stops when that window closes.</summary>
     public void SetWindowOpen(bool open)
     {
         _windowOpen = open;
@@ -433,17 +435,17 @@ public sealed class Ft4ModemService : IDisposable
         if (!IsRunning)
             return;
 
-        StopTune();
-        CancelTxSchedule();
-        _txCts?.Cancel();
+        // Cancel the loop before dropping PTT, so a slot boundary cannot key again while stopping.
         _loopCts?.Cancel();
+        StopTransmissionNow();
         if (_loopTask is not null)
         {
             try { await _loopTask.ConfigureAwait(false); }
             catch (OperationCanceledException) { /* expected */ }
         }
 
-        await _ptt.UnkeyAsync().ConfigureAwait(false);
+        await WaitForBackgroundPttAsync().ConfigureAwait(false);
+        _ptt.UnkeyNow();
         _ptt.ReleasePort();
         _slotRecorder.FlushAll();
         _audio.StopOutput();
@@ -452,6 +454,31 @@ public sealed class Ft4ModemService : IDisposable
         IsRunning = false;
         Status = _l.Get("Ft4.Status.Stopped");
         Changed?.Invoke();
+    }
+
+    /// <summary>
+    /// In-flight transmit and Tune can still open the separate PTT port after cancel.
+    /// Wait for them before releasing that port.
+    /// </summary>
+    private async Task WaitForBackgroundPttAsync()
+    {
+        var pending = new List<Task>(2);
+        if (_txTask is { } tx)
+            pending.Add(tx);
+        if (_tuneTask is { } tune)
+            pending.Add(tune);
+        if (pending.Count == 0)
+            return;
+
+        try
+        {
+            await Task.WhenAll(pending).WaitAsync(TimeSpan.FromSeconds(3)).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            // Stopping still has to drop PTT and close the port.
+            Log.Debug(ex, "FT4 PTT work did not finish before the port was released");
+        }
     }
 
     public void StartCq(bool evenSlot)
@@ -637,7 +664,7 @@ public sealed class Ft4ModemService : IDisposable
         Status = _l.Get("Ft4.Status.Tuning", FormatTuneHz());
         Changed?.Invoke();
 
-        _ = Task.Run(async () =>
+        _tuneTask = Task.Run(async () =>
         {
             try
             {
@@ -669,7 +696,7 @@ public sealed class Ft4ModemService : IDisposable
                 _ = _ptt.UnkeyAsync();
                 Status = _l.Get(
                     "Ft4.Status.TxError",
-                    ComPortConflictLocalizer.Localize(ex.Message, _l));
+                    PttFailureLocalizer.Localize(ex.Message, _l));
                 Changed?.Invoke();
             }
         });
@@ -1213,7 +1240,7 @@ public sealed class Ft4ModemService : IDisposable
             Log.Information("FT4 TX audio started {IntoMs:0} ms into the slot from a prepared buffer", intoMs);
         }
 
-        _ = Task.Run(async () =>
+        _txTask = Task.Run(async () =>
         {
             try
             {
@@ -1229,7 +1256,7 @@ public sealed class Ft4ModemService : IDisposable
                 Log.Warning(ex, "FT4 transmit task failed");
                 Status = _l.Get(
                     "Ft4.Status.TxError",
-                    ComPortConflictLocalizer.Localize(ex.Message, _l));
+                    PttFailureLocalizer.Localize(ex.Message, _l));
                 Changed?.Invoke();
             }
             finally

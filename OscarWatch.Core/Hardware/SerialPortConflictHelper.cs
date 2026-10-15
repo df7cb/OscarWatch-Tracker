@@ -129,28 +129,23 @@ public static class SerialPortConflictHelper
         RotatorSettings rotator,
         GpsSettings? gps,
         out string message) =>
-        TryDescribeSeparatePttConflict("FT4", separatePttPort, rig, rotator, gps, null, null, out message);
+        TryDescribeSeparatePttConflict("FT4", separatePttPort, rig, rotator, gps, out message);
 
-    /// <summary>FT4 separate PTT port in <paramref name="settings"/> conflicts with another device or the Terminal modem.</summary>
+    /// <summary>
+    /// FT4 separate PTT port in <paramref name="settings"/> conflicts with the radio, rotator, or GPS.
+    /// The same port may also be Terminal's separate PTT port: only one of those windows holds it open.
+    /// </summary>
     public static bool TryDescribeFt4SeparatePttConflict(AppSettings settings, string? separatePttPort, out string message) =>
         TryDescribeSeparatePttConflict(
-            "FT4", separatePttPort, settings.Rig, settings.Rotator, settings.Gps,
-            "Terminal", TerminalSeparatePttPort(settings), out message);
+            "FT4", separatePttPort, settings.Rig, settings.Rotator, settings.Gps, out message);
 
-    /// <summary>Terminal modem separate PTT port conflicts with another device or FT4.</summary>
+    /// <summary>
+    /// Terminal modem separate PTT port conflicts with the radio, rotator, or GPS.
+    /// The same port may also be FT4's separate PTT port: only one of those windows holds it open.
+    /// </summary>
     public static bool TryDescribeTerminalSeparatePttConflict(AppSettings settings, string? separatePttPort, out string message) =>
         TryDescribeSeparatePttConflict(
-            "Terminal", separatePttPort, settings.Rig, settings.Rotator, settings.Gps,
-            "FT4", Ft4SeparatePttPort(settings), out message);
-
-    /// <summary>The COM port the built-in Terminal modem keys on, or null when it does not use one.</summary>
-    public static string? TerminalSeparatePttPort(AppSettings settings)
-    {
-        var terminal = settings.Terminal;
-        return terminal is { Transport: TerminalTransportKind.BuiltIn, BuiltIn.PttMethod: PttMethod.SeparateComPort }
-            ? terminal.BuiltIn.SeparatePttPort
-            : null;
-    }
+            "Terminal", separatePttPort, settings.Rig, settings.Rotator, settings.Gps, out message);
 
     /// <summary>
     /// True when the Terminal KISS serial TNC port is also the radio, rotator or GPS port, or the FT4 separate
@@ -187,9 +182,8 @@ public static class SerialPortConflictHelper
         settings.Ft4.PttMethod == PttMethod.SeparateComPort ? settings.Ft4.SeparatePttPort : null;
 
     /// <summary>
-    /// True when <paramref name="owner"/>'s separate-PTT COM port would steal the radio, rotator or GPS
-    /// port, or is the separate PTT port of <paramref name="otherOwner"/> (FT4 and the Terminal modem
-    /// cannot both hold one COM port open).
+    /// True when <paramref name="owner"/>'s separate-PTT COM port would steal the radio, rotator or GPS port.
+    /// FT4 and Terminal may name the same separate PTT port: each releases it when its window closes.
     /// </summary>
     public static bool TryDescribeSeparatePttConflict(
         string owner,
@@ -197,8 +191,6 @@ public static class SerialPortConflictHelper
         RigSettings rig,
         RotatorSettings rotator,
         GpsSettings? gps,
-        string? otherOwner,
-        string? otherSeparatePttPort,
         out string message)
     {
         message = "";
@@ -212,13 +204,6 @@ public static class SerialPortConflictHelper
                 continue;
 
             message = $"{owner} separate PTT and {label} both use {ptt}. Use different COM ports or disable one device.";
-            return true;
-        }
-
-        var other = otherSeparatePttPort?.Trim() ?? "";
-        if (otherOwner is not null && string.Equals(ptt, other, StringComparison.OrdinalIgnoreCase))
-        {
-            message = $"{owner} separate PTT and {otherOwner} separate PTT both use {ptt}. Use different COM ports, or key one of them another way.";
             return true;
         }
 

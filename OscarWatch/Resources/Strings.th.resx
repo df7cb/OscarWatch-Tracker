@@ -5210,6 +5210,15 @@ LOS: {2}
   <data name="Terminal.Status.SendFailed">
     <value>ไม่ได้ส่ง: โมเด็มปฏิเสธเฟรม</value>
   </data>
+  <data name="Terminal.Status.SendFailedDetail">
+    <value>ไม่ได้ส่ง: {0}</value>
+  </data>
+  <data name="Ptt.PortBusy">
+    <value>พอร์ตอนุกรม {0} ถูกใช้งานอยู่ ปิดโปรแกรมอื่นที่ใช้พอร์ตนี้ หรือเลือกพอร์ตอื่น</value>
+  </data>
+  <data name="Ptt.PortNotFound">
+    <value>ไม่พบพอร์ตอนุกรม {0} ตรวจสอบสาย USB แล้วรีเฟรชรายการพอร์ต</value>
+  </data>
   <data name="Terminal.Status.MacroEmpty">
     <value>{0} ไม่มีข้อความมาโคร เพิ่มได้ในการตั้งค่า</value>
   </data>

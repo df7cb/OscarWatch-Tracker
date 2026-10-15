@@ -39,6 +39,15 @@ public sealed class YaesuFt847Driver : IRigDriver
     public RigType RigType => RigType.YaesuFt847;
     public bool IsConnected => _transport.IsOpen;
 
+    public bool TrySetHandshakeLine(bool useRts, bool assert)
+    {
+        if (!_transport.IsOpen)
+            return false;
+
+        _transport.SetHandshakeLine(useRts, assert);
+        return true;
+    }
+
     public bool TryConfirmIdentity()
     {
         if (!_transport.IsOpen)

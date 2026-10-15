@@ -48,6 +48,15 @@ public class YaesuFt817Driver : IRigDriver
         _catDelayMs = catDelayMs;
     }
 
+    public bool TrySetHandshakeLine(bool useRts, bool assert)
+    {
+        if (!_transport.IsOpen)
+            return false;
+
+        _transport.SetHandshakeLine(useRts, assert);
+        return true;
+    }
+
     public RigType RigType => _rigType;
     public bool IsConnected => _transport.IsOpen;
 

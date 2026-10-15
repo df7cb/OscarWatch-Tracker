@@ -5210,6 +5210,15 @@ Terbaru: {1} ({2})</value>
   <data name="Terminal.Status.SendFailed">
     <value>Tidak terkirim: modem menolak frame.</value>
   </data>
+  <data name="Terminal.Status.SendFailedDetail">
+    <value>Tidak terkirim: {0}</value>
+  </data>
+  <data name="Ptt.PortBusy">
+    <value>Port serial sedang dipakai ({0}). Tutup program lain yang memakainya, atau pilih port lain.</value>
+  </data>
+  <data name="Ptt.PortNotFound">
+    <value>Port serial tidak ditemukan ({0}). Periksa kabel USB dan segarkan daftar port.</value>
+  </data>
   <data name="Terminal.Status.MacroEmpty">
     <value>{0} belum memiliki teks makro. Tambahkan di Pengaturan.</value>
   </data>

@@ -262,6 +262,9 @@ public sealed class TerminalService : IAsyncDisposable
     public TerminalTransportState TransportState => _transport?.State ?? TerminalTransportState.Disconnected;
     public string? ModemDescription => _transport?.ModemDescription;
     public string? LastConnectionError { get; private set; }
+
+    /// <summary>Why the last send did not go out, or null after a send that did.</summary>
+    public string? LastSendFailure { get; private set; }
     public AprsIsState AprsIsState => _aprsIs.State;
     public TerminalUhmStatus UhmStatus { get; private set; } = TerminalUhmStatus.Off;
     public string? UhmStatusDetail { get; private set; }
@@ -401,12 +404,14 @@ public sealed class TerminalService : IAsyncDisposable
             await transport.SendAsync(bytes, Settings.ActiveRadioPort, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException or ObjectDisposedException
-                                       or System.Net.Sockets.SocketException)
+                                       or UnauthorizedAccessException or System.Net.Sockets.SocketException)
         {
             Log.Warning(ex, "Terminal send failed");
+            LastSendFailure = ex.Message;
             return MapTransmitFailure(ex) ?? TerminalSendResult.Failed;
         }
 
+        LastSendFailure = null;
         var utc = DateTime.UtcNow;
         TerminalLogEntry entry;
         TerminalStation? station;
@@ -504,12 +509,14 @@ public sealed class TerminalService : IAsyncDisposable
             await transport.SendAsync(bytes, Settings.ActiveRadioPort, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException or ObjectDisposedException
-                                       or System.Net.Sockets.SocketException)
+                                       or UnauthorizedAccessException or System.Net.Sockets.SocketException)
         {
             Log.Warning(ex, "Terminal position send failed");
+            LastSendFailure = ex.Message;
             return (MapTransmitFailure(ex) ?? TerminalSendResult.Failed, fix);
         }
 
+        LastSendFailure = null;
         var utc = DateTime.UtcNow;
         TerminalLogEntry entry;
         lock (_gate)

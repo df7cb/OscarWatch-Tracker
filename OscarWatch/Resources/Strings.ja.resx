@@ -5206,6 +5206,15 @@
   <data name="Terminal.Status.SendFailed">
     <value>未送信: モデムがフレームを拒否しました。</value>
   </data>
+  <data name="Terminal.Status.SendFailedDetail">
+    <value>未送信: {0}</value>
+  </data>
+  <data name="Ptt.PortBusy">
+    <value>シリアルポート {0} は使用中です。使用中のプログラムを終了するか、別のポートを選んでください。</value>
+  </data>
+  <data name="Ptt.PortNotFound">
+    <value>シリアルポート {0} が見つかりません。USBケーブルを確認し、ポート一覧を更新してください。</value>
+  </data>
   <data name="Terminal.Status.MacroEmpty">
     <value>{0} にマクロが設定されていません。設定で追加してください。</value>
   </data>

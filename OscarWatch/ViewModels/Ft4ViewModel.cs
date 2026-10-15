@@ -798,12 +798,20 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
         return Task.CompletedTask;
     }
 
-    public Task OnWindowClosedAsync()
+    public async Task OnWindowClosedAsync()
     {
         _windowOpen = false;
         _uiTimer.Stop();
         _modem.SetWindowOpen(false);
-        return Task.CompletedTask;
+        try
+        {
+            // Listening, transmit and the separate PTT port all stop with the window.
+            await StopSessionAsync().ConfigureAwait(true);
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "FT4 stop on window close failed");
+        }
     }
 
     public void StartSession()

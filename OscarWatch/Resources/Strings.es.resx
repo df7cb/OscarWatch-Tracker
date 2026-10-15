@@ -5205,6 +5205,15 @@ Está utilizando la versión {0}.
   <data name="Terminal.Status.SendFailed">
     <value>No enviado: el módem rechazó la trama.</value>
   </data>
+  <data name="Terminal.Status.SendFailedDetail">
+    <value>No enviado: {0}</value>
+  </data>
+  <data name="Ptt.PortBusy">
+    <value>Puerto serie en uso ({0}). Cierre el otro programa que lo usa, o elija otro puerto.</value>
+  </data>
+  <data name="Ptt.PortNotFound">
+    <value>Puerto serie no encontrado ({0}). Compruebe el cable USB y actualice la lista de puertos.</value>
+  </data>
   <data name="Terminal.Status.MacroEmpty">
     <value>{0} no tiene texto de macro. Añádelo en Ajustes.</value>
   </data>

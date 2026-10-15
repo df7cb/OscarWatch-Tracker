@@ -5206,6 +5206,15 @@
   <data name="Terminal.Status.SendFailed">
     <value>未发送:调制解调器拒绝了该帧。</value>
   </data>
+  <data name="Terminal.Status.SendFailedDetail">
+    <value>未发送: {0}</value>
+  </data>
+  <data name="Ptt.PortBusy">
+    <value>串口 {0} 已被占用。请关闭正在使用它的程序，或改用其他端口。</value>
+  </data>
+  <data name="Ptt.PortNotFound">
+    <value>未找到串口 {0}。请检查 USB 线并刷新端口列表。</value>
+  </data>
   <data name="Terminal.Status.MacroEmpty">
     <value>{0} 没有宏文本。请在设置中添加。</value>
   </data>

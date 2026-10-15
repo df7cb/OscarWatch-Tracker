@@ -1,5 +1,7 @@
+using OscarWatch.Core.Ft4;
 using OscarWatch.Core.Hardware;
 using OscarWatch.Core.Models;
+using OscarWatch.Core.Terminal;
 
 namespace OscarWatch.Tests;
 
@@ -245,17 +247,26 @@ public class SerialPortConflictHelperTests
     }
 
     [Fact]
-    public void Terminal_and_ft4_cannot_share_a_separate_ptt_port()
+    public void Terminal_and_ft4_may_use_the_same_separate_ptt_port()
     {
-        var rig = new RigSettings { Enabled = false };
-        var rotator = new RotatorSettings { Enabled = false };
+        var settings = new AppSettings
+        {
+            Rig = new RigSettings { Enabled = false },
+            Rotator = new RotatorSettings { Enabled = false },
+            Ft4 = new Ft4Settings { PttMethod = PttMethod.SeparateComPort, SeparatePttPort = "COM8" },
+            Terminal = new TerminalSettings
+            {
+                Transport = TerminalTransportKind.BuiltIn,
+                BuiltIn = new TerminalBuiltInModemSettings
+                {
+                    PttMethod = PttMethod.SeparateComPort,
+                    SeparatePttPort = "COM8"
+                }
+            }
+        };
 
-        Assert.True(SerialPortConflictHelper.TryDescribeSeparatePttConflict(
-            "Terminal", "com8", rig, rotator, gps: null, "FT4", "COM8", out var message));
-        Assert.Contains("Terminal separate PTT and FT4 separate PTT", message, StringComparison.Ordinal);
-
-        Assert.False(SerialPortConflictHelper.TryDescribeSeparatePttConflict(
-            "Terminal", "COM8", rig, rotator, gps: null, "FT4", "COM9", out _));
+        Assert.False(SerialPortConflictHelper.TryDescribeTerminalSeparatePttConflict(settings, "COM8", out _));
+        Assert.False(SerialPortConflictHelper.TryDescribeFt4SeparatePttConflict(settings, "COM8", out _));
     }
 
     [Fact]

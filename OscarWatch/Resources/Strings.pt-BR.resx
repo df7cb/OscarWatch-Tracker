@@ -5205,6 +5205,15 @@ Mais recente: {1} ({2})</value>
   <data name="Terminal.Status.SendFailed">
     <value>Não enviado: o modem rejeitou o quadro.</value>
   </data>
+  <data name="Terminal.Status.SendFailedDetail">
+    <value>Não enviado: {0}</value>
+  </data>
+  <data name="Ptt.PortBusy">
+    <value>Porta serial em uso ({0}). Feche o outro programa que a estiver usando, ou escolha outra porta.</value>
+  </data>
+  <data name="Ptt.PortNotFound">
+    <value>Porta serial não encontrada ({0}). Verifique o cabo USB e atualize a lista de portas.</value>
+  </data>
   <data name="Terminal.Status.MacroEmpty">
     <value>{0} não tem texto de macro. Adicione em Configurações.</value>
   </data>

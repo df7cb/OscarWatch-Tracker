@@ -6,6 +6,7 @@ namespace OscarWatch.Tests;
 internal sealed class RecordingYaesuCatTransport : IYaesuCatTransport
 {
     public List<byte[]> SentFrames { get; } = [];
+    public List<(bool UseRts, bool Assert)> HandshakeLines { get; } = [];
     public bool IsOpen { get; private set; }
 
     /// <summary>Returned once by the next <see cref="QueryFrame"/> call, ahead of the default identity reply.</summary>
@@ -41,6 +42,8 @@ internal sealed class RecordingYaesuCatTransport : IYaesuCatTransport
         frame[4] = 0x08;
         return frame;
     }
+
+    public void SetHandshakeLine(bool useRts, bool assert) => HandshakeLines.Add((useRts, assert));
 
     public void Dispose() => IsOpen = false;
 }

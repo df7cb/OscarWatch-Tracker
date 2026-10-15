@@ -5210,6 +5210,15 @@ LOS: {2}
   <data name="Terminal.Status.SendFailed">
     <value>Не отправлено: модем отклонил кадр.</value>
   </data>
+  <data name="Terminal.Status.SendFailedDetail">
+    <value>Не отправлено: {0}</value>
+  </data>
+  <data name="Ptt.PortBusy">
+    <value>Последовательный порт занят ({0}). Закройте другую программу, которая его использует, или выберите другой порт.</value>
+  </data>
+  <data name="Ptt.PortNotFound">
+    <value>Последовательный порт не найден ({0}). Проверьте USB-кабель и обновите список портов.</value>
+  </data>
   <data name="Terminal.Status.MacroEmpty">
     <value>У {0} нет текста макроса. Добавьте его в настройках.</value>
   </data>

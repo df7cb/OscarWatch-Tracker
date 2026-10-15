@@ -473,17 +473,14 @@
 
       <h3 id="back-to-ssb">When the hold applies, and going back to SSB</h3>
       <p>
-        Holding the radio still for each slot only suits FT4. It applies while FT4 is running and either:
+        Holding the radio still for each slot only suits FT4. It applies while the FT4 window is open
+        and FT4 is running, whichever transponder is selected.
       </p>
-      <ul>
-        <li>the FT4 window is open, whichever transponder is selected, or</li>
-        <li>the <strong>FT4</strong> transponder is selected in the satellite panel, even with the FT4 window closed.</li>
-      </ul>
       <p>
-        To go back to SSB, CW or any other mode, close the FT4 window and pick that transponder.
+        Closing the FT4 window stops listening and transmitting, and releases the separate PTT port.
         The hold is released straight away. The radio then follows Doppler continuously as normal,
-        and the audio correction above is switched off too. Open the FT4 window again, or pick the
-        FT4 transponder, and the hold comes back.
+        and the audio correction above is switched off too. Open the FT4 window again and the hold
+        comes back while that window is open.
       </p>
 
       <h3>Your echo</h3>
@@ -554,7 +551,7 @@
         <li><strong>VOX / audio</strong>: OscarWatch only plays the sound. The radio or interface switches to transmit when it hears it.</li>
         <li><strong>CAT</strong>: OscarWatch tells the radio to transmit over the control lead. This is the usual choice for a radio with USB control, such as the IC-9700.</li>
         <li><strong>CAT port RTS/DTR</strong>: a control line (RTS or DTR) on the radio's own serial port, for an interface built that way.</li>
-        <li><strong>Separate COM port</strong>: a control line on a different serial port, used only for PTT. It must not be the radio, rotator, or GPS port.</li>
+        <li><strong>Separate COM port</strong>: a control line on a different serial port, used only for PTT. It must not be the radio, rotator, or GPS port. Terminal may use the same port. Closing the FT4 window releases it.</li>
         <li><strong>Manual</strong>: OscarWatch tells you when to key and unkey yourself.</li>
       </ul>
       <p>

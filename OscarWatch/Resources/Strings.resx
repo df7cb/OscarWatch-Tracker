@@ -5205,6 +5205,15 @@ Latest: {1} ({2})</value>
   <data name="Terminal.Status.SendFailed">
     <value>Not sent: the modem rejected the frame.</value>
   </data>
+  <data name="Terminal.Status.SendFailedDetail">
+    <value>Not sent: {0}</value>
+  </data>
+  <data name="Ptt.PortBusy">
+    <value>Serial port in use ({0}). Close the other program using it, or choose a different port.</value>
+  </data>
+  <data name="Ptt.PortNotFound">
+    <value>Serial port not found ({0}). Check the USB cable and refresh the port list.</value>
+  </data>
   <data name="Terminal.Status.MacroEmpty">
     <value>{0} has no macro text. Add one in Settings.</value>
   </data>

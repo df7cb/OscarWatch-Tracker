@@ -564,11 +564,21 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
                 TerminalSendResult.NoCallsign => _l.Get("Terminal.Status.NoCallsign"),
                 TerminalSendResult.NotAprs => _l.Get("Terminal.Status.PositionNeedsAprs"),
                 TerminalSendResult.NoPosition => _l.Get("Terminal.Status.PositionUnknown"),
+                TerminalSendResult.Failed => DescribeSendFailure(),
                 _ => ModemSendFailureText(result) ?? _l.Get("Terminal.Status.SendFailed"),
             };
         }
 
         RefreshSendPosition(DateTime.UtcNow);
+    }
+
+    /// <summary>The send did not leave the modem. Prefer the reason it gave.</summary>
+    private string DescribeSendFailure()
+    {
+        var reason = _service.LastSendFailure;
+        if (string.IsNullOrWhiteSpace(reason))
+            return _l.Get("Terminal.Status.SendFailed");
+        return _l.Get("Terminal.Status.SendFailedDetail", PttFailureLocalizer.Localize(reason, _l));
     }
 
     /// <summary>Messages for the built-in modem's transmit blocks and failures.</summary>
@@ -754,6 +764,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
             TerminalSendResult.NoCallsign => _l.Get("Terminal.Status.NoCallsign"),
             TerminalSendResult.InvalidDestination => _l.Get("Terminal.Status.InvalidDestination"),
             TerminalSendResult.EmptyMessage => _l.Get("Terminal.Status.EmptyMessage"),
+            TerminalSendResult.Failed => DescribeSendFailure(),
             _ => ModemSendFailureText(result) ?? _l.Get("Terminal.Status.SendFailed"),
         };
         if (result == TerminalSendResult.Sent && clearMessage)

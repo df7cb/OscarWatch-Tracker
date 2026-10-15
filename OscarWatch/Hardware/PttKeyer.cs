@@ -229,8 +229,28 @@ public sealed class PttKeyer : IDisposable
             DtrEnable = false,
             RtsEnable = false
         };
-        _separatePort.Open();
+        try
+        {
+            _separatePort.Open();
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException)
+        {
+            var failed = _separatePort;
+            _separatePort = null;
+            try { failed.Dispose(); } catch { /* the open already failed */ }
+            throw new InvalidOperationException(DescribeOpenFailure(portName, ex), ex);
+        }
     }
+
+    private static string DescribeOpenFailure(string portName, Exception ex) =>
+        SerialPortConnectErrorHelper.Classify(ex) switch
+        {
+            SerialPortConnectErrorKind.PortBusy =>
+                $"Serial port in use ({portName}). Close the other program using it, or choose a different port.",
+            SerialPortConnectErrorKind.PortNotFound =>
+                $"Serial port not found ({portName}). Check the USB cable and refresh the port list.",
+            _ => ex.Message
+        };
 
     private static void SetLine(SerialPort port, PttLine line, bool assert)
     {
