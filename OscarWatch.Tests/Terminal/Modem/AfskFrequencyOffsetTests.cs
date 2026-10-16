@@ -88,7 +88,7 @@ public sealed class AfskFrequencyOffsetTests
                 after = tone.MarkAmplitude(0);
         }
 
-        Assert.True(after > before * 0.5f, $"mark correlator collapsed across former table wrap ({before} -> {after})");
+        Assert.True(after > before * 0.9f, $"mark correlator collapsed across former table wrap ({before} -> {after})");
     }
 
     [Fact]
