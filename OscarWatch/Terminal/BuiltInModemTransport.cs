@@ -44,7 +44,7 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
     private static readonly TimeSpan CaptureWait = TimeSpan.FromMilliseconds(100);
 
     /// <summary>Queued audio needed to append another frame without a gap in the carrier.</summary>
-    private const double ChainMarginSeconds = 0.03;
+    internal const double ChainMarginSeconds = 0.03;
 
     private readonly IPacketAudio _audio;
     private readonly PttKeyer _ptt;

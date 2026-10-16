@@ -109,9 +109,10 @@ public sealed class BuiltInModemTransportTests
         var first = ModemTestSignals.UiFrame(":MM9SQL   :9600 first");
         var second = ModemTestSignals.UiFrame(":MM9SQL   :9600 second");
 
+        var margin = (long)(h.Audio.PlaybackSampleRate * BuiltInModemTransport.ChainMarginSeconds);
         var sendFirst = h.Modem.SendAsync(first, 0, CancellationToken.None);
-        await WaitUntilAsync(() => h.Modem.IsTransmitting);
-        await Task.Delay(20);
+        await WaitUntilAsync(() =>
+            h.Modem.IsTransmitting && h.Audio.QueuedPlaybackSamples > margin);
         var sendSecond = h.Modem.SendAsync(second, 0, CancellationToken.None);
         await Task.WhenAll(sendFirst, sendSecond).WaitAsync(Timeout);
 
@@ -128,9 +129,10 @@ public sealed class BuiltInModemTransportTests
         var first = ModemTestSignals.UiFrame(":MM9SQL   :first frame of the chain");
         var second = ModemTestSignals.UiFrame(":MM9SQL   :second frame");
 
+        var margin = (long)(h.Audio.PlaybackSampleRate * BuiltInModemTransport.ChainMarginSeconds);
         var sendFirst = h.Modem.SendAsync(first, 0, CancellationToken.None);
-        await WaitUntilAsync(() => h.Modem.IsTransmitting);
-        await Task.Delay(80);
+        await WaitUntilAsync(() =>
+            h.Modem.IsTransmitting && h.Audio.QueuedPlaybackSamples > margin);
         var sendSecond = h.Modem.SendAsync(second, 0, CancellationToken.None);
         await Task.WhenAll(sendFirst, sendSecond).WaitAsync(Timeout);
 
