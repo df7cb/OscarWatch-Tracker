@@ -447,8 +447,10 @@
         speaker or microphone. Set <strong>Modem rate</strong> to <strong>Automatic</strong> when you pick the satellite from
         the database, or force <strong>9600 baud G3RUH</strong> manually. Connect the USB or data cable to the radio's 9600
         packet port, choose a 48 kHz capture device if Windows offers one, and set the separate <strong>TX level (9600 G3RUH
-        data port)</strong>. Put the radio menu on 9600 packet yourself; OscarWatch does not switch 1200/9600 over CAT yet.
-        Duplex (half or full) works the same as for 1200 AFSK.
+        data port)</strong>.         Put the radio menu on 9600 packet yourself; OscarWatch does not switch 1200/9600 over CAT yet.
+        Duplex (half or full) works the same as for 1200 AFSK. Keep <strong>rig Doppler correction</strong> enabled for
+        9600 satellites: each CAT tuning step moves the FM discriminator baseline on the data port, and the built-in modem
+        recentres within about 10 ms, but uncorrected Doppler drift still needs the same tracking you use for SSB/FM passes.
       </p>
       <h3>Safety and decoding (Soundcard tab)</h3>
       <ul>

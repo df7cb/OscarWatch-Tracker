@@ -17,6 +17,8 @@ These cover the demodulator bank, HDLC and bit fixing, the resampler, the transm
 | `Wa8lmfBenchmarkTests` | `OSCARWATCH_TNC_TEST_CD` set to the track folder, or to `1` for the `testdata/wa8lmf` folder that `tools/fetch-tnc-test-cd.ps1` fills. Opt-in because the tracks take minutes to decode. | Decode counts on WA8LMF TNC Test CD tracks 1 to 4 against fixed gates. Put `direwolf-atest.txt` beside the tracks to print the difference from a local Direwolf run. |
 | `DirewolfInteropTests` | `OSCARWATCH_DIREWOLF_DIR` pointing at a Direwolf build folder with `atest` and `gen_packets` | At 1200 baud: Direwolf decodes every frame our AFSK modulator produces, and we decode at least 95% as many `gen_packets -n 100` frames as Direwolf (bit fixing off). At 9600 baud: same checks with `-B 9600` and `G3ruhReceiver` (50 frames). |
 | `G3ruhChannelSimulationTests` | (always) | Synthetic 9600 loopback, noise, DC drift, polarity inversion, and clock offset. |
+| `G3ruhDopplerRobustnessTests` | (always) | Sudden discriminator steps (mid-frame and between frames), constant offset, and linear ramp; documents `G3ruhDopplerTolerance`. |
+| `G3ruhHighPassMeasurementTests` | (always) | Checks the 12 Hz DC blocker retains most scrambled 9600 baseband power. |
 
 Direwolf's Windows build is on the [Direwolf releases page](https://github.com/wb2osz/direwolf/releases). With 1.8.1 the interop test gave 20 of 20 frames decoded by Direwolf, and 73 (OscarWatch) against 72 (Direwolf) on the `gen_packets -n 100` set.
 

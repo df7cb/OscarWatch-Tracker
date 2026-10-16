@@ -6,20 +6,51 @@ public sealed class G3ruhDemodulator
     public const int MinSampleRate = 38400;
     public const int PreferredSampleRate = 48000;
 
+    /// <summary>
+    /// Normal high-pass corner (Hz). Chosen at 48 kHz so the −3 dB point sits well below the scrambled
+    /// 9600 baud lobe (measured −20 dB near 800 Hz on synthetic keys) while tracking slow baseline wander.
+    /// </summary>
+    public const float HighPassCornerHz = 12f;
+
+    /// <summary>Corner (Hz) while fast DC recovery is active after a CAT step.</summary>
+    public const float StepRecoveryCornerHz = 380f;
+
+    /// <summary>Slow DC tracker corner (Hz) used to recognise persistent baseline shifts.</summary>
+    public const float SlowBaselineCornerHz = 2.5f;
+
+    /// <summary>Per-sample jump on the data port that indicates a CAT frequency step (not a symbol edge).</summary>
+    public const float StepDetectJumpMin = 0.14f;
+
+    public const float StepDetectJumpMax = 0.55f;
+
+    /// <summary>Fraction of a detected step applied immediately to the fast DC estimate.</summary>
+    public const float StepSnapGain = 0.92f;
+
+    /// <summary>How long fast tracking stays engaged after a step (10 ms at 48 kHz).</summary>
+    public const int StepRecoveryDurationSamples = 480;
+
     private const int LowPassTaps = 31;
-    private const float HpfAlpha = 0.9995f;
     private const float AgcFastAttack = 0.65f;
     private const float AgcSlowDecay = 0.00025f;
 
     private readonly float[] _lowPass;
     private readonly float[] _delay = new float[LowPassTaps * 2];
+    private readonly float _kSlow;
+    private readonly float _kFast;
+    private readonly float _kBaseline;
     private int _delayIndex;
-    private float _hpfState;
+    private float _dcFast;
+    private float _dcSlow;
+    private float _lastSample;
     private float _agcGain = 1f;
+    private int _stepRecoverySamples;
 
     public G3ruhDemodulator(int sampleRate)
     {
         SampleRate = sampleRate;
+        _kSlow = CoefficientForCornerHz(HighPassCornerHz, sampleRate);
+        _kFast = CoefficientForCornerHz(StepRecoveryCornerHz, sampleRate);
+        _kBaseline = CoefficientForCornerHz(SlowBaselineCornerHz, sampleRate);
         _lowPass = DesignLowPass(sampleRate, cutoffHz: 7200);
     }
 
@@ -27,19 +58,41 @@ public sealed class G3ruhDemodulator
 
     public float Filtered { get; private set; }
 
+    /// <summary>True while the demodulator is in fast DC recovery after a baseline step.</summary>
+    public bool StepRecoveryActive => _stepRecoverySamples > 0;
+
     public void Reset()
     {
         Array.Clear(_delay);
         _delayIndex = 0;
-        _hpfState = 0;
+        _dcFast = 0;
+        _dcSlow = 0;
+        _lastSample = 0;
         _agcGain = 1f;
+        _stepRecoverySamples = 0;
         Filtered = 0;
     }
 
     public void Process(float sample)
     {
-        var highPass = sample - _hpfState;
-        _hpfState += (1 - HpfAlpha) * highPass;
+        _dcSlow += _kBaseline * (sample - _dcSlow);
+        var jump = sample - _lastSample;
+        _lastSample = sample;
+
+        if (Math.Abs(jump) is >= StepDetectJumpMin and <= StepDetectJumpMax)
+        {
+            _stepRecoverySamples = StepRecoveryDurationSamples;
+            _dcFast += StepSnapGain * jump;
+        }
+        else if (_stepRecoverySamples > 0)
+        {
+            _stepRecoverySamples--;
+        }
+
+        var error = sample - _dcFast;
+        var k = _stepRecoverySamples > 0 ? _kFast : _kSlow;
+        _dcFast += k * error;
+        var highPass = sample - _dcFast;
 
         _delayIndex = (_delayIndex + LowPassTaps - 1) % LowPassTaps;
         _delay[_delayIndex] = highPass;
@@ -53,6 +106,10 @@ public sealed class G3ruhDemodulator
         _agcGain += target * (Math.Max(magnitude, 1e-6f) - _agcGain);
         Filtered = filtered / Math.Max(_agcGain, 1e-4f);
     }
+
+    /// <summary>One-pole high-pass coefficient: state += k·(x−state), k ≈ 2π·fc/fs.</summary>
+    internal static float CoefficientForCornerHz(double cornerHz, int sampleRate) =>
+        (float)(2 * Math.PI * cornerHz / sampleRate);
 
     private static float[] DesignLowPass(int sampleRate, double cutoffHz)
     {

@@ -91,4 +91,40 @@ internal static class ModemTestSignals
         for (var i = 0; i < samples.Length; i++)
             samples[i] *= g;
     }
+
+    /// <summary>Adds a constant discriminator baseline (FM data-port DC) across the whole buffer.</summary>
+    public static void AddDiscriminatorDcOffset(Span<float> samples, float offset)
+    {
+        for (var i = 0; i < samples.Length; i++)
+            samples[i] += offset;
+    }
+
+    /// <summary>Sudden baseline step at <paramref name="stepIndex"/> (CAT frequency hop on the data port).</summary>
+    public static void AddDiscriminatorDcStep(Span<float> samples, int stepIndex, float step)
+    {
+        for (var i = Math.Clamp(stepIndex, 0, samples.Length); i < samples.Length; i++)
+            samples[i] += step;
+    }
+
+    /// <summary>Linear discriminator drift (residual uncorrected Doppler on the FM demod output).</summary>
+    public static void AddDiscriminatorDcRamp(Span<float> samples, int sampleRate, float startOffset, float voltsPerSecond)
+    {
+        for (var i = 0; i < samples.Length; i++)
+            samples[i] += startOffset + voltsPerSecond * (i / (float)sampleRate);
+    }
+
+    /// <summary>First sample index of keyed G3RUH audio (after leading silence).</summary>
+    public static int G3ruhPayloadStart(int sampleRate, double silenceSeconds = 0.2) =>
+        (int)(sampleRate * silenceSeconds);
+
+    /// <summary>Approximate sample at the middle of the AX.25 payload (after TXDELAY flags).</summary>
+    public static int G3ruhMidFrameSample(int sampleRate, int txDelayMs = 200, double silenceSeconds = 0.2)
+    {
+        var start = G3ruhPayloadStart(sampleRate, silenceSeconds);
+        var delaySamples = (int)(sampleRate * (txDelayMs / 1000.0));
+        var frame = UiFrame("mid-frame marker 9600 G3RUH");
+        var bits = HdlcEncoder.EncodeG3ruhTransmission([frame], txDelayMs, 30);
+        var frameSamples = G3ruhModulator.Modulate(bits, sampleRate, 0.35).Length;
+        return start + delaySamples + frameSamples / 2;
+    }
 }
