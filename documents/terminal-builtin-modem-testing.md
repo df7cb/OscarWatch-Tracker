@@ -8,7 +8,7 @@ The built-in modem (`OscarWatch.Core/Terminal/Modem`, `OscarWatch/Terminal/Built
 dotnet test OscarWatch.Tests --filter "FullyQualifiedName~Terminal"
 ```
 
-These cover the demodulator bank, HDLC and bit fixing, the resampler, the transmit path (frame chaining, PTT sequencing, watchdog, CSMA, half duplex blanking and guard, the FT-847 hold callback), settings clamping and link type classification.
+These cover the demodulator bank (including optional ±175/±350 Hz offset banks), HDLC and bit fixing, the resampler, the transmit path (frame chaining, PTT sequencing, watchdog, CSMA, half duplex blanking and guard, the FT-847 hold callback), settings clamping and link type classification.
 
 ## 2. Offline corpora (run when the files are present)
 

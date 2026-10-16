@@ -4,15 +4,8 @@ namespace OscarWatch.Core.Terminal.Modem;
 public readonly record struct AfskCandidate(byte[] FrameWithFcs, int Path, long Sample);
 
 /// <summary>
-/// Parallel decoder paths over one <see cref="AfskDemodulator"/>. Each path has its own decision,
-/// clock recovery and HDLC state:
-/// <list type="bullet">
-/// <item>A: 1.2-bit correlators (each window nulls the other tone) with mark/space balance from −6 to +10 dB, so
-/// flat data-port audio and de-emphasised speaker audio both decode without a twist setting;</item>
-/// <item>B: one-bit correlators with a smaller set of balances;</item>
-/// <item>AGC: per-tone AGC on the A correlators;</item>
-/// <item>D: delay-line discriminator.</item>
-/// </list>
+/// Parallel decoder paths over shared band-pass filtering and one or more tone-offset correlator banks.
+/// Each path has its own decision, clock recovery and HDLC state.
 /// </summary>
 public sealed class AfskSlicerBank
 {
@@ -22,21 +15,50 @@ public sealed class AfskSlicerBank
     private static readonly int[] BalancesADb = [-6, -4, -2, 0, 2, 4, 6, 8, 10];
     private static readonly int[] BalancesBDb = [-3, 0, 3, 6];
 
-    private readonly AfskDemodulator _demod = new([12, 10]);
+    private readonly AfskBandPassFilter _filter = new();
+    private readonly ToneChannel[] _channels;
     private readonly Path[] _paths;
     private long _sample;
 
-    public AfskSlicerBank()
+    public AfskSlicerBank(bool frequencyOffsetDecoders = true)
     {
+        var channels = new List<ToneChannel>();
+        foreach (var offset in AfskFrequencyOffsetDecoders.AllOffsetsHz(frequencyOffsetDecoders))
+        {
+            var tone = new AfskToneDemodulator(
+                AfskFrequencyOffsetDecoders.MarkHz + offset,
+                AfskFrequencyOffsetDecoders.SpaceHz + offset,
+                [12, 10]);
+            channels.Add(new ToneChannel(offset, tone));
+        }
+
+        _channels = channels.ToArray();
         var paths = new List<Path>();
-        foreach (var db in BalancesADb)
-            paths.Add(new Path($"A{db:+0;-0;0}", PathKind.Balance, CorrelatorA, (float)Math.Pow(10, db / 20.0)));
-        foreach (var db in BalancesBDb)
-            paths.Add(new Path($"B{db:+0;-0;0}", PathKind.Balance, CorrelatorB, (float)Math.Pow(10, db / 20.0)));
-        paths.Add(new Path("AGC", PathKind.Agc, CorrelatorA, 1));
-        paths.Add(new Path("D", PathKind.Discriminator, 0, 1));
+        foreach (var ch in _channels)
+        {
+            if (ch.OffsetHz == 0)
+            {
+                foreach (var db in BalancesADb)
+                    paths.Add(new Path(ch, $"A{db:+0;-0;0}", PathKind.Balance, CorrelatorA, (float)Math.Pow(10, db / 20.0)));
+                foreach (var db in BalancesBDb)
+                    paths.Add(new Path(ch, $"B{db:+0;-0;0}", PathKind.Balance, CorrelatorB, (float)Math.Pow(10, db / 20.0)));
+                paths.Add(new Path(ch, "AGC", PathKind.Agc, CorrelatorA, 1));
+                paths.Add(new Path(ch, "D", PathKind.Discriminator, 0, 1));
+            }
+            else
+            {
+                var tag = $"F{ch.OffsetHz:+0;-0;0}";
+                paths.Add(new Path(ch, $"{tag} A0", PathKind.Balance, CorrelatorA, 1));
+                paths.Add(new Path(ch, $"{tag} AGC", PathKind.Agc, CorrelatorA, 1));
+                paths.Add(new Path(ch, $"{tag} D", PathKind.Discriminator, 0, 1));
+            }
+        }
+
         _paths = paths.ToArray();
     }
+
+    /// <summary>Paths on the centre (0 Hz offset) bank; used as the quality percentage denominator.</summary>
+    public int QualityPathCount { get; } = BalancesADb.Length + BalancesBDb.Length + 2;
 
     public int PathCount => _paths.Length;
 
@@ -60,11 +82,13 @@ public sealed class AfskSlicerBank
     /// <summary>Samples processed at 12 kHz since construction (not cleared by <see cref="Reset"/>).</summary>
     public long Sample => _sample;
 
-    public float Filtered => _demod.Filtered;
+    public float Filtered => _filter.Last;
 
     public void Reset()
     {
-        _demod.Reset();
+        _filter.Reset();
+        foreach (var ch in _channels)
+            ch.Tone.Reset();
         foreach (var p in _paths)
         {
             p.Clock.Reset();
@@ -77,16 +101,20 @@ public sealed class AfskSlicerBank
 
     public void Process(float sample, List<AfskCandidate> output)
     {
-        _demod.Process(sample);
+        var x = _filter.Process(sample);
+        foreach (var ch in _channels)
+            ch.Tone.ProcessFiltered(x);
+
         _sample++;
         for (var i = 0; i < _paths.Length; i++)
         {
             var p = _paths[i];
+            var tone = p.Channel.Tone;
             var demod = p.Kind switch
             {
-                PathKind.Balance => _demod.MarkAmplitude(p.Correlator) - _demod.SpaceAmplitude(p.Correlator) * p.SpaceGain,
-                PathKind.Agc => _demod.AgcOutput(p.Correlator),
-                _ => _demod.Discriminator
+                PathKind.Balance => tone.MarkAmplitude(p.Correlator) - tone.SpaceAmplitude(p.Correlator) * p.SpaceGain,
+                PathKind.Agc => tone.AgcOutput(p.Correlator),
+                _ => tone.Discriminator
             };
 
             var bit = p.Clock.Push(demod, p.Hdlc.Dcd);
@@ -104,16 +132,24 @@ public sealed class AfskSlicerBank
         Discriminator
     }
 
+    private sealed class ToneChannel(int offsetHz, AfskToneDemodulator tone)
+    {
+        public int OffsetHz { get; } = offsetHz;
+        public AfskToneDemodulator Tone { get; } = tone;
+    }
+
     private sealed class Path
     {
-        public Path(string name, PathKind kind, int correlator, float spaceGain)
+        public Path(ToneChannel channel, string name, PathKind kind, int correlator, float spaceGain)
         {
+            Channel = channel;
             Name = name;
             Kind = kind;
             Correlator = correlator;
             SpaceGain = spaceGain;
         }
 
+        public ToneChannel Channel { get; }
         public string Name { get; }
         public PathKind Kind { get; }
         public int Correlator { get; }

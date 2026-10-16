@@ -5722,6 +5722,12 @@
   <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
     <value>1 ビットと隣接ペア</value>
   </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders" xml:space="preserve">
+    <value>周波数オフセット復号</value>
+  </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders.Help" xml:space="preserve">
+    <value>CAT ドップラー補正の合間で FM 音声のトーンがずれたパケットを拾うため、±175 Hz と ±350 Hz の追加復号バンクを動かします。CPU 負荷がやや増えます。非常に遅い PC ではオフにできます。</value>
+  </data>
   <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
     <value>衛星が地平線より下にある間は送信しない</value>
   </data>

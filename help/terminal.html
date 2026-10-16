@@ -448,6 +448,9 @@
         <li><strong>Bit fixing:</strong> a frame with one damaged bit would normally be thrown away. Bit fixing tries flipping
           a bit and checks whether the frame then makes sense, which rescues some weak frames. <strong>Single bit</strong> is
           the safe default.</li>
+        <li><strong>Frequency-offset decoders:</strong> on by default. Extra decoder banks at ±175 and ±350 Hz help copy ISS
+          and other FM downlink packets when Doppler CAT steps leave the audio tones slightly high or low. Turn off on a very
+          slow PC if processor use is a concern.</li>
         <li><strong>Do not transmit while the satellite is below the horizon:</strong> on by default. Untick it only for
           ground-based packet.</li>
         <li><strong>Decode WAV file:</strong> plays a recording through the modem without transmitting, for example a pass you

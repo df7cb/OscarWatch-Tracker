@@ -80,6 +80,12 @@ public sealed class TerminalBuiltInModemSettings
 
     public AfskBitFixMode BitFix { get; set; } = AfskBitFixMode.SingleBit;
 
+    /// <summary>
+    /// Parallel decoder banks at ±175 and ±350 Hz tone offset (shared band-pass). Helps FM downlink packets
+    /// when residual Doppler leaves audio tones away from 1200/2200 Hz between CAT steps.
+    /// </summary>
+    public bool FrequencyOffsetDecoders { get; set; } = true;
+
     /// <summary>Unkey after this long on the air whatever is still queued.</summary>
     public int WatchdogSeconds { get; set; } = DefaultWatchdogSeconds;
 

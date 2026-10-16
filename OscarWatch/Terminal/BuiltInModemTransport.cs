@@ -222,7 +222,7 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
 
     private void ReceiveLoop(CancellationToken ct)
     {
-        var receiver = new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix);
+        var receiver = new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix, _settings().BuiltIn.FrequencyOffsetDecoders);
         var buffer = new float[4096];
         var frames = new List<AfskDecodedFrame>();
         _stallWatch.Reset(DateTime.UtcNow);
@@ -235,7 +235,7 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
                 if (_stallWatch.OnRead(DateTime.UtcNow, gotAudio, paused: _transmitting)
                     && RestartAudioAfterStall())
                 {
-                    receiver = new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix);
+                    receiver = new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix, _settings().BuiltIn.FrequencyOffsetDecoders);
                 }
 
                 if (!gotAudio)

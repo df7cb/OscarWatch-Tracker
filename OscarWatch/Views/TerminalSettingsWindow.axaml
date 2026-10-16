@@ -377,6 +377,9 @@
                       HorizontalAlignment="Stretch"
                       AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.BitFix}" />
             <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.BitFix.Help}" />
+            <CheckBox Content="{loc:Localize Key=Terminal.Modem.FrequencyOffsetDecoders}"
+                      IsChecked="{Binding FrequencyOffsetDecoders}" />
+            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.FrequencyOffsetDecoders.Help}" />
             <CheckBox Content="{loc:Localize Key=Terminal.Modem.BlockBelowHorizon}" IsChecked="{Binding BlockTxBelowHorizon}" />
 
             <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Modem.Decode}" Margin="0,12,0,0" />

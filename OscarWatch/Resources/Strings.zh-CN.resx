@@ -5722,6 +5722,12 @@
   <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
     <value>单位和相邻位对</value>
   </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders" xml:space="preserve">
+    <value>频率偏移解码器</value>
+  </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders.Help" xml:space="preserve">
+    <value>在 ±175 与 ±350 Hz 运行额外解码组，以便在 CAT 多普勒步进之间 FM 下行音频 tones 偏移时仍能复制帧。会略增 CPU；极慢电脑可关闭。</value>
+  </data>
   <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
     <value>卫星在地平线以下时不发射</value>
   </data>

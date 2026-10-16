@@ -16,14 +16,79 @@ internal static class ModemTestSignals
         double amplitude = 0.5,
         int txDelayMs = 200,
         int txTailMs = 30,
-        double silenceSeconds = 0.2)
+        double silenceSeconds = 0.2,
+        double toneOffsetHz = 0) =>
+        TransmissionAtToneFrequencies(frames, sampleRate, amplitude, txDelayMs, txTailMs, silenceSeconds,
+            AfskModulator.MarkHz + toneOffsetHz, AfskModulator.SpaceHz + toneOffsetHz);
+
+    public static float[] TransmissionAtToneFrequencies(
+        IEnumerable<byte[]> frames,
+        int sampleRate,
+        double amplitude,
+        int txDelayMs,
+        int txTailMs,
+        double silenceSeconds,
+        double markHz,
+        double spaceHz)
     {
         var tones = HdlcEncoder.EncodeTransmission(frames, txDelayMs, txTailMs);
-        var audio = AfskModulator.Modulate(tones, sampleRate, amplitude);
+        var audio = ModulateToneList(tones, sampleRate, amplitude, markHz, spaceHz);
         var silence = (int)(sampleRate * silenceSeconds);
         var result = new float[audio.Length + 2 * silence];
         audio.CopyTo(result, silence);
         return result;
+    }
+
+    /// <summary>Linear tone offset drift across one transmission (simulates mistune changing during a frame).</summary>
+    public static float[] TransmissionWithToneDrift(
+        byte[] frame,
+        int sampleRate,
+        double startOffsetHz,
+        double endOffsetHz,
+        double amplitude = 0.5)
+    {
+        var tones = HdlcEncoder.EncodeTransmission([frame], 200, 30);
+        var samplesPerBit = sampleRate / AfskModulator.Baud;
+        var total = (int)Math.Ceiling(tones.Length * samplesPerBit);
+        var silence = (int)(sampleRate * 0.2);
+        var output = new float[total + 2 * silence];
+        var phase = 0.0;
+        for (var n = 0; n < total; n++)
+        {
+            var t = n / (double)Math.Max(1, total - 1);
+            var offset = startOffsetHz + (endOffsetHz - startOffsetHz) * t;
+            var markHz = AfskModulator.MarkHz + offset;
+            var spaceHz = AfskModulator.SpaceHz + offset;
+            var bit = Math.Min(tones.Length - 1, (int)(n / samplesPerBit));
+            var step = 2 * Math.PI * (tones[bit] ? markHz : spaceHz) / sampleRate;
+            output[n + silence] = (float)(amplitude * Math.Sin(phase));
+            phase += step;
+            if (phase > 2 * Math.PI)
+                phase -= 2 * Math.PI;
+        }
+
+        return output;
+    }
+
+    private static float[] ModulateToneList(IReadOnlyList<bool> tones, int sampleRate, double amplitude, double markHz, double spaceHz)
+    {
+        var samplesPerBit = sampleRate / AfskModulator.Baud;
+        var toneCount = tones.Count;
+        var total = (int)Math.Ceiling(toneCount * samplesPerBit);
+        var output = new float[total];
+        var phase = 0.0;
+        var markStep = 2 * Math.PI * markHz / sampleRate;
+        var spaceStep = 2 * Math.PI * spaceHz / sampleRate;
+        for (var n = 0; n < total; n++)
+        {
+            var bit = Math.Min(toneCount - 1, (int)(n / samplesPerBit));
+            output[n] = (float)(amplitude * Math.Sin(phase));
+            phase += tones[bit] ? markStep : spaceStep;
+            if (phase > 2 * Math.PI)
+                phase -= 2 * Math.PI;
+        }
+
+        return output;
     }
 
     public static void AddNoise(float[] samples, double sigma, int seed)
