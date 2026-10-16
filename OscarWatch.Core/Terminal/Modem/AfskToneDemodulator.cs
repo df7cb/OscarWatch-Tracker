@@ -2,20 +2,20 @@ namespace OscarWatch.Core.Terminal.Modem;
 
 /// <summary>
 /// Quadrature tone correlators and delay-line discriminator on band-passed audio at
-/// <paramref name="MarkHz"/> and <paramref name="SpaceHz"/>.
+/// <paramref name="MarkHz"/> and <paramref name="SpaceHz"/>. Uses phase-continuous NCOs so
+/// arbitrary tone offsets (not only 1200/2200 Hz) stay coherent across sample boundaries.
 /// </summary>
 public sealed class AfskToneDemodulator
 {
     private const int DiscriminatorDelay = 2;
     private const int DiscriminatorWindow = 10;
 
-    private readonly float[] _cosMark;
-    private readonly float[] _sinMark;
-    private readonly float[] _cosSpace;
-    private readonly float[] _sinSpace;
+    private readonly double _markStep;
+    private readonly double _spaceStep;
     private readonly float _discriminatorThreshold;
     private readonly AfskDemodulator.Correlator[] _correlators;
-    private int _lo;
+    private double _markPhase;
+    private double _spacePhase;
     private readonly float[] _discDelay = new float[DiscriminatorDelay];
     private int _discDelayIndex;
     private readonly AfskDemodulator.MovingSum _discProduct = new(DiscriminatorWindow);
@@ -25,10 +25,8 @@ public sealed class AfskToneDemodulator
     {
         MarkHz = markHz;
         SpaceHz = spaceHz;
-        _cosMark = LoTable(markHz, Math.Cos);
-        _sinMark = LoTable(markHz, Math.Sin);
-        _cosSpace = LoTable(spaceHz, Math.Cos);
-        _sinSpace = LoTable(spaceHz, Math.Sin);
+        _markStep = 2 * Math.PI * markHz / AfskDemodulator.SampleRate;
+        _spaceStep = 2 * Math.PI * spaceHz / AfskDemodulator.SampleRate;
         _discriminatorThreshold = (float)((Math.Cos(2 * Math.PI * markHz * DiscriminatorDelay / AfskDemodulator.SampleRate)
                                            + Math.Cos(2 * Math.PI * spaceHz * DiscriminatorDelay / AfskDemodulator.SampleRate)) / 2);
         _correlators = correlatorWindows.Select(w => new AfskDemodulator.Correlator(w)).ToArray();
@@ -54,17 +52,23 @@ public sealed class AfskToneDemodulator
         _discProduct.Reset();
         _discPower.Reset();
         Discriminator = 0;
-        _lo = 0;
+        _markPhase = 0;
+        _spacePhase = 0;
     }
 
     public void ProcessFiltered(float x)
     {
-        var lo = _lo;
-        _lo = (_lo + 1) % AfskDemodulator.LoTableLength;
-        var im = x * _cosMark[lo];
-        var qm = x * _sinMark[lo];
-        var isp = x * _cosSpace[lo];
-        var qs = x * _sinSpace[lo];
+        var im = (float)(x * Math.Cos(_markPhase));
+        var qm = (float)(x * Math.Sin(_markPhase));
+        var isp = (float)(x * Math.Cos(_spacePhase));
+        var qs = (float)(x * Math.Sin(_spacePhase));
+        _markPhase += _markStep;
+        _spacePhase += _spaceStep;
+        if (_markPhase >= Math.PI * 2)
+            _markPhase -= Math.PI * 2;
+        if (_spacePhase >= Math.PI * 2)
+            _spacePhase -= Math.PI * 2;
+
         foreach (var c in _correlators)
             c.Push(im, qm, isp, qs);
 
@@ -74,13 +78,5 @@ public sealed class AfskToneDemodulator
         var product = _discProduct.Push(x * delayed);
         var power = _discPower.Push(x * x);
         Discriminator = power > 1e-9f ? product / power - _discriminatorThreshold : 0f;
-    }
-
-    private static float[] LoTable(double hz, Func<double, double> f)
-    {
-        var table = new float[AfskDemodulator.LoTableLength];
-        for (var n = 0; n < AfskDemodulator.LoTableLength; n++)
-            table[n] = (float)f(2 * Math.PI * hz * n / AfskDemodulator.SampleRate);
-        return table;
     }
 }

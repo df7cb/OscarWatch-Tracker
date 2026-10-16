@@ -5726,6 +5726,12 @@ Terbaru: {1} ({2})</value>
   <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
     <value>Satu bit dan pasangan bersebelahan</value>
   </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders" xml:space="preserve">
+    <value>Decoder offset frekuensi</value>
+  </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders.Help" xml:space="preserve">
+    <value>Menjalankan bank decoder tambahan pada ±175 dan ±350 Hz agar frame downlink FM tetap terbaca saat nada audio bergeser di antara langkah Doppler CAT. Sedikit menambah beban prosesor; matikan di PC yang sangat lambat jika perlu.</value>
+  </data>
   <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
     <value>Jangan memancar saat satelit di bawah cakrawala</value>
   </data>

@@ -67,6 +67,31 @@ public sealed class AfskFrequencyOffsetTests
     }
 
     [Fact]
+    public void Offset_bank_correlator_stays_coherent_past_sixty_sample_wrapped_table_period()
+    {
+        const int offsetHz = 350;
+        const int sampleRate = AfskDemodulator.SampleRate;
+        var tone = new AfskToneDemodulator(1200 + offsetHz, 2200 + offsetHz, [12]);
+        var markOnly = new float[sampleRate];
+        for (var i = 0; i < markOnly.Length; i++)
+            markOnly[i] = (float)Math.Sin(2 * Math.PI * (1200 + offsetHz) * i / sampleRate);
+
+        var samplesPerTable = AfskDemodulator.LoTableLength;
+        var before = 0f;
+        var after = 0f;
+        for (var i = 0; i < markOnly.Length; i++)
+        {
+            tone.ProcessFiltered(markOnly[i]);
+            if (i == samplesPerTable - 2)
+                before = tone.MarkAmplitude(0);
+            if (i == samplesPerTable + 2)
+                after = tone.MarkAmplitude(0);
+        }
+
+        Assert.True(after > before * 0.5f, $"mark correlator collapsed across former table wrap ({before} -> {after})");
+    }
+
+    [Fact]
     public void Open_squelch_noise_does_not_gain_spurious_frames_from_offset_banks()
     {
         var noise = new float[48000 * 20];

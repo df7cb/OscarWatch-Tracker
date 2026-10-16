@@ -5726,6 +5726,12 @@ LOS: {2}
   <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
     <value>Один бит и соседние пары</value>
   </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders" xml:space="preserve">
+    <value>Декодеры со смещением частоты</value>
+  </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders.Help" xml:space="preserve">
+    <value>Дополнительные банки декодеров на ±175 и ±350 Гц помогают принимать FM-кадры, когда тоны аудио смещены между шагами Doppler по CAT. Немного увеличивает нагрузку на процессор; на очень медленных ПК можно отключить.</value>
+  </data>
   <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
     <value>Не передавать, пока спутник за горизонтом</value>
   </data>
