@@ -198,11 +198,34 @@ public partial class App : Application
         try
         {
             OscarWatchHttpClients.DisposeSharedHandler();
-            (Services as IDisposable)?.Dispose();
+            DisposeServices();
         }
         finally
         {
             AppShutdownWatchdog.Cancel();
+        }
+    }
+
+    /// <summary>
+    /// TerminalService only supports async dispose. The synchronous container dispose throws on it
+    /// and then skips every service registered after it.
+    /// </summary>
+    private static void DisposeServices()
+    {
+        if (Services is not IAsyncDisposable asyncServices)
+        {
+            (Services as IDisposable)?.Dispose();
+            return;
+        }
+
+        try
+        {
+            // Off the UI thread: DisposeAsync must not resume on the dispatcher this call is blocking.
+            Task.Run(() => asyncServices.DisposeAsync().AsTask()).GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Shutdown dispose failed");
         }
     }
 
