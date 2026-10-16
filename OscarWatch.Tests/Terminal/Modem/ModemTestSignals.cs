@@ -10,7 +10,7 @@ internal static class ModemTestSignals
         Ax25Frame.CreateUi(Ax25Address.Parse("APRS"), Ax25Address.Parse(source), Ax25Frame.ParsePath(path), text).Encode();
 
     /// <summary>Short UI frame (~16 ms airtime at 9600 baud) for back-to-back frame tests.</summary>
-    public static byte[] ShortUiFrame(string tag) => UiFrame(tag, source: "N0CALL");
+    public static byte[] ShortUiFrame(string tag) => UiFrame(tag, source: "N0CALL", path: "");
 
     /// <summary>One 9600 G3RUH keyed transmission with leading and trailing silence.</summary>
     public static float[] G3ruhTransmission(
