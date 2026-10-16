@@ -29,7 +29,13 @@ public sealed class CloudlogQsoUploadService : ICloudlogQsoUploadService
 
     public Task QueueUploadIfEnabledAsync(long qsoId, CancellationToken cancellationToken = default)
     {
-        _ = UploadInBackgroundAsync(qsoId);
+        _ = UploadInBackgroundAsync(qsoId, manual: false);
+        return Task.CompletedTask;
+    }
+
+    public Task ReuploadQsoAsync(long qsoId, CancellationToken cancellationToken = default)
+    {
+        _ = UploadInBackgroundAsync(qsoId, manual: true);
         return Task.CompletedTask;
     }
 
@@ -42,14 +48,26 @@ public sealed class CloudlogQsoUploadService : ICloudlogQsoUploadService
         _ = ProcessRetryQueueInternalAsync(CancellationToken.None);
     }
 
-    private async Task UploadInBackgroundAsync(long qsoId)
+    private async Task UploadInBackgroundAsync(long qsoId, bool manual)
     {
         try
         {
             await _gate.WaitAsync().ConfigureAwait(false);
             try
             {
-                await TryUploadQsoAsync(qsoId, CancellationToken.None).ConfigureAwait(false);
+                if (manual)
+                {
+                    await _repository.UpdateQsoCloudlogUploadStateAsync(
+                        qsoId,
+                        CloudlogUploadStatus.Pending,
+                        0,
+                        null,
+                        null,
+                        CancellationToken.None).ConfigureAwait(false);
+                    NotifyUploadStateChanged(qsoId);
+                }
+
+                await TryUploadQsoAsync(qsoId, CancellationToken.None, manual).ConfigureAwait(false);
             }
             finally
             {
@@ -86,7 +104,7 @@ public sealed class CloudlogQsoUploadService : ICloudlogQsoUploadService
                         if (cancellationToken.IsCancellationRequested)
                             return;
 
-                        await TryUploadQsoAsync(qso.Id, cancellationToken).ConfigureAwait(false);
+                        await TryUploadQsoAsync(qso.Id, cancellationToken, manual: false).ConfigureAwait(false);
                     }
                 }
             }
@@ -101,20 +119,35 @@ public sealed class CloudlogQsoUploadService : ICloudlogQsoUploadService
         }
     }
 
-    private async Task TryUploadQsoAsync(long qsoId, CancellationToken cancellationToken)
+    private async Task TryUploadQsoAsync(long qsoId, CancellationToken cancellationToken, bool manual)
     {
         var qso = await _repository.GetQsoByIdAsync(qsoId, cancellationToken).ConfigureAwait(false);
         if (qso is null)
             return;
 
-        if (qso.CloudlogUploadStatus is CloudlogUploadStatus.Sent or CloudlogUploadStatus.None)
+        if (!manual && qso.CloudlogUploadStatus is CloudlogUploadStatus.Sent or CloudlogUploadStatus.None)
             return;
 
         var logbook = await _repository.GetLogbookByIdAsync(qso.LogbookId, cancellationToken).ConfigureAwait(false);
         if (logbook is null)
             return;
 
-        if (!logbook.CloudlogAutoUpload || !logbook.CloudlogStationProfileId.HasValue)
+        if (!logbook.CloudlogStationProfileId.HasValue)
+        {
+            if (manual)
+            {
+                await MarkFailedAsync(
+                    qso,
+                    qso.CloudlogUploadAttempts + 1,
+                    "Choose a Cloudlog station profile for this logbook first.",
+                    cancellationToken).ConfigureAwait(false);
+                NotifyUploadStateChanged(qsoId);
+            }
+
+            return;
+        }
+
+        if (!manual && !logbook.CloudlogAutoUpload)
             return;
 
         var cloudlog = _settings.Current.Cloudlog;

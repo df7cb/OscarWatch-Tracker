@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -34,6 +35,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
     private bool _windowOpen;
     private bool _disposed;
     private int _changedQueued;
+    private readonly HashSet<string> _qsoListedCalls = new(StringComparer.Ordinal);
 
     public TerminalViewModel(
         ISettingsService settings,
@@ -885,8 +887,16 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         Dispatcher.UIThread.Post(() =>
         {
             Volatile.Write(ref _changedQueued, 0);
-            if (!_disposed)
+            if (_disposed)
+                return;
+            try
+            {
                 RefreshTick();
+            }
+            catch (Exception ex)
+            {
+                Log.Warning(ex, "Terminal refresh failed");
+            }
         });
     }
 
@@ -1094,6 +1104,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
 
     private void RefreshStations(DateTime now)
     {
+        var started = Stopwatch.GetTimestamp();
         var stations = _service.GetStations();
         var qso = stations
             .Where(s => s.InQso || s.Logged || s.RogerSent || s.RogerReceived
@@ -1105,6 +1116,54 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         SyncStations(HeardStations, heard, now);
         HasQsoStations = QsoStations.Count > 0;
         HasHeardStations = HeardStations.Count > 0;
+        LogQsoListChanges(qso, now, Stopwatch.GetElapsedTime(started));
+    }
+
+    /// <summary>Logs when the QSO list gains or loses a call, and when painting the lists is slow.</summary>
+    private void LogQsoListChanges(List<TerminalStationSnapshot> qso, DateTime now, TimeSpan elapsed)
+    {
+        var added = new List<TerminalStationSnapshot>();
+        foreach (var station in qso)
+        {
+            if (_qsoListedCalls.Add(station.Call))
+                added.Add(station);
+        }
+
+        List<string>? removed = null;
+        if (_qsoListedCalls.Count != qso.Count)
+        {
+            var current = new HashSet<string>(qso.Select(s => s.Call), StringComparer.Ordinal);
+            removed = _qsoListedCalls.Where(c => !current.Contains(c)).ToList();
+            foreach (var call in removed)
+                _qsoListedCalls.Remove(call);
+        }
+
+        foreach (var station in added)
+        {
+            var ageMs = (now - station.LastActivityUtc).TotalMilliseconds;
+            Log.Debug(
+                "Terminal QSO list showing {Call} ({State}) {AgeMs:0} ms after last activity; refresh {ElapsedMs:0} ms",
+                station.Call,
+                station.State,
+                ageMs,
+                elapsed.TotalMilliseconds);
+        }
+
+        if (removed is { Count: > 0 })
+        {
+            Log.Debug(
+                "Terminal QSO list removed {Calls}; refresh {ElapsedMs:0} ms",
+                string.Join(", ", removed),
+                elapsed.TotalMilliseconds);
+        }
+        else if (added.Count == 0 && elapsed > TimeSpan.FromMilliseconds(200))
+        {
+            Log.Debug(
+                "Terminal station refresh took {ElapsedMs:0} ms for {Heard} heard and {Qso} QSO",
+                elapsed.TotalMilliseconds,
+                HeardStations.Count,
+                QsoStations.Count);
+        }
     }
 
     private void SyncStations(

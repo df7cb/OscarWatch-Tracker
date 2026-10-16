@@ -415,12 +415,18 @@ public sealed class TerminalService : IAsyncDisposable
         var utc = DateTime.UtcNow;
         TerminalLogEntry entry;
         TerminalStation? station;
+        QsoListTrace? qsoTrace = null;
         lock (_gate)
         {
             _stats.RecordSent(outgoing.Frame.InfoText, utc);
+            var wasListed = WasInQsoList(outgoing.To);
             station = _tracker.OnSent(outgoing.To, outgoing.Text, utc);
             if (station is not null)
+            {
                 _lastTextSentTo[station.Call] = outgoing.Text;
+                qsoTrace = QsoListTrace.Capture("send", station, wasListed, outgoing.To, outgoing.Text, utc);
+            }
+
             entry = new TerminalLogEntry(
                 Interlocked.Increment(ref _nextId),
                 utc,
@@ -435,6 +441,7 @@ public sealed class TerminalService : IAsyncDisposable
 
         MessageAdded?.Invoke(entry);
         Changed?.Invoke();
+        qsoTrace?.Write(Log);
         if (station is not null)
             await TryAutoLogAsync(station).ConfigureAwait(false);
         return TerminalSendResult.Sent;
@@ -823,6 +830,7 @@ public sealed class TerminalService : IAsyncDisposable
 
         TerminalLogEntry entry;
         TerminalStation? station = null;
+        QsoListTrace? qsoTrace = null;
         lock (_gate)
         {
             TimeSpan? delay = null;
@@ -838,7 +846,15 @@ public sealed class TerminalService : IAsyncDisposable
             {
                 kind = TerminalMessageClassifier.Classify(message, myCall, locallySent: false);
                 _stats.RecordReceived(message, kind);
+                var wasListed = WasInQsoList(message.From);
                 station = _tracker.OnReceived(message, myCall);
+                if (station is not null)
+                {
+                    var listed = TerminalQsoTracker.ShowsInQsoList(station);
+                    var addressed = TerminalText.SameStation(message.To, myCall);
+                    if (addressed || wasListed != listed)
+                        qsoTrace = QsoListTrace.Capture("receive", station, wasListed, message.To, message.Text, message.Utc);
+                }
             }
 
             entry = new TerminalLogEntry(
@@ -857,6 +873,7 @@ public sealed class TerminalService : IAsyncDisposable
 
         MessageAdded?.Invoke(entry);
         Changed?.Invoke();
+        qsoTrace?.Write(Log);
 
         _aprsIs.Gate(frame, received.Utc);
 
@@ -1164,4 +1181,64 @@ public sealed class TerminalService : IAsyncDisposable
     }
 
     private bool HasUhmToken() => !string.IsNullOrWhiteSpace(_settings.Current.SatelliteStatus.ApiToken);
+
+    private bool WasInQsoList(string? call)
+    {
+        var station = _tracker.Get(call);
+        return station is not null && TerminalQsoTracker.ShowsInQsoList(station);
+    }
+
+    /// <summary>One directed frame's effect on QSO-list membership, logged after the tracker lock is released.</summary>
+    private readonly record struct QsoListTrace(
+        string Via,
+        string Change,
+        string Call,
+        string To,
+        string Text,
+        DateTime FrameUtc,
+        TerminalStationState State,
+        bool WeCalled,
+        bool TheyCalledUs)
+    {
+        public static QsoListTrace Capture(
+            string via,
+            TerminalStation station,
+            bool wasListed,
+            string? to,
+            string? text,
+            DateTime frameUtc)
+        {
+            var listed = TerminalQsoTracker.ShowsInQsoList(station);
+            var change = !wasListed && listed ? "added"
+                : wasListed && !listed ? "removed"
+                : listed ? "updated"
+                : "not listed";
+            var body = (text ?? "").Replace('\r', ' ').Replace('\n', ' ').Trim();
+            if (body.Length > 80)
+                body = body[..80];
+            return new QsoListTrace(
+                via,
+                change,
+                station.Call,
+                to ?? "",
+                body,
+                frameUtc,
+                station.State,
+                station.WeCalled,
+                station.TheyCalledUs);
+        }
+
+        public void Write(ILogger log) =>
+            log.Debug(
+                "Terminal QSO list {Change} on {Via} {Call} to {To} at {FrameUtc:HH:mm:ss.fff}: state {State}, we called {WeCalled}, they called {TheyCalled}, text {Text}",
+                Change,
+                Via,
+                Call,
+                To,
+                FrameUtc,
+                State,
+                WeCalled,
+                TheyCalledUs,
+                Text);
+    }
 }

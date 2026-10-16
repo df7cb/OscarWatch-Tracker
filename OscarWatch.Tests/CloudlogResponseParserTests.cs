@@ -35,6 +35,18 @@ public sealed class CloudlogResponseParserTests
         Assert.True(success);
     }
 
+    [Fact]
+    public void Created_with_nothing_imported_is_a_failure_and_keeps_the_message()
+    {
+        const string json = """{"status":"created","imported_count":0,"messages":["Date/Time: 2026-10-16 16:41 Callsign: DL7NDR Band: 2m Duplicate "]}""";
+
+        var result = CloudlogResponseParser.TryParse(json, out var success, out var reason);
+
+        Assert.True(result);
+        Assert.False(success);
+        Assert.Equal("Date/Time: 2026-10-16 16:41 Callsign: DL7NDR Band: 2m Duplicate", reason);
+    }
+
     /// <summary>
     /// Response containing a "reason" field populates the reason output with a trimmed value.
     /// </summary>

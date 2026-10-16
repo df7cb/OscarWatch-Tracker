@@ -1432,6 +1432,12 @@ LOS: {2}
   <data name="Logbook.DeleteQso">
     <value>ลบ QSO</value>
   </data>
+  <data name="Logbook.ReuploadCloudlog">
+    <value>อัปโหลดไปยัง Cloudlog อีกครั้ง</value>
+  </data>
+  <data name="Logbook.Status.CloudlogReupload">
+    <value>กำลังอัปโหลด {0} ไปยัง Cloudlog อีกครั้ง</value>
+  </data>
   <data name="Logbook.History">
     <value>QSO ล่าสุด</value>
   </data>

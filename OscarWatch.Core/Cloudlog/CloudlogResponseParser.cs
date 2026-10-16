@@ -22,8 +22,15 @@ public static class CloudlogResponseParser
             if (doc is null)
                 return false;
 
-            reason = doc.Reason?.Trim();
+            reason = FirstReason(doc);
             success = IsSuccessStatus(doc.Status);
+            if (success && doc.ImportedCount is 0)
+            {
+                success = false;
+                if (string.IsNullOrWhiteSpace(reason))
+                    reason = "Cloudlog did not import this QSO.";
+            }
+
             return true;
         }
         catch
@@ -38,4 +45,26 @@ public static class CloudlogResponseParser
     internal static bool IsSuccessStatus(string? status) =>
         string.Equals(status, "success", StringComparison.OrdinalIgnoreCase)
         || string.Equals(status, "created", StringComparison.OrdinalIgnoreCase);
+
+    private static string? FirstReason(CloudlogApiResponse doc)
+    {
+        var reason = doc.Reason?.Trim();
+        if (!string.IsNullOrWhiteSpace(reason))
+            return reason;
+
+        if (doc.Messages.ValueKind != JsonValueKind.Array)
+            return null;
+
+        foreach (var item in doc.Messages.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.String)
+                continue;
+
+            var text = item.GetString()?.Trim();
+            if (!string.IsNullOrEmpty(text))
+                return text;
+        }
+
+        return null;
+    }
 }

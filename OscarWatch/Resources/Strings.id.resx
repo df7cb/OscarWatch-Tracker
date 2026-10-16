@@ -1432,6 +1432,12 @@ Lanjutkan?</value>
   <data name="Logbook.DeleteQso">
     <value>Hapus QSO</value>
   </data>
+  <data name="Logbook.ReuploadCloudlog">
+    <value>Unggah ulang ke Cloudlog</value>
+  </data>
+  <data name="Logbook.Status.CloudlogReupload">
+    <value>Mengunggah ulang {0} ke Cloudlog.</value>
+  </data>
   <data name="Logbook.History">
     <value>QSO terkini</value>
   </data>

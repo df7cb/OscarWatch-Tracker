@@ -1425,6 +1425,12 @@
   <data name="Logbook.DeleteQso">
     <value>删除 QSO</value>
   </data>
+  <data name="Logbook.ReuploadCloudlog">
+    <value>重新上传到 Cloudlog</value>
+  </data>
+  <data name="Logbook.Status.CloudlogReupload">
+    <value>正在将 {0} 重新上传到 Cloudlog。</value>
+  </data>
   <data name="Logbook.History">
     <value>最近 QSO</value>
   </data>

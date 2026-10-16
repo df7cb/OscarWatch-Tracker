@@ -204,6 +204,7 @@ public class QsoLogbookCorrespondentLookupTests
     {
         public event Action<long>? UploadStateChanged { add { } remove { } }
         public Task QueueUploadIfEnabledAsync(long qsoId, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task ReuploadQsoAsync(long qsoId, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task ProcessRetryQueueAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task ResetFailedUploadsForRetryAsync(long logbookId, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }

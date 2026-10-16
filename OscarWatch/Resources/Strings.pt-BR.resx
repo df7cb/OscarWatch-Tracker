@@ -1425,6 +1425,12 @@ Continuar?</value>
   <data name="Logbook.DeleteQso">
     <value>Excluir QSO</value>
   </data>
+  <data name="Logbook.ReuploadCloudlog">
+    <value>Enviar novamente ao Cloudlog</value>
+  </data>
+  <data name="Logbook.Status.CloudlogReupload">
+    <value>Enviando {0} ao Cloudlog novamente.</value>
+  </data>
   <data name="Logbook.History">
     <value>QSOs recentes</value>
   </data>

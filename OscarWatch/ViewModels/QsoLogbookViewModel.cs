@@ -92,6 +92,7 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(DeleteSelectedQsoCommand))]
     [NotifyCanExecuteChangedFor(nameof(BeginEditSelectedQsoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ReuploadSelectedQsoCommand))]
     private QsoRowViewModel? _selectedQso;
 
     [ObservableProperty]
@@ -609,6 +610,18 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
         return string.IsNullOrWhiteSpace(result) ? "logbook" : result;
     }
 
+    [RelayCommand(CanExecute = nameof(CanEditQso))]
+    private async Task ReuploadSelectedQsoAsync()
+    {
+        if (SelectedQso is null)
+            return;
+
+        var id = SelectedQso.Id;
+        var call = SelectedQso.Call;
+        StatusText = _l.Get("Logbook.Status.CloudlogReupload", call);
+        await _cloudlogUpload.ReuploadQsoAsync(id).ConfigureAwait(true);
+    }
+
     [RelayCommand(CanExecute = nameof(CanDeleteQso))]
     private async Task DeleteSelectedQsoAsync()
     {
@@ -661,6 +674,7 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
         CommitQsoCommand.NotifyCanExecuteChanged();
         BeginEditSelectedQsoCommand.NotifyCanExecuteChanged();
         DeleteSelectedQsoCommand.NotifyCanExecuteChanged();
+        ReuploadSelectedQsoCommand.NotifyCanExecuteChanged();
         OnPropertyChanged(nameof(EntryCommitLabel));
         OnPropertyChanged(nameof(ShowCancelEdit));
         OnPropertyChanged(nameof(EditingStatusText));
@@ -1313,7 +1327,10 @@ public sealed class QsoRowViewModel
             Comment = record.Comment,
             CloudlogUploadStatus = record.CloudlogUploadStatus,
             CloudlogStatusGlyph = FormatCloudlogGlyph(record.CloudlogUploadStatus),
-            CloudlogStatusToolTip = FormatCloudlogStatus(record.CloudlogUploadStatus, localization)
+            CloudlogStatusToolTip = FormatCloudlogStatus(
+                record.CloudlogUploadStatus,
+                record.CloudlogUploadLastError,
+                localization)
         };
     }
 
@@ -1325,12 +1342,21 @@ public sealed class QsoRowViewModel
             _ => ""
         };
 
-    private static string FormatCloudlogStatus(CloudlogUploadStatus status, ILocalizationService localization) =>
-        status switch
+    private static string FormatCloudlogStatus(
+        CloudlogUploadStatus status,
+        string? lastError,
+        ILocalizationService localization)
+    {
+        var label = status switch
         {
             CloudlogUploadStatus.Pending => localization.Get("Logbook.CloudlogStatus.Pending"),
             CloudlogUploadStatus.Sent => localization.Get("Logbook.CloudlogStatus.Sent"),
             CloudlogUploadStatus.Failed => localization.Get("Logbook.CloudlogStatus.Failed"),
             _ => ""
         };
+        if (status == CloudlogUploadStatus.Failed && !string.IsNullOrWhiteSpace(lastError))
+            return $"{label}: {lastError.Trim()}";
+
+        return label;
+    }
 }

@@ -325,6 +325,8 @@
                 <ContextMenu>
                   <MenuItem Header="{loc:Localize Key=Logbook.EditQso}"
                             Command="{Binding BeginEditSelectedQsoCommand}" />
+                  <MenuItem Header="{loc:Localize Key=Logbook.ReuploadCloudlog}"
+                            Command="{Binding ReuploadSelectedQsoCommand}" />
                   <MenuItem Header="{loc:Localize Key=Logbook.DeleteQso}"
                             Click="OnDeleteQsoClick" />
                 </ContextMenu>
