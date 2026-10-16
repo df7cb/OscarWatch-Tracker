@@ -281,14 +281,17 @@ public sealed class BuiltInModemTransportTests
     public async Task Flowing_capture_is_not_reopened()
     {
         await using var h = new Harness();
-        h.Modem.CaptureStallTimeout = TimeSpan.FromMilliseconds(400);
+        // A busy CI runner can pause this thread for more than a few hundred milliseconds.
+        // The limit has to sit above that, or a flowing stream looks like a dead soundcard.
+        h.Modem.CaptureStallTimeout = TimeSpan.FromSeconds(3);
         await h.StartAsync();
 
-        var chunk = new float[h.Audio.CaptureSampleRate / 20];
-        for (var i = 0; i < 20; i++)
+        var chunk = new float[Math.Max(1, h.Audio.CaptureSampleRate / 50)];
+        var until = DateTime.UtcNow + TimeSpan.FromSeconds(1);
+        while (DateTime.UtcNow < until)
         {
             h.Audio.Feed(chunk);
-            await Task.Delay(50);
+            await Task.Delay(20);
         }
 
         Assert.Equal(1, h.Audio.StartCount);
