@@ -5886,10 +5886,31 @@ Terbaru: {1} ({2})</value>
     <value>Nada uji dihentikan.</value>
   </data>
   <data name="Terminal.Modem.TxLevel" xml:space="preserve">
-    <value>Level TX</value>
+    <value>Level TX (1200 AFSK)</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel9600" xml:space="preserve">
+    <value>Level TX (port data 9600 G3RUH)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode" xml:space="preserve">
+    <value>Kecepatan modem</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Auto" xml:space="preserve">
+    <value>Otomatis (dari profil satelit)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Afsk1200" xml:space="preserve">
+    <value>1200 baud AFSK (speaker/mikrofon)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.G3ruh9600" xml:space="preserve">
+    <value>9600 baud G3RUH (port data radio)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Help" xml:space="preserve">
+    <value>1200 AFSK memakai nada audio lewat speaker atau mikrofon. 9600 G3RUH membutuhkan port data datar 9600 baud (bukan akustik). Atur menu radio sendiri; OscarWatch belum mengganti mode lewat CAT.</value>
+  </data>
+  <data name="Terminal.Modem.G3ruh.Warning" xml:space="preserve">
+    <value>9600 G3RUH memakai port data radio pada 48 kHz. Jangan memakai audio speaker/mikrofon pada kecepatan ini.</value>
   </data>
   <data name="Terminal.Modem.Unsupported" xml:space="preserve">
-    <value>{0} memakai {1}. Modem bawaan hanya mendekode 1200 AFSK. Gunakan UZ7HO melalui AGWPE untuk satelit ini.</value>
+    <value>{0} memakai {1}. Modem bawaan mendukung 1200 AFSK dan 9600 G3RUH saja. Gunakan UZ7HO melalui AGWPE untuk BPSK, GMSK, dan mode serupa.</value>
   </data>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>Tunggu kanal kosong juga saat dupleks penuh</value>

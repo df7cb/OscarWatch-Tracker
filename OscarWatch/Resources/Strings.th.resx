@@ -5886,10 +5886,31 @@ LOS: {2}
     <value>หยุดเสียงทดสอบแล้ว</value>
   </data>
   <data name="Terminal.Modem.TxLevel" xml:space="preserve">
-    <value>ระดับ TX</value>
+    <value>ระดับ TX (1200 AFSK)</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel9600" xml:space="preserve">
+    <value>ระดับ TX (พอร์ตข้อมูล 9600 G3RUH)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode" xml:space="preserve">
+    <value>อัตราโมเด็ม</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Auto" xml:space="preserve">
+    <value>อัตโนมัติ (จากโปรไฟล์ดาวเทียม)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Afsk1200" xml:space="preserve">
+    <value>1200 บอด AFSK (ลำโพง/ไมโครโฟน)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.G3ruh9600" xml:space="preserve">
+    <value>9600 บอด G3RUH (พอร์ตข้อมูลวิทยุ)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Help" xml:space="preserve">
+    <value>1200 AFSK ใช้โทนเสียงผ่านลำโพงหรือไมโครโฟน 9600 G3RUH ต้องใช้พอร์ตข้อมูล 9600 บอดแบบ flat (ไม่ใช่การคู่เสียง) ตั้งเมนูวิทยุเอง OscarWatch ยังไม่สลับโหมดผ่าน CAT</value>
+  </data>
+  <data name="Terminal.Modem.G3ruh.Warning" xml:space="preserve">
+    <value>9600 G3RUH ใช้พอร์ตข้อมูลวิทยุที่ 48 kHz อย่าใช้เสียงลำโพง/ไมโครโฟนที่อัตรานี้</value>
   </data>
   <data name="Terminal.Modem.Unsupported" xml:space="preserve">
-    <value>{0} ใช้ {1} โมเด็มในตัวถอดรหัสได้เฉพาะ 1200 AFSK ใช้ UZ7HO ผ่าน AGWPE สำหรับดาวเทียมนี้</value>
+    <value>{0} ใช้ {1} โมเด็มในตัวรองรับ 1200 AFSK และ 9600 G3RUH เท่านั้น ใช้ UZ7HO ผ่าน AGWPE สำหรับ BPSK GMSK และโหมดคล้ายกัน</value>
   </data>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>รอช่องว่างแม้ในฟูลดูเพล็กซ์</value>

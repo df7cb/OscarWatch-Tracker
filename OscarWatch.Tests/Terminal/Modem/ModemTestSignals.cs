@@ -9,6 +9,23 @@ internal static class ModemTestSignals
     public static byte[] UiFrame(string text, string source = "MM9SQL-7", string path = "ARISS") =>
         Ax25Frame.CreateUi(Ax25Address.Parse("APRS"), Ax25Address.Parse(source), Ax25Frame.ParsePath(path), text).Encode();
 
+    /// <summary>One 9600 G3RUH keyed transmission with leading and trailing silence.</summary>
+    public static float[] G3ruhTransmission(
+        IEnumerable<byte[]> frames,
+        int sampleRate,
+        double amplitude = 0.35,
+        int txDelayMs = 200,
+        int txTailMs = 30,
+        double silenceSeconds = 0.2)
+    {
+        var bits = HdlcEncoder.EncodeG3ruhTransmission(frames, txDelayMs, txTailMs);
+        var audio = G3ruhModulator.Modulate(bits, sampleRate, amplitude);
+        var silence = (int)(sampleRate * silenceSeconds);
+        var result = new float[audio.Length + 2 * silence];
+        audio.CopyTo(result, silence);
+        return result;
+    }
+
     /// <summary>One keyed transmission with leading and trailing silence.</summary>
     public static float[] Transmission(
         IEnumerable<byte[]> frames,

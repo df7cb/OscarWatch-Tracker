@@ -1,3 +1,5 @@
+using OscarWatch.Core.Terminal.Modem;
+
 namespace OscarWatch.Core.Terminal;
 
 /// <summary>
@@ -38,5 +40,5 @@ public sealed class TerminalTransmitWindow
 
     /// <summary>Bit rate from the profile's modem hint: 9600 for G3RUH, otherwise 1200.</summary>
     public static int BaudForModemHint(string? modemHint) =>
-        modemHint?.Contains("9600", StringComparison.Ordinal) == true ? 9600 : 1200;
+        TerminalSatelliteProfiles.ModemHintIsG3ruh9600(modemHint) ? HdlcEncoder.G3ruhBaud : HdlcEncoder.Baud;
 }

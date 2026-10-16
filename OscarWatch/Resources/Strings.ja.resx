@@ -5882,10 +5882,31 @@
     <value>テストトーンを停止しました。</value>
   </data>
   <data name="Terminal.Modem.TxLevel" xml:space="preserve">
-    <value>送信レベル</value>
+    <value>送信レベル (1200 AFSK)</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel9600" xml:space="preserve">
+    <value>送信レベル (9600 G3RUH データポート)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode" xml:space="preserve">
+    <value>モデム速度</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Auto" xml:space="preserve">
+    <value>自動 (衛星プロファイルに従う)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Afsk1200" xml:space="preserve">
+    <value>1200 ボー AFSK (スピーカー/マイク音声)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.G3ruh9600" xml:space="preserve">
+    <value>9600 ボー G3RUH (無線機データポート)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Help" xml:space="preserve">
+    <value>1200 AFSK はスピーカー/マイク経路の音声トーンです。9600 G3RUH にはフラットな 9600 ボー データポートが必要です (音響結合不可)。無線機メニューは手動で設定してください。OscarWatch は CAT でモードを切り替えません。</value>
+  </data>
+  <data name="Terminal.Modem.G3ruh.Warning" xml:space="preserve">
+    <value>9600 G3RUH は 48 kHz のデータポートを使います。この速度でスピーカー/マイク音声は使わないでください。</value>
   </data>
   <data name="Terminal.Modem.Unsupported" xml:space="preserve">
-    <value>{0} は {1} を使用します。内蔵モデムがデコードできるのは 1200 AFSK のみです。この衛星には AGWPE 経由で UZ7HO を使ってください。</value>
+    <value>{0} は {1} を使用します。内蔵モデムは 1200 AFSK と 9600 G3RUH のみ対応です。BPSK、GMSK などは AGWPE 経由で UZ7HO を使ってください。</value>
   </data>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>全二重でも空きチャンネルを待つ</value>

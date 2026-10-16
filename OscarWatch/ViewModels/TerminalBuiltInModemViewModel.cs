@@ -30,6 +30,11 @@ public sealed record TerminalTestToneOption(AfskTestTone Value, string Label)
     public override string ToString() => Label;
 }
 
+public sealed record TerminalRateModeOption(BuiltInModemRateMode Value, string Label)
+{
+    public override string ToString() => Label;
+}
+
 /// <summary>Built-in soundcard modem section of the Terminal settings dialogue.</summary>
 public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, IDisposable
 {
@@ -88,8 +93,16 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
             new TerminalTestToneOption(AfskTestTone.Mark, _l.Get("Terminal.Modem.TestTone.Mark")),
             new TerminalTestToneOption(AfskTestTone.Space, _l.Get("Terminal.Modem.TestTone.Space")),
         ];
+        RateModeOptions =
+        [
+            new TerminalRateModeOption(BuiltInModemRateMode.Auto, _l.Get("Terminal.Modem.RateMode.Auto")),
+            new TerminalRateModeOption(BuiltInModemRateMode.Afsk1200, _l.Get("Terminal.Modem.RateMode.Afsk1200")),
+            new TerminalRateModeOption(BuiltInModemRateMode.G3ruh9600, _l.Get("Terminal.Modem.RateMode.G3ruh9600")),
+        ];
 
         _txLevelPercent = (int)Math.Round(m.TxLevel * 100);
+        _txLevel9600Percent = (int)Math.Round(m.TxLevel9600 * 100);
+        _selectedRateMode = RateModeOptions.First(o => o.Value == m.RateMode);
         _selectedPttMethod = PttMethodOptions.FirstOrDefault(o => o.Value == m.PttMethod) ?? PttMethodOptions[0];
         _selectedPttLine = PttLineOptions.FirstOrDefault(o => o.Value == m.PttLine) ?? PttLineOptions[0];
         _pttInvert = m.PttInvert;
@@ -110,6 +123,17 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         _meterTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
         _meterTimer.Tick += (_, _) => UpdateMeter();
         _meterTimer.Start();
+        RefreshG3ruhWarning();
+    }
+
+    partial void OnSelectedRateModeChanged(TerminalRateModeOption value) => RefreshG3ruhWarning();
+
+    private void RefreshG3ruhWarning()
+    {
+        var profileHint = _service.Profile?.ModemHint;
+        ShowG3ruhWarning = SelectedRateMode.Value == BuiltInModemRateMode.G3ruh9600
+                          || (SelectedRateMode.Value == BuiltInModemRateMode.Auto
+                              && TerminalSatelliteProfiles.ModemHintIsG3ruh9600(profileHint));
     }
 
     public IReadOnlyList<PttMethodOption> PttMethodOptions { get; }
@@ -117,6 +141,7 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
     public IReadOnlyList<TerminalDuplexOption> DuplexOptions { get; }
     public IReadOnlyList<TerminalBitFixOption> BitFixOptions { get; }
     public IReadOnlyList<TerminalTestToneOption> TestToneOptions { get; }
+    public IReadOnlyList<TerminalRateModeOption> RateModeOptions { get; }
     public ObservableCollection<Ft4AudioDeviceOption> InputDeviceOptions { get; } = [];
     public ObservableCollection<Ft4AudioDeviceOption> OutputDeviceOptions { get; } = [];
     public ObservableCollection<string> PttPortOptions { get; } = [];
@@ -125,6 +150,9 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
     [ObservableProperty] private Ft4AudioDeviceOption? _selectedInputDevice;
     [ObservableProperty] private Ft4AudioDeviceOption? _selectedOutputDevice;
     [ObservableProperty] private int _txLevelPercent;
+    [ObservableProperty] private int _txLevel9600Percent;
+    [ObservableProperty] private TerminalRateModeOption _selectedRateMode;
+    [ObservableProperty] private bool _showG3ruhWarning;
     [ObservableProperty] private PttMethodOption _selectedPttMethod;
     [ObservableProperty] private PttLineOption _selectedPttLine;
     [ObservableProperty] private bool _pttInvert;
@@ -336,8 +364,13 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         try
         {
             audio.StartPlayback(SelectedOutputDevice?.Id, SelectedOutputDevice?.DisplayName);
-            var tone = AfskModulator.TestTone(SelectedTestTone.Value, TestToneLength.TotalSeconds, audio.PlaybackSampleRate,
-                Math.Clamp(TxLevelPercent / 100.0, 0.01, 1));
+            var useG3 = BuiltInModemKind.ResolveDataRate(_settings.Current.Terminal.BuiltIn, _service.Profile?.ModemHint)
+                        == BuiltInModemDataRate.G3ruh9600;
+            var tone = useG3
+                ? G3ruhModulator.TestPattern(TestToneLength.TotalSeconds, audio.PlaybackSampleRate,
+                    Math.Clamp(TxLevel9600Percent / 100.0, 0.01, 1))
+                : AfskModulator.TestTone(SelectedTestTone.Value, TestToneLength.TotalSeconds, audio.PlaybackSampleRate,
+                    Math.Clamp(TxLevelPercent / 100.0, 0.01, 1));
             await ptt.KeyAsync(cts.Token).ConfigureAwait(true);
             audio.Enqueue(tone);
             await audio.WaitForDrainAsync(cts.Token).WaitAsync(TestToneLength + TimeSpan.FromSeconds(2), cts.Token).ConfigureAwait(true);
@@ -444,6 +477,8 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         }
 
         m.TxLevel = TxLevelPercent / 100.0;
+        m.TxLevel9600 = TxLevel9600Percent / 100.0;
+        m.RateMode = SelectedRateMode.Value;
         m.PttMethod = SelectedPttMethod.Value;
         m.PttLine = SelectedPttLine.Value;
         m.PttInvert = PttInvert;

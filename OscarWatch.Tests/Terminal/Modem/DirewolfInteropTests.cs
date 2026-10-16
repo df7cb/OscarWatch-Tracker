@@ -47,6 +47,57 @@ public sealed partial class DirewolfInteropTests
     }
 
     [Fact]
+    public void Direwolf_decodes_every_9600_frame_we_modulate()
+    {
+        if (Tool("atest") is not { } atest)
+            return;
+
+        const int count = 10;
+        var audio = new List<float>();
+        for (var i = 0; i < count; i++)
+        {
+            var frame = ModemTestSignals.UiFrame($":MM9SQL   :G3RUH interop {i:00} test{{{i}");
+            audio.AddRange(ModemTestSignals.G3ruhTransmission([frame], SampleRate, txDelayMs: 150, txTailMs: 30));
+        }
+
+        var wav = TempWav("oscarwatch-g3ruh-to-direwolf");
+        try
+        {
+            WriteWav16(wav, audio.ToArray(), SampleRate);
+            var decoded = RunAtest9600(atest, wav);
+            _output.WriteLine($"Direwolf atest -B 9600 decoded {decoded} of {count}");
+            Assert.Equal(count, decoded);
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+    }
+
+    [Fact]
+    public void We_decode_at_least_as_many_gen_packets_9600_frames_as_direwolf()
+    {
+        if (Tool("gen_packets") is not { } gen || Tool("atest") is not { } atest)
+            return;
+
+        var wav = TempWav("direwolf-g3ruh-to-oscarwatch");
+        try
+        {
+            Run(gen, $"-B 9600 -n 50 -r {SampleRate} -o \"{wav}\"");
+            var direwolf = RunAtest9600(atest, wav);
+            var (samples, rate) = SstvWavReader.Read(wav);
+            var ours = G3ruhReceiver.DecodeAll(samples, rate, AfskBitFixMode.Off).Count;
+            _output.WriteLine($"gen_packets -B 9600 -n 50: Direwolf {direwolf}, OscarWatch {ours}");
+            Assert.True(direwolf > 0, "atest decoded nothing; check the Direwolf build");
+            Assert.True(ours >= direwolf * 0.90, $"OscarWatch decoded {ours}, Direwolf {direwolf}");
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+    }
+
+    [Fact]
     public void We_decode_at_least_as_many_gen_packets_frames_as_direwolf()
     {
         if (Tool("gen_packets") is not { } gen || Tool("atest") is not { } atest)
@@ -87,9 +138,13 @@ public sealed partial class DirewolfInteropTests
     private static string TempWav(string prefix) =>
         Path.Combine(Path.GetTempPath(), $"{prefix}-{Guid.NewGuid():N}.wav");
 
-    private int RunAtest(string atest, string wav)
+    private int RunAtest(string atest, string wav) => RunAtest(atest, wav, baudFlag: "");
+
+    private int RunAtest9600(string atest, string wav) => RunAtest(atest, wav, baudFlag: "-B 9600 ");
+
+    private int RunAtest(string atest, string wav, string baudFlag)
     {
-        var output = Run(atest, $"-F0 \"{wav}\"");
+        var output = Run(atest, $"{baudFlag}-F0 \"{wav}\"");
         var match = PacketsDecoded().Match(output);
         Assert.True(match.Success, "Unexpected atest output: " + output);
         return int.Parse(match.Groups[1].Value);

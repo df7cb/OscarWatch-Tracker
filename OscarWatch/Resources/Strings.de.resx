@@ -5886,10 +5886,31 @@ Aktuell: {1} ({2})</value>
     <value>Testton gestoppt.</value>
   </data>
   <data name="Terminal.Modem.TxLevel" xml:space="preserve">
-    <value>Sendepegel</value>
+    <value>Sendepegel (1200 AFSK)</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel9600" xml:space="preserve">
+    <value>Sendepegel (9600 G3RUH Datenport)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode" xml:space="preserve">
+    <value>Modemgeschwindigkeit</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Auto" xml:space="preserve">
+    <value>Automatisch (Satellitenprofil)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Afsk1200" xml:space="preserve">
+    <value>1200 Baud AFSK (Lautsprecher/Mikrofon)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.G3ruh9600" xml:space="preserve">
+    <value>9600 Baud G3RUH (Funkgerätedatenport)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Help" xml:space="preserve">
+    <value>1200 AFSK nutzt Audiotöne über Lautsprecher oder Mikrofon. 9600 G3RUH braucht den flachen 9600-Baud-Datenport (keine akustische Kopplung). Stellen Sie das Funkgerätemenü selbst ein; OscarWatch schaltet den Modus noch nicht per CAT um.</value>
+  </data>
+  <data name="Terminal.Modem.G3ruh.Warning" xml:space="preserve">
+    <value>9600 G3RUH nutzt den Datenport bei 48 kHz. Verwenden Sie bei dieser Rate kein Lautsprecher- oder Mikrofonaudio.</value>
   </data>
   <data name="Terminal.Modem.Unsupported" xml:space="preserve">
-    <value>{0} verwendet {1}. Das eingebaute Modem dekodiert nur 1200 AFSK. Verwenden Sie für diesen Satelliten UZ7HO über AGWPE.</value>
+    <value>{0} verwendet {1}. Das eingebaute Modem unterstützt nur 1200 AFSK und 9600 G3RUH. Für BPSK, GMSK und ähnliche Modi UZ7HO über AGWPE verwenden.</value>
   </data>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>Auch im Vollduplex auf freien Kanal warten</value>
