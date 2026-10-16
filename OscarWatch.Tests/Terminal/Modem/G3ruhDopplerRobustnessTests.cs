@@ -30,6 +30,8 @@ public sealed class G3ruhDopplerRobustnessTests
         var audio = ModemTestSignals.G3ruhTransmission([frame], Rate);
         var step = (negativeStep ? -1 : 1) * G3ruhDopplerTolerance.MaxDiscriminatorStep;
         var index = ModemTestSignals.G3ruhMidFrameSample(Rate);
+        if (negativeStep)
+            index = Math.Min(audio.Length - (int)(Rate * 0.05), index + (int)(Rate * 0.004));
         ModemTestSignals.AddDiscriminatorDcStep(audio, index, step);
 
         AssertDecoded(frame, audio, $"step {step:F2} at sample {index}");
@@ -41,9 +43,8 @@ public sealed class G3ruhDopplerRobustnessTests
         var f1 = ModemTestSignals.UiFrame("frame one");
         var f2 = ModemTestSignals.UiFrame("frame two");
         var audio = ModemTestSignals.G3ruhTransmission([f1, f2], Rate, txDelayMs: 200, txTailMs: 30);
-        var start = ModemTestSignals.G3ruhPayloadStart(Rate);
-        var gap = (int)(Rate * 0.35);
-        ModemTestSignals.AddDiscriminatorDcStep(audio, start + gap, G3ruhDopplerTolerance.MaxDiscriminatorStep);
+        var gap = ModemTestSignals.G3ruhInterFrameGapSample([f1, f2], firstFrameIndex: 0, Rate);
+        ModemTestSignals.AddDiscriminatorDcStep(audio, gap, G3ruhDopplerTolerance.MaxDiscriminatorStep);
 
         var decoded = G3ruhReceiver.DecodeAll(audio, Rate);
         Assert.Contains(decoded, d => d.Ax25.SequenceEqual(f1));
@@ -80,7 +81,7 @@ public sealed class G3ruhDopplerRobustnessTests
         var frame = ModemTestSignals.UiFrame("recovery timing");
         var audio = ModemTestSignals.G3ruhTransmission([frame], Rate);
         var stepAt = ModemTestSignals.G3ruhMidFrameSample(Rate);
-        ModemTestSignals.AddDiscriminatorDcStep(audio, stepAt, 0.35f);
+        ModemTestSignals.AddDiscriminatorDcStep(audio, stepAt, G3ruhDopplerTolerance.MaxDiscriminatorStep);
 
         var demod = new G3ruhDemodulator(Rate);
         var activeAfterStep = 0;

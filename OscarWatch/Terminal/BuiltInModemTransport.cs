@@ -440,18 +440,21 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
             if (DataRate == BuiltInModemDataRate.G3ruh9600)
             {
                 var g3 = new G3ruhStreamModulator(_audio.PlaybackSampleRate, modem.TxLevel9600);
-                _audio.Enqueue(g3.Append(HdlcEncoder.EncodeG3ruhTransmission(
-                    batch.Select(b => b.Frame), settings.ModemTxDelayMs, 0)));
-                await EnqueueChainedAsync(g3, batch, settings, watchdogAt, modem, ct, g3ruh: true).ConfigureAwait(false);
+                var g3Encode = new G3ruhStreamEncoder();
+                var delayFlags = HdlcEncoder.FlagsFor(settings.ModemTxDelayMs, baud);
+                _audio.Enqueue(g3.Append(g3Encode.AppendFrames(batch.Select(b => b.Frame), delayFlags, 0)));
+                await EnqueueChainedAsync(g3, g3Encode, batch, settings, watchdogAt, modem, ct, g3ruh: true)
+                    .ConfigureAwait(false);
                 var tailG3 = Math.Max(1, HdlcEncoder.FlagsFor(settings.ModemTxTailMs, baud) - 1);
-                _audio.Enqueue(g3.Finish(HdlcEncoder.FlagBits(tailG3)));
+                _audio.Enqueue(g3.Finish(g3Encode.AppendFlags(tailG3)));
             }
             else
             {
                 var modulator = new AfskStreamModulator(_audio.PlaybackSampleRate, modem.TxLevel);
                 _audio.Enqueue(modulator.Append(HdlcEncoder.EncodeBits(
                     batch.Select(b => b.Frame), HdlcEncoder.FlagsFor(settings.ModemTxDelayMs), 0)));
-                await EnqueueChainedAsync(modulator, batch, settings, watchdogAt, modem, ct, g3ruh: false).ConfigureAwait(false);
+                await EnqueueChainedAsync(modulator, null, batch, settings, watchdogAt, modem, ct, g3ruh: false)
+                    .ConfigureAwait(false);
                 var tailFlags = Math.Max(1, HdlcEncoder.FlagsFor(settings.ModemTxTailMs) - 1);
                 _audio.Enqueue(modulator.Finish(HdlcEncoder.FlagBits(tailFlags)));
             }
@@ -493,6 +496,7 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
 
     private async Task EnqueueChainedAsync(
         object modulator,
+        G3ruhStreamEncoder? g3Encoder,
         List<TxItem> batch,
         TerminalSettings settings,
         long watchdogAt,
@@ -514,7 +518,7 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
                 {
                     if (g3ruh)
                     {
-                        var bits = HdlcEncoder.EncodeG3ruhBits(more.Select(m => m.Frame), 1, 0);
+                        var bits = g3Encoder!.AppendContinuationFrames(more.Select(m => m.Frame));
                         _audio.Enqueue(((G3ruhStreamModulator)modulator).Append(bits));
                     }
                     else

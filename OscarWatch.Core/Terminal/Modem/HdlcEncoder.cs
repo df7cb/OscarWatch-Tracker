@@ -16,11 +16,14 @@ public static class HdlcEncoder
         Math.Max(1, (int)Math.Ceiling(Math.Max(0, milliseconds) * baud / 8000.0));
 
     /// <summary>HDLC bits before NRZI. Flags are never stuffed; frame bytes and FCS are.</summary>
-    public static List<bool> EncodeBits(IEnumerable<byte[]> ax25Frames, int preambleFlags, int tailFlags)
+    public static List<bool> EncodeBits(IEnumerable<byte[]> ax25Frames, int preambleFlags, int tailFlags, bool leadingFlags = true)
     {
         var bits = new List<bool>(4096);
-        for (var i = 0; i < Math.Max(1, preambleFlags); i++)
-            AppendByte(bits, Flag);
+        if (leadingFlags)
+        {
+            for (var i = 0; i < Math.Max(1, preambleFlags); i++)
+                AppendByte(bits, Flag);
+        }
 
         foreach (var frame in ax25Frames)
         {

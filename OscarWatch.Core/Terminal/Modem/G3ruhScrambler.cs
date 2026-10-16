@@ -17,19 +17,22 @@ public sealed class G3ruhScrambler
         return clear;
     }
 
+    /// <summary>Scrambles one NRZI level for transmit. The LFSR shifts in the scrambled output bit.</summary>
+    public bool ScrambleNrziBit(bool nrziLevel)
+    {
+        var feedback = ((_lfsr >> 16) ^ (_lfsr >> 11)) & 1;
+        var scrambled = nrziLevel ^ feedback != 0;
+        _lfsr = ((_lfsr << 1) | (scrambled ? 1u : 0u)) & Mask;
+        return scrambled;
+    }
+
     /// <summary>Scrambles NRZI bits for transmit. The LFSR shifts in the scrambled output bit.</summary>
     public static bool[] ScrambleBits(IReadOnlyList<bool> nrziBits)
     {
         var scrambler = new G3ruhScrambler();
         var output = new bool[nrziBits.Count];
         for (var i = 0; i < nrziBits.Count; i++)
-        {
-            var feedback = ((scrambler._lfsr >> 16) ^ (scrambler._lfsr >> 11)) & 1;
-            var scrambled = nrziBits[i] ^ feedback != 0;
-            output[i] = scrambled;
-            scrambler._lfsr = ((scrambler._lfsr << 1) | (scrambled ? 1u : 0u)) & Mask;
-        }
-
+            output[i] = scrambler.ScrambleNrziBit(nrziBits[i]);
         return output;
     }
 }

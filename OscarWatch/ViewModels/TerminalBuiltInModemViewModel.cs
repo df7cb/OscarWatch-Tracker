@@ -364,8 +364,12 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         try
         {
             audio.StartPlayback(SelectedOutputDevice?.Id, SelectedOutputDevice?.DisplayName);
-            var useG3 = BuiltInModemKind.ResolveDataRate(_settings.Current.Terminal.BuiltIn, _service.Profile?.ModemHint)
-                        == BuiltInModemDataRate.G3ruh9600;
+            var useG3 = SelectedRateMode.Value switch
+            {
+                BuiltInModemRateMode.G3ruh9600 => true,
+                BuiltInModemRateMode.Afsk1200 => false,
+                _ => TerminalSatelliteProfiles.ModemHintIsG3ruh9600(_service.Profile?.ModemHint),
+            };
             var tone = useG3
                 ? G3ruhModulator.TestPattern(TestToneLength.TotalSeconds, audio.PlaybackSampleRate,
                     Math.Clamp(TxLevel9600Percent / 100.0, 0.01, 1))

@@ -48,6 +48,7 @@ public sealed class TerminalTransmitWindowTests
     [InlineData(TerminalSatelliteProfiles.ModemHintAfsk1200, 1200)]
     [InlineData(TerminalSatelliteProfiles.ModemHintBpsk1200, 1200)]
     [InlineData(TerminalSatelliteProfiles.ModemHintG3ruh9600, 9600)]
+    [InlineData(TerminalSatelliteProfiles.ModemHintGmsk9600, 9600)]
     [InlineData(null, 1200)]
     public void Baud_follows_the_modem_hint(string? hint, int baud) =>
         Assert.Equal(baud, TerminalTransmitWindow.BaudForModemHint(hint));

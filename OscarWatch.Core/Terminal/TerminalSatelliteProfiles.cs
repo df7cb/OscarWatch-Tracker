@@ -101,6 +101,23 @@ public static class TerminalSatelliteProfiles
     }
 
     /// <summary>
+    /// True when a profile modem hint implies 9600 baud airtime (G3RUH, GMSK, or other 9k6 modes).
+    /// Independent of whether the built-in modem supports the mode.
+    /// </summary>
+    public static bool ModemHintUses9600Baud(string? modemHint)
+    {
+        var hint = modemHint ?? "";
+        if (hint.Contains("1200", StringComparison.Ordinal))
+            return false;
+        if (ModemHintIsG3ruh9600(hint))
+            return true;
+        if (hint.Contains("9600", StringComparison.Ordinal)
+            || hint.Contains("9k6", StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    /// <summary>
     /// True when the built-in modem can work a satellite with this hint: 1200 AFSK, 9600 G3RUH, or an
     /// unknown hint that does not name an unsupported mode (BPSK, GMSK, Skylink, and similar).
     /// </summary>

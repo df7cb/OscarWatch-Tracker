@@ -8,7 +8,8 @@ namespace OscarWatch.Core.Terminal.Modem;
 /// </summary>
 public sealed class G3ruhReceiver
 {
-    private const int ClusterSamples = 960;
+    /// <summary>Merge duplicate path decodes of one frame (~2.5 ms at 48 kHz), not back-to-back frames.</summary>
+    private const int ClusterSamples = 48;
     private const int DuplicateSamples = G3ruhDemodulator.PreferredSampleRate;
     private const int DcdHoldSamples = G3ruhDemodulator.PreferredSampleRate / 10;
     private const int MaxFixAttemptsPerCluster = 6;

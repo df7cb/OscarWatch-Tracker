@@ -40,5 +40,5 @@ public sealed class TerminalTransmitWindow
 
     /// <summary>Bit rate from the profile's modem hint: 9600 for G3RUH, otherwise 1200.</summary>
     public static int BaudForModemHint(string? modemHint) =>
-        TerminalSatelliteProfiles.ModemHintIsG3ruh9600(modemHint) ? HdlcEncoder.G3ruhBaud : HdlcEncoder.Baud;
+        TerminalSatelliteProfiles.ModemHintUses9600Baud(modemHint) ? HdlcEncoder.G3ruhBaud : HdlcEncoder.Baud;
 }
