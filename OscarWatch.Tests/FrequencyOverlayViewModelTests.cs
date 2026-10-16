@@ -391,6 +391,79 @@ public class FrequencyOverlayViewModelTests
     }
 
     [Fact]
+    public void Offset_hint_updates_when_another_satellite_is_selected()
+    {
+        using var _ = TestUiCulture.Apply(LocalizationCulture.DefaultLanguage);
+        var settings = new TestSettingsService();
+        settings.Current.FrequencySelections["RS-44"] = new SatelliteFrequencySelection
+        {
+            ModeType = "SSB Transponder",
+            ModeIndex = 0,
+            RememberOffsets = true
+        };
+        settings.Current.FrequencySelections["RS-44"].SetOffsetsForMode("SSB Transponder", 0, -3);
+        settings.Current.FrequencySelections["JO-97"] = new SatelliteFrequencySelection
+        {
+            ModeType = "SSB Transponder",
+            ModeIndex = 0,
+            RememberOffsets = true
+        };
+        settings.Current.FrequencySelections["JO-97"].SetOffsetsForMode("SSB Transponder", 0, 1.5);
+
+        var database = new TestSatelliteDatabaseService(
+        [
+            new SatelliteRadioEntry
+            {
+                Name = "RS-44",
+                Modes = [ReverseSsbMode()]
+            },
+            new SatelliteRadioEntry
+            {
+                Name = "JO-97",
+                Modes = [ReverseSsbMode()]
+            }
+        ]);
+
+        var vm = new FrequencyOverlayViewModel(settings, database, LocalizationService.Instance);
+        vm.Update(new SatelliteTrackState
+        {
+            Name = "RS-44",
+            NoradId = "44909",
+            Subpoint = new GeoCoordinate(57, 18),
+            LookAngles = new LookAngles(180, 25, 800, 0)
+        });
+
+        Assert.Contains("-3.000", vm.OffsetAppliedHint, StringComparison.Ordinal);
+        Assert.Contains("Tune Main for uplink", vm.OffsetAppliedHint, StringComparison.Ordinal);
+
+        vm.Update(new SatelliteTrackState
+        {
+            Name = "JO-97",
+            NoradId = "43803",
+            Subpoint = new GeoCoordinate(52, -4),
+            LookAngles = new LookAngles(90, 20, 600, 0)
+        });
+
+        Assert.Contains("+1.500", vm.OffsetAppliedHint, StringComparison.Ordinal);
+        Assert.DoesNotContain("-3.000", vm.OffsetAppliedHint, StringComparison.Ordinal);
+        Assert.InRange(vm.ReceiveOffsetKHz, 1.499, 1.501);
+
+        vm.StoreOffsetCommand.Execute(null);
+        var storedHint = vm.OffsetAppliedHint;
+        Assert.Contains("Stored", storedHint, StringComparison.Ordinal);
+
+        vm.Update(new SatelliteTrackState
+        {
+            Name = "JO-97",
+            NoradId = "43803",
+            Subpoint = new GeoCoordinate(52, -4),
+            LookAngles = new LookAngles(91, 21, 600, 0.1)
+        });
+
+        Assert.Equal(storedHint, vm.OffsetAppliedHint);
+    }
+
+    [Fact]
     public void Offset_adjustment_does_not_persist_until_store()
     {
         var settings = new TestSettingsService();
@@ -876,6 +949,16 @@ public class FrequencyOverlayViewModelTests
         });
         Assert.False(vm.CanReportSatelliteStatus);
     }
+
+    private static SatelliteTransponderMode ReverseSsbMode() => new()
+    {
+        Type = "SSB Transponder",
+        DownlinkKHz = 435_667,
+        UplinkKHz = 145_937.61,
+        DownlinkMode = "USB",
+        UplinkMode = "LSB",
+        Doppler = "REV"
+    };
 
     private static TestSatelliteDatabaseService CreateRs44Database() =>
         new(

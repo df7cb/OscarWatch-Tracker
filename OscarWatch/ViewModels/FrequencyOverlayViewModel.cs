@@ -420,7 +420,8 @@ public partial class FrequencyOverlayViewModel : ViewModelBase
         SatelliteName = state.Name;
         ShowBelowHorizonDim = state.LookAngles is null || state.LookAngles.ElevationDeg < 0;
 
-        if (!string.Equals(_currentNoradId, state.NoradId, StringComparison.Ordinal))
+        var satelliteChanged = !string.Equals(_currentNoradId, state.NoradId, StringComparison.Ordinal);
+        if (satelliteChanged)
         {
             _currentNoradId = state.NoradId;
             _currentSatelliteName = state.Name;
@@ -446,6 +447,11 @@ public partial class FrequencyOverlayViewModel : ViewModelBase
 
         _lastRangeRateKmPerSec = state.LookAngles?.RangeRateKmPerSec ?? 0;
         ApplyFrequencyDisplay(state);
+        // Mode load suppresses offset property changes, so the hint would stay on the
+        // previous satellite until the TX/RX leg toggle rebuilds it. Tracking ticks
+        // must not overwrite a Store Offset confirmation.
+        if (satelliteChanged)
+            UpdateOffsetAppliedHint();
         UpdateCanReportSatelliteStatus();
     }
 
