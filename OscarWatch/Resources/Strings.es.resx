@@ -5809,7 +5809,7 @@ Está utilizando la versión {0}.
     <value>semidúplex</value>
   </data>
   <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
-    <value>Los satélites símplex como la ISS usan una sola frecuencia, así que el módem espera un canal libre, silencia el receptor al transmitir y deja una breve pausa antes de volver a escuchar. Los satélites de banda cruzada pueden funcionar en dúplex completo, para que oiga su propio paquete volver por el digipetidor.</value>
+    <value>Los satélites símplex como la ISS usan una sola frecuencia, así que el módem espera un canal libre y silencia el receptor al transmitir. Vuelve a escuchar en cuanto suelta el PTT. Una copia de su propio paquete se trata como un eco, y la pausa de conmutación solo retrasa la siguiente transmisión. Los satélites de banda cruzada pueden funcionar en dúplex completo, para que oiga su propio paquete volver por el digipetidor.</value>
   </data>
   <data name="Terminal.Modem.Guard" xml:space="preserve">
     <value>Pausa de conmutación (ms)</value>

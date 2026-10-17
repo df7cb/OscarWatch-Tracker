@@ -432,15 +432,15 @@
       <ul>
         <li><strong>Duplex:</strong> <strong>Automatic</strong> follows the satellite's link type, which is right almost every
           time. <strong>Half duplex</strong> is for one-frequency satellites such as the ISS: the modem listens for a quiet
-          channel, mutes its own receiver while sending, and pauses briefly before listening again. <strong>Full
-          duplex</strong> is for satellites with the uplink and downlink on different bands, where you can hear your own frame
-          coming back while you send.</li>
+          channel and mutes its own receiver while sending. It listens again as soon as it unkeys. A copy of your own
+          packet is treated as an echo. <strong>Full duplex</strong> is for satellites with the uplink and downlink on
+          different bands, where you can hear your own frame coming back while you send.</li>
         <li><strong>Persistence</strong> and <strong>Slot time (ms):</strong> when the channel goes quiet, the modem does not
           always send at once. In each slot it decides at random whether to go, so several stations waiting for the same quiet
           moment do not all transmit together. Higher persistence means it sends sooner.</li>
         <li><strong>Maximum wait (ms):</strong> how long the modem waits for a quiet channel before giving up on that frame.</li>
-        <li><strong>Turnaround guard (ms):</strong> the short pause after transmitting before the receiver listens again, so
-          the end of your own transmission is not mistaken for a signal.</li>
+        <li><strong>Turnaround guard (ms):</strong> the short pause after transmitting before the modem may transmit again,
+          so you do not transmit over the digipeat. The receiver keeps listening. A copy of your own packet is an echo.</li>
         <li><strong>Wait for a clear channel in full duplex too:</strong> normally off, because in full duplex you hear
           yourself and the channel would always seem busy.</li>
       </ul>

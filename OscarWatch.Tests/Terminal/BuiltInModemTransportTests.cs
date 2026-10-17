@@ -251,6 +251,29 @@ public sealed class BuiltInModemTransportTests
     }
 
     [Fact]
+    public async Task Half_duplex_keeps_listening_through_the_turnaround_guard()
+    {
+        await using var h = new Harness(s =>
+        {
+            s.BuiltIn.Duplex = TerminalDuplexMode.Half;
+            s.BuiltIn.TurnaroundGuardMs = 1000;
+        });
+        await h.StartAsync();
+        var reply = ModemTestSignals.UiFrame(":MM9SQL   :heard in the guard", source: "G4XYZ");
+
+        await h.Modem.SendAsync(ModemTestSignals.UiFrame("my frame"), 0, CancellationToken.None);
+        h.Audio.Feed(ModemTestSignals.Transmission([reply], h.Audio.CaptureSampleRate));
+        await WaitUntilAsync(() =>
+        {
+            lock (h.Received)
+                return h.Received.Count > 0;
+        });
+
+        lock (h.Received)
+            Assert.Equal(reply, Assert.Single(h.Received).Ax25);
+    }
+
+    [Fact]
     public async Task Full_duplex_keeps_receiving_while_keyed()
     {
         await using var h = new Harness();

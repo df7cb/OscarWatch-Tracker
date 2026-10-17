@@ -82,7 +82,7 @@ public sealed class TerminalBuiltInModemSettings
     /// <summary>Give up on a busy channel after this long and report it, rather than wait for the whole pass.</summary>
     public int MaxChannelWaitMs { get; set; } = DefaultMaxChannelWaitMs;
 
-    /// <summary>Half duplex: ignore receive audio for this long after unkeying (soundcard latency and the radio's TX to RX switch).</summary>
+    /// <summary>Half duplex: wait this long after unkeying before transmitting again. The receiver keeps listening.</summary>
     public int TurnaroundGuardMs { get; set; } = DefaultTurnaroundGuardMs;
 
     public AfskBitFixMode BitFix { get; set; } = AfskBitFixMode.SingleBit;

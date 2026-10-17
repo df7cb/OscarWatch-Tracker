@@ -71,7 +71,7 @@ public sealed class AfskReceiver
     /// <summary>Recent input peak (0 to 1), falling slowly.</summary>
     public float InputPeak => _peak;
 
-    /// <summary>While true the input is counted but not decoded (half duplex transmit and turnaround guard).</summary>
+    /// <summary>While true the input is counted but not decoded (half duplex, while the transmitter is keyed).</summary>
     public bool Blanked
     {
         get => _blanked;

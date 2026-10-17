@@ -5809,7 +5809,7 @@ Mais recente: {1} ({2})</value>
     <value>half duplex</value>
   </data>
   <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
-    <value>Satélites simplex como a ISS usam uma só frequência, então o modem espera o canal livre, silencia o receptor ao transmitir e deixa uma pequena pausa antes de ouvir de novo. Satélites de banda cruzada podem operar em full duplex, para você ouvir seu próprio pacote voltar pelo digipeater.</value>
+    <value>Satélites simplex como a ISS usam uma só frequência, então o modem espera o canal livre e silencia o receptor ao transmitir. Volta a escutar assim que solta o PTT. Uma cópia do próprio pacote é tratada como eco, e a pausa de comutação só atrasa a transmissão seguinte. Satélites de banda cruzada podem operar em full duplex, para você ouvir seu próprio pacote voltar pelo digipeater.</value>
   </data>
   <data name="Terminal.Modem.Guard" xml:space="preserve">
     <value>Pausa de comutação (ms)</value>

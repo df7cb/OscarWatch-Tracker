@@ -284,7 +284,9 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
                 while ((n = _audio.ReadCapture(buffer)) > 0)
                 {
                     _recent.Write(buffer.AsSpan(0, n));
-                    var blanked = _rxBlank || Stopwatch.GetTimestamp() < Interlocked.Read(ref _blankUntilTimestamp);
+                    // The turnaround guard delays the next transmission. It does not blank the decoder:
+                    // a copy of our own packet is classified as an echo, and a digipeat can be heard at once.
+                    var blanked = _rxBlank;
                     var bitFix = _settings().BuiltIn.BitFix;
                     if (g3ruh is not null)
                     {
@@ -491,6 +493,7 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
             _transmitting = false;
             if (half)
             {
+                // Holds the next transmission only. Receive blanking ends with _rxBlank.
                 var guard = (long)(modem.TurnaroundGuardMs / 1000.0 * Stopwatch.Frequency);
                 Interlocked.Exchange(ref _blankUntilTimestamp, Stopwatch.GetTimestamp() + guard);
                 _rxBlank = false;

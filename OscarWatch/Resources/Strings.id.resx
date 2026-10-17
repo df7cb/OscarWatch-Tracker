@@ -5814,7 +5814,7 @@ Terbaru: {1} ({2})</value>
     <value>setengah dupleks</value>
   </data>
   <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
-    <value>Satelit simpleks seperti ISS memakai satu frekuensi, jadi modem menunggu kanal kosong, membisukan penerima saat memancar, dan memberi jeda singkat sebelum mendengar lagi. Satelit lintas band dapat berjalan dupleks penuh sehingga Anda mendengar paket sendiri kembali melalui digipeater.</value>
+    <value>Satelit simpleks seperti ISS memakai satu frekuensi, jadi modem menunggu kanal kosong dan membisukan penerima saat memancar. Ia langsung mendengar lagi setelah PTT lepas. Salinan paket sendiri dianggap gema, dan jeda peralihan hanya menunda pancaran berikutnya. Satelit lintas band dapat berjalan dupleks penuh sehingga Anda mendengar paket sendiri kembali melalui digipeater.</value>
   </data>
   <data name="Terminal.Modem.Guard" xml:space="preserve">
     <value>Jeda peralihan (ms)</value>

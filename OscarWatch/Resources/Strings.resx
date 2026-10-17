@@ -5809,7 +5809,7 @@ Latest: {1} ({2})</value>
     <value>half duplex</value>
   </data>
   <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
-    <value>Simplex satellites such as the ISS use one frequency, so the modem waits for a clear channel, mutes its receiver while transmitting and leaves a short guard before it listens again. Crossband satellites can run full duplex, so you hear your own packet come back through the digipeater.</value>
+    <value>Simplex satellites such as the ISS use one frequency, so the modem waits for a clear channel and mutes its receiver while transmitting. It listens again as soon as it unkeys. A copy of your own packet is treated as an echo, and the turnaround guard only delays the next transmission. Crossband satellites can run full duplex, so you hear your own packet come back through the digipeater.</value>
   </data>
   <data name="Terminal.Modem.Guard" xml:space="preserve">
     <value>Turnaround guard (ms)</value>

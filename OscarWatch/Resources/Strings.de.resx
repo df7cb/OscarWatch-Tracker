@@ -5814,7 +5814,7 @@ Aktuell: {1} ({2})</value>
     <value>Halbduplex</value>
   </data>
   <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
-    <value>Simplex-Satelliten wie die ISS nutzen eine Frequenz. Das Modem wartet daher auf einen freien Kanal, schaltet den Empfang beim Senden stumm und lässt eine kurze Schutzzeit, bevor es wieder hört. Crossband-Satelliten können im Vollduplex laufen, sodass Sie Ihr eigenes Paket über den Digipeater zurückhören.</value>
+    <value>Simplex-Satelliten wie die ISS nutzen eine Frequenz. Das Modem wartet daher auf einen freien Kanal und schaltet den Empfang beim Senden stumm. Nach dem Abfallen der Taste hört es sofort wieder. Eine Kopie des eigenen Pakets gilt als Echo, und die Umschalt-Schutzzeit verzögert nur die nächste Aussendung. Crossband-Satelliten können im Vollduplex laufen, sodass Sie Ihr eigenes Paket über den Digipeater zurückhören.</value>
   </data>
   <data name="Terminal.Modem.Guard" xml:space="preserve">
     <value>Umschalt-Schutzzeit (ms)</value>

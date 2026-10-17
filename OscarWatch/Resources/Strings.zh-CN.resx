@@ -5810,7 +5810,7 @@
     <value>半双工</value>
   </data>
   <data name="Terminal.Modem.Duplex.Help" xml:space="preserve">
-    <value>ISS 等单工卫星使用同一频率，因此调制解调器会等待信道空闲，发射时静音接收，并在重新接收前留出短暂保护时间。跨频段卫星可以全双工运行，您能听到自己的数据包经数字中继返回。</value>
+    <value>ISS 等单工卫星使用同一频率，因此调制解调器会等待信道空闲，并在发射时静音接收。松开 PTT 后立即继续接收。自己数据包的副本视为回声，收发切换保护只延迟下一次发射。跨频段卫星可以全双工运行，您能听到自己的数据包经数字中继返回。</value>
   </data>
   <data name="Terminal.Modem.Guard" xml:space="preserve">
     <value>收发切换保护 (ms)</value>
