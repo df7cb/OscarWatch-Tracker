@@ -14,7 +14,7 @@ public sealed class BuiltInModemTransportTests
 
     private sealed class Harness : IAsyncDisposable
     {
-        public Harness(Action<TerminalSettings>? configure = null)
+        public Harness(Action<TerminalSettings>? configure = null, int sampleRate = 12000)
         {
             Settings.Transport = TerminalTransportKind.BuiltIn;
             Settings.ModemTxDelayMs = 50;
@@ -23,6 +23,7 @@ public sealed class BuiltInModemTransportTests
             Settings.BuiltIn.Duplex = TerminalDuplexMode.Full;
             configure?.Invoke(Settings);
             Settings.Normalise();
+            Audio = new FakePacketAudio(sampleRate);
             Ptt = new PttKeyer(Rig, () => Settings.BuiltIn.ToPttOptions(), "Terminal");
             Modem = new BuiltInModemTransport(Audio, Ptt, () => Settings, Rig, new Random(1));
             Modem.FrameReceived += f =>
@@ -34,7 +35,7 @@ public sealed class BuiltInModemTransportTests
 
         public TerminalSettings Settings { get; } = new();
         public RecordingRigController Rig { get; } = new();
-        public FakePacketAudio Audio { get; } = new();
+        public FakePacketAudio Audio { get; private set; } = new();
         public PttKeyer Ptt { get; }
         public BuiltInModemTransport Modem { get; }
         public List<TerminalReceivedFrame> Received { get; } = [];
@@ -95,6 +96,32 @@ public sealed class BuiltInModemTransportTests
     }
 
     [Fact]
+    public async Task G3ruh_frames_chained_while_keyed_use_one_scrambler_state()
+    {
+        await using var h = new Harness(
+            s =>
+            {
+                s.BuiltIn.RateMode = BuiltInModemRateMode.G3ruh9600;
+                s.BuiltIn.TxLevel9600 = 0.4;
+            },
+            sampleRate: 48000);
+        await h.StartAsync();
+        var first = ModemTestSignals.UiFrame(":MM9SQL   :9600 first");
+        var second = ModemTestSignals.UiFrame(":MM9SQL   :9600 second");
+
+        var margin = (long)(h.Audio.PlaybackSampleRate * BuiltInModemTransport.ChainMarginSeconds);
+        var sendFirst = h.Modem.SendAsync(first, 0, CancellationToken.None);
+        await WaitUntilAsync(() =>
+            h.Modem.IsTransmitting && h.Audio.QueuedPlaybackSamples > margin);
+        var sendSecond = h.Modem.SendAsync(second, 0, CancellationToken.None);
+        await Task.WhenAll(sendFirst, sendSecond).WaitAsync(Timeout);
+
+        Assert.Equal(1, h.KeyCount);
+        var decoded = G3ruhReceiver.DecodeAll(h.Audio.Played, h.Audio.PlaybackSampleRate, AfskBitFixMode.Off);
+        Assert.Equal([first, second], decoded.Select(d => d.Ax25).ToList());
+    }
+
+    [Fact]
     public async Task Frames_queued_while_keyed_are_chained_into_one_transmission()
     {
         await using var h = new Harness();
@@ -102,9 +129,10 @@ public sealed class BuiltInModemTransportTests
         var first = ModemTestSignals.UiFrame(":MM9SQL   :first frame of the chain");
         var second = ModemTestSignals.UiFrame(":MM9SQL   :second frame");
 
+        var margin = (long)(h.Audio.PlaybackSampleRate * BuiltInModemTransport.ChainMarginSeconds);
         var sendFirst = h.Modem.SendAsync(first, 0, CancellationToken.None);
-        await WaitUntilAsync(() => h.Modem.IsTransmitting);
-        await Task.Delay(80);
+        await WaitUntilAsync(() =>
+            h.Modem.IsTransmitting && h.Audio.QueuedPlaybackSamples > margin);
         var sendSecond = h.Modem.SendAsync(second, 0, CancellationToken.None);
         await Task.WhenAll(sendFirst, sendSecond).WaitAsync(Timeout);
 

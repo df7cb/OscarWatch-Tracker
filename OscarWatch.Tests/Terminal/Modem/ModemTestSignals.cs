@@ -9,6 +9,26 @@ internal static class ModemTestSignals
     public static byte[] UiFrame(string text, string source = "MM9SQL-7", string path = "ARISS") =>
         Ax25Frame.CreateUi(Ax25Address.Parse("APRS"), Ax25Address.Parse(source), Ax25Frame.ParsePath(path), text).Encode();
 
+    /// <summary>Short UI frame (~16 ms airtime at 9600 baud) for back-to-back frame tests.</summary>
+    public static byte[] ShortUiFrame(string tag) => UiFrame(tag, source: "N0CALL", path: "");
+
+    /// <summary>One 9600 G3RUH keyed transmission with leading and trailing silence.</summary>
+    public static float[] G3ruhTransmission(
+        IEnumerable<byte[]> frames,
+        int sampleRate,
+        double amplitude = 0.35,
+        int txDelayMs = 200,
+        int txTailMs = 30,
+        double silenceSeconds = 0.2)
+    {
+        var bits = HdlcEncoder.EncodeG3ruhTransmission(frames, txDelayMs, txTailMs);
+        var audio = G3ruhModulator.Modulate(bits, sampleRate, amplitude);
+        var silence = (int)(sampleRate * silenceSeconds);
+        var result = new float[audio.Length + 2 * silence];
+        audio.CopyTo(result, silence);
+        return result;
+    }
+
     /// <summary>One keyed transmission with leading and trailing silence.</summary>
     public static float[] Transmission(
         IEnumerable<byte[]> frames,
@@ -138,5 +158,68 @@ internal static class ModemTestSignals
         var g = (float)(peak / max);
         for (var i = 0; i < samples.Length; i++)
             samples[i] *= g;
+    }
+
+    /// <summary>Adds a constant discriminator baseline (FM data-port DC) across the whole buffer.</summary>
+    public static void AddDiscriminatorDcOffset(Span<float> samples, float offset)
+    {
+        for (var i = 0; i < samples.Length; i++)
+            samples[i] += offset;
+    }
+
+    /// <summary>Sudden baseline step at <paramref name="stepIndex"/> (CAT frequency hop on the data port).</summary>
+    public static void AddDiscriminatorDcStep(Span<float> samples, int stepIndex, float step)
+    {
+        for (var i = Math.Clamp(stepIndex, 0, samples.Length); i < samples.Length; i++)
+            samples[i] += step;
+    }
+
+    /// <summary>Linear discriminator drift (residual uncorrected Doppler on the FM demod output).</summary>
+    public static void AddDiscriminatorDcRamp(Span<float> samples, int sampleRate, float startOffset, float voltsPerSecond)
+    {
+        for (var i = 0; i < samples.Length; i++)
+            samples[i] += startOffset + voltsPerSecond * (i / (float)sampleRate);
+    }
+
+    /// <summary>First sample index of keyed G3RUH audio (after leading silence).</summary>
+    public static int G3ruhPayloadStart(int sampleRate, double silenceSeconds = 0.2) =>
+        (int)(sampleRate * silenceSeconds);
+
+    /// <summary>Sample index at the middle of the AX.25 payload (inside the frame, after TXDELAY flags).</summary>
+    public static int G3ruhMidFrameSample(int sampleRate, int txDelayMs = 200, double silenceSeconds = 0.2)
+    {
+        var start = G3ruhPayloadStart(sampleRate, silenceSeconds);
+        var frame = UiFrame("mid-frame marker 9600 G3RUH");
+        var delayFlags = HdlcEncoder.FlagsFor(txDelayMs, HdlcEncoder.G3ruhBaud);
+        var keyed = HdlcEncoder.EncodeG3ruhTransmission([frame], txDelayMs, txTailMs: 0);
+        var delayOnly = HdlcEncoder.EncodeG3ruhBits([], delayFlags, 0);
+        var keyedSamples = G3ruhModulator.Modulate(keyed, sampleRate, 0.35).Length;
+        var delaySamples = G3ruhModulator.Modulate(delayOnly, sampleRate, 0.35).Length;
+        var mid = start + delaySamples + (keyedSamples - delaySamples) / 2;
+        AssertMidFramePlacement(start, start + keyedSamples, mid);
+        return mid;
+    }
+
+    /// <summary>Sample index in the inter-frame flag gap after <paramref name="firstFrameIndex"/>.</summary>
+    public static int G3ruhInterFrameGapSample(
+        IReadOnlyList<byte[]> frames,
+        int firstFrameIndex,
+        int sampleRate,
+        int txDelayMs = 200,
+        double silenceSeconds = 0.2)
+    {
+        var start = G3ruhPayloadStart(sampleRate, silenceSeconds);
+        var delayFlags = HdlcEncoder.FlagsFor(txDelayMs, HdlcEncoder.G3ruhBaud);
+        var prefix = frames.Take(firstFrameIndex + 1).ToArray();
+        var bitsThroughFirst = HdlcEncoder.EncodeG3ruhBits(prefix, delayFlags, 1);
+        var throughSamples = G3ruhModulator.Modulate(bitsThroughFirst, sampleRate, 0.35).Length;
+        var flagSamples = (int)Math.Round(sampleRate / (double)HdlcEncoder.G3ruhBaud * 8);
+        return start + throughSamples - flagSamples / 2;
+    }
+
+    private static void AssertMidFramePlacement(int keyedStart, int keyedEnd, int mid)
+    {
+        if (mid <= keyedStart || mid >= keyedEnd)
+            throw new InvalidOperationException($"Mid-frame step {mid} lies outside keyed audio [{keyedStart}, {keyedEnd}).");
     }
 }

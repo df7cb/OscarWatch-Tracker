@@ -38,6 +38,7 @@ public static class TerminalSatelliteProfiles
 
     public const string ModemHintAfsk1200 = "1200 AFSK";
     public const string ModemHintBpsk1200 = "BPSK 1200 (UZ7HO only)";
+    public const string ModemHintGmsk9600 = "9600 GMSK (external modem)";
     public const string ModemHintG3ruh9600 = "9600 G3RUH";
 
     public static IReadOnlyList<TerminalSatelliteProfile> BuiltIn { get; } =
@@ -61,22 +62,79 @@ public static class TerminalSatelliteProfiles
         var t = modeType ?? "";
         if (t.Contains("BPSK", StringComparison.OrdinalIgnoreCase))
             return ModemHintBpsk1200;
-        if (t.Contains("9k6", StringComparison.OrdinalIgnoreCase) || t.Contains("9600", StringComparison.OrdinalIgnoreCase))
+        if (t.Contains("GMSK", StringComparison.OrdinalIgnoreCase)
+            || t.Contains("Skylink", StringComparison.OrdinalIgnoreCase))
+            return ModemHintGmsk9600;
+        if (IsG3ruh9600ModeType(t))
             return ModemHintG3ruh9600;
         return ModemHintAfsk1200;
     }
 
+    /// <summary>True for AX.25 packet mode types that use 9600 baud G3RUH FSK (not GMSK, Skylink, or BPSK).</summary>
+    public static bool IsG3ruh9600ModeType(string? modeType)
+    {
+        if (string.IsNullOrWhiteSpace(modeType))
+            return false;
+        var t = modeType;
+        if (t.Contains("BPSK", StringComparison.OrdinalIgnoreCase)
+            || t.Contains("GMSK", StringComparison.OrdinalIgnoreCase)
+            || t.Contains("Skylink", StringComparison.OrdinalIgnoreCase)
+            || t.Contains("SSDV", StringComparison.OrdinalIgnoreCase)
+            || t.Contains("Telemetry", StringComparison.OrdinalIgnoreCase))
+            return false;
+        if (t.Contains("G3RUH", StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (!t.Contains("9k6", StringComparison.OrdinalIgnoreCase) && !t.Contains("9600", StringComparison.OrdinalIgnoreCase))
+            return false;
+        return t.Contains("Packet", StringComparison.OrdinalIgnoreCase)
+               || t.Contains("Digipeater", StringComparison.OrdinalIgnoreCase)
+               || t.Contains("APRS", StringComparison.OrdinalIgnoreCase)
+               || t.Contains("FSK", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>True when a profile hint selects 9600 G3RUH on the built-in modem.</summary>
+    public static bool ModemHintIsG3ruh9600(string? modemHint)
+    {
+        var hint = modemHint ?? "";
+        return hint.Contains("G3RUH", StringComparison.OrdinalIgnoreCase)
+               || hint.Contains("9600 G3RUH", StringComparison.OrdinalIgnoreCase);
+    }
+
     /// <summary>
-    /// True when the built-in modem can work a satellite with this hint: 1200 AFSK, or an unknown or
-    /// free-text hint that does not name BPSK or 9600 baud.
+    /// True when a profile modem hint implies 9600 baud airtime (G3RUH, GMSK, or other 9k6 modes).
+    /// Independent of whether the built-in modem supports the mode.
+    /// </summary>
+    public static bool ModemHintUses9600Baud(string? modemHint)
+    {
+        var hint = modemHint ?? "";
+        if (hint.Contains("1200", StringComparison.Ordinal))
+            return false;
+        if (ModemHintIsG3ruh9600(hint))
+            return true;
+        if (hint.Contains("9600", StringComparison.Ordinal)
+            || hint.Contains("9k6", StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    /// <summary>
+    /// True when the built-in modem can work a satellite with this hint: 1200 AFSK, 9600 G3RUH, or an
+    /// unknown hint that does not name an unsupported mode (BPSK, GMSK, Skylink, and similar).
     /// </summary>
     public static bool IsSupportedByBuiltIn(string? modemHint)
     {
         var hint = modemHint ?? "";
-        return !(hint.Contains("BPSK", StringComparison.OrdinalIgnoreCase)
-                 || hint.Contains("9600", StringComparison.Ordinal)
-                 || hint.Contains("9k6", StringComparison.OrdinalIgnoreCase)
-                 || hint.Contains("G3RUH", StringComparison.OrdinalIgnoreCase));
+        if (hint.Contains("BPSK", StringComparison.OrdinalIgnoreCase))
+            return false;
+        if (ModemHintIsG3ruh9600(hint))
+            return true;
+        if (hint.Contains("GMSK", StringComparison.OrdinalIgnoreCase)
+            || hint.Contains("Skylink", StringComparison.OrdinalIgnoreCase))
+            return false;
+        if (hint.Contains("9600", StringComparison.Ordinal)
+            || hint.Contains("9k6", StringComparison.OrdinalIgnoreCase))
+            return false;
+        return true;
     }
 
     /// <summary>Link type for one uplink and downlink pair.</summary>

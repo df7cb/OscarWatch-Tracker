@@ -5888,10 +5888,31 @@
     <value>测试音已停止。</value>
   </data>
   <data name="Terminal.Modem.TxLevel" xml:space="preserve">
-    <value>发射电平</value>
+    <value>发射电平 (1200 AFSK)</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel9600" xml:space="preserve">
+    <value>发射电平 (9600 G3RUH 数据口)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode" xml:space="preserve">
+    <value>调制解调器速率</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Auto" xml:space="preserve">
+    <value>自动 (按卫星配置)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Afsk1200" xml:space="preserve">
+    <value>1200 波特 AFSK (扬声器或麦克风音频)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.G3ruh9600" xml:space="preserve">
+    <value>9600 波特 G3RUH (电台数据口)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Help" xml:space="preserve">
+    <value>1200 AFSK 通过扬声器或麦克风发送音频音调。9600 G3RUH 需要电台的平坦 9600 波特数据口 (不要声学耦合)。请在电台上自行设置菜单；OscarWatch 尚不能通过 CAT 切换模式。</value>
+  </data>
+  <data name="Terminal.Modem.G3ruh.Warning" xml:space="preserve">
+    <value>9600 G3RUH 使用 48 kHz 的电台数据口。此速率请勿使用扬声器或麦克风音频。</value>
   </data>
   <data name="Terminal.Modem.Unsupported" xml:space="preserve">
-    <value>{0} 使用 {1}。内置调制解调器仅解码 1200 AFSK。此卫星请通过 AGWPE 使用 UZ7HO。</value>
+    <value>{0} 使用 {1}。内置调制解调器仅支持 1200 AFSK 与 9600 G3RUH。BPSK、GMSK 等模式请通过 AGWPE 使用 UZ7HO。</value>
   </data>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>全双工时也等待信道空闲</value>

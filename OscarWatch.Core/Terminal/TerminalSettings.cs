@@ -36,10 +36,11 @@ public enum TerminalDuplexMode
     Full
 }
 
-/// <summary>OscarWatch Terminal built-in 1200 baud AFSK soundcard modem.</summary>
+/// <summary>OscarWatch Terminal built-in soundcard packet modem (1200 AFSK and 9600 G3RUH).</summary>
 public sealed class TerminalBuiltInModemSettings
 {
     public const double DefaultTxLevel = 0.5;
+    public const double DefaultTxLevel9600 = 0.35;
     public const int DefaultPersist = 63;
     public const int DefaultSlotTimeMs = 100;
     public const int DefaultMaxChannelWaitMs = 5000;
@@ -61,6 +62,12 @@ public sealed class TerminalBuiltInModemSettings
 
     /// <summary>Output level, 0.01 to 1. Set so the radio deviates about 3 kHz.</summary>
     public double TxLevel { get; set; } = DefaultTxLevel;
+
+    /// <summary>9600 G3RUH data-port output level, 0.01 to 1.</summary>
+    public double TxLevel9600 { get; set; } = DefaultTxLevel9600;
+
+    /// <summary>Manual 1200 vs 9600 choice, or Automatic from the satellite profile hint.</summary>
+    public BuiltInModemRateMode RateMode { get; set; } = BuiltInModemRateMode.Auto;
 
     public TerminalDuplexMode Duplex { get; set; } = TerminalDuplexMode.Auto;
 
@@ -114,6 +121,9 @@ public sealed class TerminalBuiltInModemSettings
         OutputDeviceDisplayName ??= "";
         SeparatePttPort = (SeparatePttPort ?? "").Trim();
         TxLevel = double.IsFinite(TxLevel) ? Math.Clamp(TxLevel, 0.01, 1.0) : DefaultTxLevel;
+        TxLevel9600 = double.IsFinite(TxLevel9600) ? Math.Clamp(TxLevel9600, 0.01, 1.0) : DefaultTxLevel9600;
+        if (!Enum.IsDefined(RateMode))
+            RateMode = BuiltInModemRateMode.Auto;
         if (!Enum.IsDefined(Duplex))
             Duplex = TerminalDuplexMode.Auto;
         if (!Enum.IsDefined(BitFix))

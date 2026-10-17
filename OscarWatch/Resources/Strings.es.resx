@@ -5887,10 +5887,31 @@ Está utilizando la versión {0}.
     <value>Tono de prueba detenido.</value>
   </data>
   <data name="Terminal.Modem.TxLevel" xml:space="preserve">
-    <value>Nivel de TX</value>
+    <value>Nivel de TX (1200 AFSK)</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel9600" xml:space="preserve">
+    <value>Nivel de TX (puerto de datos 9600 G3RUH)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode" xml:space="preserve">
+    <value>Velocidad del módem</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Auto" xml:space="preserve">
+    <value>Automático (según el perfil del satélite)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Afsk1200" xml:space="preserve">
+    <value>1200 baudios AFSK (altavoz o micrófono)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.G3ruh9600" xml:space="preserve">
+    <value>9600 baudios G3RUH (puerto de datos de la radio)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Help" xml:space="preserve">
+    <value>1200 AFSK usa tonos de audio por altavoz o micrófono. 9600 G3RUH necesita el puerto de datos plano a 9600 baudios (no acoplamiento acústico). Configure el menú de la radio usted mismo; OscarWatch aún no cambia el modo por CAT.</value>
+  </data>
+  <data name="Terminal.Modem.G3ruh.Warning" xml:space="preserve">
+    <value>9600 G3RUH usa el puerto de datos de la radio a 48 kHz. No use audio de altavoz o micrófono a esta velocidad.</value>
   </data>
   <data name="Terminal.Modem.Unsupported" xml:space="preserve">
-    <value>{0} usa {1}. El módem integrado solo decodifica 1200 AFSK. Use UZ7HO por AGWPE para este satélite.</value>
+    <value>{0} usa {1}. El módem integrado admite solo 1200 AFSK y 9600 G3RUH. Use UZ7HO por AGWPE para BPSK, GMSK y modos similares.</value>
   </data>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>Esperar canal libre también en dúplex completo</value>

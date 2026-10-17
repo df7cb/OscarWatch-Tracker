@@ -5892,10 +5892,31 @@ LOS: {2}
     <value>Тестовый тон остановлен.</value>
   </data>
   <data name="Terminal.Modem.TxLevel" xml:space="preserve">
-    <value>Уровень TX</value>
+    <value>Уровень TX (1200 AFSK)</value>
+  </data>
+  <data name="Terminal.Modem.TxLevel9600" xml:space="preserve">
+    <value>Уровень TX (порт данных 9600 G3RUH)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode" xml:space="preserve">
+    <value>Скорость модема</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Auto" xml:space="preserve">
+    <value>Авто (по профилю спутника)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Afsk1200" xml:space="preserve">
+    <value>1200 бод AFSK (динамик/микрофон)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.G3ruh9600" xml:space="preserve">
+    <value>9600 бод G3RUH (порт данных радиостанции)</value>
+  </data>
+  <data name="Terminal.Modem.RateMode.Help" xml:space="preserve">
+    <value>1200 AFSK использует аудиотоны через динамик или микрофон. 9600 G3RUH требует плоский порт данных 9600 бод (не акустическая связь). Настройте меню радиостанции вручную; OscarWatch пока не переключает режим по CAT.</value>
+  </data>
+  <data name="Terminal.Modem.G3ruh.Warning" xml:space="preserve">
+    <value>9600 G3RUH использует порт данных на 48 кГц. Не используйте аудио динамика или микрофона на этой скорости.</value>
   </data>
   <data name="Terminal.Modem.Unsupported" xml:space="preserve">
-    <value>{0} использует {1}. Встроенный модем декодирует только 1200 AFSK. Для этого спутника используйте UZ7HO через AGWPE.</value>
+    <value>{0} использует {1}. Встроенный модем поддерживает только 1200 AFSK и 9600 G3RUH. Для BPSK, GMSK и подобных режимов используйте UZ7HO через AGWPE.</value>
   </data>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>Ждать свободного канала и в полном дуплексе</value>

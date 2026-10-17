@@ -284,6 +284,14 @@
             <TextBlock Text="{Binding InputLevelText}" TextWrapping="Wrap" />
             <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.Level.Help}" />
 
+            <TextBlock Text="{loc:Localize Key=Terminal.Modem.RateMode}" />
+            <ComboBox ItemsSource="{Binding RateModeOptions}" SelectedItem="{Binding SelectedRateMode}"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.RateMode}" />
+            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.RateMode.Help}" />
+            <TextBlock Classes="ts-warning" Text="{loc:Localize Key=Terminal.Modem.G3ruh.Warning}"
+                       IsVisible="{Binding ShowG3ruhWarning}" TextWrapping="Wrap" />
+
             <TextBlock Text="{loc:Localize Key=Terminal.Modem.TxLevel}" />
             <Grid ColumnDefinitions="*,70" ColumnSpacing="8">
               <Slider Grid.Column="0" Minimum="1" Maximum="100" Value="{Binding TxLevelPercent}"
@@ -291,6 +299,14 @@
                       AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.TxLevel}" />
               <NumericUpDown Grid.Column="1" Minimum="1" Maximum="100" Value="{Binding TxLevelPercent}" FormatString="F0"
                              AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.TxLevel}" />
+            </Grid>
+            <TextBlock Text="{loc:Localize Key=Terminal.Modem.TxLevel9600}" />
+            <Grid ColumnDefinitions="*,70" ColumnSpacing="8">
+              <Slider Grid.Column="0" Minimum="1" Maximum="100" Value="{Binding TxLevel9600Percent}"
+                      TickFrequency="1" IsSnapToTickEnabled="True"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.TxLevel9600}" />
+              <NumericUpDown Grid.Column="1" Minimum="1" Maximum="100" Value="{Binding TxLevel9600Percent}" FormatString="F0"
+                             AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.TxLevel9600}" />
             </Grid>
             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
               <ComboBox Grid.Column="0" ItemsSource="{Binding TestToneOptions}" SelectedItem="{Binding SelectedTestTone}"

@@ -441,6 +441,17 @@
         <li><strong>Wait for a clear channel in full duplex too:</strong> normally off, because in full duplex you hear
           yourself and the channel would always seem busy.</li>
       </ul>
+      <h3>9600 baud G3RUH (Soundcard tab)</h3>
+      <p>
+        Some satellites (for example LASARsat or KNACKSAT-2) use 9600 baud G3RUH on the radio's flat data port, not through the
+        speaker or microphone. Set <strong>Modem rate</strong> to <strong>Automatic</strong> when you pick the satellite from
+        the database, or force <strong>9600 baud G3RUH</strong> manually. Connect the USB or data cable to the radio's 9600
+        packet port, choose a 48 kHz capture device if Windows offers one, and set the separate <strong>TX level (9600 G3RUH
+        data port)</strong>.         Put the radio menu on 9600 packet yourself; OscarWatch does not switch 1200/9600 over CAT yet.
+        Duplex (half or full) works the same as for 1200 AFSK. Keep <strong>rig Doppler correction</strong> enabled for
+        9600 satellites: each CAT tuning step moves the FM discriminator baseline on the data port, and the built-in modem
+        recentres within about 10 ms, but uncorrected Doppler drift still needs the same tracking you use for SSB/FM passes.
+      </p>
       <h3>Safety and decoding (Soundcard tab)</h3>
       <ul>
         <li><strong>Transmit watchdog (s):</strong> stops any transmission that runs longer than this (10 seconds by default).
@@ -464,7 +475,8 @@
       <h2 id="external-modem">Using Direwolf or UZ7HO instead</h2>
       <p>
         You can still use a separate soundmodem application if you prefer, or if a satellite needs a mode the built-in modem does
-        not have, such as 9600 baud. The built-in modem decodes 1200 baud AFSK only, and Terminal shows a warning and blocks
+        not have, such as BPSK or GMSK. The built-in modem supports 1200 baud AFSK (speaker or microphone audio) and 9600 baud
+        G3RUH on the radio data port. Terminal shows a warning and blocks
         sending if the focused satellite needs something else.
       </p>
       <ol>
