@@ -11,6 +11,9 @@ public sealed class DopplerPassLogger : IDopplerPassLogger
 {
     private static readonly ILogger Log = Serilog.Log.ForContext<DopplerPassLogger>();
 
+    // Reusable StringBuilder buffer for CSV entry formatting to avoid string array and Join allocations
+    private static readonly StringBuilder _entryBuffer = new(1024);
+
     private static readonly string[] HeaderColumns =
     [
         "Utc",
@@ -143,52 +146,59 @@ public sealed class DopplerPassLogger : IDopplerPassLogger
         _activePath = null;
     }
 
-    internal static string FormatEntry(DopplerPassLogEntry entry) =>
-        string.Join(',',
-        [
-            Format(entry.Utc),
-            Escape(entry.Event),
-            Escape(entry.NoradId),
-            Escape(entry.SatelliteName),
-            Format(entry.ElevationDeg),
-            Format(entry.AzimuthDeg),
-            Format(entry.RangeRateKmPerSec),
-            Format(entry.SlopeKmPerSec2),
-            Format(entry.SlewHzPerSec),
-            entry.BaseThresholdHz.ToString(CultureInfo.InvariantCulture),
-            entry.EffectiveThresholdHz.ToString(CultureInfo.InvariantCulture),
-            entry.LeadEnabled ? "1" : "0",
-            Format(entry.LeadBlend),
-            entry.LeadGainPercent.ToString(CultureInfo.InvariantCulture),
-            Format(entry.LeadMsRx),
-            Format(entry.LeadMsTx),
-            Format(entry.LeadRxRangeRate),
-            Format(entry.LeadTxRangeRate),
-            Format(entry.SatRxKHz),
-            Format(entry.SatTxKHz),
-            Format(entry.RadioRxKHz),
-            Format(entry.RadioTxKHz),
-            entry.LastRigRxHz.ToString(CultureInfo.InvariantCulture),
-            entry.LastRigTxHz.ToString(CultureInfo.InvariantCulture),
-            entry.RxDeltaHz.ToString(CultureInfo.InvariantCulture),
-            entry.TxDeltaHz.ToString(CultureInfo.InvariantCulture),
-            Format(entry.RxOffsetKHz),
-            Format(entry.TxOffsetKHz),
-            Format(entry.PassbandDlKHz),
-            Format(entry.PassbandUlKHz),
-            entry.WroteRx ? "1" : "0",
-            entry.WroteTx ? "1" : "0",
-            entry.BelowThreshold ? "1" : "0",
-            entry.Interactive ? "1" : "0",
-            Escape(entry.DialTracking),
-            entry.MainDialHz.ToString(CultureInfo.InvariantCulture),
-            entry.DialVsCatHz.ToString(CultureInfo.InvariantCulture),
-            entry.VfoStable ? "1" : "0",
-            entry.RigTracking ? "1" : "0",
-            entry.CatPaused ? "1" : "0",
-            Escape(entry.SkipReason),
-            Escape(entry.Notes)
-        ]);
+    internal static string FormatEntry(DopplerPassLogEntry entry)
+    {
+        lock (_entryBuffer)
+        {
+            _entryBuffer.Clear();
+            
+            // Build CSV line using StringBuilder buffer to eliminate string.Join array allocation
+            AppendField(_entryBuffer, Format(entry.Utc));
+            AppendField(_entryBuffer, Escape(entry.Event));
+            AppendField(_entryBuffer, Escape(entry.NoradId));
+            AppendField(_entryBuffer, Escape(entry.SatelliteName));
+            AppendField(_entryBuffer, Format(entry.ElevationDeg));
+            AppendField(_entryBuffer, Format(entry.AzimuthDeg));
+            AppendField(_entryBuffer, Format(entry.RangeRateKmPerSec));
+            AppendField(_entryBuffer, Format(entry.SlopeKmPerSec2));
+            AppendField(_entryBuffer, Format(entry.SlewHzPerSec));
+            AppendField(_entryBuffer, entry.BaseThresholdHz.ToString(CultureInfo.InvariantCulture));
+            AppendField(_entryBuffer, entry.EffectiveThresholdHz.ToString(CultureInfo.InvariantCulture));
+            AppendField(_entryBuffer, entry.LeadEnabled ? "1" : "0");
+            AppendField(_entryBuffer, Format(entry.LeadBlend));
+            AppendField(_entryBuffer, entry.LeadGainPercent.ToString(CultureInfo.InvariantCulture));
+            AppendField(_entryBuffer, Format(entry.LeadMsRx));
+            AppendField(_entryBuffer, Format(entry.LeadMsTx));
+            AppendField(_entryBuffer, Format(entry.LeadRxRangeRate));
+            AppendField(_entryBuffer, Format(entry.LeadTxRangeRate));
+            AppendField(_entryBuffer, Format(entry.SatRxKHz));
+            AppendField(_entryBuffer, Format(entry.SatTxKHz));
+            AppendField(_entryBuffer, Format(entry.RadioRxKHz));
+            AppendField(_entryBuffer, Format(entry.RadioTxKHz));
+            AppendField(_entryBuffer, entry.LastRigRxHz.ToString(CultureInfo.InvariantCulture));
+            AppendField(_entryBuffer, entry.LastRigTxHz.ToString(CultureInfo.InvariantCulture));
+            AppendField(_entryBuffer, entry.RxDeltaHz.ToString(CultureInfo.InvariantCulture));
+            AppendField(_entryBuffer, entry.TxDeltaHz.ToString(CultureInfo.InvariantCulture));
+            AppendField(_entryBuffer, Format(entry.RxOffsetKHz));
+            AppendField(_entryBuffer, Format(entry.TxOffsetKHz));
+            AppendField(_entryBuffer, Format(entry.PassbandDlKHz));
+            AppendField(_entryBuffer, Format(entry.PassbandUlKHz));
+            AppendField(_entryBuffer, entry.WroteRx ? "1" : "0");
+            AppendField(_entryBuffer, entry.WroteTx ? "1" : "0");
+            AppendField(_entryBuffer, entry.BelowThreshold ? "1" : "0");
+            AppendField(_entryBuffer, entry.Interactive ? "1" : "0");
+            AppendField(_entryBuffer, Escape(entry.DialTracking));
+            AppendField(_entryBuffer, entry.MainDialHz.ToString(CultureInfo.InvariantCulture));
+            AppendField(_entryBuffer, entry.DialVsCatHz.ToString(CultureInfo.InvariantCulture));
+            AppendField(_entryBuffer, entry.VfoStable ? "1" : "0");
+            AppendField(_entryBuffer, entry.RigTracking ? "1" : "0");
+            AppendField(_entryBuffer, entry.CatPaused ? "1" : "0");
+            AppendField(_entryBuffer, Escape(entry.SkipReason));
+            AppendField(_entryBuffer, Escape(entry.Notes));
+            
+            return _entryBuffer.ToString();
+        }
+    }
 
     private static string Format(DateTime utc) =>
         utc.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
@@ -197,6 +207,17 @@ public sealed class DopplerPassLogger : IDopplerPassLogger
         double.IsNaN(value) || double.IsInfinity(value)
             ? ""
             : value.ToString("0.######", CultureInfo.InvariantCulture);
+
+    /// <summary>
+    /// Appends a CSV field to the StringBuilder buffer with comma separator.
+    /// Used by FormatEntry optimization to eliminate string array allocation.
+    /// </summary>
+    private static void AppendField(StringBuilder buffer, string value)
+    {
+        if (buffer.Length > 0)
+            buffer.Append(',');
+        buffer.Append(value);
+    }
 
     private static string Escape(string? value)
     {
