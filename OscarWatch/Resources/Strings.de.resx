@@ -4693,6 +4693,33 @@ Aktuell: {1} ({2})</value>
   <data name="Ft4.Status.NeedStation">
     <value>Rufzeichen und Grid unter Einstellungen, Station festlegen.</value>
   </data>
+  <data name="Ft4.Station.BannerTitle">
+    <value>FT4 hört nicht</value>
+  </data>
+  <data name="Ft4.Station.NeedCallsign">
+    <value>Rufzeichen eintragen. Der Wasserfall bleibt leer, bis es gesetzt ist.</value>
+  </data>
+  <data name="Ft4.Station.NeedLocator">
+    <value>Locator eintragen. Der Wasserfall bleibt leer, bis ein Locator mit mindestens vier Zeichen gesetzt ist.</value>
+  </data>
+  <data name="Ft4.Station.NeedBoth">
+    <value>Rufzeichen und Locator eintragen. Der Wasserfall bleibt leer, bis beide gesetzt sind.</value>
+  </data>
+  <data name="Ft4.Station.OpenSettings">
+    <value>Stationsdaten eintragen</value>
+  </data>
+  <data name="Ft4.Station.Intro">
+    <value>FT4 öffnet den Empfänger erst, wenn Rufzeichen und ein Locator mit mindestens vier Zeichen gespeichert sind. Das sind dieselben Felder wie unter Einstellungen, Station.</value>
+  </data>
+  <data name="Ft4.Station.CallsignRequired">
+    <value>Rufzeichen eintragen.</value>
+  </data>
+  <data name="Ft4.Station.LocatorRequired">
+    <value>Locator mit mindestens vier Zeichen eintragen, zum Beispiel IO91 oder JN47.</value>
+  </data>
+  <data name="Window.Ft4Station.Title">
+    <value>Stationsdaten für FT4</value>
+  </data>
   <data name="Ft4.Status.InputUnavailable">
     <value>Die FT4-Eingangssoundkarte ist nicht verfügbar. Öffnen Sie die FT4-Einstellungen, klicken Sie auf Aktualisieren und wählen Sie den Eingang erneut.</value>
   </data>

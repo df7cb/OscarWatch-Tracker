@@ -4689,6 +4689,33 @@ Mais recente: {1} ({2})</value>
   <data name="Ft4.Status.NeedStation">
     <value>Defina seu indicativo e grid em Definições, Estação.</value>
   </data>
+  <data name="Ft4.Station.BannerTitle">
+    <value>O FT4 não está escutando</value>
+  </data>
+  <data name="Ft4.Station.NeedCallsign">
+    <value>Informe seu indicativo. A cascata fica em branco até que ele seja definido.</value>
+  </data>
+  <data name="Ft4.Station.NeedLocator">
+    <value>Informe seu locator. A cascata fica em branco até que um locator de pelo menos quatro caracteres seja definido.</value>
+  </data>
+  <data name="Ft4.Station.NeedBoth">
+    <value>Informe seu indicativo e seu locator. A cascata fica em branco até que ambos sejam definidos.</value>
+  </data>
+  <data name="Ft4.Station.OpenSettings">
+    <value>Informar dados da estação</value>
+  </data>
+  <data name="Ft4.Station.Intro">
+    <value>O FT4 não abre o receptor até que o indicativo e um locator de pelo menos quatro caracteres estejam salvos. São os mesmos campos de Definições, Estação.</value>
+  </data>
+  <data name="Ft4.Station.CallsignRequired">
+    <value>Informe seu indicativo.</value>
+  </data>
+  <data name="Ft4.Station.LocatorRequired">
+    <value>Informe um locator de pelo menos quatro caracteres, como IO91 ou JN47.</value>
+  </data>
+  <data name="Window.Ft4Station.Title">
+    <value>Dados da estação para o FT4</value>
+  </data>
   <data name="Ft4.Status.InputUnavailable">
     <value>A placa de som de entrada do FT4 não está disponível. Abra as definições do FT4, clique em Atualizar e escolha a entrada novamente.</value>
   </data>

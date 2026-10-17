@@ -139,6 +139,10 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
         _uiTimer.Tick += (_, _) => RefreshUiTick();
         SlotPeriodLabel = _l.Get("Ft4.Slot.Rx");
         SlotProgressText = "0%";
+
+        var stationGap = Ft4StationIdentity.Gap(StationCallsign, StationGrid);
+        if (stationGap != Ft4StationGap.None)
+            ShowStationSetup(stationGap);
     }
 
     public ObservableCollection<Ft4DecodeRowViewModel> Decodes { get; } = [];
@@ -191,6 +195,12 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
         !string.IsNullOrWhiteSpace(SelectedEchoCalibrationSatellite);
 
     [ObservableProperty] private string _waterfallStatusText = "";
+    [ObservableProperty] private bool _stationSetupMissing;
+    [ObservableProperty] private string _stationSetupMessage = "";
+    private bool _waitingForStation;
+
+    /// <summary>True when the station dialogue should focus the callsign rather than the locator.</summary>
+    public bool StationSetupFocusCallsign { get; private set; }
     [ObservableProperty] private string _slotClockText = "";
     [ObservableProperty] private string _clockSourceText = "";
     [ObservableProperty] private string _slotPeriodLabel = "";
@@ -818,17 +828,23 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
     {
         if (!_modem.NativeAvailable)
         {
+            _waitingForStation = false;
+            StationSetupMissing = false;
             StatusLine = _l.Get(Ft8Native.UnavailableMessageKey);
             WaterfallStatusText = _l.Get("Ft4.Waterfall.Unavailable");
             Log.Warning("FT4 native library unavailable: {Error}", Ft8Native.LoadError);
             return;
         }
 
-        if (StationCallsign.Length == 0 || StationGrid.Length < 4)
+        var stationGap = Ft4StationIdentity.Gap(StationCallsign, StationGrid);
+        if (stationGap != Ft4StationGap.None)
         {
-            StatusLine = _l.Get("Ft4.Status.NeedStation");
+            ShowStationSetup(stationGap);
             return;
         }
+
+        _waitingForStation = false;
+        StationSetupMissing = false;
 
         try
         {
@@ -1552,8 +1568,51 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
             OscarWatchSpotsEnabled = false;
     }
 
+    public Ft4StationSetupViewModel CreateStationSetup() =>
+        new(_settings, _l, StationSetupFocusCallsign);
+
+    /// <summary>Call after station details are saved so listening can start without reopening the window.</summary>
+    public void OnStationDetailsSaved()
+    {
+        OnPropertyChanged(nameof(StationCallsign));
+        OnPropertyChanged(nameof(StationGrid));
+        OnPropertyChanged(nameof(TxMessageWatermark));
+        if (_windowOpen && !_modem.IsRunning)
+            StartSession();
+    }
+
+    private void ShowStationSetup(Ft4StationGap gap)
+    {
+        _waitingForStation = true;
+        StationSetupFocusCallsign = gap != Ft4StationGap.Locator;
+        var message = gap switch
+        {
+            Ft4StationGap.Callsign => _l.Get("Ft4.Station.NeedCallsign"),
+            Ft4StationGap.Locator => _l.Get("Ft4.Station.NeedLocator"),
+            _ => _l.Get("Ft4.Station.NeedBoth")
+        };
+        StationSetupMessage = message;
+        StationSetupMissing = true;
+        StatusLine = message;
+        WaterfallStatusText = "";
+    }
+
+    private void TryStartWhenStationReady()
+    {
+        if (!_waitingForStation || _modem.IsRunning)
+            return;
+        if (Ft4StationIdentity.Gap(StationCallsign, StationGrid) != Ft4StationGap.None)
+            return;
+
+        _waitingForStation = false;
+        StartSession();
+    }
+
     private void RefreshUiTick()
     {
+        if (_windowOpen)
+            TryStartWhenStationReady();
+
         SyncOscarWatchSpotAvailability();
         var utc = Ft4Clock.UtcNow;
         var slotStart = Ft4SlotClock.SlotStartUtc(utc, Ft4SlotClock.Ft4SlotSeconds);

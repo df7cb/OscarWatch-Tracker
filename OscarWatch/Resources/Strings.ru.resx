@@ -4693,6 +4693,33 @@ LOS: {2}
   <data name="Ft4.Status.NeedStation">
     <value>Укажите позывной и грид в Настройки, Станция.</value>
   </data>
+  <data name="Ft4.Station.BannerTitle">
+    <value>FT4 не слушает</value>
+  </data>
+  <data name="Ft4.Station.NeedCallsign">
+    <value>Укажите позывной. Водопад остаётся пустым, пока он не задан.</value>
+  </data>
+  <data name="Ft4.Station.NeedLocator">
+    <value>Укажите локатор. Водопад остаётся пустым, пока не задан локатор не короче четырёх символов.</value>
+  </data>
+  <data name="Ft4.Station.NeedBoth">
+    <value>Укажите позывной и локатор. Водопад остаётся пустым, пока не заданы оба.</value>
+  </data>
+  <data name="Ft4.Station.OpenSettings">
+    <value>Указать данные станции</value>
+  </data>
+  <data name="Ft4.Station.Intro">
+    <value>FT4 не открывает приёмник, пока не сохранены позывной и локатор не короче четырёх символов. Это те же поля, что в Настройки, Станция.</value>
+  </data>
+  <data name="Ft4.Station.CallsignRequired">
+    <value>Укажите позывной.</value>
+  </data>
+  <data name="Ft4.Station.LocatorRequired">
+    <value>Укажите локатор не короче четырёх символов, например IO91 или JN47.</value>
+  </data>
+  <data name="Window.Ft4Station.Title">
+    <value>Данные станции для FT4</value>
+  </data>
   <data name="Ft4.Status.InputUnavailable">
     <value>Входная звуковая карта FT4 недоступна. Откройте настройки FT4, нажмите «Обновить» и снова выберите вход.</value>
   </data>

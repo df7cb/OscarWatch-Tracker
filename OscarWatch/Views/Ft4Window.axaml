@@ -48,18 +48,58 @@
     <Style Selector="TextBlock.ft4-slot-tx">
       <Setter Property="Foreground" Value="#C44B4B" />
     </Style>
+    <!-- Sits on the always-dark waterfall, so the colours stay light in either theme. -->
+    <Style Selector="Border.ft4-station-warning">
+      <Setter Property="Background" Value="#F0121008" />
+      <Setter Property="BorderBrush" Value="#FFB300" />
+      <Setter Property="BorderThickness" Value="2" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Padding" Value="16,12" />
+    </Style>
+    <Style Selector="Border.ft4-station-warning TextBlock.ft4-station-title">
+      <Setter Property="Foreground" Value="#FFD56A" />
+      <Setter Property="FontSize" Value="16" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="TextAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.ft4-station-warning TextBlock.ft4-station-body">
+      <Setter Property="Foreground" Value="#F4F1EA" />
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="TextAlignment" Value="Center" />
+    </Style>
   </Window.Styles>
 
   <DockPanel>
     <!-- Edge-to-edge waterfall (top / left / right of the client area). -->
-    <controls:Ft4WaterfallControl DockPanel.Dock="Top"
-                                  Height="200"
-                                  Spectrum="{Binding SpectrumBins}"
-                                  TxAudioHz="{Binding TxAudioHz, Mode=TwoWay}"
-                                  RxAudioHz="{Binding RxAudioHz, Mode=TwoWay}"
-                                  HoldTxFrequency="{Binding HoldTxFrequency}"
-                                  DisplayRangeDb="{Binding WaterfallRangeDb}"
-                                  StatusText="{Binding WaterfallStatusText}" />
+    <Grid DockPanel.Dock="Top" Height="200">
+      <controls:Ft4WaterfallControl Spectrum="{Binding SpectrumBins}"
+                                    TxAudioHz="{Binding TxAudioHz, Mode=TwoWay}"
+                                    RxAudioHz="{Binding RxAudioHz, Mode=TwoWay}"
+                                    HoldTxFrequency="{Binding HoldTxFrequency}"
+                                    ShowTuningBrackets="{Binding !StationSetupMissing}"
+                                    DisplayRangeDb="{Binding WaterfallRangeDb}"
+                                    StatusText="{Binding WaterfallStatusText}" />
+      <Border Classes="ft4-station-warning"
+              Margin="24,28"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              IsVisible="{Binding StationSetupMissing}"
+              AutomationProperties.Name="{Binding StationSetupMessage}">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="ft4-station-title"
+                     Text="{loc:Localize Key=Ft4.Station.BannerTitle}" />
+          <TextBlock Classes="ft4-station-body"
+                     Text="{Binding StationSetupMessage}" />
+          <Button Content="{loc:Localize Key=Ft4.Station.OpenSettings}"
+                  Classes="dialog-footer accent"
+                  HorizontalAlignment="Center"
+                  MinWidth="180"
+                  Click="OnEnterStationDetailsClick" />
+        </StackPanel>
+      </Border>
+    </Grid>
 
     <DockPanel Margin="10">
     <!-- Status bar: slot progress, clock/Doppler, status -->

@@ -4689,6 +4689,33 @@
   <data name="Ft4.Status.NeedStation">
     <value>请在设置、电台中设置呼号和网格。</value>
   </data>
+  <data name="Ft4.Station.BannerTitle">
+    <value>FT4尚未开始监听</value>
+  </data>
+  <data name="Ft4.Station.NeedCallsign">
+    <value>请填写呼号。填写之前瀑布图保持空白。</value>
+  </data>
+  <data name="Ft4.Station.NeedLocator">
+    <value>请填写定位网格。至少四位的定位网格填写之前，瀑布图保持空白。</value>
+  </data>
+  <data name="Ft4.Station.NeedBoth">
+    <value>请填写呼号和定位网格。两者都填写之前，瀑布图保持空白。</value>
+  </data>
+  <data name="Ft4.Station.OpenSettings">
+    <value>填写电台资料</value>
+  </data>
+  <data name="Ft4.Station.Intro">
+    <value>在保存呼号和至少四位的定位网格之前，FT4不会打开接收机。这些字段与设置中的电台相同。</value>
+  </data>
+  <data name="Ft4.Station.CallsignRequired">
+    <value>请填写呼号。</value>
+  </data>
+  <data name="Ft4.Station.LocatorRequired">
+    <value>请填写至少四位的定位网格，例如 IO91 或 JN47。</value>
+  </data>
+  <data name="Window.Ft4Station.Title">
+    <value>FT4电台资料</value>
+  </data>
   <data name="Ft4.Status.InputUnavailable">
     <value>FT4 输入声卡不可用。请打开 FT4 设置，点击刷新，然后重新选择输入。</value>
   </data>

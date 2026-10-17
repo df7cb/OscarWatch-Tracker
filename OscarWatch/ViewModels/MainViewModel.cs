@@ -3113,6 +3113,13 @@ public partial class MainViewModel : ViewModelBase
         }
     }
 
+    /// <summary>Refresh the displayed station after callsign or locator is saved outside Settings.</summary>
+    public void RefreshStationFromSettings()
+    {
+        RefreshGroundStationFromSettings();
+        UpdateGpsStatusDisplay();
+    }
+
     private void RefreshGroundStationFromSettings()
     {
         var gs = _settings.Current.GroundStation;

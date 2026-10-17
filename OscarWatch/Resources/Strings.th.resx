@@ -4693,6 +4693,33 @@ LOS: {2}
   <data name="Ft4.Status.NeedStation">
     <value>ตั้งค่าสัญญาณเรียกและกริดใน การตั้งค่า, สถานี</value>
   </data>
+  <data name="Ft4.Station.BannerTitle">
+    <value>FT4 ยังไม่ได้รับสัญญาณ</value>
+  </data>
+  <data name="Ft4.Station.NeedCallsign">
+    <value>ใส่สัญญาณเรียก น้ำตกจะว่างจนกว่าจะตั้งค่า</value>
+  </data>
+  <data name="Ft4.Station.NeedLocator">
+    <value>ใส่โลเคเตอร์ น้ำตกจะว่างจนกว่าจะตั้งโลเคเตอร์อย่างน้อยสี่ตัวอักษร</value>
+  </data>
+  <data name="Ft4.Station.NeedBoth">
+    <value>ใส่สัญญาณเรียกและโลเคเตอร์ น้ำตกจะว่างจนกว่าจะตั้งทั้งสองอย่าง</value>
+  </data>
+  <data name="Ft4.Station.OpenSettings">
+    <value>กรอกข้อมูลสถานี</value>
+  </data>
+  <data name="Ft4.Station.Intro">
+    <value>FT4 จะไม่เปิดเครื่องรับจนกว่าจะบันทึกสัญญาณเรียกและโลเคเตอร์อย่างน้อยสี่ตัวอักษร นี่เป็นช่องเดียวกับ การตั้งค่า, สถานี</value>
+  </data>
+  <data name="Ft4.Station.CallsignRequired">
+    <value>ใส่สัญญาณเรียก</value>
+  </data>
+  <data name="Ft4.Station.LocatorRequired">
+    <value>ใส่โลเคเตอร์อย่างน้อยสี่ตัวอักษร เช่น IO91 หรือ JN47</value>
+  </data>
+  <data name="Window.Ft4Station.Title">
+    <value>ข้อมูลสถานีสำหรับ FT4</value>
+  </data>
   <data name="Ft4.Status.InputUnavailable">
     <value>ซาวด์การ์ดขาเข้า FT4 ไม่พร้อมใช้งาน เปิดการตั้งค่า FT4 แล้วคลิกรีเฟรช จากนั้นเลือกอินพุตอีกครั้ง</value>
   </data>

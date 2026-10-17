@@ -4693,6 +4693,33 @@ Terbaru: {1} ({2})</value>
   <data name="Ft4.Status.NeedStation">
     <value>Atur tanda panggilan dan grid di Pengaturan, Stasiun.</value>
   </data>
+  <data name="Ft4.Station.BannerTitle">
+    <value>FT4 belum menerima</value>
+  </data>
+  <data name="Ft4.Station.NeedCallsign">
+    <value>Masukkan tanda panggilan. Waterfall tetap kosong sampai diisi.</value>
+  </data>
+  <data name="Ft4.Station.NeedLocator">
+    <value>Masukkan locator. Waterfall tetap kosong sampai locator minimal empat karakter diisi.</value>
+  </data>
+  <data name="Ft4.Station.NeedBoth">
+    <value>Masukkan tanda panggilan dan locator. Waterfall tetap kosong sampai keduanya diisi.</value>
+  </data>
+  <data name="Ft4.Station.OpenSettings">
+    <value>Isi data stasiun</value>
+  </data>
+  <data name="Ft4.Station.Intro">
+    <value>FT4 tidak membuka penerima sampai tanda panggilan dan locator minimal empat karakter disimpan. Ini bidang yang sama dengan Pengaturan, Stasiun.</value>
+  </data>
+  <data name="Ft4.Station.CallsignRequired">
+    <value>Masukkan tanda panggilan.</value>
+  </data>
+  <data name="Ft4.Station.LocatorRequired">
+    <value>Masukkan locator minimal empat karakter, misalnya IO91 atau JN47.</value>
+  </data>
+  <data name="Window.Ft4Station.Title">
+    <value>Data stasiun untuk FT4</value>
+  </data>
   <data name="Ft4.Status.InputUnavailable">
     <value>Kartu suara masuk FT4 tidak tersedia. Buka pengaturan FT4, klik Segarkan, lalu pilih masukan lagi.</value>
   </data>

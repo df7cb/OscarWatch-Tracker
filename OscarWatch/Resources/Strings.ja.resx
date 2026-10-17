@@ -4689,6 +4689,33 @@
   <data name="Ft4.Status.NeedStation">
     <value>設定の「局」でコールサインとグリッドを設定してください。</value>
   </data>
+  <data name="Ft4.Station.BannerTitle">
+    <value>FT4は受信していません</value>
+  </data>
+  <data name="Ft4.Station.NeedCallsign">
+    <value>コールサインを入力してください。設定するまでウォーターフォールは空白のままです。</value>
+  </data>
+  <data name="Ft4.Station.NeedLocator">
+    <value>ロケーターを入力してください。4文字以上のロケーターを設定するまでウォーターフォールは空白のままです。</value>
+  </data>
+  <data name="Ft4.Station.NeedBoth">
+    <value>コールサインとロケーターを入力してください。両方を設定するまでウォーターフォールは空白のままです。</value>
+  </data>
+  <data name="Ft4.Station.OpenSettings">
+    <value>局の情報を入力</value>
+  </data>
+  <data name="Ft4.Station.Intro">
+    <value>コールサインと4文字以上のロケーターを保存するまで、FT4は受信機を開きません。設定の「局」と同じ項目です。</value>
+  </data>
+  <data name="Ft4.Station.CallsignRequired">
+    <value>コールサインを入力してください。</value>
+  </data>
+  <data name="Ft4.Station.LocatorRequired">
+    <value>4文字以上のロケーターを入力してください。例: IO91、JN47。</value>
+  </data>
+  <data name="Window.Ft4Station.Title">
+    <value>FT4の局情報</value>
+  </data>
   <data name="Ft4.Status.InputUnavailable">
     <value>FT4の入力サウンドカードは利用できません。FT4設定を開き、「更新」をクリックして、入力を選び直してください。</value>
   </data>

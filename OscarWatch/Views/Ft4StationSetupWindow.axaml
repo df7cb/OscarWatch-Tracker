@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:OscarWatch.ViewModels"
+        xmlns:loc="using:OscarWatch.Localization"
+        x:Class="OscarWatch.Views.Ft4StationSetupWindow"
+        x:DataType="vm:Ft4StationSetupViewModel"
+        Title="{loc:Localize Key=Window.Ft4Station.Title}"
+        Width="460"
+        SizeToContent="Height"
+        MinWidth="400"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+  <DockPanel Margin="16">
+    <StackPanel DockPanel.Dock="Bottom" Spacing="8" Margin="0,16,0,0">
+      <TextBlock Text="{Binding ErrorText}"
+                 TextWrapping="Wrap"
+                 Foreground="#FFC07070"
+                 IsVisible="{Binding HasError}" />
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+        <Button Content="{loc:Localize Key=Common.Cancel}"
+                Classes="dialog-footer"
+                Click="OnCancelClick"
+                IsCancel="True" />
+        <Button Content="{loc:Localize Key=Common.Save}"
+                Classes="dialog-footer accent"
+                Click="OnSaveClick"
+                IsDefault="True" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Text="{loc:Localize Key=Ft4.Station.Intro}"
+                 TextWrapping="Wrap"
+                 Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+      <StackPanel Spacing="4">
+        <TextBlock Text="{loc:Localize Key=Settings.Station.Callsign}" FontSize="12" />
+        <TextBox x:Name="CallsignBox"
+                 Text="{Binding Callsign, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 MaxLength="20" />
+      </StackPanel>
+      <StackPanel Spacing="4">
+        <TextBlock Text="{loc:Localize Key=Settings.Station.GridSquare}" FontSize="12" />
+        <TextBox x:Name="LocatorBox"
+                 Text="{Binding Locator, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 MaxLength="40" />
+        <TextBlock Text="{loc:Localize Key=Settings.Station.GridSquareNote}"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+      </StackPanel>
+    </StackPanel>
+  </DockPanel>
+</Window>

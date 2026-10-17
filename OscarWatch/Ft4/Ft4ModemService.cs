@@ -285,7 +285,7 @@ public sealed class Ft4ModemService : IDisposable
 
         var call = Ft4MessageCodec.NormalizeCall(_settings.Current.GroundStation.Callsign ?? "");
         var grid = _settings.Current.GroundStation.GridSquare?.Trim() ?? "";
-        if (call.Length == 0 || grid.Length < 4)
+        if (!Ft4StationIdentity.IsReady(call, grid))
         {
             Status = _l.Get("Ft4.Status.NeedStation");
             Changed?.Invoke();

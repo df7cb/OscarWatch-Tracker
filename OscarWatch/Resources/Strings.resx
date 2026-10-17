@@ -4689,6 +4689,33 @@ Latest: {1} ({2})</value>
   <data name="Ft4.Status.NeedStation">
     <value>Set your callsign and grid under Settings, Station.</value>
   </data>
+  <data name="Ft4.Station.BannerTitle">
+    <value>FT4 is not listening</value>
+  </data>
+  <data name="Ft4.Station.NeedCallsign">
+    <value>Enter your callsign. The waterfall stays blank until it is set.</value>
+  </data>
+  <data name="Ft4.Station.NeedLocator">
+    <value>Enter your locator. The waterfall stays blank until a locator of at least four characters is set.</value>
+  </data>
+  <data name="Ft4.Station.NeedBoth">
+    <value>Enter your callsign and locator. The waterfall stays blank until both are set.</value>
+  </data>
+  <data name="Ft4.Station.OpenSettings">
+    <value>Enter station details</value>
+  </data>
+  <data name="Ft4.Station.Intro">
+    <value>FT4 does not open the receiver until your callsign and a locator of at least four characters are saved. These are the same fields as Settings, Station.</value>
+  </data>
+  <data name="Ft4.Station.CallsignRequired">
+    <value>Enter your callsign.</value>
+  </data>
+  <data name="Ft4.Station.LocatorRequired">
+    <value>Enter a locator of at least four characters, such as IO91 or JN47.</value>
+  </data>
+  <data name="Window.Ft4Station.Title">
+    <value>Station details for FT4</value>
+  </data>
   <data name="Ft4.Status.InputUnavailable">
     <value>The FT4 input soundcard is not available. Open FT4 settings, click Refresh, and choose the input again.</value>
   </data>

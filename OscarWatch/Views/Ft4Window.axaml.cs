@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using OscarWatch;
 using OscarWatch.Core.Ft4;
 using OscarWatch.Localization;
 using OscarWatch.ViewModels;
@@ -85,6 +86,21 @@ public partial class Ft4Window : Window
 
         vm.Decodes.CollectionChanged -= OnDecodeRowsChanged;
         await vm.OnWindowClosedAsync().ConfigureAwait(true);
+    }
+
+    private async void OnEnterStationDetailsClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not Ft4ViewModel vm)
+            return;
+
+        var dialog = new Ft4StationSetupWindow { DataContext = vm.CreateStationSetup() };
+        var saved = await dialog.ShowDialog<bool>(this).ConfigureAwait(true);
+        if (!saved)
+            return;
+
+        if (App.MainWindow?.DataContext is MainViewModel main)
+            main.RefreshStationFromSettings();
+        vm.OnStationDetailsSaved();
     }
 
     private async void OnSettingsClick(object? sender, RoutedEventArgs e)
