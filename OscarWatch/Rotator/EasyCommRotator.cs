@@ -11,6 +11,12 @@ public sealed class EasyCommRotator : IRotatorDriver
     private readonly IRotatorSerialTransport _port;
     private readonly SemaphoreSlim _gate = new(1, 1);
 
+    /// <summary>
+    /// Null until the first position read. False when the controller never answered, so later
+    /// reads skip the serial queries (write-only interfaces). Once true, every read queries.
+    /// </summary>
+    private bool? _positionFeedback;
+
     public EasyCommRotator(string portName, int baudRate)
         : this(new SerialRotatorTransport(portName, baudRate, 1000, 1000, LineEnding))
     {
@@ -22,12 +28,6 @@ public sealed class EasyCommRotator : IRotatorDriver
     }
 
     public void Open() => _port.Open();
-
-    public bool TryConfirmLink()
-    {
-        var (az, el) = GetPosition();
-        return az is not null || el is not null;
-    }
 
     public void SetPosition(double azimuthDeg, double elevationDeg, RotatorSettings settings)
     {
@@ -44,8 +44,15 @@ public sealed class EasyCommRotator : IRotatorDriver
         _gate.Wait();
         try
         {
+            if (_positionFeedback == false)
+                return (null, null);
+
             var az = QueryAxis("AZ");
             var el = QueryAxis("EL");
+            if (az is not null || el is not null)
+                _positionFeedback = true;
+            else
+                _positionFeedback ??= false;
             return (az, el);
         }
         finally

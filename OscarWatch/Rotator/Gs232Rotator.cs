@@ -7,6 +7,13 @@ public sealed class Gs232Rotator : IRotatorDriver
     private readonly IRotatorSerialTransport _port;
     private readonly SemaphoreSlim _gate = new(1, 1);
 
+    /// <summary>
+    /// Null until the first position read. False when the controller never answered, so later
+    /// reads skip the serial queries (write-only interfaces such as the Foxdelta ST3). Once true,
+    /// every read queries.
+    /// </summary>
+    private bool? _positionFeedback;
+
     public Gs232Rotator(string portName, int baudRate)
         : this(new SerialRotatorTransport(portName, baudRate, 1000, 1000, "\r"))
     {
@@ -18,12 +25,6 @@ public sealed class Gs232Rotator : IRotatorDriver
     }
 
     public void Open() => _port.Open();
-
-    public bool TryConfirmLink()
-    {
-        var (az, el) = GetPosition();
-        return az is not null || el is not null;
-    }
 
     public void SetPosition(double azimuthDeg, double elevationDeg, RotatorSettings settings)
     {
@@ -39,6 +40,9 @@ public sealed class Gs232Rotator : IRotatorDriver
         _gate.Wait();
         try
         {
+            if (_positionFeedback == false)
+                return (null, null);
+
             // C2 then C/B for missing axis. GS-232B: AZ=/EL=; GS-232A: +0aaa+0eee / +0nnn.
             Gs232PositionParser.TryParseParts(Query("C2"), out var az, out var el);
 
@@ -48,6 +52,10 @@ public sealed class Gs232Rotator : IRotatorDriver
             if (el is null && Gs232PositionParser.TryParseElevationLine(Query("B"), out var elValue))
                 el = elValue;
 
+            if (az is not null || el is not null)
+                _positionFeedback = true;
+            else
+                _positionFeedback ??= false;
             return (az, el);
         }
         finally
