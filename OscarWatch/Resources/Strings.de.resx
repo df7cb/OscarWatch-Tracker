@@ -5732,6 +5732,12 @@ Aktuell: {1} ({2})</value>
   <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
     <value>Einzelbit und benachbarte Paare</value>
   </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders" xml:space="preserve">
+    <value>Frequenzversatz-Decoder</value>
+  </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders.Help" xml:space="preserve">
+    <value>Zusätzliche Decoder-Bänke bei ±175 und ±350 Hz, damit FM-Downlink-Rahmen auch zwischen Doppler-CAT-Schritten noch dekodiert werden, wenn die Audiotöne verschoben sind. Etwas mehr Prozessorlast; bei sehr langsamen PCs bei Bedarf abschalten.</value>
+  </data>
   <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
     <value>Nicht senden, solange der Satellit unter dem Horizont ist</value>
   </data>

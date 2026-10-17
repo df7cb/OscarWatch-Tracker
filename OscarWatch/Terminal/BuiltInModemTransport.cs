@@ -258,7 +258,7 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
                 {
                     activeRate = rate;
                     afsk = rate == BuiltInModemDataRate.Afsk1200
-                        ? new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix)
+                        ? new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix, _settings().BuiltIn.FrequencyOffsetDecoders)
                         : null;
                     g3ruh = rate == BuiltInModemDataRate.G3ruh9600
                         ? new G3ruhReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix)

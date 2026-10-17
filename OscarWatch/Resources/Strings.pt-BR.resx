@@ -5727,6 +5727,12 @@ Mais recente: {1} ({2})</value>
   <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
     <value>Um bit e pares vizinhos</value>
   </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders" xml:space="preserve">
+    <value>Decodificadores com deslocamento de frequência</value>
+  </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders.Help" xml:space="preserve">
+    <value>Executa bancos extra a ±175 e ±350 Hz para copiar quadros quando o áudio FM está deslocado entre passos Doppler por CAT. Usa um pouco mais de processador; desligue em PCs muito lentos se precisar.</value>
+  </data>
   <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
     <value>Não transmitir enquanto o satélite estiver abaixo do horizonte</value>
   </data>

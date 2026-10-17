@@ -116,6 +116,7 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         _maxChannelWaitMs = m.MaxChannelWaitMs;
         _turnaroundGuardMs = m.TurnaroundGuardMs;
         _selectedBitFix = BitFixOptions.First(o => o.Value == m.BitFix);
+        _frequencyOffsetDecoders = m.FrequencyOffsetDecoders;
         _watchdogSeconds = m.WatchdogSeconds;
         _blockTxBelowHorizon = m.BlockTxBelowHorizon;
         _selectedTestTone = TestToneOptions[0];
@@ -167,6 +168,7 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
     [ObservableProperty] private int _maxChannelWaitMs;
     [ObservableProperty] private int _turnaroundGuardMs;
     [ObservableProperty] private TerminalBitFixOption _selectedBitFix;
+    [ObservableProperty] private bool _frequencyOffsetDecoders;
     [ObservableProperty] private int _watchdogSeconds;
     [ObservableProperty] private bool _blockTxBelowHorizon;
     [ObservableProperty] private TerminalTestToneOption _selectedTestTone;
@@ -420,7 +422,8 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         var bitFix = SelectedBitFix.Value;
         try
         {
-            var result = await Task.Run(() => DecodeFile(path, bitFix)).ConfigureAwait(true);
+            var offsetDecoders = FrequencyOffsetDecoders;
+            var result = await Task.Run(() => DecodeFile(path, bitFix, offsetDecoders)).ConfigureAwait(true);
             foreach (var line in result.Lines)
                 DecodedFrames.Add(line);
             OnPropertyChanged(nameof(HasDecodedFrames));
@@ -440,10 +443,10 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
 
     private sealed record DecodeResult(List<string> Lines, int Frames, int Fixed, double Seconds, string Paths);
 
-    private static DecodeResult DecodeFile(string path, AfskBitFixMode bitFix)
+    private static DecodeResult DecodeFile(string path, AfskBitFixMode bitFix, bool frequencyOffsetDecoders)
     {
         var (samples, rate) = SstvWavReader.Read(path);
-        var receiver = new AfskReceiver(rate, bitFix);
+        var receiver = new AfskReceiver(rate, bitFix, frequencyOffsetDecoders);
         var frames = new List<AfskDecodedFrame>();
         const int block = 8192;
         for (var i = 0; i < samples.Length; i += block)
@@ -496,6 +499,7 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         m.MaxChannelWaitMs = MaxChannelWaitMs;
         m.TurnaroundGuardMs = TurnaroundGuardMs;
         m.BitFix = SelectedBitFix.Value;
+        m.FrequencyOffsetDecoders = FrequencyOffsetDecoders;
         m.WatchdogSeconds = WatchdogSeconds;
         m.BlockTxBelowHorizon = BlockTxBelowHorizon;
         m.Normalise();

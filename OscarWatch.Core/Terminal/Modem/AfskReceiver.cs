@@ -15,7 +15,7 @@ public sealed record AfskDecodedFrame(
 /// <summary>
 /// Complete 1200 baud AFSK receiver: resample to 12 kHz, run the decoder bank, check the FCS, merge the
 /// same frame decoded by several paths, and repair a frame no path decoded cleanly when bit fixing is on.
-/// <see cref="AfskDecodedFrame.Quality"/> is the percentage of paths that decoded the frame cleanly.
+/// <see cref="AfskDecodedFrame.Quality"/> is the percentage of centre-bank paths that decoded the frame cleanly.
 /// Not thread safe; feed it from one thread.
 /// </summary>
 public sealed class AfskReceiver
@@ -30,7 +30,7 @@ public sealed class AfskReceiver
     private const int MaxFixAttemptsPerCluster = 6;
 
     private readonly PolyphaseResampler _resampler;
-    private readonly AfskSlicerBank _bank = new();
+    private readonly AfskSlicerBank _bank;
     private readonly List<float> _resampled = new(4096);
     private readonly List<AfskCandidate> _candidates = new();
     private readonly List<(ulong Hash, long Sample)> _recent = new();
@@ -39,16 +39,19 @@ public sealed class AfskReceiver
     private float _peak;
     private bool _blanked;
 
-    public AfskReceiver(int inputSampleRate, AfskBitFixMode bitFix = AfskBitFixMode.SingleBit)
+    public AfskReceiver(int inputSampleRate, AfskBitFixMode bitFix = AfskBitFixMode.SingleBit, bool frequencyOffsetDecoders = true)
     {
         InputSampleRate = inputSampleRate;
         _resampler = new PolyphaseResampler(inputSampleRate, AfskDemodulator.SampleRate);
         BitFix = bitFix;
+        FrequencyOffsetDecoders = frequencyOffsetDecoders;
+        _bank = new AfskSlicerBank(frequencyOffsetDecoders);
         _pathCounts = new int[_bank.PathCount];
     }
 
     public int InputSampleRate { get; }
     public AfskBitFixMode BitFix { get; set; }
+    public bool FrequencyOffsetDecoders { get; }
 
     public int PathCount => _bank.PathCount;
     public string PathName(int path) => _bank.PathName(path);
@@ -127,9 +130,10 @@ public sealed class AfskReceiver
     public static List<AfskDecodedFrame> DecodeAll(
         ReadOnlySpan<float> samples,
         int sampleRate,
-        AfskBitFixMode bitFix = AfskBitFixMode.SingleBit)
+        AfskBitFixMode bitFix = AfskBitFixMode.SingleBit,
+        bool frequencyOffsetDecoders = true)
     {
-        var receiver = new AfskReceiver(sampleRate, bitFix);
+        var receiver = new AfskReceiver(sampleRate, bitFix, frequencyOffsetDecoders);
         var frames = new List<AfskDecodedFrame>();
         const int block = 4096;
         for (var i = 0; i < samples.Length; i += block)
@@ -195,7 +199,11 @@ public sealed class AfskReceiver
                 foreach (var p in g.Paths)
                     _pathCounts[p]++;
                 FrameCount++;
-                var quality = (int)Math.Round(100.0 * g.Paths.Count / _bank.PathCount);
+                var centrePaths = g.Paths.Count(p => p < _bank.QualityPathCount);
+                var quality = centrePaths > 0
+                    ? (int)Math.Round(100.0 * centrePaths / _bank.QualityPathCount)
+                    : (int)Math.Round(100.0 * g.Paths.Count / 3.0);
+                quality = Math.Min(100, quality);
                 output.Add(new AfskDecodedFrame(g.Ax25, g.Sample, _bank.PathName(g.Paths[0]), quality, Fixed: false));
             }
 

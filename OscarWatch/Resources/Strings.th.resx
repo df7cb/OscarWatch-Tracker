@@ -5732,6 +5732,12 @@ LOS: {2}
   <data name="Terminal.Modem.BitFix.Pair" xml:space="preserve">
     <value>หนึ่งบิตและคู่ที่ติดกัน</value>
   </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders" xml:space="preserve">
+    <value>ตัวถอดรหัสออフゟเซตความถี่</value>
+  </data>
+  <data name="Terminal.Modem.FrequencyOffsetDecoders.Help" xml:space="preserve">
+    <value>เปิดชุดถอดรหัสเพิ่มที่ ±175 และ ±350 Hz เพื่อรับเฟรมดาวน์ลิงก์ FM เมื่อโทนเสียงเลื่อนระหว่างขั้น Doppler ทาง CAT ใช้ CPU มากขึ้นเล็กน้อย ปิดได้บน PC ที่ช้ามากหากจำเป็น</value>
+  </data>
   <data name="Terminal.Modem.BlockBelowHorizon" xml:space="preserve">
     <value>ไม่ส่งขณะดาวเทียมอยู่ใต้ขอบฟ้า</value>
   </data>

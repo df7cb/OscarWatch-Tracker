@@ -24,6 +24,7 @@ public sealed class TerminalBuiltInModemSettingsTests
         Assert.Equal(100, s.SlotTimeMs);
         Assert.Equal(150, s.TurnaroundGuardMs);
         Assert.Equal(AfskBitFixMode.SingleBit, s.BitFix);
+        Assert.True(s.FrequencyOffsetDecoders);
         Assert.Equal(10, s.WatchdogSeconds);
         Assert.True(s.BlockTxBelowHorizon);
         Assert.Equal(PttMethod.Vox, s.PttMethod);
