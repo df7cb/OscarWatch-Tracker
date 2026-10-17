@@ -104,7 +104,24 @@
       <TabItem Header="{loc:Localize Key=Terminal.Settings.Tab.Modem}">
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,8,4,0">
           <StackPanel Spacing="10" MaxWidth="420">
-            <TextBlock Text="{loc:Localize Key=Terminal.Settings.Transport}" />
+            <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Station}" />
+            <Grid ColumnDefinitions="*,140" ColumnSpacing="8">
+              <StackPanel Grid.Column="0" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Settings.Callsign}" />
+                <TextBox Text="{Binding Callsign}"
+                         Watermark="{Binding GroundStationCallsign}"
+                         MaxLength="9"
+                         AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Callsign}" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4">
+                <TextBlock Text="{loc:Localize Key=Terminal.Settings.Ssid}" />
+                <NumericUpDown Value="{Binding Ssid}" Minimum="0" Maximum="15" FormatString="F0"
+                               AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Ssid}" />
+              </StackPanel>
+            </Grid>
+            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Callsign.Help}" />
+
+            <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Settings.Transport}" Margin="0,12,0,0" />
             <ComboBox ItemsSource="{Binding TransportOptions}"
                       SelectedItem="{Binding SelectedTransport}"
                       HorizontalAlignment="Stretch"
@@ -240,23 +257,10 @@
                        IsVisible="{Binding ShowModemTiming}" />
             <TextBlock Classes="ts-warning" Text="{loc:Localize Key=Terminal.Settings.BuiltIn.LongTail}"
                        IsVisible="{Binding ShowLongTailWarning}" />
-
-            <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Station}" Margin="0,12,0,0" />
-            <Grid ColumnDefinitions="*,140" ColumnSpacing="8">
-              <StackPanel Grid.Column="0" Spacing="4">
-                <TextBlock Text="{loc:Localize Key=Terminal.Settings.Callsign}" />
-                <TextBox Text="{Binding Callsign}"
-                         Watermark="{Binding GroundStationCallsign}"
-                         MaxLength="9"
-                         AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Callsign}" />
-              </StackPanel>
-              <StackPanel Grid.Column="1" Spacing="4">
-                <TextBlock Text="{loc:Localize Key=Terminal.Settings.Ssid}" />
-                <NumericUpDown Value="{Binding Ssid}" Minimum="0" Maximum="15" FormatString="F0"
-                               AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Ssid}" />
-              </StackPanel>
-            </Grid>
-            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Callsign.Help}" />
+            <TextBlock Text="{loc:Localize Key=Terminal.TxDelay}" />
+            <NumericUpDown Value="{Binding TxDelaySeconds}" Minimum="0" Maximum="60" FormatString="F0"
+                           AutomationProperties.Name="{loc:Localize Key=Terminal.TxDelay}" />
+            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.TxDelay.Help}" />
           </StackPanel>
         </ScrollViewer>
       </TabItem>
@@ -265,7 +269,15 @@
       <TabItem Header="{loc:Localize Key=Terminal.Settings.Tab.Soundcard}" IsVisible="{Binding IsBuiltInSelected}">
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,8,4,0">
           <StackPanel Spacing="10" MaxWidth="460" DataContext="{Binding BuiltIn}" x:DataType="vm:TerminalBuiltInModemViewModel">
-            <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Modem.Soundcard}" />
+            <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Modem.RateMode}" />
+            <ComboBox ItemsSource="{Binding RateModeOptions}" SelectedItem="{Binding SelectedRateMode}"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.RateMode}" />
+            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.RateMode.Help}" />
+            <TextBlock Classes="ts-warning" Text="{loc:Localize Key=Terminal.Modem.G3ruh.Warning}"
+                       IsVisible="{Binding ShowG3ruhWarning}" TextWrapping="Wrap" />
+
+            <TextBlock Classes="ts-section" Text="{loc:Localize Key=Terminal.Modem.Soundcard}" Margin="0,12,0,0" />
             <TextBlock Text="{loc:Localize Key=Terminal.Modem.Input}" />
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
               <ComboBox Grid.Column="0" ItemsSource="{Binding InputDeviceOptions}" SelectedItem="{Binding SelectedInputDevice}"
@@ -283,14 +295,6 @@
                          AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.Level}" />
             <TextBlock Text="{Binding InputLevelText}" TextWrapping="Wrap" />
             <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.Level.Help}" />
-
-            <TextBlock Text="{loc:Localize Key=Terminal.Modem.RateMode}" />
-            <ComboBox ItemsSource="{Binding RateModeOptions}" SelectedItem="{Binding SelectedRateMode}"
-                      HorizontalAlignment="Stretch"
-                      AutomationProperties.Name="{loc:Localize Key=Terminal.Modem.RateMode}" />
-            <TextBlock Classes="ts-hint" Text="{loc:Localize Key=Terminal.Modem.RateMode.Help}" />
-            <TextBlock Classes="ts-warning" Text="{loc:Localize Key=Terminal.Modem.G3ruh.Warning}"
-                       IsVisible="{Binding ShowG3ruhWarning}" TextWrapping="Wrap" />
 
             <TextBlock Text="{loc:Localize Key=Terminal.Modem.TxLevel}" />
             <Grid ColumnDefinitions="*,70" ColumnSpacing="8">
@@ -544,36 +548,8 @@
                      FontFamily="Consolas,Courier New,monospace"
                      AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Position.Comment}" />
             <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Position.Comment.Help}" />
-          </StackPanel>
-        </ScrollViewer>
-      </TabItem>
-
-      <!-- Colours -->
-      <TabItem Header="{loc:Localize Key=Terminal.Settings.Tab.Colours}">
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,8,4,0">
-          <StackPanel Spacing="10" MaxWidth="420">
-            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Colours.Help}" />
-            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="12">
-              <TextBlock Grid.Row="0" Text="{loc:Localize Key=Terminal.Tag.ToMe}" VerticalAlignment="Center" FontSize="12" />
-              <ColorPicker Grid.Row="0" Grid.Column="1"
-                           Color="{Binding ToMeColour, Converter={x:Static ft4:Ft4HexColorConverter.Instance}}"
-                           AutomationProperties.Name="{loc:Localize Key=Terminal.Tag.ToMe}" />
-              <TextBlock Grid.Row="1" Text="{loc:Localize Key=Terminal.Tag.Cq}" VerticalAlignment="Center" FontSize="12" />
-              <ColorPicker Grid.Row="1" Grid.Column="1"
-                           Color="{Binding CqColour, Converter={x:Static ft4:Ft4HexColorConverter.Instance}}"
-                           AutomationProperties.Name="{loc:Localize Key=Terminal.Tag.Cq}" />
-              <TextBlock Grid.Row="2" Text="{loc:Localize Key=Terminal.Tag.MyTx}" VerticalAlignment="Center" FontSize="12" />
-              <ColorPicker Grid.Row="2" Grid.Column="1"
-                           Color="{Binding MyTxColour, Converter={x:Static ft4:Ft4HexColorConverter.Instance}}"
-                           AutomationProperties.Name="{loc:Localize Key=Terminal.Tag.MyTx}" />
-              <TextBlock Grid.Row="3" Text="{loc:Localize Key=Terminal.Tag.MyDigipeated}" VerticalAlignment="Center" FontSize="12" />
-              <ColorPicker Grid.Row="3" Grid.Column="1"
-                           Color="{Binding MyDigipeatedColour, Converter={x:Static ft4:Ft4HexColorConverter.Instance}}"
-                           AutomationProperties.Name="{loc:Localize Key=Terminal.Tag.MyDigipeated}" />
-            </Grid>
-            <Button Content="{loc:Localize Key=Terminal.Settings.Colours.Reset}"
-                    Command="{Binding ResetColoursCommand}"
-                    HorizontalAlignment="Left" />
+            <CheckBox Content="{loc:Localize Key=Terminal.Settings.AprsAutoAck}" IsChecked="{Binding AprsAutoAck}" Margin="0,8,0,0" />
+            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.AprsAutoAck.Tip}" />
           </StackPanel>
         </ScrollViewer>
       </TabItem>
@@ -640,20 +616,45 @@
         </ScrollViewer>
       </TabItem>
 
+      <!-- Colours -->
+      <TabItem Header="{loc:Localize Key=Terminal.Settings.Tab.Colours}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,8,4,0">
+          <StackPanel Spacing="10" MaxWidth="420">
+            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Colours.Help}" />
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="12">
+              <TextBlock Grid.Row="0" Text="{loc:Localize Key=Terminal.Tag.ToMe}" VerticalAlignment="Center" FontSize="12" />
+              <ColorPicker Grid.Row="0" Grid.Column="1"
+                           Color="{Binding ToMeColour, Converter={x:Static ft4:Ft4HexColorConverter.Instance}}"
+                           AutomationProperties.Name="{loc:Localize Key=Terminal.Tag.ToMe}" />
+              <TextBlock Grid.Row="1" Text="{loc:Localize Key=Terminal.Tag.Cq}" VerticalAlignment="Center" FontSize="12" />
+              <ColorPicker Grid.Row="1" Grid.Column="1"
+                           Color="{Binding CqColour, Converter={x:Static ft4:Ft4HexColorConverter.Instance}}"
+                           AutomationProperties.Name="{loc:Localize Key=Terminal.Tag.Cq}" />
+              <TextBlock Grid.Row="2" Text="{loc:Localize Key=Terminal.Tag.MyTx}" VerticalAlignment="Center" FontSize="12" />
+              <ColorPicker Grid.Row="2" Grid.Column="1"
+                           Color="{Binding MyTxColour, Converter={x:Static ft4:Ft4HexColorConverter.Instance}}"
+                           AutomationProperties.Name="{loc:Localize Key=Terminal.Tag.MyTx}" />
+              <TextBlock Grid.Row="3" Text="{loc:Localize Key=Terminal.Tag.MyDigipeated}" VerticalAlignment="Center" FontSize="12" />
+              <ColorPicker Grid.Row="3" Grid.Column="1"
+                           Color="{Binding MyDigipeatedColour, Converter={x:Static ft4:Ft4HexColorConverter.Instance}}"
+                           AutomationProperties.Name="{loc:Localize Key=Terminal.Tag.MyDigipeated}" />
+            </Grid>
+            <Button Content="{loc:Localize Key=Terminal.Settings.Colours.Reset}"
+                    Command="{Binding ResetColoursCommand}"
+                    HorizontalAlignment="Left" />
+            <TextBlock Text="{loc:Localize Key=Terminal.Settings.FontSize}" Margin="0,8,0,0" />
+            <NumericUpDown Value="{Binding FontSize}" Minimum="10" Maximum="28" FormatString="F0"
+                           AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.FontSize}" />
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
       <!-- Logging -->
       <TabItem Header="{loc:Localize Key=Terminal.Settings.Tab.Logging}">
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,8,4,0">
           <StackPanel Spacing="10" MaxWidth="420">
             <CheckBox Content="{loc:Localize Key=Terminal.Settings.AutoLog}" IsChecked="{Binding AutoLog}" />
             <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.AutoLog.Help}" />
-            <CheckBox Content="{loc:Localize Key=Terminal.Settings.AprsAutoAck}" IsChecked="{Binding AprsAutoAck}" />
-            <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.AprsAutoAck.Tip}" />
-            <TextBlock Text="{loc:Localize Key=Terminal.TxDelay}" Margin="0,8,0,0" />
-            <NumericUpDown Value="{Binding TxDelaySeconds}" Minimum="0" Maximum="60" FormatString="F0"
-                           AutomationProperties.Name="{loc:Localize Key=Terminal.TxDelay}" />
-            <TextBlock Text="{loc:Localize Key=Terminal.Settings.FontSize}" />
-            <NumericUpDown Value="{Binding FontSize}" Minimum="10" Maximum="28" FormatString="F0"
-                           AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.FontSize}" />
           </StackPanel>
         </ScrollViewer>
       </TabItem>

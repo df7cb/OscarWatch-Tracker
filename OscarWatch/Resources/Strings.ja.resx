@@ -4888,6 +4888,9 @@
   <data name="Terminal.TxDelay">
     <value>送信遅延 (秒)</value>
   </data>
+  <data name="Terminal.Settings.TxDelay.Help" xml:space="preserve">
+    <value>送信を押してから、この秒数だけ待ってフレームを出します。応答先の局に重ならないようにするためです。同じ操作はターミナル画面にもあります。</value>
+  </data>
   <data name="Terminal.Format">
     <value>形式</value>
   </data>
@@ -5270,7 +5273,7 @@
     <value>KISS シリアル TNC</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>内蔵サウンドモデム (1200 AFSK)</value>
+    <value>内蔵サウンドモデム (1200 または 9600)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} は今後のリリースで対応予定です。現在は AGWPE を使用します。</value>
@@ -5363,7 +5366,7 @@
     <value>既定のマクロに戻す</value>
   </data>
   <data name="Terminal.Settings.Colours.Help">
-    <value>メッセージログの行の色です。各行には文字のタグも表示されるため、色だけに頼ることはありません。</value>
+    <value>メッセージログの行の色と文字サイズです。各行には文字のタグも表示されるため、色だけに頼ることはありません。</value>
   </data>
   <data name="Terminal.Settings.Colours.Reset">
     <value>既定の色に戻す</value>
@@ -5558,7 +5561,7 @@
     <value>グリッドの中心</value>
   </data>
   <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
-    <value>位置</value>
+    <value>APRS</value>
   </data>
   <data name="Terminal.Settings.Position.Help" xml:space="preserve">
     <value>位置を送信すると、衛星経由で APRS 位置レポートを送信します。OscarWatch は最近の GPS 測位、局の緯度経度、グリッドの中心の順に使用します。送信は1分に1回までです。</value>
@@ -5738,7 +5741,7 @@
     <value>衛星が地平線より下にある間は送信しない</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
-    <value>モデム: OscarWatch 1200 AFSK、{0}、入力 {1}%、デコード {2} フレーム (修正 {3})</value>
+    <value>モデム: OscarWatch {0}、{1}、入力 {2}%、デコード {3} フレーム (修正 {4})</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
     <value>サウンドカード</value>
@@ -5933,7 +5936,7 @@
     <value>閉じる</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>内蔵モデムは無線機に接続したサウンドカードを使います。デバイス、レベル、PTT は「サウンドカード」タブで選んでください。</value>
+    <value>内蔵モデムは無線機に接続したサウンドカードを使います。「サウンドカード」タブで 1200 AFSK または 9600 G3RUH を選び、その後デバイス、レベル、PTT を設定してください。</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>半二重で TXTAIL が長すぎます: ISS のようなシンプレックス衛星では、50 ms を超えるテールは受信の再開を遅らせ、デジピートされたコピーを逃すことがあります。通常は 30 から 50 ms で十分です。</value>

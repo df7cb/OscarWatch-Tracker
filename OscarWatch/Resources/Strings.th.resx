@@ -4892,6 +4892,9 @@ LOS: {2}
   <data name="Terminal.TxDelay">
     <value>หน่วงเวลา TX (วินาที)</value>
   </data>
+  <data name="Terminal.Settings.TxDelay.Help" xml:space="preserve">
+    <value>รอเป็นวินาทีหลังกดส่ง เพื่อไม่ให้เฟรมทับสถานีที่กำลังตอบ ตัวควบคุมเดียวกันอยู่ที่หน้าต่างเทอร์มินัล</value>
+  </data>
   <data name="Terminal.Format">
     <value>รูปแบบ</value>
   </data>
@@ -5274,7 +5277,7 @@ LOS: {2}
     <value>TNC KISS แบบอนุกรม</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>ซาวด์โมเด็มในตัว (1200 AFSK)</value>
+    <value>ซาวด์โมเด็มในตัว (1200 หรือ 9600)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} วางแผนไว้สำหรับรุ่นถัดไป ขณะนี้ใช้ AGWPE</value>
@@ -5367,7 +5370,7 @@ LOS: {2}
     <value>คืนค่ามาโครเริ่มต้น</value>
   </data>
   <data name="Terminal.Settings.Colours.Help">
-    <value>สีของแถวในบันทึกข้อความ แต่ละแถวมีป้ายข้อความด้วย สีจึงไม่ใช่สิ่งบอกเพียงอย่างเดียว</value>
+    <value>สีของแถวและขนาดตัวอักษรในบันทึกข้อความ แต่ละแถวมีป้ายข้อความด้วย สีจึงไม่ใช่สิ่งบอกเพียงอย่างเดียว</value>
   </data>
   <data name="Terminal.Settings.Colours.Reset">
     <value>คืนค่าสีเริ่มต้น</value>
@@ -5562,7 +5565,7 @@ LOS: {2}
     <value>จุดกึ่งกลางกริด</value>
   </data>
   <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
-    <value>ตำแหน่ง</value>
+    <value>APRS</value>
   </data>
   <data name="Terminal.Settings.Position.Help" xml:space="preserve">
     <value>ส่งตำแหน่งจะส่งรายงานตำแหน่ง APRS ผ่านดาวเทียม OscarWatch ใช้ค่า GPS ล่าสุดก่อน แล้วจึงใช้ละติจูดและลองจิจูดของสถานี และจุดกึ่งกลางกริดของคุณ ส่งได้ไม่เกินนาทีละหนึ่งครั้ง</value>
@@ -5742,7 +5745,7 @@ LOS: {2}
     <value>ไม่ส่งขณะดาวเทียมอยู่ใต้ขอบฟ้า</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
-    <value>โมเด็ม: OscarWatch 1200 AFSK, {0}, อินพุต {1}%, ถอดรหัสได้ {2} เฟรม (แก้ไข {3})</value>
+    <value>โมเด็ม: OscarWatch {0}, {1}, อินพุต {2}%, ถอดรหัสได้ {3} เฟรม (แก้ไข {4})</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
     <value>การ์ดเสียง</value>
@@ -5937,7 +5940,7 @@ LOS: {2}
     <value>ปิด</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>โมเด็มในตัวใช้การ์ดเสียงที่ต่อกับวิทยุของคุณ เลือกอุปกรณ์ ระดับ และ PTT ในแท็บ การ์ดเสียง</value>
+    <value>โมเด็มในตัวใช้การ์ดเสียงที่ต่อกับวิทยุของคุณ ในแท็บ การ์ดเสียง ให้เลือก 1200 AFSK หรือ 9600 G3RUH แล้วเลือกอุปกรณ์ ระดับ และ PTT</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>TXTAIL ยาวในฮาล์ฟดูเพล็กซ์: บนดาวเทียมซิมเพล็กซ์อย่าง ISS ท้ายที่ยาวกว่า 50 ms จะหน่วงเครื่องรับและอาจพลาดสำเนาที่ดิจิพีทกลับมา ปกติ 30 ถึง 50 ms ก็พอ</value>

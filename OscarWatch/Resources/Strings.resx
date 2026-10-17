@@ -4887,6 +4887,9 @@ Latest: {1} ({2})</value>
   <data name="Terminal.TxDelay">
     <value>TX delay (s)</value>
   </data>
+  <data name="Terminal.Settings.TxDelay.Help" xml:space="preserve">
+    <value>Waits this many seconds after you press Send, so your frame does not land on the station you are answering. The same control is on the Terminal window.</value>
+  </data>
   <data name="Terminal.Format">
     <value>Format</value>
   </data>
@@ -5269,7 +5272,7 @@ Latest: {1} ({2})</value>
     <value>KISS serial TNC</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>Built-in soundmodem (1200 AFSK)</value>
+    <value>Built-in soundmodem (1200 or 9600)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} is planned for a later release. AGWPE is used for now.</value>
@@ -5362,7 +5365,7 @@ Latest: {1} ({2})</value>
     <value>Restore default macros</value>
   </data>
   <data name="Terminal.Settings.Colours.Help">
-    <value>Row colours in the message log. Each row also shows a text tag, so the colour is never the only cue.</value>
+    <value>Row colours and text size in the message log. Each row also shows a text tag, so the colour is never the only cue.</value>
   </data>
   <data name="Terminal.Settings.Colours.Reset">
     <value>Restore default colours</value>
@@ -5557,7 +5560,7 @@ Latest: {1} ({2})</value>
     <value>Grid square centre</value>
   </data>
   <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
-    <value>Position</value>
+    <value>APRS</value>
   </data>
   <data name="Terminal.Settings.Position.Help" xml:space="preserve">
     <value>Send Position transmits an APRS position report through the satellite. OscarWatch uses a recent GPS fix first, then your station latitude and longitude, then the centre of your grid square. You can send at most one position a minute.</value>
@@ -5737,7 +5740,7 @@ Latest: {1} ({2})</value>
     <value>Do not transmit while the satellite is below the horizon</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
-    <value>Modem: OscarWatch 1200 AFSK, {0}, input {1}%, {2} frames decoded ({3} fixed)</value>
+    <value>Modem: OscarWatch {0}, {1}, input {2}%, {3} frames decoded ({4} fixed)</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
     <value>soundcard</value>
@@ -5932,7 +5935,7 @@ Latest: {1} ({2})</value>
     <value>Dismiss</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>The built-in modem uses a soundcard connected to your radio. Choose the devices, levels and push to talk on the Soundcard tab.</value>
+    <value>The built-in modem uses a soundcard connected to your radio. On the Soundcard tab, choose 1200 AFSK or 9600 G3RUH, then the devices, levels and push to talk.</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>Long TXTAIL in half duplex: on simplex satellites such as the ISS, a tail over 50 ms delays your receiver and can miss the digipeated copy. 30 to 50 ms is usually enough.</value>

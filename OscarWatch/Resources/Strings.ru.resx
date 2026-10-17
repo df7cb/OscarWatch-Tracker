@@ -4892,6 +4892,9 @@ LOS: {2}
   <data name="Terminal.TxDelay">
     <value>Задержка TX (с)</value>
   </data>
+  <data name="Terminal.Settings.TxDelay.Help" xml:space="preserve">
+    <value>Ждёт столько секунд после нажатия «Отправить», чтобы кадр не наложился на станцию, которой вы отвечаете. То же управление есть в окне терминала.</value>
+  </data>
   <data name="Terminal.Format">
     <value>Формат</value>
   </data>
@@ -5274,7 +5277,7 @@ LOS: {2}
     <value>KISS TNC через последовательный порт</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>Встроенный звуковой модем (1200 AFSK)</value>
+    <value>Встроенный звуковой модем (1200 или 9600)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} планируется в будущей версии. Пока используется AGWPE.</value>
@@ -5367,7 +5370,7 @@ LOS: {2}
     <value>Восстановить макросы по умолчанию</value>
   </data>
   <data name="Terminal.Settings.Colours.Help">
-    <value>Цвета строк в журнале сообщений. В каждой строке есть и текстовая метка, поэтому цвет никогда не единственная подсказка.</value>
+    <value>Цвета строк и размер текста в журнале сообщений. В каждой строке есть и текстовая метка, поэтому цвет никогда не единственная подсказка.</value>
   </data>
   <data name="Terminal.Settings.Colours.Reset">
     <value>Восстановить цвета по умолчанию</value>
@@ -5562,7 +5565,7 @@ LOS: {2}
     <value>Центр квадрата локатора</value>
   </data>
   <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
-    <value>Позиция</value>
+    <value>APRS</value>
   </data>
   <data name="Terminal.Settings.Position.Help" xml:space="preserve">
     <value>Кнопка «Отправить позицию» передаёт отчёт о позиции APRS через спутник. OscarWatch использует сначала свежие данные GPS, затем широту и долготу станции, затем центр вашего квадрата локатора. Не чаще одного раза в минуту.</value>
@@ -5742,7 +5745,7 @@ LOS: {2}
     <value>Не передавать, пока спутник за горизонтом</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
-    <value>Модем: OscarWatch 1200 AFSK, {0}, вход {1}%, декодировано кадров: {2} (исправлено: {3})</value>
+    <value>Модем: OscarWatch {0}, {1}, вход {2}%, декодировано кадров: {3} (исправлено: {4})</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
     <value>звуковая карта</value>
@@ -5937,7 +5940,7 @@ LOS: {2}
     <value>Закрыть</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>Встроенный модем использует звуковую карту, подключённую к радиостанции. Устройства, уровни и PTT выберите на вкладке «Звуковая карта».</value>
+    <value>Встроенный модем использует звуковую карту, подключённую к радиостанции. На вкладке «Звуковая карта» выберите 1200 AFSK или 9600 G3RUH, затем устройства, уровни и PTT.</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>Длинный TXTAIL в полудуплексе: на симплексных спутниках, таких как МКС, хвост длиннее 50 мс задерживает приёмник и может пропустить ретранслированную копию. Обычно достаточно 30 до 50 мс.</value>

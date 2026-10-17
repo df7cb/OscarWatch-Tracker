@@ -4892,6 +4892,9 @@ Aktuell: {1} ({2})</value>
   <data name="Terminal.TxDelay">
     <value>TX-Verzögerung (s)</value>
   </data>
+  <data name="Terminal.Settings.TxDelay.Help" xml:space="preserve">
+    <value>Wartet nach Senden so viele Sekunden, damit Ihr Frame nicht auf die Station fällt, die Sie beantworten. Dieselbe Einstellung steht im Terminal-Fenster.</value>
+  </data>
   <data name="Terminal.Format">
     <value>Format</value>
   </data>
@@ -5274,7 +5277,7 @@ Aktuell: {1} ({2})</value>
     <value>KISS-TNC seriell</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>Eingebautes Soundmodem (1200 AFSK)</value>
+    <value>Eingebautes Soundmodem (1200 oder 9600)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} ist für eine spätere Version geplant. Vorerst wird AGWPE verwendet.</value>
@@ -5367,7 +5370,7 @@ Aktuell: {1} ({2})</value>
     <value>Standardmakros wiederherstellen</value>
   </data>
   <data name="Terminal.Settings.Colours.Help">
-    <value>Zeilenfarben im Nachrichtenprotokoll. Jede Zeile zeigt auch eine Textmarke, die Farbe ist also nie der einzige Hinweis.</value>
+    <value>Zeilenfarben und Textgröße im Nachrichtenprotokoll. Jede Zeile zeigt auch eine Textmarke, die Farbe ist also nie der einzige Hinweis.</value>
   </data>
   <data name="Terminal.Settings.Colours.Reset">
     <value>Standardfarben wiederherstellen</value>
@@ -5562,7 +5565,7 @@ Aktuell: {1} ({2})</value>
     <value>Mitte des Locator-Felds</value>
   </data>
   <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
-    <value>Position</value>
+    <value>APRS</value>
   </data>
   <data name="Terminal.Settings.Position.Help" xml:space="preserve">
     <value>Position senden überträgt einen APRS-Positionsbericht über den Satelliten. OscarWatch nutzt zuerst einen aktuellen GPS-Fix, dann Breite und Länge der Station, dann die Mitte des Locator-Felds. Höchstens eine Position pro Minute.</value>
@@ -5742,7 +5745,7 @@ Aktuell: {1} ({2})</value>
     <value>Nicht senden, solange der Satellit unter dem Horizont ist</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
-    <value>Modem: OscarWatch 1200 AFSK, {0}, Eingang {1}%, {2} Rahmen dekodiert ({3} korrigiert)</value>
+    <value>Modem: OscarWatch {0}, {1}, Eingang {2}%, {3} Rahmen dekodiert ({4} korrigiert)</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
     <value>Soundkarte</value>
@@ -5937,7 +5940,7 @@ Aktuell: {1} ({2})</value>
     <value>Schließen</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>Das eingebaute Modem nutzt eine mit dem Funkgerät verbundene Soundkarte. Geräte, Pegel und PTT wählen Sie im Reiter Soundkarte.</value>
+    <value>Das eingebaute Modem nutzt eine mit dem Funkgerät verbundene Soundkarte. Im Reiter Soundkarte wählen Sie 1200 AFSK oder 9600 G3RUH, danach Geräte, Pegel und PTT.</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>Langer TXTAIL im Halbduplex: Bei Simplex-Satelliten wie der ISS verzögert ein Nachlauf über 50 ms den Empfang und kann die digipeatete Kopie verpassen. 30 bis 50 ms reichen meist.</value>

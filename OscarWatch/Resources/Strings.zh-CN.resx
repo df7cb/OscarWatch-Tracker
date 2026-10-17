@@ -4888,6 +4888,9 @@
   <data name="Terminal.TxDelay">
     <value>发射延迟 (秒)</value>
   </data>
+  <data name="Terminal.Settings.TxDelay.Help" xml:space="preserve">
+    <value>按下发送后等待这么多秒，避免帧落在正在应答的电台上。终端窗口上有相同的控件。</value>
+  </data>
   <data name="Terminal.Format">
     <value>格式</value>
   </data>
@@ -5270,7 +5273,7 @@
     <value>KISS 串口 TNC</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>内置声卡调制解调器 (1200 AFSK)</value>
+    <value>内置声卡调制解调器 (1200 或 9600)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} 计划在后续版本提供。目前使用 AGWPE。</value>
@@ -5363,7 +5366,7 @@
     <value>恢复默认宏</value>
   </data>
   <data name="Terminal.Settings.Colours.Help">
-    <value>消息记录中的行颜色。每行还会显示文字标签,因此颜色不是唯一提示。</value>
+    <value>消息记录中的行颜色和文字大小。每行还会显示文字标签,因此颜色不是唯一提示。</value>
   </data>
   <data name="Terminal.Settings.Colours.Reset">
     <value>恢复默认颜色</value>
@@ -5558,7 +5561,7 @@
     <value>网格中心</value>
   </data>
   <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
-    <value>位置</value>
+    <value>APRS</value>
   </data>
   <data name="Terminal.Settings.Position.Help" xml:space="preserve">
     <value>“发送位置”会通过卫星发送 APRS 位置报告。OscarWatch 优先使用最近的 GPS 定位，其次是电台经纬度，最后是网格中心。每分钟最多发送一次。</value>
@@ -5738,7 +5741,7 @@
     <value>卫星在地平线以下时不发射</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
-    <value>调制解调器：OscarWatch 1200 AFSK，{0}，输入 {1}%，已解码 {2} 帧（纠错 {3}）</value>
+    <value>调制解调器：OscarWatch {0}，{1}，输入 {2}%，已解码 {3} 帧（纠错 {4}）</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
     <value>声卡</value>
@@ -5933,7 +5936,7 @@
     <value>关闭</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>内置调制解调器使用连接到电台的声卡。请在“声卡”选项卡中选择设备、电平和 PTT。</value>
+    <value>内置调制解调器使用连接到电台的声卡。请在“声卡”选项卡中先选择 1200 AFSK 或 9600 G3RUH，再选择设备、电平和 PTT。</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>半双工下 TXTAIL 过长：在 ISS 等单工卫星上，超过 50 ms 的拖尾会延迟接收，可能错过数字中继返回的副本。通常 30 到 50 ms 就足够。</value>

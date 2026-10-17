@@ -4887,6 +4887,9 @@ Mais recente: {1} ({2})</value>
   <data name="Terminal.TxDelay">
     <value>Atraso TX (s)</value>
   </data>
+  <data name="Terminal.Settings.TxDelay.Help" xml:space="preserve">
+    <value>Espera estes segundos depois de Enviar, para o quadro não cair sobre a estação que você está respondendo. O mesmo controle está na janela do Terminal.</value>
+  </data>
   <data name="Terminal.Format">
     <value>Formato</value>
   </data>
@@ -5269,7 +5272,7 @@ Mais recente: {1} ({2})</value>
     <value>TNC KISS serial</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>Soundmodem integrado (1200 AFSK)</value>
+    <value>Soundmodem integrado (1200 ou 9600)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} está previsto para uma versão futura. Por enquanto usa-se AGWPE.</value>
@@ -5362,7 +5365,7 @@ Mais recente: {1} ({2})</value>
     <value>Restaurar macros padrão</value>
   </data>
   <data name="Terminal.Settings.Colours.Help">
-    <value>Cores das linhas do registro de mensagens. Cada linha mostra também uma etiqueta de texto, por isso a cor nunca é a única pista.</value>
+    <value>Cores e tamanho do texto no registro de mensagens. Cada linha mostra também uma etiqueta de texto, por isso a cor nunca é a única pista.</value>
   </data>
   <data name="Terminal.Settings.Colours.Reset">
     <value>Restaurar cores padrão</value>
@@ -5557,7 +5560,7 @@ Mais recente: {1} ({2})</value>
     <value>Centro do quadrado do locator</value>
   </data>
   <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
-    <value>Posição</value>
+    <value>APRS</value>
   </data>
   <data name="Terminal.Settings.Position.Help" xml:space="preserve">
     <value>Enviar posição transmite um relatório de posição APRS pelo satélite. O OscarWatch usa primeiro um fix GPS recente, depois a latitude e longitude da estação e depois o centro do seu locator. No máximo uma posição por minuto.</value>
@@ -5737,7 +5740,7 @@ Mais recente: {1} ({2})</value>
     <value>Não transmitir enquanto o satélite estiver abaixo do horizonte</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
-    <value>Modem: OscarWatch 1200 AFSK, {0}, entrada {1}%, {2} quadros decodificados ({3} corrigidos)</value>
+    <value>Modem: OscarWatch {0}, {1}, entrada {2}%, {3} quadros decodificados ({4} corrigidos)</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
     <value>placa de som</value>
@@ -5932,7 +5935,7 @@ Mais recente: {1} ({2})</value>
     <value>Fechar</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>O modem integrado usa uma placa de som ligada ao seu rádio. Escolha dispositivos, níveis e PTT na aba Placa de som.</value>
+    <value>O modem integrado usa uma placa de som ligada ao seu rádio. Na aba Placa de som, escolha 1200 AFSK ou 9600 G3RUH e depois os dispositivos, níveis e PTT.</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>TXTAIL longo em half duplex: em satélites simplex como a ISS, uma cauda acima de 50 ms atrasa o receptor e pode perder a cópia digipeated. Normalmente 30 a 50 ms bastam.</value>

@@ -4892,6 +4892,9 @@ Terbaru: {1} ({2})</value>
   <data name="Terminal.TxDelay">
     <value>Tunda TX (d)</value>
   </data>
+  <data name="Terminal.Settings.TxDelay.Help" xml:space="preserve">
+    <value>Menunggu selama detik ini setelah Anda menekan Kirim, agar frame tidak menimpa stasiun yang sedang Anda jawab. Kontrol yang sama ada di jendela Terminal.</value>
+  </data>
   <data name="Terminal.Format">
     <value>Format</value>
   </data>
@@ -5274,7 +5277,7 @@ Terbaru: {1} ({2})</value>
     <value>TNC KISS serial</value>
   </data>
   <data name="Terminal.Settings.Transport.BuiltIn">
-    <value>Soundmodem bawaan (1200 AFSK)</value>
+    <value>Soundmodem bawaan (1200 atau 9600)</value>
   </data>
   <data name="Terminal.Settings.Transport.Planned">
     <value>{0} direncanakan untuk rilis mendatang. Untuk saat ini AGWPE digunakan.</value>
@@ -5367,7 +5370,7 @@ Terbaru: {1} ({2})</value>
     <value>Pulihkan makro bawaan</value>
   </data>
   <data name="Terminal.Settings.Colours.Help">
-    <value>Warna baris di log pesan. Setiap baris juga menampilkan label teks, jadi warna tidak pernah menjadi satu-satunya petunjuk.</value>
+    <value>Warna baris dan ukuran teks di log pesan. Setiap baris juga menampilkan label teks, jadi warna tidak pernah menjadi satu-satunya petunjuk.</value>
   </data>
   <data name="Terminal.Settings.Colours.Reset">
     <value>Pulihkan warna bawaan</value>
@@ -5562,7 +5565,7 @@ Terbaru: {1} ({2})</value>
     <value>Titik tengah kotak grid</value>
   </data>
   <data name="Terminal.Settings.Tab.Position" xml:space="preserve">
-    <value>Posisi</value>
+    <value>APRS</value>
   </data>
   <data name="Terminal.Settings.Position.Help" xml:space="preserve">
     <value>Kirim posisi memancarkan laporan posisi APRS melalui satelit. OscarWatch memakai fix GPS terbaru lebih dulu, lalu lintang dan bujur stasiun, lalu titik tengah kotak grid Anda. Paling banyak satu posisi per menit.</value>
@@ -5742,7 +5745,7 @@ Terbaru: {1} ({2})</value>
     <value>Jangan memancar saat satelit di bawah cakrawala</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Connected" xml:space="preserve">
-    <value>Modem: OscarWatch 1200 AFSK, {0}, input {1}%, {2} frame terdekode ({3} diperbaiki)</value>
+    <value>Modem: OscarWatch {0}, {1}, input {2}%, {3} frame terdekode ({4} diperbaiki)</value>
   </data>
   <data name="Terminal.Modem.BuiltIn.Endpoint" xml:space="preserve">
     <value>kartu suara</value>
@@ -5937,7 +5940,7 @@ Terbaru: {1} ({2})</value>
     <value>Tutup</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>Modem bawaan memakai kartu suara yang tersambung ke radio Anda. Pilih perangkat, level, dan PTT di tab Kartu suara.</value>
+    <value>Modem bawaan memakai kartu suara yang tersambung ke radio Anda. Di tab Kartu suara, pilih 1200 AFSK atau 9600 G3RUH, lalu perangkat, level, dan PTT.</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>TXTAIL panjang pada setengah dupleks: pada satelit simpleks seperti ISS, ekor lebih dari 50 ms menunda penerima dan dapat melewatkan salinan digipeat. Biasanya 30 hingga 50 ms sudah cukup.</value>

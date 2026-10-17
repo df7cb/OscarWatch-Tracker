@@ -110,6 +110,10 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
             }
             : null;
 
+    /// <summary>1200 AFSK or 9600 G3RUH, for the Terminal status line.</summary>
+    public string RateName =>
+        DataRate == BuiltInModemDataRate.G3ruh9600 ? "9600 G3RUH" : "1200 AFSK";
+
     public event Action<TerminalTransportState>? StateChanged;
     public event Action<TerminalReceivedFrame>? FrameReceived;
 

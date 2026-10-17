@@ -1042,6 +1042,7 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
         {
             TerminalTransportState.Connected when _service.BuiltInModem is { } modem => _l.Get(
                 "Terminal.Modem.BuiltIn.Connected",
+                modem.RateName,
                 _l.Get(modem.IsHalfDuplex ? "Terminal.Modem.Duplex.HalfShort" : "Terminal.Modem.Duplex.FullShort"),
                 Math.Round(modem.InputLevel * 100),
                 modem.DecodedFrames,
