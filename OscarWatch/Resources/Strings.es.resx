@@ -5317,7 +5317,7 @@ Está utilizando la versión {0}.
     <value>Deja el indicativo vacío para usar el de tu estación terrena. La mayoría de operadores de satélite usan SSID 0.</value>
   </data>
   <data name="Terminal.Settings.Profiles.Help">
-    <value>Terminal elige el formato de mensaje y la ruta del digipeater según el satélite enfocado. Añade aquí un satélite para cambiar los valores por defecto.</value>
+    <value>Terminal elige el formato de mensaje y la ruta del digipeater según el satélite enfocado. Añade aquí un satélite para cambiar los valores por defecto. La lista de módem es 1200 AFSK o 9600 G3RUH para el módem integrado, o BPSK y GMSK si usas UZ7HO u otro módem externo.</value>
   </data>
   <data name="Terminal.Settings.Profiles.BuiltIn">
     <value>Valores integrados</value>
@@ -5345,6 +5345,18 @@ Está utilizando la versión {0}.
   </data>
   <data name="Terminal.Settings.Profiles.ModemHint">
     <value>Módem</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Afsk1200" xml:space="preserve">
+    <value>1200 AFSK</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.G3ruh9600" xml:space="preserve">
+    <value>9600 G3RUH</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Bpsk1200" xml:space="preserve">
+    <value>BPSK 1200 (solo UZ7HO)</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Gmsk9600" xml:space="preserve">
+    <value>9600 GMSK (módem externo)</value>
   </data>
   <data name="Terminal.Settings.Macros.Help">
     <value>Marcadores: {CALL} es el indicativo de Para, {MYCALL} tu indicativo, {MYGRID} tu cuadrícula completa y {MYGRID4} sus cuatro primeros caracteres. Marca A CQ en las macros que siempre deban ir a CQ.</value>
@@ -5715,6 +5727,12 @@ Está utilizando la versión {0}.
   <data name="Terminal.LinkType.Crossband" xml:space="preserve">
     <value>Banda cruzada</value>
   </data>
+  <data name="Terminal.Modem.Decoding" xml:space="preserve">
+    <value>Decodificación</value>
+  </data>
+  <data name="Terminal.Modem.Timing" xml:space="preserve">
+    <value>Temporización de transmisión</value>
+  </data>
   <data name="Terminal.Modem.BitFix" xml:space="preserve">
     <value>Corrección de bits</value>
   </data>
@@ -5925,6 +5943,9 @@ Está utilizando la versión {0}.
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>Esperar canal libre también en dúplex completo</value>
   </data>
+  <data name="Terminal.Modem.Safety" xml:space="preserve">
+    <value>Seguridad</value>
+  </data>
   <data name="Terminal.Modem.Watchdog" xml:space="preserve">
     <value>Vigilancia de transmisión (s)</value>
   </data>
@@ -5935,7 +5956,7 @@ Está utilizando la versión {0}.
     <value>Cerrar</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>El módem integrado usa una tarjeta de sonido conectada a su radio. En la pestaña Tarjeta de sonido, elija 1200 AFSK o 9600 G3RUH y después los dispositivos, niveles y PTT.</value>
+    <value>El módem integrado usa una tarjeta de sonido conectada a su radio. Elija la velocidad y el PTT aquí abajo. Los dispositivos y niveles están en la pestaña Tarjeta de sonido.</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>TXTAIL largo en semidúplex: en satélites símplex como la ISS, una cola de más de 50 ms retrasa el receptor y puede perder la copia digipetida. Normalmente bastan 30 a 50 ms.</value>

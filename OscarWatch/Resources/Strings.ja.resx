@@ -5318,7 +5318,7 @@
     <value>空欄にすると地上局のコールサインを使用します。衛星運用では通常 SSID 0 を使います。</value>
   </data>
   <data name="Terminal.Settings.Profiles.Help">
-    <value>ターミナルは選択中の衛星からメッセージ形式とデジピーターパスを決めます。既定値を変更するにはここに衛星を追加します。</value>
+    <value>ターミナルは選択中の衛星からメッセージ形式とデジピーターパスを決めます。既定値を変更するにはここに衛星を追加します。モデムは内蔵なら 1200 AFSK か 9600 G3RUH、UZ7HO など外部モデムなら BPSK と GMSK から選びます。</value>
   </data>
   <data name="Terminal.Settings.Profiles.BuiltIn">
     <value>組み込みの既定値</value>
@@ -5346,6 +5346,18 @@
   </data>
   <data name="Terminal.Settings.Profiles.ModemHint">
     <value>モデム</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Afsk1200" xml:space="preserve">
+    <value>1200 AFSK</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.G3ruh9600" xml:space="preserve">
+    <value>9600 G3RUH</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Bpsk1200" xml:space="preserve">
+    <value>BPSK 1200（UZ7HO のみ）</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Gmsk9600" xml:space="preserve">
+    <value>9600 GMSK（外部モデム）</value>
   </data>
   <data name="Terminal.Settings.Macros.Help">
     <value>置換: {CALL} は宛先、{MYCALL} は自局コール、{MYGRID} は自局グリッド全体、{MYGRID4} は先頭 4 文字です。常に CQ 宛に送るマクロは「CQ 宛」にチェックします。</value>
@@ -5716,6 +5728,12 @@
   <data name="Terminal.LinkType.Crossband" xml:space="preserve">
     <value>クロスバンド</value>
   </data>
+  <data name="Terminal.Modem.Decoding" xml:space="preserve">
+    <value>デコード</value>
+  </data>
+  <data name="Terminal.Modem.Timing" xml:space="preserve">
+    <value>送信タイミング</value>
+  </data>
   <data name="Terminal.Modem.BitFix" xml:space="preserve">
     <value>ビット修正</value>
   </data>
@@ -5926,6 +5944,9 @@
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>全二重でも空きチャンネルを待つ</value>
   </data>
+  <data name="Terminal.Modem.Safety" xml:space="preserve">
+    <value>安全</value>
+  </data>
   <data name="Terminal.Modem.Watchdog" xml:space="preserve">
     <value>送信ウォッチドッグ (秒)</value>
   </data>
@@ -5936,7 +5957,7 @@
     <value>閉じる</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>内蔵モデムは無線機に接続したサウンドカードを使います。「サウンドカード」タブで 1200 AFSK または 9600 G3RUH を選び、その後デバイス、レベル、PTT を設定してください。</value>
+    <value>内蔵モデムは無線機に接続したサウンドカードを使います。速度と PTT は下で選びます。デバイスとレベルは「サウンドカード」タブにあります。</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>半二重で TXTAIL が長すぎます: ISS のようなシンプレックス衛星では、50 ms を超えるテールは受信の再開を遅らせ、デジピートされたコピーを逃すことがあります。通常は 30 から 50 ms で十分です。</value>

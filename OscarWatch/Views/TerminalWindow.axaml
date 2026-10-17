@@ -94,6 +94,21 @@
       <Setter Property="Margin" Value="0,0,6,0" />
       <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
+    <Style Selector="TextBlock.term-status">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="CheckBox.term-bar">
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="Padding" Value="4,0,0,0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.term-bar">
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="Padding" Value="10,2" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
     <Style Selector="Button.term-clear">
       <Setter Property="FontSize" Value="11" />
       <Setter Property="Padding" Value="6,1" />
@@ -150,38 +165,37 @@
     <Border DockPanel.Dock="Bottom"
             BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
             BorderThickness="0,1,0,0"
-            Padding="0,6,0,0"
-            Margin="0,8,0,0"
-            MinHeight="28">
-      <StackPanel Orientation="Horizontal">
-        <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
-          <Ellipse Classes="term-dot" Fill="{Binding ModemDot}" />
-          <TextBlock Text="{Binding ModemStatusText}" FontSize="12" VerticalAlignment="Center" />
-        </StackPanel>
-        <TextBlock Text="{Binding ProfileText}" FontSize="12" Margin="0,0,18,0" VerticalAlignment="Center" />
-        <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
-          <Ellipse Classes="term-dot" Fill="{Binding AprsIsDot}" />
-          <TextBlock Text="{Binding AprsIsStatusText}" FontSize="12" VerticalAlignment="Center" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="0,0,18,0" ToolTip.Tip="{Binding UhmServerText}">
-          <Ellipse Classes="term-dot" Fill="{Binding UhmDot}" />
-          <TextBlock Text="{Binding UhmStatusText}" FontSize="12" VerticalAlignment="Center" />
-        </StackPanel>
-        <TextBlock Text="{Binding UhmServerText}" FontSize="12" Margin="0,0,18,0"
+            Padding="0,6,0,2"
+            Margin="0,8,0,0">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" Height="22" VerticalAlignment="Center">
+        <Grid Grid.Column="0" ColumnDefinitions="Auto,*" Margin="0,0,18,0" VerticalAlignment="Center">
+          <Ellipse Grid.Column="0" Classes="term-dot" Fill="{Binding ModemDot}" />
+          <TextBlock Grid.Column="1" Classes="term-status" Text="{Binding ModemStatusText}" />
+        </Grid>
+        <TextBlock Grid.Column="1" Classes="term-status" Margin="0,0,18,0" Text="{Binding ProfileText}" />
+        <Grid Grid.Column="2" ColumnDefinitions="Auto,*" Margin="0,0,18,0" VerticalAlignment="Center">
+          <Ellipse Grid.Column="0" Classes="term-dot" Fill="{Binding AprsIsDot}" />
+          <TextBlock Grid.Column="1" Classes="term-status" Text="{Binding AprsIsStatusText}" />
+        </Grid>
+        <Grid Grid.Column="3" ColumnDefinitions="Auto,*" Margin="0,0,18,0" VerticalAlignment="Center"
+              ToolTip.Tip="{Binding UhmServerText}">
+          <Ellipse Grid.Column="0" Classes="term-dot" Fill="{Binding UhmDot}" />
+          <TextBlock Grid.Column="1" Classes="term-status" Text="{Binding UhmStatusText}" />
+        </Grid>
+        <TextBlock Grid.Column="4" Classes="term-status" Margin="0,0,18,0" Text="{Binding UhmServerText}"
                    IsVisible="{Binding UhmServerText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
-        <TextBlock Text="{Binding UtcClockText}" FontSize="12" FontFamily="Consolas,Courier New,monospace"
-                   VerticalAlignment="Center" />
-      </StackPanel>
+        <TextBlock Grid.Column="5" Classes="term-status" Text="{Binding UtcClockText}" />
+      </Grid>
     </Border>
 
     <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
-      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="12">
-        <CheckBox Content="{loc:Localize Key=Terminal.ScrollToLast}" IsChecked="{Binding ScrollToLastLine}" />
-        <CheckBox Content="{loc:Localize Key=Terminal.ShowCallers}" IsChecked="{Binding ShowCallers}" />
-        <CheckBox Content="{loc:Localize Key=Terminal.ShowOwnOnly}" IsChecked="{Binding ShowOwnOnly}" />
-        <Button Content="{loc:Localize Key=Terminal.ClearLog}" Command="{Binding ClearLogCommand}" />
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+        <CheckBox Classes="term-bar" Content="{loc:Localize Key=Terminal.ScrollToLast}" IsChecked="{Binding ScrollToLastLine}" />
+        <CheckBox Classes="term-bar" Content="{loc:Localize Key=Terminal.ShowCallers}" IsChecked="{Binding ShowCallers}" />
+        <CheckBox Classes="term-bar" Content="{loc:Localize Key=Terminal.ShowOwnOnly}" IsChecked="{Binding ShowOwnOnly}" />
+        <Button Classes="term-bar" Content="{loc:Localize Key=Terminal.ClearLog}" Command="{Binding ClearLogCommand}" />
       </StackPanel>
-      <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
         <TextBlock Text="{loc:Localize Key=Terminal.Legend}" Classes="term-label" Margin="0,0,8,0" />
         <Border Classes="term-swatch" Background="{Binding LegendToMeBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
         <TextBlock Text="{loc:Localize Key=Terminal.Tag.ToMe}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
@@ -191,7 +205,7 @@
         <TextBlock Text="{loc:Localize Key=Terminal.Tag.MyTx}" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" />
         <Border Classes="term-swatch" Background="{Binding LegendMyDigipeatedBrushHex, Converter={x:Static ft4:Ft4HexBrushConverter.Instance}}" />
         <TextBlock Text="{loc:Localize Key=Terminal.Tag.MyDigipeated}" FontSize="12" VerticalAlignment="Center" />
-      </WrapPanel>
+      </StackPanel>
     </DockPanel>
 
     <!-- Top: shortcuts and send box, then one station and statistics panel -->

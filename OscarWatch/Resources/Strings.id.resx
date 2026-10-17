@@ -5322,7 +5322,7 @@ Terbaru: {1} ({2})</value>
     <value>Kosongkan untuk memakai tanda panggil stasiun bumi. Sebagian besar operator satelit memakai SSID 0.</value>
   </data>
   <data name="Terminal.Settings.Profiles.Help">
-    <value>Terminal memilih format pesan dan jalur digipeater dari satelit terpilih. Tambahkan satelit di sini untuk mengganti bawaan.</value>
+    <value>Terminal memilih format pesan dan jalur digipeater dari satelit terpilih. Tambahkan satelit di sini untuk mengganti bawaan. Daftar modem adalah 1200 AFSK atau 9600 G3RUH untuk modem bawaan, atau BPSK dan GMSK bila memakai UZ7HO atau modem eksternal lain.</value>
   </data>
   <data name="Terminal.Settings.Profiles.BuiltIn">
     <value>Bawaan</value>
@@ -5350,6 +5350,18 @@ Terbaru: {1} ({2})</value>
   </data>
   <data name="Terminal.Settings.Profiles.ModemHint">
     <value>Modem</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Afsk1200" xml:space="preserve">
+    <value>1200 AFSK</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.G3ruh9600" xml:space="preserve">
+    <value>9600 G3RUH</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Bpsk1200" xml:space="preserve">
+    <value>BPSK 1200 (hanya UZ7HO)</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Gmsk9600" xml:space="preserve">
+    <value>9600 GMSK (modem eksternal)</value>
   </data>
   <data name="Terminal.Settings.Macros.Help">
     <value>Placeholder: {CALL} adalah tanda panggil di kotak Ke, {MYCALL} tanda panggil Anda, {MYGRID} grid lengkap Anda dan {MYGRID4} empat karakter pertamanya. Centang Ke CQ untuk makro yang selalu dikirim ke CQ.</value>
@@ -5720,6 +5732,12 @@ Terbaru: {1} ({2})</value>
   <data name="Terminal.LinkType.Crossband" xml:space="preserve">
     <value>Lintas band</value>
   </data>
+  <data name="Terminal.Modem.Decoding" xml:space="preserve">
+    <value>Dekode</value>
+  </data>
+  <data name="Terminal.Modem.Timing" xml:space="preserve">
+    <value>Waktu pancar</value>
+  </data>
   <data name="Terminal.Modem.BitFix" xml:space="preserve">
     <value>Perbaikan bit</value>
   </data>
@@ -5930,6 +5948,9 @@ Terbaru: {1} ({2})</value>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>Tunggu kanal kosong juga saat dupleks penuh</value>
   </data>
+  <data name="Terminal.Modem.Safety" xml:space="preserve">
+    <value>Keamanan</value>
+  </data>
   <data name="Terminal.Modem.Watchdog" xml:space="preserve">
     <value>Pengawas pancar (s)</value>
   </data>
@@ -5940,7 +5961,7 @@ Terbaru: {1} ({2})</value>
     <value>Tutup</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>Modem bawaan memakai kartu suara yang tersambung ke radio Anda. Di tab Kartu suara, pilih 1200 AFSK atau 9600 G3RUH, lalu perangkat, level, dan PTT.</value>
+    <value>Modem bawaan memakai kartu suara yang tersambung ke radio Anda. Pilih kecepatan dan PTT di bawah. Perangkat dan level ada di tab Kartu suara.</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>TXTAIL panjang pada setengah dupleks: pada satelit simpleks seperti ISS, ekor lebih dari 50 ms menunda penerima dan dapat melewatkan salinan digipeat. Biasanya 30 hingga 50 ms sudah cukup.</value>

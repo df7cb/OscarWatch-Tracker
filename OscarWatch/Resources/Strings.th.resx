@@ -5322,7 +5322,7 @@ LOS: {2}
     <value>เว้นว่างไว้เพื่อใช้สัญญาณเรียกขานของสถานีภาคพื้น ผู้ใช้ดาวเทียมส่วนใหญ่ใช้ SSID 0</value>
   </data>
   <data name="Terminal.Settings.Profiles.Help">
-    <value>Terminal เลือกรูปแบบข้อความและเส้นทางดิจิพีทเตอร์ตามดาวเทียมที่เลือก เพิ่มดาวเทียมที่นี่เพื่อเปลี่ยนค่าเริ่มต้น</value>
+    <value>Terminal เลือกรูปแบบข้อความและเส้นทางดิจิพีทเตอร์ตามดาวเทียมที่เลือก เพิ่มดาวเทียมที่นี่เพื่อเปลี่ยนค่าเริ่มต้น รายการโมเด็มคือ 1200 AFSK หรือ 9600 G3RUH สำหรับโมเด็มในตัว หรือ BPSK และ GMSK เมื่อใช้ UZ7HO หรือโมเด็มภายนอกอื่น</value>
   </data>
   <data name="Terminal.Settings.Profiles.BuiltIn">
     <value>ค่าเริ่มต้นในตัว</value>
@@ -5350,6 +5350,18 @@ LOS: {2}
   </data>
   <data name="Terminal.Settings.Profiles.ModemHint">
     <value>โมเด็ม</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Afsk1200" xml:space="preserve">
+    <value>1200 AFSK</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.G3ruh9600" xml:space="preserve">
+    <value>9600 G3RUH</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Bpsk1200" xml:space="preserve">
+    <value>BPSK 1200 (เฉพาะ UZ7HO)</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Gmsk9600" xml:space="preserve">
+    <value>9600 GMSK (โมเด็มภายนอก)</value>
   </data>
   <data name="Terminal.Settings.Macros.Help">
     <value>ตัวแทน: {CALL} คือสัญญาณเรียกขานในช่อง ถึง, {MYCALL} คือของคุณ, {MYGRID} คือกริดเต็ม และ {MYGRID4} คือสี่ตัวแรก เลือก ถึง CQ สำหรับมาโครที่ส่งถึง CQ เสมอ</value>
@@ -5720,6 +5732,12 @@ LOS: {2}
   <data name="Terminal.LinkType.Crossband" xml:space="preserve">
     <value>ข้ามแบนด์</value>
   </data>
+  <data name="Terminal.Modem.Decoding" xml:space="preserve">
+    <value>การถอดรหัส</value>
+  </data>
+  <data name="Terminal.Modem.Timing" xml:space="preserve">
+    <value>จังหวะการส่ง</value>
+  </data>
   <data name="Terminal.Modem.BitFix" xml:space="preserve">
     <value>การแก้บิต</value>
   </data>
@@ -5930,6 +5948,9 @@ LOS: {2}
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>รอช่องว่างแม้ในฟูลดูเพล็กซ์</value>
   </data>
+  <data name="Terminal.Modem.Safety" xml:space="preserve">
+    <value>ความปลอดภัย</value>
+  </data>
   <data name="Terminal.Modem.Watchdog" xml:space="preserve">
     <value>ตัวเฝ้าการส่ง (วินาที)</value>
   </data>
@@ -5940,7 +5961,7 @@ LOS: {2}
     <value>ปิด</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>โมเด็มในตัวใช้การ์ดเสียงที่ต่อกับวิทยุของคุณ ในแท็บ การ์ดเสียง ให้เลือก 1200 AFSK หรือ 9600 G3RUH แล้วเลือกอุปกรณ์ ระดับ และ PTT</value>
+    <value>โมเด็มในตัวใช้การ์ดเสียงที่ต่อกับวิทยุของคุณ เลือกอัตราและ PTT ด้านล่าง อุปกรณ์และระดับอยู่ที่แท็บ การ์ดเสียง</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>TXTAIL ยาวในฮาล์ฟดูเพล็กซ์: บนดาวเทียมซิมเพล็กซ์อย่าง ISS ท้ายที่ยาวกว่า 50 ms จะหน่วงเครื่องรับและอาจพลาดสำเนาที่ดิจิพีทกลับมา ปกติ 30 ถึง 50 ms ก็พอ</value>

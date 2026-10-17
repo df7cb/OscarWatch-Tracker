@@ -5322,7 +5322,7 @@ Aktuell: {1} ({2})</value>
     <value>Leer lassen, um das Rufzeichen der Bodenstation zu verwenden. Die meisten Satellitenfunker nutzen SSID 0.</value>
   </data>
   <data name="Terminal.Settings.Profiles.Help">
-    <value>Terminal wählt Nachrichtenformat und Digipeater-Pfad anhand des gewählten Satelliten. Fügen Sie hier einen Satelliten hinzu, um die Vorgaben zu ändern.</value>
+    <value>Terminal wählt Nachrichtenformat und Digipeater-Pfad anhand des gewählten Satelliten. Fügen Sie hier einen Satelliten hinzu, um die Vorgaben zu ändern. Die Modemliste ist 1200 AFSK oder 9600 G3RUH für das eingebaute Modem, oder BPSK und GMSK bei UZ7HO oder einem anderen externen Modem.</value>
   </data>
   <data name="Terminal.Settings.Profiles.BuiltIn">
     <value>Eingebaute Vorgaben</value>
@@ -5350,6 +5350,18 @@ Aktuell: {1} ({2})</value>
   </data>
   <data name="Terminal.Settings.Profiles.ModemHint">
     <value>Modem</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Afsk1200" xml:space="preserve">
+    <value>1200 AFSK</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.G3ruh9600" xml:space="preserve">
+    <value>9600 G3RUH</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Bpsk1200" xml:space="preserve">
+    <value>BPSK 1200 (nur UZ7HO)</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Gmsk9600" xml:space="preserve">
+    <value>9600 GMSK (externes Modem)</value>
   </data>
   <data name="Terminal.Settings.Macros.Help">
     <value>Platzhalter: {CALL} ist das Rufzeichen im Feld An, {MYCALL} Ihr Rufzeichen, {MYGRID} Ihr ganzer Locator und {MYGRID4} die ersten vier Zeichen. An CQ ankreuzen für Makros, die immer an CQ gehen.</value>
@@ -5720,6 +5732,12 @@ Aktuell: {1} ({2})</value>
   <data name="Terminal.LinkType.Crossband" xml:space="preserve">
     <value>Crossband</value>
   </data>
+  <data name="Terminal.Modem.Decoding" xml:space="preserve">
+    <value>Dekodierung</value>
+  </data>
+  <data name="Terminal.Modem.Timing" xml:space="preserve">
+    <value>Sendezeiten</value>
+  </data>
   <data name="Terminal.Modem.BitFix" xml:space="preserve">
     <value>Bitkorrektur</value>
   </data>
@@ -5930,6 +5948,9 @@ Aktuell: {1} ({2})</value>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>Auch im Vollduplex auf freien Kanal warten</value>
   </data>
+  <data name="Terminal.Modem.Safety" xml:space="preserve">
+    <value>Sicherheit</value>
+  </data>
   <data name="Terminal.Modem.Watchdog" xml:space="preserve">
     <value>Sende-Watchdog (s)</value>
   </data>
@@ -5940,7 +5961,7 @@ Aktuell: {1} ({2})</value>
     <value>Schließen</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>Das eingebaute Modem nutzt eine mit dem Funkgerät verbundene Soundkarte. Im Reiter Soundkarte wählen Sie 1200 AFSK oder 9600 G3RUH, danach Geräte, Pegel und PTT.</value>
+    <value>Das eingebaute Modem nutzt eine mit dem Funkgerät verbundene Soundkarte. Wählen Sie unten Rate und PTT. Geräte und Pegel stehen im Reiter Soundkarte.</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>Langer TXTAIL im Halbduplex: Bei Simplex-Satelliten wie der ISS verzögert ein Nachlauf über 50 ms den Empfang und kann die digipeatete Kopie verpassen. 30 bis 50 ms reichen meist.</value>

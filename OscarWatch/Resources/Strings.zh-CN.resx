@@ -5318,7 +5318,7 @@
     <value>呼号留空则使用地面站呼号。大多数卫星操作员使用 SSID 0。</value>
   </data>
   <data name="Terminal.Settings.Profiles.Help">
-    <value>终端根据所选卫星确定消息格式和转发路径。在此添加卫星可覆盖默认值。</value>
+    <value>终端根据所选卫星确定消息格式和转发路径。在此添加卫星可覆盖默认值。调制解调器可选内置的 1200 AFSK 或 9600 G3RUH，使用 UZ7HO 或其他外部调制解调器时选 BPSK 或 GMSK。</value>
   </data>
   <data name="Terminal.Settings.Profiles.BuiltIn">
     <value>内置默认值</value>
@@ -5346,6 +5346,18 @@
   </data>
   <data name="Terminal.Settings.Profiles.ModemHint">
     <value>调制解调器</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Afsk1200" xml:space="preserve">
+    <value>1200 AFSK</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.G3ruh9600" xml:space="preserve">
+    <value>9600 G3RUH</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Bpsk1200" xml:space="preserve">
+    <value>BPSK 1200（仅 UZ7HO）</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Gmsk9600" xml:space="preserve">
+    <value>9600 GMSK（外部调制解调器）</value>
   </data>
   <data name="Terminal.Settings.Macros.Help">
     <value>占位符:{CALL} 为“发往”呼号,{MYCALL} 为你的呼号,{MYGRID} 为完整网格,{MYGRID4} 为前四个字符。始终发往 CQ 的宏请勾选“发往 CQ”。</value>
@@ -5716,6 +5728,12 @@
   <data name="Terminal.LinkType.Crossband" xml:space="preserve">
     <value>跨频段</value>
   </data>
+  <data name="Terminal.Modem.Decoding" xml:space="preserve">
+    <value>解码</value>
+  </data>
+  <data name="Terminal.Modem.Timing" xml:space="preserve">
+    <value>发射时序</value>
+  </data>
   <data name="Terminal.Modem.BitFix" xml:space="preserve">
     <value>位纠错</value>
   </data>
@@ -5926,6 +5944,9 @@
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>全双工时也等待信道空闲</value>
   </data>
+  <data name="Terminal.Modem.Safety" xml:space="preserve">
+    <value>安全</value>
+  </data>
   <data name="Terminal.Modem.Watchdog" xml:space="preserve">
     <value>发射看门狗（秒）</value>
   </data>
@@ -5936,7 +5957,7 @@
     <value>关闭</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>内置调制解调器使用连接到电台的声卡。请在“声卡”选项卡中先选择 1200 AFSK 或 9600 G3RUH，再选择设备、电平和 PTT。</value>
+    <value>内置调制解调器使用连接到电台的声卡。请在下方选择速率和 PTT。设备和电平在“声卡”选项卡。</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>半双工下 TXTAIL 过长：在 ISS 等单工卫星上，超过 50 ms 的拖尾会延迟接收，可能错过数字中继返回的副本。通常 30 到 50 ms 就足够。</value>

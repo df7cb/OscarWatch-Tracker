@@ -110,12 +110,13 @@
         <li>
           <strong>Modem tab.</strong> Leave <strong>Callsign</strong> empty to use your station callsign, and leave
           <strong>SSID</strong> on 0, which is what most satellite operators use. Check <strong>Connection</strong> says
-          <strong>Built-in soundmodem (1200 or 9600)</strong>. This is the default. The baud rate is chosen on the Soundcard tab.
+          <strong>Built-in soundmodem (1200 or 9600)</strong>. This is the default. Set <strong>Modem rate</strong> to
+          <strong>Automatic</strong> for most satellites, or choose <strong>1200 baud AFSK</strong> or
+          <strong>9600 baud G3RUH</strong>. Under <strong>Push to talk</strong>, pick how OscarWatch keys the radio. See
+          <a href="#ptt">Push to talk</a> if you are not sure.
         </li>
         <li>
-          <strong>Soundcard tab: choose the rate, then the devices.</strong> Set <strong>Modem rate</strong> to
-          <strong>Automatic</strong> for most satellites, or choose <strong>1200 baud AFSK</strong> or
-          <strong>9600 baud G3RUH</strong>. Then set <strong>Input (from the radio)</strong> and
+          <strong>Soundcard tab: choose the devices.</strong> Set <strong>Input (from the radio)</strong> and
           <strong>Output (to the radio)</strong> to your radio's sound interface. They usually have the same name, for example
           <em>Microphone (USB Audio CODEC)</em> and <em>Speakers (USB Audio CODEC)</em>. For 9600 baud, use the radio's data
           port and a 48 kHz device if Windows offers one. Click <strong>Refresh</strong> if you
@@ -126,10 +127,6 @@
           frequency, or open the squelch so you hear noise, and aim for 30 to 70% on the meter. The text under the meter says
           whether the level is too low, good or clipping. Change the radio's data output level or the Windows recording level
           to adjust it.
-        </li>
-        <li>
-          <strong>Choose push to talk.</strong> Pick how OscarWatch keys the radio under <strong>Push to talk</strong>. See
-          <a href="#ptt">Push to talk</a> below if you are not sure.
         </li>
         <li>
           <strong>Set the transmit level.</strong> Connect a dummy load, or pick a clear frequency. Choose a test tone and
@@ -150,7 +147,7 @@
         <a href="#modem-settings">Transmit watchdog</a>), but a setting in the radio protects you even if the PC fails.
       </div>
 
-      <h3 id="ptt">Push to talk</h3>
+      <h3 id="ptt">Push to talk (Modem tab)</h3>
       <ul>
         <li><strong>VOX / audio:</strong> the radio or interface keys itself when it hears audio from the PC. Simplest to set
           up. Many USB interfaces such as the SignaLink work this way.</li>
@@ -335,8 +332,9 @@
       </ul>
       <p>
         Use the <strong>Format</strong> buttons in the window to switch for this session, or the <strong>Satellites</strong>
-        tab of Terminal settings to change a satellite's format, path, link type or the name used for UHM. <strong>Add focused
-        satellite</strong> adds the satellite you are tracking to that list.
+        tab of Terminal settings to change a satellite's format, path, modem, link type or the name used for UHM.
+        <strong>Modem</strong> is a list: 1200 AFSK and 9600 G3RUH use the built-in modem. BPSK and GMSK need UZ7HO or
+        another external modem. <strong>Add focused satellite</strong> adds the satellite you are tracking to that list.
       </p>
 
       <h2 id="positions">APRS positions and the Terminal Map</h2>
@@ -421,7 +419,7 @@
       <p>
         The defaults suit the ISS and most stations. These notes explain what each setting does if you want to fine-tune.
       </p>
-      <h3>Timing (Modem tab)</h3>
+      <h3>Transmit timing (Modem tab)</h3>
       <ul>
         <li><strong>Modem TX delay (ms):</strong> how long the modem sends a steady pattern after keying, before the message,
           so your radio and the receiving station have settled. 300 ms suits most FM radios; with CAT keying or a fast data port,
@@ -430,7 +428,7 @@
           at 30 to 50 ms. A longer tail keeps you transmitting while the satellite is already repeating your frame, so you can
           miss it. Terminal settings warns you if it is too long.</li>
       </ul>
-      <h3>Channel access (Soundcard tab)</h3>
+      <h3>Channel access (Modem tab)</h3>
       <ul>
         <li><strong>Duplex:</strong> <strong>Automatic</strong> follows the satellite's link type, which is right almost every
           time. <strong>Half duplex</strong> is for one-frequency satellites such as the ISS: the modem listens for a quiet
@@ -446,18 +444,19 @@
         <li><strong>Wait for a clear channel in full duplex too:</strong> normally off, because in full duplex you hear
           yourself and the channel would always seem busy.</li>
       </ul>
-      <h3>9600 baud G3RUH (Soundcard tab)</h3>
+      <h3>9600 baud G3RUH</h3>
       <p>
         Some satellites (for example LASARsat or KNACKSAT-2) use 9600 baud G3RUH on the radio's flat data port, not through the
-        speaker or microphone. Set <strong>Modem rate</strong> to <strong>Automatic</strong> when you pick the satellite from
-        the database, or force <strong>9600 baud G3RUH</strong> manually. Connect the USB or data cable to the radio's 9600
-        packet port, choose a 48 kHz capture device if Windows offers one, and set the separate <strong>TX level (9600 G3RUH
-        data port)</strong>. Put the radio menu on 9600 packet yourself; OscarWatch does not switch 1200/9600 over CAT yet.
+        speaker or microphone. On the <strong>Modem</strong> tab, set <strong>Modem rate</strong> to <strong>Automatic</strong>
+        when you pick the satellite from the database, or force <strong>9600 baud G3RUH</strong> manually. Connect the USB
+        or data cable to the radio's 9600 packet port. On the <strong>Soundcard</strong> tab, choose a 48 kHz capture device
+        if Windows offers one, and set the separate <strong>TX level (9600 G3RUH data port)</strong>. Put the radio menu on
+        9600 packet yourself; OscarWatch does not switch 1200/9600 over CAT yet.
         Duplex (half or full) works the same as for 1200 AFSK. Keep <strong>rig Doppler correction</strong> enabled for
         9600 satellites: each CAT tuning step moves the FM discriminator baseline on the data port, and the built-in modem
         recentres within about 10 ms, but uncorrected Doppler drift still needs the same tracking you use for SSB/FM passes.
       </p>
-      <h3>Safety and decoding (Soundcard tab)</h3>
+      <h3>Decoding and safety (Modem tab)</h3>
       <ul>
         <li><strong>Transmit watchdog (s):</strong> stops any transmission that runs longer than this (10 seconds by default).
           A packet transmission is normally under a second, so this only trips if something has gone wrong.</li>
@@ -566,11 +565,11 @@
         <li><strong>Your frames never come back as MY DIGI:</strong> check the radio actually transmits (PTT method), the
           transmit level with a test tone, and the uplink frequency. On the ISS, keep the TX tail at 30 to 50 ms.</li>
         <li><strong>"Not sent: the satellite is below the horizon":</strong> wait for the satellite to rise. For ground-based
-          packet, untick the horizon setting on the Soundcard tab.</li>
+          packet, untick the horizon setting on the Modem tab.</li>
         <li><strong>"Not sent: the channel stayed busy":</strong> the modem heard a signal for longer than the maximum wait.
           If the input is only noise, the receive level may be too high, or try a longer <strong>Maximum wait</strong>.</li>
-        <li><strong>"Transmission stopped by the watchdog":</strong> push to talk or the soundcard output got stuck. Check the
-          output device and the push to talk method on the Soundcard tab.</li>
+        <li><strong>"Transmission stopped by the watchdog":</strong> push to talk or the soundcard output got stuck. Check
+          push to talk and the transmit watchdog on the Modem tab, and the output device on the Soundcard tab.</li>
         <li><strong>"Modem: cannot reach 127.0.0.1:8000":</strong> only when using Direwolf or UZ7HO. The application is not
           running, or its AGWPE server is off or on another port. For KISS over TCP the same message means Direwolf's
           KISSPORT is off or on another port.</li>

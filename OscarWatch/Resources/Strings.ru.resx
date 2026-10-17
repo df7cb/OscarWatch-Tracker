@@ -5322,7 +5322,7 @@ LOS: {2}
     <value>Оставьте пустым, чтобы использовать позывной наземной станции. Большинство операторов спутников используют SSID 0.</value>
   </data>
   <data name="Terminal.Settings.Profiles.Help">
-    <value>Терминал выбирает формат сообщений и путь дигипитера по выбранному спутнику. Добавьте спутник сюда, чтобы изменить значения по умолчанию.</value>
+    <value>Терминал выбирает формат сообщений и путь дигипитера по выбранному спутнику. Добавьте спутник сюда, чтобы изменить значения по умолчанию. В списке модема: 1200 AFSK или 9600 G3RUH для встроенного модема, либо BPSK и GMSK для UZ7HO или другого внешнего модема.</value>
   </data>
   <data name="Terminal.Settings.Profiles.BuiltIn">
     <value>Встроенные значения</value>
@@ -5350,6 +5350,18 @@ LOS: {2}
   </data>
   <data name="Terminal.Settings.Profiles.ModemHint">
     <value>Модем</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Afsk1200" xml:space="preserve">
+    <value>1200 AFSK</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.G3ruh9600" xml:space="preserve">
+    <value>9600 G3RUH</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Bpsk1200" xml:space="preserve">
+    <value>BPSK 1200 (только UZ7HO)</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Gmsk9600" xml:space="preserve">
+    <value>9600 GMSK (внешний модем)</value>
   </data>
   <data name="Terminal.Settings.Macros.Help">
     <value>Подстановки: {CALL} позывной из поля «Кому», {MYCALL} ваш позывной, {MYGRID} полный локатор, {MYGRID4} его первые четыре символа. Отметьте «В CQ» для макросов, которые всегда идут в CQ.</value>
@@ -5720,6 +5732,12 @@ LOS: {2}
   <data name="Terminal.LinkType.Crossband" xml:space="preserve">
     <value>Кросс-диапазон</value>
   </data>
+  <data name="Terminal.Modem.Decoding" xml:space="preserve">
+    <value>Декодирование</value>
+  </data>
+  <data name="Terminal.Modem.Timing" xml:space="preserve">
+    <value>Задержки передачи</value>
+  </data>
   <data name="Terminal.Modem.BitFix" xml:space="preserve">
     <value>Исправление битов</value>
   </data>
@@ -5930,6 +5948,9 @@ LOS: {2}
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>Ждать свободного канала и в полном дуплексе</value>
   </data>
+  <data name="Terminal.Modem.Safety" xml:space="preserve">
+    <value>Безопасность</value>
+  </data>
   <data name="Terminal.Modem.Watchdog" xml:space="preserve">
     <value>Сторож передачи (с)</value>
   </data>
@@ -5940,7 +5961,7 @@ LOS: {2}
     <value>Закрыть</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>Встроенный модем использует звуковую карту, подключённую к радиостанции. На вкладке «Звуковая карта» выберите 1200 AFSK или 9600 G3RUH, затем устройства, уровни и PTT.</value>
+    <value>Встроенный модем использует звуковую карту, подключённую к радиостанции. Ниже выберите скорость и PTT. Устройства и уровни находятся на вкладке «Звуковая карта».</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>Длинный TXTAIL в полудуплексе: на симплексных спутниках, таких как МКС, хвост длиннее 50 мс задерживает приёмник и может пропустить ретранслированную копию. Обычно достаточно 30 до 50 мс.</value>

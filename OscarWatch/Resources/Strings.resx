@@ -5317,7 +5317,7 @@ Latest: {1} ({2})</value>
     <value>Leave the callsign empty to use your ground station callsign. Most satellite operators use SSID 0.</value>
   </data>
   <data name="Terminal.Settings.Profiles.Help">
-    <value>Terminal picks the message format and digipeater path from the focused satellite. Add a satellite here to override the defaults.</value>
+    <value>Terminal picks the message format and digipeater path from the focused satellite. Add a satellite here to override the defaults. The modem list is 1200 AFSK or 9600 G3RUH for the built-in modem, or BPSK and GMSK when you use UZ7HO or another external modem.</value>
   </data>
   <data name="Terminal.Settings.Profiles.BuiltIn">
     <value>Built-in defaults</value>
@@ -5345,6 +5345,18 @@ Latest: {1} ({2})</value>
   </data>
   <data name="Terminal.Settings.Profiles.ModemHint">
     <value>Modem</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Afsk1200" xml:space="preserve">
+    <value>1200 AFSK</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.G3ruh9600" xml:space="preserve">
+    <value>9600 G3RUH</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Bpsk1200" xml:space="preserve">
+    <value>BPSK 1200 (UZ7HO only)</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Gmsk9600" xml:space="preserve">
+    <value>9600 GMSK (external modem)</value>
   </data>
   <data name="Terminal.Settings.Macros.Help">
     <value>Placeholders: {CALL} is the To call, {MYCALL} your callsign, {MYGRID} your full grid and {MYGRID4} the first four characters. Tick To CQ for macros that should always go to CQ.</value>
@@ -5715,6 +5727,12 @@ Latest: {1} ({2})</value>
   <data name="Terminal.LinkType.Crossband" xml:space="preserve">
     <value>Crossband</value>
   </data>
+  <data name="Terminal.Modem.Decoding" xml:space="preserve">
+    <value>Decoding</value>
+  </data>
+  <data name="Terminal.Modem.Timing" xml:space="preserve">
+    <value>Transmit timing</value>
+  </data>
   <data name="Terminal.Modem.BitFix" xml:space="preserve">
     <value>Bit fixing</value>
   </data>
@@ -5925,6 +5943,9 @@ Latest: {1} ({2})</value>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>Wait for a clear channel in full duplex too</value>
   </data>
+  <data name="Terminal.Modem.Safety" xml:space="preserve">
+    <value>Safety</value>
+  </data>
   <data name="Terminal.Modem.Watchdog" xml:space="preserve">
     <value>Transmit watchdog (s)</value>
   </data>
@@ -5935,7 +5956,7 @@ Latest: {1} ({2})</value>
     <value>Dismiss</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>The built-in modem uses a soundcard connected to your radio. On the Soundcard tab, choose 1200 AFSK or 9600 G3RUH, then the devices, levels and push to talk.</value>
+    <value>The built-in modem uses a soundcard connected to your radio. Choose the rate and push to talk below. Devices and levels are on the Soundcard tab.</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>Long TXTAIL in half duplex: on simplex satellites such as the ISS, a tail over 50 ms delays your receiver and can miss the digipeated copy. 30 to 50 ms is usually enough.</value>

@@ -5317,7 +5317,7 @@ Mais recente: {1} ({2})</value>
     <value>Deixe o indicativo vazio para usar o da sua estação terrena. A maioria dos operadores de satélite usa SSID 0.</value>
   </data>
   <data name="Terminal.Settings.Profiles.Help">
-    <value>O Terminal escolhe o formato da mensagem e o caminho do digipeater pelo satélite selecionado. Adicione um satélite aqui para alterar os padrões.</value>
+    <value>O Terminal escolhe o formato da mensagem e o caminho do digipeater pelo satélite selecionado. Adicione um satélite aqui para alterar os padrões. A lista de modem é 1200 AFSK ou 9600 G3RUH para o modem integrado, ou BPSK e GMSK quando você usa o UZ7HO ou outro modem externo.</value>
   </data>
   <data name="Terminal.Settings.Profiles.BuiltIn">
     <value>Padrões integrados</value>
@@ -5345,6 +5345,18 @@ Mais recente: {1} ({2})</value>
   </data>
   <data name="Terminal.Settings.Profiles.ModemHint">
     <value>Modem</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Afsk1200" xml:space="preserve">
+    <value>1200 AFSK</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.G3ruh9600" xml:space="preserve">
+    <value>9600 G3RUH</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Bpsk1200" xml:space="preserve">
+    <value>BPSK 1200 (somente UZ7HO)</value>
+  </data>
+  <data name="Terminal.Settings.Profiles.Modem.Gmsk9600" xml:space="preserve">
+    <value>9600 GMSK (modem externo)</value>
   </data>
   <data name="Terminal.Settings.Macros.Help">
     <value>Marcadores: {CALL} é o indicativo do campo Para, {MYCALL} o seu indicativo, {MYGRID} o seu grid completo e {MYGRID4} os quatro primeiros caracteres. Marque Para CQ nas macros que devem ir sempre para CQ.</value>
@@ -5715,6 +5727,12 @@ Mais recente: {1} ({2})</value>
   <data name="Terminal.LinkType.Crossband" xml:space="preserve">
     <value>Banda cruzada</value>
   </data>
+  <data name="Terminal.Modem.Decoding" xml:space="preserve">
+    <value>Decodificação</value>
+  </data>
+  <data name="Terminal.Modem.Timing" xml:space="preserve">
+    <value>Temporização da transmissão</value>
+  </data>
   <data name="Terminal.Modem.BitFix" xml:space="preserve">
     <value>Correção de bits</value>
   </data>
@@ -5925,6 +5943,9 @@ Mais recente: {1} ({2})</value>
   <data name="Terminal.Modem.WaitClearFullDuplex" xml:space="preserve">
     <value>Esperar canal livre também em full duplex</value>
   </data>
+  <data name="Terminal.Modem.Safety" xml:space="preserve">
+    <value>Segurança</value>
+  </data>
   <data name="Terminal.Modem.Watchdog" xml:space="preserve">
     <value>Vigia de transmissão (s)</value>
   </data>
@@ -5935,7 +5956,7 @@ Mais recente: {1} ({2})</value>
     <value>Fechar</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.Help" xml:space="preserve">
-    <value>O modem integrado usa uma placa de som ligada ao seu rádio. Na aba Placa de som, escolha 1200 AFSK ou 9600 G3RUH e depois os dispositivos, níveis e PTT.</value>
+    <value>O modem integrado usa uma placa de som ligada ao seu rádio. Escolha a taxa e o PTT abaixo. Dispositivos e níveis ficam na aba Placa de som.</value>
   </data>
   <data name="Terminal.Settings.BuiltIn.LongTail" xml:space="preserve">
     <value>TXTAIL longo em half duplex: em satélites simplex como a ISS, uma cauda acima de 50 ms atrasa o receptor e pode perder a cópia digipeated. Normalmente 30 a 50 ms bastam.</value>

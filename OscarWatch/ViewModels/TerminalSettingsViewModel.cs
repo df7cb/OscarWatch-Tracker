@@ -50,12 +50,19 @@ public sealed record TerminalLinkTypeOption(TerminalLinkType? Value, string Labe
     public override string ToString() => Label;
 }
 
+/// <summary>Modem choice for a profile. <see cref="Value"/> is the stored hint the modem matcher uses.</summary>
+public sealed record TerminalModemHintOption(string Value, string Label)
+{
+    public override string ToString() => Label;
+}
+
 public sealed partial class TerminalProfileEditViewModel : ObservableObject
 {
     public TerminalProfileEditViewModel(
         TerminalSatelliteProfileSettings p,
         IReadOnlyList<TerminalFormatOption> formats,
-        IReadOnlyList<TerminalLinkTypeOption> linkTypes)
+        IReadOnlyList<TerminalLinkTypeOption> linkTypes,
+        IReadOnlyList<TerminalModemHintOption> modemHints)
     {
         Formats = formats;
         LinkTypes = linkTypes;
@@ -63,19 +70,33 @@ public sealed partial class TerminalProfileEditViewModel : ObservableObject
         _name = p.Name;
         _path = p.Path;
         _uhmName = p.UhmName;
-        _modemHint = p.ModemHint;
         _selectedFormat = formats.FirstOrDefault(f => f.Value == p.Format) ?? formats[0];
         _selectedLinkType = linkTypes.FirstOrDefault(l => l.Value == p.LinkType) ?? linkTypes[0];
+
+        var hint = p.ModemHint.Trim();
+        var match = modemHints.FirstOrDefault(m => string.Equals(m.Value, hint, StringComparison.OrdinalIgnoreCase));
+        if (match is not null || hint.Length == 0)
+        {
+            ModemHints = modemHints;
+            _selectedModemHint = match ?? modemHints[0];
+        }
+        else
+        {
+            var custom = new TerminalModemHintOption(hint, hint);
+            ModemHints = [.. modemHints, custom];
+            _selectedModemHint = custom;
+        }
     }
 
     public IReadOnlyList<TerminalFormatOption> Formats { get; }
     public IReadOnlyList<TerminalLinkTypeOption> LinkTypes { get; }
+    public IReadOnlyList<TerminalModemHintOption> ModemHints { get; }
     [ObservableProperty] private TerminalLinkTypeOption _selectedLinkType;
+    [ObservableProperty] private TerminalModemHintOption _selectedModemHint;
     [ObservableProperty] private string _noradId;
     [ObservableProperty] private string _name;
     [ObservableProperty] private string _path;
     [ObservableProperty] private string _uhmName;
-    [ObservableProperty] private string _modemHint;
     [ObservableProperty] private TerminalFormatOption _selectedFormat;
 
     public TerminalSatelliteProfileSettings ToSettings() => new()
@@ -85,7 +106,7 @@ public sealed partial class TerminalProfileEditViewModel : ObservableObject
         Format = SelectedFormat.Value,
         Path = Path.Trim().ToUpperInvariant(),
         UhmName = UhmName.Trim(),
-        ModemHint = ModemHint.Trim(),
+        ModemHint = SelectedModemHint.Value,
         LinkType = SelectedLinkType.Value,
     };
 }
@@ -133,6 +154,13 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
             new(TerminalLinkType.SameBand, _l.Get("Terminal.LinkType.SameBand")),
             new(TerminalLinkType.Crossband, _l.Get("Terminal.LinkType.Crossband")),
         ];
+        ModemHintOptions =
+        [
+            new(TerminalSatelliteProfiles.ModemHintAfsk1200, _l.Get("Terminal.Settings.Profiles.Modem.Afsk1200")),
+            new(TerminalSatelliteProfiles.ModemHintG3ruh9600, _l.Get("Terminal.Settings.Profiles.Modem.G3ruh9600")),
+            new(TerminalSatelliteProfiles.ModemHintBpsk1200, _l.Get("Terminal.Settings.Profiles.Modem.Bpsk1200")),
+            new(TerminalSatelliteProfiles.ModemHintGmsk9600, _l.Get("Terminal.Settings.Profiles.Modem.Gmsk9600")),
+        ];
         BuiltIn = new TerminalBuiltInModemViewModel(settings, localization, service, rig);
 
         _selectedTransport = TransportOptions.FirstOrDefault(o => o.Kind == t.Transport && o.IsAvailable)
@@ -159,7 +187,7 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         for (var i = 0; i < t.Macros.Count; i++)
             Macros.Add(new TerminalMacroEditViewModel(i, t.Macros[i]));
         foreach (var p in t.SatelliteProfiles)
-            Profiles.Add(new TerminalProfileEditViewModel(p, FormatOptions, LinkTypeOptions));
+            Profiles.Add(new TerminalProfileEditViewModel(p, FormatOptions, LinkTypeOptions, ModemHintOptions));
 
         _toMeColour = t.ToMeColour;
         _cqColour = t.CqColour;
@@ -308,6 +336,7 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
 
     public TerminalBuiltInModemViewModel BuiltIn { get; }
     public IReadOnlyList<TerminalLinkTypeOption> LinkTypeOptions { get; }
+    public IReadOnlyList<TerminalModemHintOption> ModemHintOptions { get; }
 
     public bool IsAgwpeSelected => SelectedTransport.Kind == TerminalTransportKind.Agwpe;
     public bool IsBuiltInSelected => SelectedTransport.Kind == TerminalTransportKind.BuiltIn;
@@ -507,7 +536,7 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
             return;
         }
 
-        var row = new TerminalProfileEditViewModel(source, FormatOptions, LinkTypeOptions);
+        var row = new TerminalProfileEditViewModel(source, FormatOptions, LinkTypeOptions, ModemHintOptions);
         Profiles.Add(row);
         SelectedProfile = row;
     }
