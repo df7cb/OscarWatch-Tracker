@@ -25,6 +25,10 @@ The default `OscarWatch/Assets/Maps/world_map.jpg` is an equirectangular Blue Ma
 
 - [Avalonia UI](https://avaloniaui.net/)
 
+## APRS symbols
+
+The Terminal pass map, and the symbol list on the APRS tab of Terminal settings, use the [aprs.fi high-resolution symbol set](https://github.com/hessu/aprs-symbols) by Heikki Hannikainen, OH7LZB. The set is published for any APRS application to use. Individual symbols have different copyrights: original designs by OH7LZB (CC BY-SA 2.0), public-domain artwork, and vector redraws of the familiar APRS symbol table. A few symbols are product logos (Apple, Microsoft, Kenwood) and remain the property of those owners. Per-symbol notes are in `OscarWatch/Assets/AprsSymbols/COPYRIGHT.md`.
+
 ## Localisation
 
 - **Igor Monteiro (PU4ELT)** — Brazilian Portuguese (`pt-BR`) user interface localisation

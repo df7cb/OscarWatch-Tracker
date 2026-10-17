@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OscarWatch.Core.Hardware;
@@ -22,8 +23,8 @@ public sealed record TerminalRadioPortOption(int Index, string Label);
 
 public sealed record TerminalPrecisionOption(TerminalPositionPrecision Value, string Label);
 
-/// <summary>APRS symbol preset: table character then symbol code.</summary>
-public sealed record TerminalSymbolOption(string Symbol, string Label);
+/// <summary>APRS symbol preset: table character then symbol code, with its aprs.fi picture.</summary>
+public sealed record TerminalSymbolOption(string Symbol, string Label, Bitmap? Icon);
 
 public sealed partial class TerminalMacroEditViewModel : ObservableObject
 {
@@ -187,14 +188,15 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
             .ToList();
         SymbolOptions =
         [
-            new("/[", _l.Get("Terminal.Settings.Position.Symbol.Person")),
-            new("/-", _l.Get("Terminal.Settings.Position.Symbol.House")),
-            new("/>", _l.Get("Terminal.Settings.Position.Symbol.Car")),
-            new("/`", _l.Get("Terminal.Settings.Position.Symbol.Dish")),
+            SymbolOption("/[", "Terminal.Settings.Position.Symbol.Person"),
+            SymbolOption("/-", "Terminal.Settings.Position.Symbol.House"),
+            SymbolOption("/>", "Terminal.Settings.Position.Symbol.Car"),
+            SymbolOption("/`", "Terminal.Settings.Position.Symbol.Dish"),
         ];
         _selectedPrecision = PrecisionOptions.First(o => o.Value == t.PositionPrecision);
         _positionSymbol = t.PositionSymbol;
         _selectedSymbol = SymbolOptions.FirstOrDefault(o => o.Symbol == t.PositionSymbol);
+        _symbolPreview = AprsSymbolAtlas.TryCreateIcon(t.PositionSymbol);
         _positionComment = t.PositionComment;
     }
 
@@ -204,6 +206,7 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
     [ObservableProperty] private TerminalPrecisionOption _selectedPrecision;
     [ObservableProperty] private TerminalSymbolOption? _selectedSymbol;
     [ObservableProperty] private string _positionSymbol;
+    [ObservableProperty] private Bitmap? _symbolPreview;
     [ObservableProperty] private string _positionComment;
 
     partial void OnSelectedSymbolChanged(TerminalSymbolOption? value)
@@ -217,7 +220,11 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         var match = SymbolOptions.FirstOrDefault(o => o.Symbol == value);
         if (!Equals(SelectedSymbol, match))
             SelectedSymbol = match;
+        SymbolPreview = AprsSymbolAtlas.TryCreateIcon(value);
     }
+
+    private TerminalSymbolOption SymbolOption(string symbol, string labelKey) =>
+        new(symbol, _l.Get(labelKey), AprsSymbolAtlas.TryCreateIcon(symbol));
 
     /// <summary>Raised with true after Save, false on Cancel.</summary>
     public event Action<bool>? CloseRequested;

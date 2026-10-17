@@ -9,6 +9,14 @@
         Width="800" Height="560"
         MinWidth="760" MinHeight="420"
         WindowStartupLocation="CenterOwner">
+  <Window.Resources>
+    <DataTemplate x:Key="AprsSymbolItem" x:DataType="vm:TerminalSymbolOption">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Image Width="22" Height="22" Source="{Binding Icon}" Stretch="Uniform" />
+        <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
+      </StackPanel>
+    </DataTemplate>
+  </Window.Resources>
   <Window.Styles>
     <Style Selector="TextBlock.ts-note">
       <Setter Property="FontSize" Value="11" />
@@ -520,19 +528,16 @@
               </ComboBox.ItemTemplate>
             </ComboBox>
             <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Position.Precision.Help}" />
-            <Grid ColumnDefinitions="*,120" ColumnSpacing="8">
+            <Grid ColumnDefinitions="*,120,36" ColumnSpacing="8">
               <StackPanel Grid.Column="0" Spacing="4">
                 <TextBlock Text="{loc:Localize Key=Terminal.Settings.Position.Symbol}" />
                 <ComboBox ItemsSource="{Binding SymbolOptions}"
                           SelectedItem="{Binding SelectedSymbol}"
+                          ItemTemplate="{StaticResource AprsSymbolItem}"
+                          SelectionBoxItemTemplate="{StaticResource AprsSymbolItem}"
                           PlaceholderText="{loc:Localize Key=Terminal.Settings.Position.Symbol.Custom}"
                           HorizontalAlignment="Stretch"
                           AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Position.Symbol}">
-                  <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="vm:TerminalSymbolOption">
-                      <TextBlock Text="{Binding Label}" />
-                    </DataTemplate>
-                  </ComboBox.ItemTemplate>
                 </ComboBox>
               </StackPanel>
               <StackPanel Grid.Column="1" Spacing="4">
@@ -541,6 +546,10 @@
                          FontFamily="Consolas,Courier New,monospace"
                          AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Position.SymbolCode}" />
               </StackPanel>
+              <Image Grid.Column="2" Width="28" Height="28" VerticalAlignment="Bottom"
+                     Source="{Binding SymbolPreview}" Stretch="Uniform"
+                     IsVisible="{Binding SymbolPreview, Converter={x:Static ObjectConverters.IsNotNull}}"
+                     AutomationProperties.Name="{loc:Localize Key=Terminal.Settings.Position.Symbol}" />
             </Grid>
             <TextBlock Classes="ts-note" Text="{loc:Localize Key=Terminal.Settings.Position.Symbol.Help}" />
             <TextBlock Text="{loc:Localize Key=Terminal.Settings.Position.Comment}" />

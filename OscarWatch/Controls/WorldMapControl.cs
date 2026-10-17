@@ -12,6 +12,7 @@ using OscarWatch.Core.Geo;
 using OscarWatch.Core.Models;
 using OscarWatch.Core.Terminal;
 using OscarWatch.Localization;
+using OscarWatch.Terminal;
 
 namespace OscarWatch.Controls;
 
@@ -75,7 +76,8 @@ public class WorldMapControl : ThemeAwareControl
     private bool _dragging;
 
     private const double StationLabelFontSize = 11;
-    private const double StationHitRadiusPx = 10;
+    private const double StationHitRadiusPx = 16;
+    private const double StationSymbolSize = 26;
     private readonly FormattedTextCache _stationLabelCache = new();
 
     /// <summary>Raised with the callsign when a heard-station marker is clicked.</summary>
@@ -678,7 +680,20 @@ public class WorldMapControl : ThemeAwareControl
             var m = markers[i];
             var (mx, my) = EquirectangularProjection.GeoToPixel(m.Latitude, m.Longitude, w, h, centreLon);
             foreach (var xOffset in GetSubpointWrapOffsets(mx, w))
-                PlotMarkerDrawing.DrawHeardStationMarker(context, mx + xOffset, my, m.IsFaded, _renderCache);
+            {
+                var x = mx + xOffset;
+                var drewSymbol = m.SymbolTable is { } table && m.SymbolCode is { } code
+                    && AprsSymbolAtlas.Draw(context, table, code, x, my, StationSymbolSize, m.IsFaded);
+                if (!drewSymbol)
+                    PlotMarkerDrawing.DrawHeardStationMarker(context, x, my, m.IsFaded, _renderCache);
+                else if (m.IsFaded)
+                {
+                    context.DrawEllipse(
+                        null,
+                        _renderCache.GetDashedPen(Colors.White, 1.5),
+                        new Rect(x - StationSymbolSize / 2, my - StationSymbolSize / 2, StationSymbolSize, StationSymbolSize));
+                }
+            }
         }
 
         _stationLabelCache.GetLabelBrush(palette);
@@ -690,7 +705,8 @@ public class WorldMapControl : ThemeAwareControl
             var (mx, my) = EquirectangularProjection.GeoToPixel(m.Latitude, m.Longitude, w, h, centreLon);
             foreach (var xOffset in GetSubpointWrapOffsets(mx, w))
             {
-                var bg = new Rect(mx + xOffset + 8, my - text.Height / 2 - 2, text.Width + 8, text.Height + 4);
+                var labelGap = m.SymbolTable is not null && m.SymbolCode is not null ? 16 : 8;
+                var bg = new Rect(mx + xOffset + labelGap, my - text.Height / 2 - 2, text.Width + 8, text.Height + 4);
                 context.FillRectangle(background, bg);
                 context.DrawText(text, new Point(bg.X + 4, bg.Y + 2));
             }

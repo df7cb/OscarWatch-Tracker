@@ -10,7 +10,9 @@ public sealed record MapStationMarker(
     DateTime LastHeardUtc,
     bool IsPrecise,
     bool IsFaded,
-    string ToolTipText);
+    string ToolTipText,
+    char? SymbolTable = null,
+    char? SymbolCode = null);
 
 /// <summary>Input for <see cref="MapStationMarkers.Build"/>: one heard station.</summary>
 public sealed record MapStationSource(string Call, AprsPosition? Position, string? Grid, DateTime LastHeardUtc);
@@ -46,7 +48,9 @@ public static class MapStationMarkers
                 s.LastHeardUtc,
                 s.Position is not null,
                 age > fade,
-                toolTip?.Invoke(s) ?? s.Call));
+                toolTip?.Invoke(s) ?? s.Call,
+                s.Position?.SymbolTable,
+                s.Position?.SymbolCode));
         }
 
         return result;

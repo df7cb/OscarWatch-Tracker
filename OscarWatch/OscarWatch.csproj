@@ -70,6 +70,7 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
+    <AvaloniaResource Remove="Assets\AprsSymbols\COPYRIGHT.md" />
     <AvaloniaResource Include="icons\**" />
     <Content Include="Assets\satellite_database.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
