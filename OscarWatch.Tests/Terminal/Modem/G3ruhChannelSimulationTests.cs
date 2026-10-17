@@ -17,6 +17,18 @@ public sealed class G3ruhChannelSimulationTests
     }
 
     [Fact]
+    public void Clean_frames_decode_at_44_1_kHz()
+    {
+        const int rate = 44100;
+        var frames = Enumerable.Range(0, 20).Select(i => ModemTestSignals.UiFrame($"44.1 kHz capture {i:00}")).ToList();
+        var audio = frames.SelectMany(f => ModemTestSignals.G3ruhTransmission([f], rate)).ToArray();
+
+        var decoded = G3ruhReceiver.DecodeAll(audio, rate, AfskBitFixMode.Off);
+
+        Assert.Equal(frames, decoded.Select(d => d.Ax25));
+    }
+
+    [Fact]
     public void Loopback_with_noise_and_dc_drift()
     {
         var frame = ModemTestSignals.UiFrame("impaired 9600");

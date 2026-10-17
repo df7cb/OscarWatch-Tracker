@@ -29,6 +29,45 @@ internal static class ModemTestSignals
         return result;
     }
 
+    /// <summary>
+    /// The audio Direwolf's <c>gen_packets -B 9600 -n count</c> writes: one keying per frame with 32 to 33
+    /// symbols of silence, 32 preamble flags and 2 trailing flags, plus uniform noise rising linearly from
+    /// frame 1 to the last. Uses gen_packets' seeded generator and noise scaling, so the output is the same
+    /// on every run and roughly as hard as Direwolf's file (the modulator is ours, not Direwolf's).
+    /// </summary>
+    public static (float[] Audio, IReadOnlyList<byte[]> Frames) G3ruhGenPacketsNoiseLadder(
+        int count,
+        int sampleRate,
+        int amplitudePercent = 50)
+    {
+        const int randMax = 0x7fffffff;
+        var seed = 1;
+        int NextRand() => seed = (int)(((uint)seed * 1103515245u + 12345u) & randMax);
+
+        var signalAmplitude = amplitudePercent / 200.0;
+        var samplesPerSymbol = sampleRate / HdlcEncoder.G3ruhBaud;
+        var audio = new List<float>();
+        var frames = new List<byte[]>(count);
+        for (var i = 1; i <= count; i++)
+        {
+            var noiseLevel = 0.33 * (amplitudePercent / 200.0) * ((double)i / count);
+            var frame = UiFrame($"The quick brown fox jumps over the lazy dog! {i:0000} of {count:0000}");
+            frames.Add(frame);
+
+            var silence = (int)(samplesPerSymbol * (32 + NextRand() / (double)randMax));
+            var keyed = G3ruhModulator.Modulate(HdlcEncoder.EncodeG3ruhBits([frame], 32, 2), sampleRate, signalAmplitude);
+            var segment = new float[silence + keyed.Length];
+            keyed.CopyTo(segment, silence);
+            foreach (var sample in segment)
+            {
+                var r = (NextRand() - randMax / 2.0) / (randMax / 2.0);
+                audio.Add((float)Math.Clamp(sample + 5 * r * noiseLevel, -1, 1));
+            }
+        }
+
+        return (audio.ToArray(), frames);
+    }
+
     /// <summary>One keyed transmission with leading and trailing silence.</summary>
     public static float[] Transmission(
         IEnumerable<byte[]> frames,

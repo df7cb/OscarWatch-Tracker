@@ -14,6 +14,13 @@ public sealed class G3ruhReceiver
     private const int DcdHoldSamples = G3ruhDemodulator.PreferredSampleRate / 10;
     private const int MaxFixAttemptsPerCluster = 6;
 
+    /// <summary>
+    /// Resampler passband for 9600 baud baseband. The AFSK default (about 3 kHz) smears G3RUH symbols,
+    /// which need flat response to roughly 7.2 kHz (raised cosine, alpha 0.5).
+    /// </summary>
+    private const double ResamplerCutoffHz = 9600;
+    private const double ResamplerTransitionHz = 4000;
+
     private readonly PolyphaseResampler? _resampler;
     private readonly G3ruhDecoderBank _bank;
     private readonly List<float> _resampled = new(4096);
@@ -33,7 +40,7 @@ public sealed class G3ruhReceiver
         InputSampleRate = inputSampleRate;
         var workRate = G3ruhDemodulator.PreferredSampleRate;
         if (inputSampleRate != workRate)
-            _resampler = new PolyphaseResampler(inputSampleRate, workRate);
+            _resampler = new PolyphaseResampler(inputSampleRate, workRate, ResamplerCutoffHz, ResamplerTransitionHz);
         _bank = new G3ruhDecoderBank(workRate);
         BitFix = bitFix;
         _pathCounts = new int[_bank.PathCount];
