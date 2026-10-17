@@ -145,10 +145,37 @@ public sealed class TerminalTextAndProfileTests
     [InlineData("", true)]
     [InlineData(null, true)]
     [InlineData(TerminalSatelliteProfiles.ModemHintBpsk1200, false)]
-    [InlineData(TerminalSatelliteProfiles.ModemHintG3ruh9600, false)]
+    [InlineData(TerminalSatelliteProfiles.ModemHintG3ruh9600, true)]
     [InlineData("9k6 GMSK", false)]
-    public void Built_in_modem_supports_1200_afsk_only(string? hint, bool expected) =>
+    [InlineData("Packet (9k6 GMSK/Skylink)", false)]
+    public void Built_in_modem_supports_afsk_and_g3ruh(string? hint, bool expected) =>
         Assert.Equal(expected, TerminalSatelliteProfiles.IsSupportedByBuiltIn(hint));
+
+    [Theory]
+    [InlineData("Packet (9k6 GFSK/G3RUH)", true)]
+    [InlineData("Digipeater (9k6 FSK)", true)]
+    [InlineData("Packet (9k6 APRS)", true)]
+    [InlineData("Packet (9k6 GMSK/Skylink)", false)]
+    [InlineData("SSDV 9k6 BPSK", false)]
+    [InlineData("9k6 BPSK Telemetry", false)]
+    public void Mode_type_hint_maps_g3ruh_only_for_fsk_ax25(string modeType, bool g3ruh) =>
+        Assert.Equal(g3ruh, TerminalSatelliteProfiles.IsG3ruh9600ModeType(modeType));
+
+    [Fact]
+    public void Knacksat_packet_aprs_profile_uses_g3ruh()
+    {
+        var p = TerminalSatelliteProfiles.Resolve("67683", "KNACKSAT-2", ["Packet (9k6 APRS)"], null);
+        Assert.Equal(TerminalSatelliteProfiles.ModemHintG3ruh9600, p!.ModemHint);
+    }
+
+    [Fact]
+    public void Grbbeta_skylink_stays_unsupported()
+    {
+        var p = TerminalSatelliteProfiles.Resolve("60237", "GRBBeta", ["Packet (9k6 GMSK/Skylink)"], null);
+        Assert.NotNull(p);
+        Assert.Equal(TerminalSatelliteProfiles.ModemHintGmsk9600, p!.ModemHint);
+        Assert.False(TerminalSatelliteProfiles.IsSupportedByBuiltIn(p.ModemHint));
+    }
 
     [Fact]
     public void Settings_normalise_pads_macros_and_clamps()

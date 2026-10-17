@@ -33,9 +33,10 @@ public sealed class TerminalTransmitException(TerminalTransmitFailure failure, s
 }
 
 /// <summary>
-/// OscarWatch's own 1200 baud AFSK soundcard modem. Receives on a decoder thread and transmits from a
-/// queue: channel access when half duplex, the before-key callback, PTT, TXDELAY flags, the frames
-/// (with frames queued meanwhile chained into the same transmission), TXTAIL flags, then unkey.
+/// OscarWatch's built-in soundcard packet modem (1200 baud AFSK and 9600 baud G3RUH). Receives on a
+/// decoder thread and transmits from a queue: channel access when half duplex, the before-key callback,
+/// PTT, TXDELAY flags, the frames (with frames queued meanwhile chained into the same transmission),
+/// TXTAIL flags, then unkey.
 /// </summary>
 public sealed class BuiltInModemTransport : ITerminalModemTransport
 {
@@ -43,7 +44,7 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
     private static readonly TimeSpan CaptureWait = TimeSpan.FromMilliseconds(100);
 
     /// <summary>Queued audio needed to append another frame without a gap in the carrier.</summary>
-    private const double ChainMarginSeconds = 0.03;
+    internal const double ChainMarginSeconds = 0.03;
 
     private readonly IPacketAudio _audio;
     private readonly PttKeyer _ptt;
@@ -101,7 +102,12 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
 
     public string? ModemDescription =>
         State == TerminalTransportState.Connected
-            ? $"OscarWatch 1200 AFSK, {(IsHalfDuplex ? "half duplex" : "full duplex")}"
+            ? DataRate switch
+            {
+                BuiltInModemDataRate.G3ruh9600 =>
+                    $"OscarWatch 9600 G3RUH, {(IsHalfDuplex ? "half duplex" : "full duplex")}",
+                _ => $"OscarWatch 1200 AFSK, {(IsHalfDuplex ? "half duplex" : "full duplex")}",
+            }
             : null;
 
     public event Action<TerminalTransportState>? StateChanged;
@@ -113,6 +119,12 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
         get => _linkType;
         set => _linkType = value;
     }
+
+    /// <summary>Profile modem hint for Automatic 1200 vs 9600 selection.</summary>
+    public string? ModemHint { get; set; }
+
+    private BuiltInModemDataRate DataRate =>
+        BuiltInModemKind.ResolveDataRate(_settings().BuiltIn, ModemHint);
 
     /// <summary>
     /// Runs just before PTT with the expected time on the air. Returning false cancels the transmission.
@@ -164,6 +176,13 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
         try
         {
             _audio.Start(modem.InputDeviceId, modem.InputDeviceDisplayName, modem.OutputDeviceId, modem.OutputDeviceDisplayName);
+            if (DataRate == BuiltInModemDataRate.G3ruh9600
+                && _audio.CaptureSampleRate < G3ruhDemodulator.MinSampleRate)
+            {
+                throw new InvalidOperationException(
+                    $"9600 baud G3RUH needs a capture rate of at least {G3ruhDemodulator.MinSampleRate} Hz " +
+                    $"(this device is {_audio.CaptureSampleRate} Hz). Choose a 48 kHz data-port device or set the modem to 1200 AFSK.");
+            }
         }
         catch
         {
@@ -207,7 +226,9 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
     }
 
     public Task<IReadOnlyList<TerminalRadioPort>> GetRadioPortsAsync(CancellationToken cancellationToken) =>
-        Task.FromResult<IReadOnlyList<TerminalRadioPort>>([new TerminalRadioPort(0, "OscarWatch 1200 AFSK")]);
+        Task.FromResult<IReadOnlyList<TerminalRadioPort>>([
+            new TerminalRadioPort(0, DataRate == BuiltInModemDataRate.G3ruh9600 ? "OscarWatch 9600 G3RUH" : "OscarWatch 1200 AFSK")
+        ]);
 
     internal TimeSpan CaptureStallTimeout
     {
@@ -222,7 +243,9 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
 
     private void ReceiveLoop(CancellationToken ct)
     {
-        var receiver = new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix);
+        BuiltInModemDataRate? activeRate = null;
+        AfskReceiver? afsk = null;
+        G3ruhReceiver? g3ruh = null;
         var buffer = new float[4096];
         var frames = new List<AfskDecodedFrame>();
         _stallWatch.Reset(DateTime.UtcNow);
@@ -230,12 +253,24 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
         {
             while (!ct.IsCancellationRequested)
             {
-                receiver.Blanked = _rxBlank || Stopwatch.GetTimestamp() < Interlocked.Read(ref _blankUntilTimestamp);
+                var rate = DataRate;
+                if (rate != activeRate)
+                {
+                    activeRate = rate;
+                    afsk = rate == BuiltInModemDataRate.Afsk1200
+                        ? new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix)
+                        : null;
+                    g3ruh = rate == BuiltInModemDataRate.G3ruh9600
+                        ? new G3ruhReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix)
+                        : null;
+                }
+
                 var gotAudio = _audio.WaitForCapture(CaptureWait, ct);
                 if (_stallWatch.OnRead(DateTime.UtcNow, gotAudio, paused: _transmitting)
                     && RestartAudioAfterStall())
                 {
-                    receiver = new AfskReceiver(_audio.CaptureSampleRate, _settings().BuiltIn.BitFix);
+                    activeRate = null;
+                    continue;
                 }
 
                 if (!gotAudio)
@@ -245,12 +280,27 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
                 while ((n = _audio.ReadCapture(buffer)) > 0)
                 {
                     _recent.Write(buffer.AsSpan(0, n));
-                    receiver.BitFix = _settings().BuiltIn.BitFix;
-                    receiver.Blanked = _rxBlank || Stopwatch.GetTimestamp() < Interlocked.Read(ref _blankUntilTimestamp);
-                    receiver.Process(buffer.AsSpan(0, n), frames);
-                    _dcd = !receiver.Blanked && receiver.Dcd;
-                    Volatile.Write(ref _decoded, receiver.FrameCount);
-                    Volatile.Write(ref _fixed, receiver.FixedCount);
+                    var blanked = _rxBlank || Stopwatch.GetTimestamp() < Interlocked.Read(ref _blankUntilTimestamp);
+                    var bitFix = _settings().BuiltIn.BitFix;
+                    if (g3ruh is not null)
+                    {
+                        g3ruh.BitFix = bitFix;
+                        g3ruh.Blanked = blanked;
+                        g3ruh.Process(buffer.AsSpan(0, n), frames);
+                        _dcd = !g3ruh.Blanked && g3ruh.Dcd;
+                        Volatile.Write(ref _decoded, g3ruh.FrameCount);
+                        Volatile.Write(ref _fixed, g3ruh.FixedCount);
+                    }
+                    else if (afsk is not null)
+                    {
+                        afsk.BitFix = bitFix;
+                        afsk.Blanked = blanked;
+                        afsk.Process(buffer.AsSpan(0, n), frames);
+                        _dcd = !afsk.Blanked && afsk.Dcd;
+                        Volatile.Write(ref _decoded, afsk.FrameCount);
+                        Volatile.Write(ref _fixed, afsk.FixedCount);
+                    }
+
                     foreach (var frame in frames)
                     {
                         try
@@ -379,40 +429,35 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
         {
             await _ptt.KeyAsync(ct).ConfigureAwait(false);
             _transmitting = true;
-            var modulator = new AfskStreamModulator(_audio.PlaybackSampleRate, modem.TxLevel);
-            _audio.Enqueue(modulator.Append(HdlcEncoder.EncodeBits(
-                batch.Select(b => b.Frame), HdlcEncoder.FlagsFor(settings.ModemTxDelayMs), 0)));
-
-            var margin = (long)(_audio.PlaybackSampleRate * ChainMarginSeconds);
-            while (true)
+            var baud = BuiltInModemKind.BaudFor(DataRate);
+            if (DataRate == BuiltInModemDataRate.G3ruh9600
+                && _audio.PlaybackSampleRate < G3ruhDemodulator.MinSampleRate)
             {
-                if (Stopwatch.GetTimestamp() >= watchdogAt)
-                    throw Watchdog(modem);
-
-                var more = new List<TxItem>();
-                DrainQueue(more);
-                if (more.Count > 0)
-                {
-                    if (_audio.QueuedPlaybackSamples > margin)
-                    {
-                        _audio.Enqueue(modulator.Append(HdlcEncoder.EncodeBits(more.Select(m => m.Frame), 1, 0)));
-                        batch.AddRange(more);
-                        if (BeforeKey is { } extend)
-                            _ = extend(Airtime(more, settings, withDelay: false), CancellationToken.None);
-                        continue;
-                    }
-
-                    _carry.AddRange(more);
-                    break;
-                }
-
-                if (_audio.QueuedPlaybackSamples <= margin)
-                    break;
-                await Task.Delay(5, ct).ConfigureAwait(false);
+                throw new InvalidOperationException(
+                    $"9600 baud G3RUH needs playback at least {G3ruhDemodulator.MinSampleRate} Hz.");
             }
 
-            var tailFlags = Math.Max(1, HdlcEncoder.FlagsFor(settings.ModemTxTailMs) - 1);
-            _audio.Enqueue(modulator.Finish(HdlcEncoder.FlagBits(tailFlags)));
+            if (DataRate == BuiltInModemDataRate.G3ruh9600)
+            {
+                var g3 = new G3ruhStreamModulator(_audio.PlaybackSampleRate, modem.TxLevel9600);
+                var g3Encode = new G3ruhStreamEncoder();
+                var delayFlags = HdlcEncoder.FlagsFor(settings.ModemTxDelayMs, baud);
+                _audio.Enqueue(g3.Append(g3Encode.AppendFrames(batch.Select(b => b.Frame), delayFlags, 0)));
+                await EnqueueChainedAsync(g3, g3Encode, batch, settings, watchdogAt, modem, ct, g3ruh: true)
+                    .ConfigureAwait(false);
+                var tailG3 = Math.Max(1, HdlcEncoder.FlagsFor(settings.ModemTxTailMs, baud) - 1);
+                _audio.Enqueue(g3.Finish(g3Encode.AppendFlags(tailG3)));
+            }
+            else
+            {
+                var modulator = new AfskStreamModulator(_audio.PlaybackSampleRate, modem.TxLevel);
+                _audio.Enqueue(modulator.Append(HdlcEncoder.EncodeBits(
+                    batch.Select(b => b.Frame), HdlcEncoder.FlagsFor(settings.ModemTxDelayMs), 0)));
+                await EnqueueChainedAsync(modulator, null, batch, settings, watchdogAt, modem, ct, g3ruh: false)
+                    .ConfigureAwait(false);
+                var tailFlags = Math.Max(1, HdlcEncoder.FlagsFor(settings.ModemTxTailMs) - 1);
+                _audio.Enqueue(modulator.Finish(HdlcEncoder.FlagBits(tailFlags)));
+            }
 
             var remaining = Stopwatch.GetElapsedTime(Stopwatch.GetTimestamp(), watchdogAt);
             try
@@ -449,6 +494,54 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
         }
     }
 
+    private async Task EnqueueChainedAsync(
+        object modulator,
+        G3ruhStreamEncoder? g3Encoder,
+        List<TxItem> batch,
+        TerminalSettings settings,
+        long watchdogAt,
+        TerminalBuiltInModemSettings modem,
+        CancellationToken ct,
+        bool g3ruh)
+    {
+        var margin = (long)(_audio.PlaybackSampleRate * ChainMarginSeconds);
+        while (true)
+        {
+            if (Stopwatch.GetTimestamp() >= watchdogAt)
+                throw Watchdog(modem);
+
+            var more = new List<TxItem>();
+            DrainQueue(more);
+            if (more.Count > 0)
+            {
+                if (_audio.QueuedPlaybackSamples > margin)
+                {
+                    if (g3ruh)
+                    {
+                        var bits = g3Encoder!.AppendContinuationFrames(more.Select(m => m.Frame));
+                        _audio.Enqueue(((G3ruhStreamModulator)modulator).Append(bits));
+                    }
+                    else
+                    {
+                        var bits = HdlcEncoder.EncodeBits(more.Select(m => m.Frame), 1, 0);
+                        _audio.Enqueue(((AfskStreamModulator)modulator).Append(bits));
+                    }
+                    batch.AddRange(more);
+                    if (BeforeKey is { } extend)
+                        _ = extend(Airtime(more, settings, withDelay: false), CancellationToken.None);
+                    continue;
+                }
+
+                _carry.AddRange(more);
+                break;
+            }
+
+            if (_audio.QueuedPlaybackSamples <= margin)
+                break;
+            await Task.Delay(5, ct).ConfigureAwait(false);
+        }
+    }
+
     private static TerminalTransmitException Watchdog(TerminalBuiltInModemSettings modem) =>
         new(TerminalTransmitFailure.Watchdog, $"Transmit watchdog: on the air for {modem.WatchdogSeconds} s");
 
@@ -474,11 +567,12 @@ public sealed class BuiltInModemTransport : ITerminalModemTransport
             into.Add(item);
     }
 
-    private static TimeSpan Airtime(List<TxItem> items, TerminalSettings settings, bool withDelay = true)
+    private TimeSpan Airtime(List<TxItem> items, TerminalSettings settings, bool withDelay = true)
     {
+        var baud = BuiltInModemKind.BaudFor(DataRate);
         var total = TimeSpan.Zero;
         foreach (var item in items)
-            total += TerminalTransmitWindow.FrameAirtime(item.Frame.Length, HdlcEncoder.Baud);
+            total += TerminalTransmitWindow.FrameAirtime(item.Frame.Length, baud);
         if (withDelay)
             total += TimeSpan.FromMilliseconds(settings.ModemTxDelayMs + settings.ModemTxTailMs + settings.BuiltIn.PttLeadMs);
         return total;

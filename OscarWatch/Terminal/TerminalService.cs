@@ -81,7 +81,7 @@ public enum TerminalSendResult
     /// <summary>Built-in modem: the focused satellite is below the horizon.</summary>
     BelowHorizon,
 
-    /// <summary>Built-in modem: the satellite needs BPSK or 9600 baud.</summary>
+    /// <summary>Built-in modem: the satellite needs a mode the built-in modem does not implement (for example BPSK or GMSK).</summary>
     UnsupportedModem,
 
     /// <summary>Built-in modem, half duplex: the downlink stayed busy for the maximum channel wait.</summary>
@@ -167,7 +167,7 @@ public sealed class TerminalService : IAsyncDisposable
     /// <summary>The built-in modem while it is the active transport, for level and decode counts.</summary>
     public BuiltInModemTransport? BuiltInModem => _transport as BuiltInModemTransport;
 
-    /// <summary>The built-in modem is selected and the focused satellite needs BPSK or 9600 baud.</summary>
+    /// <summary>The built-in modem is selected and the focused satellite needs an unsupported mode.</summary>
     public bool ProfileUnsupportedByBuiltIn =>
         Settings.Transport == TerminalTransportKind.BuiltIn
         && Profile is { } profile
@@ -217,6 +217,7 @@ public sealed class TerminalService : IAsyncDisposable
         var modem = new BuiltInModemTransport(_createPacketAudio(), ptt, () => Settings, _rig)
         {
             LinkType = Profile?.LinkType ?? TerminalLinkType.Unknown,
+            ModemHint = Profile?.ModemHint,
             BeforeKey = HoldUplinkAtKeyAsync
         };
         return modem;
@@ -299,7 +300,11 @@ public sealed class TerminalService : IAsyncDisposable
         }
 
         if (_transport is BuiltInModemTransport modem)
+        {
             modem.LinkType = profile?.LinkType ?? TerminalLinkType.Unknown;
+            modem.ModemHint = profile?.ModemHint;
+        }
+
         Changed?.Invoke();
     }
 
