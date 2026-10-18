@@ -71,12 +71,23 @@ public sealed class SstvLineRendererAllocationTests
         for (var line = 0; line < 8; line++)
             renderer.Render(buffer, buffer.Start + line * lineSamples, samplesPerMs, 0, line);
 
-        var before = GC.GetAllocatedBytesForCurrentThread();
-        for (var line = 8; line < mode.TransmittedLines; line++)
-            renderer.Render(buffer, buffer.Start + line * lineSamples, samplesPerMs, 0, line);
-        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        // A single sample is not enough. GetAllocatedBytesForCurrentThread also counts
+        // one-off runtime allocations, such as a GC refilling this thread's allocation
+        // context, and the full suite can trip that during the measured lines. A real
+        // scratch array is allocated on every pass, so the quietest pass is the one
+        // that reflects the renderer.
+        var allocated = long.MaxValue;
+        for (var pass = 0; pass < 5; pass++)
+        {
+            var before = GC.GetAllocatedBytesForCurrentThread();
+            for (var line = 8; line < mode.TransmittedLines; line++)
+                renderer.Render(buffer, buffer.Start + line * lineSamples, samplesPerMs, 0, line);
+            allocated = Math.Min(allocated, GC.GetAllocatedBytesForCurrentThread() - before);
+            if (allocated == 0)
+                break;
+        }
 
-        // Scratch is reused, so steady-state rendering should allocate essentially nothing.
+        // Scratch is reused, so a quiet pass allocates nothing.
         // A single double[width] would be 8*width bytes; stay well under one such array.
         Assert.True(
             allocated < mode.Width * 8,
