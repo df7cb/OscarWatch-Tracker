@@ -11,6 +11,7 @@ internal sealed class FakePacketAudio : IPacketAudio
     private readonly SemaphoreSlim _captureSignal = new(0, int.MaxValue);
     private readonly List<float> _played = [];
     private long _playEndTimestamp;
+    private long? _heldAtTimestamp;
 
     public FakePacketAudio(int sampleRate = 12000)
     {
@@ -83,8 +84,7 @@ internal sealed class FakePacketAudio : IPacketAudio
         lock (_gate)
         {
             _played.AddRange(samples);
-            var now = Stopwatch.GetTimestamp();
-            var start = Math.Max(now, _playEndTimestamp);
+            var start = Math.Max(PlaybackClock(), _playEndTimestamp);
             _playEndTimestamp = start + (long)(samples.Length / (double)PlaybackSampleRate * Stopwatch.Frequency);
         }
     }
@@ -95,11 +95,36 @@ internal sealed class FakePacketAudio : IPacketAudio
         {
             lock (_gate)
             {
-                var left = _playEndTimestamp - Stopwatch.GetTimestamp();
+                var left = _playEndTimestamp - PlaybackClock();
                 return left <= 0 ? 0 : (long)(left / (double)Stopwatch.Frequency * PlaybackSampleRate);
             }
         }
     }
+
+    /// <summary>
+    /// Stops queued playback from draining until <see cref="ResumePlayback"/>, so a test can
+    /// queue more audio mid-transmission without racing the wall clock on a loaded runner.
+    /// </summary>
+    public void HoldPlayback()
+    {
+        lock (_gate)
+            _heldAtTimestamp ??= Stopwatch.GetTimestamp();
+    }
+
+    public void ResumePlayback()
+    {
+        lock (_gate)
+        {
+            if (_heldAtTimestamp is not { } heldAt)
+                return;
+
+            if (_playEndTimestamp > heldAt)
+                _playEndTimestamp += Stopwatch.GetTimestamp() - heldAt;
+            _heldAtTimestamp = null;
+        }
+    }
+
+    private long PlaybackClock() => _heldAtTimestamp ?? Stopwatch.GetTimestamp();
 
     public void ClearPlayback()
     {

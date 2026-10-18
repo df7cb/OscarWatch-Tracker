@@ -109,12 +109,7 @@ public sealed class BuiltInModemTransportTests
         var first = ModemTestSignals.UiFrame(":MM9SQL   :9600 first");
         var second = ModemTestSignals.UiFrame(":MM9SQL   :9600 second");
 
-        var margin = (long)(h.Audio.PlaybackSampleRate * BuiltInModemTransport.ChainMarginSeconds);
-        var sendFirst = h.Modem.SendAsync(first, 0, CancellationToken.None);
-        await WaitUntilAsync(() =>
-            h.Modem.IsTransmitting && h.Audio.QueuedPlaybackSamples > margin);
-        var sendSecond = h.Modem.SendAsync(second, 0, CancellationToken.None);
-        await Task.WhenAll(sendFirst, sendSecond).WaitAsync(Timeout);
+        await SendChainedWhileKeyedAsync(h, first, second);
 
         Assert.Equal(1, h.KeyCount);
         var decoded = G3ruhReceiver.DecodeAll(h.Audio.Played, h.Audio.PlaybackSampleRate, AfskBitFixMode.Off);
@@ -129,12 +124,7 @@ public sealed class BuiltInModemTransportTests
         var first = ModemTestSignals.UiFrame(":MM9SQL   :first frame of the chain");
         var second = ModemTestSignals.UiFrame(":MM9SQL   :second frame");
 
-        var margin = (long)(h.Audio.PlaybackSampleRate * BuiltInModemTransport.ChainMarginSeconds);
-        var sendFirst = h.Modem.SendAsync(first, 0, CancellationToken.None);
-        await WaitUntilAsync(() =>
-            h.Modem.IsTransmitting && h.Audio.QueuedPlaybackSamples > margin);
-        var sendSecond = h.Modem.SendAsync(second, 0, CancellationToken.None);
-        await Task.WhenAll(sendFirst, sendSecond).WaitAsync(Timeout);
+        await SendChainedWhileKeyedAsync(h, first, second);
 
         Assert.Equal(1, h.KeyCount);
         var decoded = AfskReceiver.DecodeAll(h.Audio.Played, h.Audio.PlaybackSampleRate, AfskBitFixMode.Off);
@@ -366,6 +356,31 @@ public sealed class BuiltInModemTransportTests
         var peak = Array.IndexOf(bins, bins.Max());
         var peakHz = 300 + (3000 - 300) * peak / (double)(bins.Length - 1);
         Assert.InRange(peakHz, 1170, 1230);
+    }
+
+    /// <summary>
+    /// Holds the fake soundcard while the second frame is queued, so a stalled test thread
+    /// cannot let the first transmission drain and unkey before the chain is built.
+    /// </summary>
+    private static async Task SendChainedWhileKeyedAsync(Harness h, byte[] first, byte[] second)
+    {
+        var margin = (long)(h.Audio.PlaybackSampleRate * BuiltInModemTransport.ChainMarginSeconds);
+        h.Audio.HoldPlayback();
+        try
+        {
+            var sendFirst = h.Modem.SendAsync(first, 0, CancellationToken.None);
+            await WaitUntilAsync(() =>
+                h.Modem.IsTransmitting && h.Audio.QueuedPlaybackSamples > margin);
+            var playedBeforeSecond = h.Audio.Played.Length;
+            var sendSecond = h.Modem.SendAsync(second, 0, CancellationToken.None);
+            await WaitUntilAsync(() => h.Audio.Played.Length > playedBeforeSecond);
+            h.Audio.ResumePlayback();
+            await Task.WhenAll(sendFirst, sendSecond).WaitAsync(Timeout);
+        }
+        finally
+        {
+            h.Audio.ResumePlayback();
+        }
     }
 
     private static async Task WaitUntilAsync(Func<bool> condition)
