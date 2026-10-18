@@ -2833,6 +2833,12 @@ Lanjutkan?</value>
   <data name="Settings.Radio.CwSidebandNote">
     <value>Berlaku saat panel frekuensi disetel ke CW pada satelit SSB linear. Dicentang adalah split lazim (CW TX, USB/LSB RX). Tidak dicentang menyetel kedua VFO ke CW.</value>
   </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnClose">
+    <value>Matikan mode satelit saat OscarWatch ditutup</value>
+  </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnCloseNote">
+    <value>Jika OscarWatch yang menyalakan mode satelit, mode itu dimatikan lagi saat aplikasi ditutup atau radio diputus. Hapus centang agar radio tetap dalam mode satelit.</value>
+  </data>
   <data name="Settings.Radio.DopplerFm">
     <value>Ambang Doppler FM (Hz)</value>
   </data>

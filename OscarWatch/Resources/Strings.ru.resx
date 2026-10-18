@@ -2833,6 +2833,12 @@ LOS: {2}
   <data name="Settings.Radio.CwSidebandNote">
     <value>Действует, когда панель частот в CW на линейных SSB-спутниках. Галочка: обычный сплит (CW TX, USB/LSB RX). Без галочки оба VFO ставятся в CW.</value>
   </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnClose">
+    <value>Выключать спутниковый режим при закрытии OscarWatch</value>
+  </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnCloseNote">
+    <value>Если спутниковый режим включил OscarWatch, он выключается при выходе из приложения или отключении радио. Снимите галочку, чтобы оставить радио в спутниковом режиме.</value>
+  </data>
   <data name="Settings.Radio.DopplerFm">
     <value>Порог Доплера FM (Гц)</value>
   </data>

@@ -422,25 +422,11 @@ public sealed class KenwoodTs2000Driver : IRigDriver
         RestoreMemoryVfoIfNeeded();
     }
 
-    public void Dispose()
-    {
-        try
-        {
-            if (_transport.IsOpen && (_satelliteMode || _faFbSatelliteTracking))
-            {
-                Log.Information("TS-2000 disposing; exiting satellite tracking before closing CAT");
-                SetSatelliteMode(false);
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Warning(ex, "TS-2000 satellite mode exit failed during dispose");
-        }
-        finally
-        {
-            _transport.Dispose();
-        }
-    }
+    /// <summary>
+    /// Closes CAT only. <see cref="RigController"/> sends the satellite mode exit first when
+    /// <see cref="RigSettings.ExitSatelliteModeOnClose"/> is on.
+    /// </summary>
+    public void Dispose() => _transport.Dispose();
 
     private void SendSatelliteModeExitSequence()
     {

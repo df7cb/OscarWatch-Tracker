@@ -2829,6 +2829,12 @@
   <data name="Settings.Radio.CwSidebandNote">
     <value>当频率面板在线性 SSB 卫星上设置为 CW 时适用。选中为常规分离（CW TX，USB/LSB RX）。取消选中将两个 VFO 都设置为 CW。</value>
   </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnClose">
+    <value>关闭 OscarWatch 时关闭卫星模式</value>
+  </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnCloseNote">
+    <value>如果卫星模式是由 OscarWatch 打开的，退出程序或断开电台连接时会将其关闭。取消选中则让电台保持卫星模式。</value>
+  </data>
   <data name="Settings.Radio.DopplerFm">
     <value>多普勒阈值 FM (Hz)</value>
   </data>

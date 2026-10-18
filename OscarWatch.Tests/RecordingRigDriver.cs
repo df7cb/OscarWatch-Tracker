@@ -23,7 +23,7 @@ internal sealed class RecordingRigDriver : IRigDriver
     public bool ToneSquelchOn { get; private set; }
     public bool ToneOn { get; private set; }
 
-    public RigType RigType => RigType.Dummy;
+    public RigType RigType { get; set; } = RigType.Dummy;
     public bool IsConnected => true;
     public bool SupportsTracking => true;
     public bool ConfirmIdentity { get; set; } = true;
@@ -156,5 +156,5 @@ internal sealed class RecordingRigDriver : IRigDriver
         LastToneSquelch = squelchTone;
         LastToneVfo = _currentVfo;
     }
-    public void Dispose() { }
+    public void Dispose() => Commands.Add("dispose");
 }

@@ -1644,6 +1644,12 @@
   <data name="Settings.Radio.CwSidebandNote">
     <value>リニアSSB衛星で周波数パネルがCWのときに適用。オンが通常のスプリット（CW TX、USB/LSB RX）。オフは両VFOをCW。</value>
   </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnClose">
+    <value>OscarWatch終了時にサテライトモードをオフにする</value>
+  </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnCloseNote">
+    <value>OscarWatchがサテライトモードをオンにした場合、アプリ終了時または無線機の切断時にオフに戻します。無線機をサテライトモードのままにするにはオフにします。</value>
+  </data>
   <data name="Settings.Radio.DopplerFm">
     <value>ドップラーしきい値 FM (Hz)</value>
   </data>

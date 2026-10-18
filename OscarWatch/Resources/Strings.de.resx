@@ -2833,6 +2833,12 @@ Fortfahren?</value>
   <data name="Settings.Radio.CwSidebandNote">
     <value>Gilt, wenn das Frequenzfeld auf linearen SSB-Satelliten auf CW steht. Aktiviert ist die übliche Split-Variante (CW TX, USB/LSB RX). Deaktiviert setzt beide VFOs auf CW.</value>
   </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnClose">
+    <value>Satellitenmodus beim Schließen von OscarWatch ausschalten</value>
+  </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnCloseNote">
+    <value>Hat OscarWatch den Satellitenmodus eingeschaltet, schaltet es ihn beim Beenden oder beim Trennen des Funkgeräts wieder aus. Deaktivieren, um das Funkgerät im Satellitenmodus zu lassen.</value>
+  </data>
   <data name="Settings.Radio.DopplerFm">
     <value>Doppler-Schwellwert FM (Hz)</value>
   </data>

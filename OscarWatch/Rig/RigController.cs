@@ -82,6 +82,11 @@ public sealed class RigController : IRigController, IDisposable
     /// and a band exchange is ignored until split is off.
     /// </summary>
     private bool _icomSplitActive;
+    /// <summary>
+    /// Pass init on the current connection left the radio in satellite mode. A radio the operator
+    /// already had in satellite mode stays false until a pass turns it on.
+    /// </summary>
+    private bool _satelliteModeEngaged;
     private RigVfo _receiveVfo = RigVfo.VfoA;
     private int _rxDialHistoryCount;
     private bool _vfoNotMoving;
@@ -780,6 +785,8 @@ public sealed class RigController : IRigController, IDisposable
 
     private void TearDownRig()
     {
+        ExitSatelliteModeBeforeTearDown();
+        _satelliteModeEngaged = false;
         _driver?.Dispose();
         _driver = null;
         _downlinkDriver?.Dispose();
@@ -790,6 +797,40 @@ public sealed class RigController : IRigController, IDisposable
         _downlinkConnectedKey = null;
         _uplinkConnectedKey = null;
         ResetTrackingState();
+    }
+
+    private void ExitSatelliteModeBeforeTearDown()
+    {
+        if (!_satelliteModeEngaged || _driver is not { IsConnected: true } driver)
+            return;
+
+        if (!_cachedSettings.ExitSatelliteModeOnClose)
+        {
+            Log.Information("Leaving {RigType} in satellite mode (exit on close is off)", driver.RigType);
+            return;
+        }
+
+        try
+        {
+            Log.Information("Exiting satellite mode on {RigType} before closing CAT", driver.RigType);
+            // The uplink tone sits on Sub. Clear it while the satellite layout still addresses Sub.
+            var clearTonesAndReturnToMain = IsIcomSatelliteLayoutRig(driver.RigType)
+                || driver.RigType == RigType.YaesuFt847;
+            if (clearTonesAndReturnToMain)
+            {
+                SetCtcssOffOnVfo(RigVfo.Main);
+                SetCtcssOffOnVfo(RigVfo.Sub);
+            }
+
+            driver.SetSatelliteMode(false);
+
+            if (clearTonesAndReturnToMain)
+                driver.SelectVfo(RigVfo.Main, force: true);
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Satellite mode exit failed on {RigType}", driver.RigType);
+        }
     }
 
     private void ResetTrackingState()
@@ -1780,6 +1821,7 @@ public sealed class RigController : IRigController, IDisposable
                 else
                 {
                     _driver.SetSatelliteMode(true);
+                    _satelliteModeEngaged = true;
                     if (!_driver.IsSatelliteModeActive)
                     {
                         Log.Warning(
@@ -1792,6 +1834,7 @@ public sealed class RigController : IRigController, IDisposable
             else
             {
                 _driver.SetSatelliteMode(false);
+                _satelliteModeEngaged = false;
                 _driver.SetSplitOn(false);
                 _icomSplitActive = false;
                 ClearCtcssLeavingSatelliteMode(settings, context);
@@ -1801,6 +1844,7 @@ public sealed class RigController : IRigController, IDisposable
         else if (!_useMainSub)
         {
             _driver.SetSatelliteMode(false);
+            _satelliteModeEngaged = false;
             if (UsesIcomSplitAbLayout(settings, context))
             {
                 // Split blocks the main/sub exchange, so the operating band is moved first.
@@ -1840,6 +1884,7 @@ public sealed class RigController : IRigController, IDisposable
                 }
 
                 _driver.SetSatelliteMode(true);
+                _satelliteModeEngaged = true;
                 if (settings.Type == RigType.KenwoodTs2000 && !_driver.IsSatelliteModeActive)
                 {
                     Log.Warning(

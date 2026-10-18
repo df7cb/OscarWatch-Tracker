@@ -161,6 +161,12 @@ public sealed class RigSettings
     /// </summary>
     public bool CwKeepSidebandDownlink { get; set; }
 
+    /// <summary>
+    /// When true, closing OscarWatch or disconnecting the radio turns satellite mode off
+    /// if OscarWatch turned it on during this session.
+    /// </summary>
+    public bool ExitSatelliteModeOnClose { get; set; } = true;
+
     public bool IsDualRadio => DualRadioEnabled;
 
     public bool IsDualRadioConfigured =>

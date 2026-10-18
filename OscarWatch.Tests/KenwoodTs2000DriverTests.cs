@@ -302,7 +302,7 @@ public sealed class KenwoodTs2000DriverTests
     }
 
     [Fact]
-    public void Dispose_exits_satellite_mode_when_tracking_was_active()
+    public void Dispose_leaves_satellite_mode_exit_to_the_controller()
     {
         var transport = new RecordingKenwoodCatTransport();
         var driver = new KenwoodTs2000Driver(transport);
@@ -312,8 +312,7 @@ public sealed class KenwoodTs2000DriverTests
 
         driver.Dispose();
 
-        Assert.Equal(KenwoodCatCodec.SatelliteModeExitSequence, transport.SentCommands);
-        Assert.False(driver.IsSatelliteModeActive);
+        Assert.Empty(transport.SentCommands);
     }
 
     [Fact]

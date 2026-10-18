@@ -189,6 +189,116 @@ public class RigControllerTests
         Assert.True(controller.GetStatus().IsTracking);
     }
 
+    [Theory]
+    [InlineData(RigType.IcomIc910)]
+    [InlineData(RigType.IcomIc9700)]
+    [InlineData(RigType.YaesuFt847)]
+    public void Disconnect_exits_satellite_mode_before_closing_cat(RigType type)
+    {
+        var rig = new RecordingRigDriver { RigType = type };
+        var controller = new RigController(_ => rig);
+        var settings = CrossBandSettings(type);
+
+        controller.Update(settings, CrossBandFmContext());
+        Assert.True(rig.LastSatelliteModeOn);
+        rig.Commands.Clear();
+
+        controller.DisconnectAndWait();
+
+        var satOff = rig.Commands.IndexOf("sat-off");
+        var dispose = rig.Commands.IndexOf("dispose");
+        Assert.True(satOff >= 0 && satOff < dispose, string.Join(", ", rig.Commands));
+        Assert.Contains(RigVfo.Sub, rig.ToneClearedVfos);
+        Assert.Equal(RigVfo.Main, rig.CurrentVfo);
+        controller.Dispose();
+    }
+
+    [Fact]
+    public void Disconnect_leaves_satellite_mode_on_when_exit_on_close_is_off()
+    {
+        var rig = new RecordingRigDriver { RigType = RigType.IcomIc910 };
+        var controller = new RigController(_ => rig);
+        var settings = CrossBandSettings(RigType.IcomIc910);
+        settings.ExitSatelliteModeOnClose = false;
+
+        controller.Update(settings, CrossBandFmContext());
+        Assert.True(rig.LastSatelliteModeOn);
+        rig.Commands.Clear();
+
+        controller.DisconnectAndWait();
+
+        Assert.DoesNotContain("sat-off", rig.Commands);
+        Assert.Contains("dispose", rig.Commands);
+        controller.Dispose();
+    }
+
+    [Fact]
+    public void Disconnect_without_a_pass_does_not_touch_satellite_mode()
+    {
+        var rig = new RecordingRigDriver { RigType = RigType.IcomIc910 };
+        var controller = new RigController(_ => rig);
+
+        controller.Update(CrossBandSettings(RigType.IcomIc910), null);
+        Assert.True(controller.GetStatus().IsConnected);
+
+        controller.DisconnectAndWait();
+
+        Assert.Equal(0, rig.SetSatelliteModeCallCount);
+        Assert.Contains("dispose", rig.Commands);
+        controller.Dispose();
+    }
+
+    [Fact]
+    public void Disconnect_exits_ts2000_satellite_mode_without_icom_vfo_handling()
+    {
+        var rig = new RecordingRigDriver { RigType = RigType.KenwoodTs2000 };
+        var controller = new RigController(_ => rig);
+
+        controller.Update(CrossBandSettings(RigType.KenwoodTs2000), CrossBandFmContext());
+        Assert.True(rig.LastSatelliteModeOn);
+        rig.Commands.Clear();
+        var selectsBefore = rig.SelectVfoCallCount;
+
+        controller.DisconnectAndWait();
+
+        Assert.Equal(["sat-off", "dispose"], rig.Commands);
+        Assert.Equal(selectsBefore, rig.SelectVfoCallCount);
+        controller.Dispose();
+    }
+
+    private static RigSettings CrossBandSettings(RigType type) => new()
+    {
+        Enabled = true,
+        Type = type,
+        Port = "COM1",
+        CatDelayMs = 0
+    };
+
+    private static RigTrackingContext CrossBandFmContext()
+    {
+        var mode = new SatelliteTransponderMode
+        {
+            Type = "FM VOICE",
+            DownlinkKHz = 436_795,
+            UplinkKHz = 145_850,
+            DownlinkMode = "FM",
+            UplinkMode = "FM"
+        };
+
+        return new RigTrackingContext
+        {
+            TrackState = new SatelliteTrackState
+            {
+                Name = "SO-50",
+                NoradId = "27607",
+                Subpoint = new GeoCoordinate(0, 0),
+                LookAngles = new LookAngles(180, 20, 800, 0)
+            },
+            Mode = mode,
+            Corrected = DopplerFrequencyCalculator.Compute(mode, 0, 0)
+        };
+    }
+
     [Fact]
     public void Kenwood_satellite_mode_unconfirmed_does_not_fall_back_to_split_vfo()
     {

@@ -390,6 +390,9 @@ public partial class SettingsViewModel : ViewModelBase, IDisposable
     private bool _rigKenwoodTraceEnabled = true;
 
     [ObservableProperty]
+    private bool _rigExitSatelliteModeOnClose = true;
+
+    [ObservableProperty]
     private bool _rigDopplerCatLeadEnabled = true;
 
     [ObservableProperty]
@@ -1343,7 +1346,8 @@ public partial class SettingsViewModel : ViewModelBase, IDisposable
             DopplerCatLeadMs = RigDopplerCatLeadMs,
             DopplerCatLeadGainPercent = RigDopplerCatLeadGainPercent,
             CatUpdatesPaused = _settings.Current.Rig.CatUpdatesPaused,
-            CwKeepSidebandDownlink = RigCwKeepSidebandDownlink
+            CwKeepSidebandDownlink = RigCwKeepSidebandDownlink,
+            ExitSatelliteModeOnClose = RigExitSatelliteModeOnClose
         };
         _settings.Current.Cloudlog = new CloudlogSettings
         {
@@ -1606,6 +1610,7 @@ public partial class SettingsViewModel : ViewModelBase, IDisposable
                 ? rig.DopplerCatLeadGainPercent
                 : RigSettings.DefaultDopplerCatLeadGainPercent;
             RigCwKeepSidebandDownlink = rig.CwKeepSidebandDownlink;
+            RigExitSatelliteModeOnClose = rig.ExitSatelliteModeOnClose;
             var cloudlog = _settings.Current.Cloudlog ?? new CloudlogSettings();
             CloudlogEnabled = cloudlog.Enabled;
             CloudlogBaseUrl = cloudlog.BaseUrl;

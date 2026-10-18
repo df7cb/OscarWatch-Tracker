@@ -2829,6 +2829,12 @@ Continue?</value>
   <data name="Settings.Radio.CwSidebandNote">
     <value>Applies when the frequency panel is set to CW on linear SSB satellites. Checked is the usual split (CW TX, USB/LSB RX). Unchecked sets both VFOs to CW.</value>
   </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnClose">
+    <value>Turn satellite mode off when OscarWatch closes</value>
+  </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnCloseNote">
+    <value>When OscarWatch turned satellite mode on, it turns it off again when you quit or disconnect the radio. Untick to leave the radio in satellite mode.</value>
+  </data>
   <data name="Settings.Radio.DopplerFm">
     <value>Doppler threshold FM (Hz)</value>
   </data>

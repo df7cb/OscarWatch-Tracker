@@ -2833,6 +2833,12 @@ LOS: {2}
   <data name="Settings.Radio.CwSidebandNote">
     <value>ใช้เมื่อแผงความถี่ตั้งเป็น CW บนดาวเทียม SSB เชิงเส้น ติ๊กคือการแยกปกติ (ส่ง CW, รับ USB/LSB) ไม่ติ๊กจะตั้งทั้งสอง VFO เป็น CW</value>
   </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnClose">
+    <value>ปิดโหมดดาวเทียมเมื่อปิด OscarWatch</value>
+  </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnCloseNote">
+    <value>หาก OscarWatch เป็นผู้เปิดโหมดดาวเทียม จะปิดโหมดนี้เมื่อออกจากแอปหรือตัดการเชื่อมต่อวิทยุ ไม่ติ๊กเพื่อให้วิทยุอยู่ในโหมดดาวเทียมต่อไป</value>
+  </data>
   <data name="Settings.Radio.DopplerFm">
     <value>เกณฑ์ดอปเพลอร์ FM (Hz)</value>
   </data>

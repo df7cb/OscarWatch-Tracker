@@ -2829,6 +2829,12 @@ Continuar?</value>
   <data name="Settings.Radio.CwSidebandNote">
     <value>Aplica-se quando o painel de frequências está definido para CW em satélites SSB lineares. Marcado é o split usual (TX CW, RX USB/LSB). Desmarcado define ambos os VFOs para CW.</value>
   </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnClose">
+    <value>Desligar o modo satélite ao fechar o OscarWatch</value>
+  </data>
+  <data name="Settings.Radio.ExitSatelliteModeOnCloseNote">
+    <value>Se o OscarWatch ligou o modo satélite, ele o desliga ao sair do aplicativo ou desconectar o rádio. Desmarque para deixar o rádio em modo satélite.</value>
+  </data>
   <data name="Settings.Radio.DopplerFm">
     <value>Limiar Doppler FM (Hz)</value>
   </data>

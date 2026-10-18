@@ -863,6 +863,13 @@
                        FontSize="11"
                        TextWrapping="Wrap"
                        Text="{loc:Localize Key=Settings.Radio.CwSidebandNote}" />
+            <CheckBox Content="{loc:Localize Key=Settings.Radio.ExitSatelliteModeOnClose}"
+                      IsChecked="{Binding RigExitSatelliteModeOnClose, Mode=TwoWay}"
+                      Margin="0,8,0,0" />
+            <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                       FontSize="11"
+                       TextWrapping="Wrap"
+                       Text="{loc:Localize Key=Settings.Radio.ExitSatelliteModeOnCloseNote}" />
             <TextBlock Text="{loc:Localize Key=Settings.Radio.DopplerFm}" Margin="0,8,0,0" />
             <NumericUpDown Value="{Binding RigDopplerThresholdFmHz, Mode=TwoWay}"
                            Minimum="0" Maximum="2000"
