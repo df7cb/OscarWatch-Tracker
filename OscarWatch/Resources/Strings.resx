@@ -4383,6 +4383,12 @@ Latest: {1} ({2})</value>
   <data name="Ft4.ParallelTxEchoDecode.Note">
     <value>On transmit slots, run the normal decode and a late-echo pass together so your own copy appears sooner. Uses more CPU for that slot. Leave on unless the PC struggles.</value>
   </data>
+  <data name="Ft4.ShowDtWsjtxConvention">
+    <value>Show DT like WSJT-X</value>
+  </data>
+  <data name="Ft4.ShowDtWsjtxConvention.Note">
+    <value>FT4 tones start 0.5 s into the slot. With this on, DT has that 0.5 s taken off so an on-time signal reads near 0, matching WSJT-X. With it off, DT is measured from the slot start, so an on-time signal reads about +0.5 s. Display only; it does not change decoding.</value>
+  </data>
   <data name="Ft4.Settings.Group.DecoderTesting">
     <value>Decoder testing</value>
   </data>

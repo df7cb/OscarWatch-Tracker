@@ -311,10 +311,10 @@
                              IsVisible="{Binding IsPounceTarget}" />
                   <TextBlock Grid.Column="2"
                              Classes.ft4-ink="{Binding HasRowForeground}"
-                             Text="{Binding Message.TimeSec, StringFormat={}{0:+0.0;-0.0;0.0}}"
+                             Text="{Binding DtText}"
                              IsVisible="{Binding Message.IsReceiveActivity}" />
                   <TextBlock Grid.Column="2"
-                             Text="{Binding Message.TimeSec, StringFormat={}{0:+0.0;-0.0;0.0}}"
+                             Text="{Binding DtText}"
                              Foreground="#6DB3F2"
                              IsVisible="{Binding Message.IsOwnEcho}" />
                   <TextBlock Grid.Column="2"
