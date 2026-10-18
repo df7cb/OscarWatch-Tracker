@@ -19,6 +19,11 @@ internal sealed class SstvLineRenderer
     private readonly bool[]? _robotIsBlue;
     private readonly bool[]? _robotHas;
 
+    // Per-channel scratch for the pixel means of one line, reused across lines. The decoder
+    // renders from a single thread and each buffer is consumed within the same Render call,
+    // except Robot 36, which keeps its line arrays for pairing and so allocates its own.
+    private readonly double[]?[]? _scratch;
+
     public SstvLineRenderer(SstvMode mode, SstvImage image)
     {
         _mode = mode;
@@ -31,6 +36,19 @@ internal sealed class SstvLineRenderer
             _robotIsBlue = new bool[lines];
             _robotHas = new bool[lines];
         }
+        else
+        {
+            // One buffer per SstvChannel value, allocated lazily per channel the mode uses.
+            _scratch = new double[Enum.GetValues<SstvChannel>().Length][];
+        }
+    }
+
+    /// <summary>Reusable scratch for a channel's pixel means (Robot 36 keeps its own arrays).</summary>
+    private double[] ChannelBuffer(SstvChannel channel, int width)
+    {
+        if (_scratch is null)
+            return new double[width];
+        return _scratch[(int)channel] ??= new double[width];
     }
 
     /// <param name="lineStart">Sample where the line starts (not where its sync starts).</param>
@@ -48,7 +66,7 @@ internal sealed class SstvLineRenderer
             var seg = _mode.Segments[s];
             if (seg.Channel is not (SstvChannel.Sync or SstvChannel.Gap))
             {
-                var values = new double[w];
+                var values = ChannelBuffer(seg.Channel, w);
                 Scan(buffer, lineStart + t * samplesPerMs, seg.Ms * samplesPerMs, offsetHz, values);
                 switch (seg.Channel)
                 {
