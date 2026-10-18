@@ -387,13 +387,13 @@
         <tr><th>Column</th><th>Meaning</th></tr>
         <tr><td>UTC</td><td>When that slot started, in UTC.</td></tr>
         <tr><td>TX</td><td>Blank when you heard someone else. <strong>TX</strong> is a message you sent. <strong>Echo</strong> is your own message back from the satellite. <strong>AP</strong> is a weak reply with the callsigns filled in. Struck through means it was not used.</td></tr>
-        <tr><td>DT</td><td>How late the signal was, in seconds. About +0.5 is on time. Your echo is often a little later.</td></tr>
+        <tr><td>DT</td><td>How late the signal was, in seconds. By default this follows WSJT-X, so about 0 is on time and your echo is often a little later. You can switch this in <a href="#settings">FT4 settings</a>; with the WSJT-X convention off, DT is measured from the start of the slot and on time reads about +0.5.</td></tr>
         <tr><td>SNR</td><td>How strong the signal is compared with the noise, in dB. Higher is stronger. Below zero is normal. This is the same scale WSJT-X uses.</td></tr>
         <tr><td>Message</td><td>The text that was decoded.</td></tr>
         <tr><td>Hz</td><td>Where the signal sits on the waterfall.</td></tr>
       </table>
       <div class="tip">
-        If one station's DT is a long way from +0.5, that station's clock is off. If every station
+        If one station's DT is a long way from the others, that station's clock is off. If every station
         is a long way off, set your PC clock, or use a GPS. See <a href="#clock-source">Clock source</a>.
       </div>
       <p>
@@ -623,7 +623,7 @@
 
       <h2 id="problems">If something is wrong</h2>
       <ul>
-        <li><strong>Nothing decodes</strong>: check the input soundcard, and that traces are on the waterfall. If DT for most stations is a long way from +0.5, set the PC clock, or connect a GPS so FT4 can correct it.</li>
+        <li><strong>Nothing decodes</strong>: check the input soundcard, and that traces are on the waterfall. If DT for most stations is a long way from where on-time sits (about 0 with the WSJT-X convention, about +0.5 without), set the PC clock, or connect a GPS so FT4 can correct it.</li>
         <li><strong>The radio does not transmit</strong>: check the PTT method and the output soundcard. For VOX, the radio's VOX or data VOX has to be on.</li>
         <li><strong>Transmit is blocked</strong>: read the status line. It names the reason: the satellite, power above 30 W, or a missing callsign or grid. For power, see <a href="#power">Power and good practice</a>.</li>
         <li><strong>Few decodes low on the horizon</strong>: this is normal for the first few degrees. Signals are weak and the frequency changes quickly. OscarWatch already works harder on decoding there (see <a href="#decoding">Decoding</a>). A clear view of the horizon helps more than extra power.</li>
@@ -707,7 +707,8 @@
         slot has started, or at a different delay from that station's other copies, is left out.
       </p>
       <p>
-        A decode with a DT above 1.5 seconds is still ignored. A satellite path is never that slow, so it
+        A decode more than 1.5 seconds after the slot start is still ignored (that is the raw timing the
+        decoder uses, whatever the DT column shows). A satellite path is never that slow, so it
         is a moonbounce echo or a station with a badly wrong clock. If a strong signal sits on a weaker one, the strong signal is taken
         off the audio and the slot is decoded again, so the weaker station can still be read.
       </p>

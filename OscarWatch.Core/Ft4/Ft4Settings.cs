@@ -123,6 +123,14 @@ public sealed class Ft4Settings
     /// </summary>
     public int TxWatchdogMinutes { get; set; } = Ft4TxWatchdog.DefaultMinutes;
 
+    /// <summary>
+    /// When true (default), the DT column shows the WSJT-X convention: the 0.5 s FT4 slot
+    /// start is subtracted so an on-time signal reads near 0, matching WSJT-X. When false,
+    /// DT is shown relative to the slot start (an on-time signal reads about +0.5 s).
+    /// Display only; decode filtering always uses the raw slot-relative DT.
+    /// </summary>
+    public bool ShowDtWsjtxConvention { get; set; } = true;
+
     /// <summary>When true, receive decodes are reported to PSK Reporter. Off by default.</summary>
     public bool PskReporterEnabled { get; set; }
 

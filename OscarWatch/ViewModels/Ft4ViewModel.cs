@@ -80,6 +80,7 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
         _audioDopplerRx = ft4.AudioDopplerRx;
         _parallelTxEchoDecode = ft4.ParallelTxEchoDecode;
         _saveSlotAudio = ft4.SaveSlotAudio;
+        _showDtWsjtxConvention = ft4.ShowDtWsjtxConvention;
         _txWatchdogMinutes = Ft4TxWatchdog.ClampMinutes(ft4.TxWatchdogMinutes);
         _pskReporterEnabled = ft4.PskReporterEnabled;
         _oscarWatchSpotsTokenAvailable = Ft4OscarWatchSpots.HasApiToken(_settings.Current.SatelliteStatus.ApiToken);
@@ -225,6 +226,9 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private bool _parallelTxEchoDecode = true;
     [ObservableProperty] private bool _saveSlotAudio;
 
+    /// <summary>Show the DT column using the WSJT-X convention (0.5 s slot start removed).</summary>
+    [ObservableProperty] private bool _showDtWsjtxConvention = true;
+
     [ObservableProperty] private int _txWatchdogMinutes = Ft4TxWatchdog.DefaultMinutes;
     [ObservableProperty] private bool _pskReporterEnabled;
 
@@ -324,6 +328,14 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
     {
         _settings.Current.Ft4.SaveSlotAudio = value;
         _settings.RequestSave();
+    }
+
+    partial void OnShowDtWsjtxConventionChanged(bool value)
+    {
+        _settings.Current.Ft4.ShowDtWsjtxConvention = value;
+        _settings.RequestSave();
+        foreach (var row in Decodes)
+            row.SetDtConvention(value);
     }
 
     [RelayCommand]
@@ -1503,7 +1515,7 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
                 continue;
             }
 
-            var row = new Ft4DecodeRowViewModel(message);
+            var row = new Ft4DecodeRowViewModel(message, ShowDtWsjtxConvention);
             ApplyHighlight(row);
             Decodes.Insert(rowIndex, row);
             rowIndex++;

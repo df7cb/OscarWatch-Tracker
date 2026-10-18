@@ -231,6 +231,11 @@
             <TextBlock Classes="ft4-note"
                        Margin="24,0,0,0"
                        Text="{loc:Localize Key=Ft4.ParallelTxEchoDecode.Note}" />
+            <CheckBox Content="{loc:Localize Key=Ft4.ShowDtWsjtxConvention}"
+                      IsChecked="{Binding ShowDtWsjtxConvention}" />
+            <TextBlock Classes="ft4-note"
+                       Margin="24,0,0,0"
+                       Text="{loc:Localize Key=Ft4.ShowDtWsjtxConvention.Note}" />
 
             <Separator Classes="ft4-rule" />
             <TextBlock Classes="ft4-section"

@@ -4383,6 +4383,12 @@
   <data name="Ft4.ParallelTxEchoDecode.Note">
     <value>在发射时隙同时运行正常解码与迟到回波处理，以便更快显示本台回波。该时隙会占用更多 CPU。除非电脑吃力，否则请保持开启。</value>
   </data>
+  <data name="Ft4.ShowDtWsjtxConvention">
+    <value>Show DT like WSJT-X</value>
+  </data>
+  <data name="Ft4.ShowDtWsjtxConvention.Note">
+    <value>FT4 tones start 0.5 s into the slot. With this on, DT has that 0.5 s taken off so an on-time signal reads near 0, matching WSJT-X. With it off, DT is measured from the slot start, so an on-time signal reads about +0.5 s. Display only; it does not change decoding.</value>
+  </data>
   <data name="Ft4.Settings.Group.DecoderTesting">
     <value>解码器测试</value>
   </data>

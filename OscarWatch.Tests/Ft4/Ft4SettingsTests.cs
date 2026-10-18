@@ -38,6 +38,7 @@ public sealed class Ft4SettingsTests
         Assert.True(settings.AudioDopplerTx);
         Assert.True(settings.AudioDopplerRx);
         Assert.True(settings.ParallelTxEchoDecode);
+        Assert.True(settings.ShowDtWsjtxConvention);
         Assert.Equal(Ft4TxWatchdog.DefaultMinutes, settings.TxWatchdogMinutes);
         Assert.False(settings.PskReporterEnabled);
         Assert.False(settings.OscarWatchSpotsEnabled);

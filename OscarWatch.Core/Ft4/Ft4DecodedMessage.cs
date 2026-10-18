@@ -26,4 +26,12 @@ public sealed record Ft4DecodedMessage(
     /// of the same station in this slot showed a different message.
     /// </summary>
     public bool IsRejectedApriori => IsApriori && IsRejected;
+
+    /// <summary>
+    /// DT as shown in the decode list. With <paramref name="wsjtxConvention"/> the 0.5 s
+    /// FT4 slot-start offset is removed so the value matches WSJT-X. The stored
+    /// <see cref="TimeSec"/> is unchanged; only the display is adjusted.
+    /// </summary>
+    public double DisplayDtSec(bool wsjtxConvention) =>
+        Ft4DecodeDepth.DisplayDt(TimeSec, wsjtxConvention);
 }

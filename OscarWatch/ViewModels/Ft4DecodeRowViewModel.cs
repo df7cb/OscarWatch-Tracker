@@ -1,3 +1,4 @@
+using System.Globalization;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OscarWatch.Core.Ft4;
@@ -8,12 +9,34 @@ namespace OscarWatch.ViewModels;
 /// <summary>One decode list row, with a background that tracks the current QSO partner.</summary>
 public sealed partial class Ft4DecodeRowViewModel : ObservableObject
 {
-    public Ft4DecodeRowViewModel(Ft4DecodedMessage message)
+    public Ft4DecodeRowViewModel(Ft4DecodedMessage message, bool dtWsjtxConvention = true)
     {
         Message = message;
+        _dtWsjtxConvention = dtWsjtxConvention;
+        _dtText = FormatDt(message, dtWsjtxConvention);
     }
 
     public Ft4DecodedMessage Message { get; }
+
+    private bool _dtWsjtxConvention;
+
+    /// <summary>
+    /// DT column text (RX decodes and own echoes). Follows the WSJT-X convention toggle,
+    /// which only changes the displayed value, not the stored DT.
+    /// </summary>
+    [ObservableProperty] private string _dtText;
+
+    /// <summary>Updates the DT column when the WSJT-X convention setting changes.</summary>
+    public void SetDtConvention(bool wsjtxConvention)
+    {
+        if (_dtWsjtxConvention == wsjtxConvention)
+            return;
+        _dtWsjtxConvention = wsjtxConvention;
+        DtText = FormatDt(Message, wsjtxConvention);
+    }
+
+    private static string FormatDt(Ft4DecodedMessage message, bool wsjtxConvention) =>
+        message.DisplayDtSec(wsjtxConvention).ToString("+0.0;-0.0;0.0", CultureInfo.InvariantCulture);
 
     [ObservableProperty] private IBrush _rowBackground = Brushes.Transparent;
 

@@ -4383,6 +4383,12 @@ Está utilizando la versión {0}.
   <data name="Ft4.ParallelTxEchoDecode.Note">
     <value>En ranuras de transmisión, ejecuta el decode normal y un pase de eco tardío juntos para que tu propia copia aparezca antes. Usa más CPU en esa ranura. Déjalo activo salvo que el PC vaya justo.</value>
   </data>
+  <data name="Ft4.ShowDtWsjtxConvention">
+    <value>Show DT like WSJT-X</value>
+  </data>
+  <data name="Ft4.ShowDtWsjtxConvention.Note">
+    <value>FT4 tones start 0.5 s into the slot. With this on, DT has that 0.5 s taken off so an on-time signal reads near 0, matching WSJT-X. With it off, DT is measured from the slot start, so an on-time signal reads about +0.5 s. Display only; it does not change decoding.</value>
+  </data>
   <data name="Ft4.Settings.Group.DecoderTesting">
     <value>Pruebas del decodificador</value>
   </data>

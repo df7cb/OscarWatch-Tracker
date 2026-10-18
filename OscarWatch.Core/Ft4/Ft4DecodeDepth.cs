@@ -57,4 +57,19 @@ public static class Ft4DecodeDepth
 
     public static bool IsPlausibleSatelliteDt(double timeSec) =>
         timeSec is >= MinSatelliteDtSec and <= MaxSatelliteDtSec;
+
+    /// <summary>
+    /// FT4 tones start 0.5 s into the slot. OscarWatch measures DT from the start of the
+    /// slot, so an on-time signal reads about +0.5 s. WSJT-X takes this 0.5 s off, so its
+    /// DT of 0 means on time. This is the offset to subtract to match the WSJT-X convention.
+    /// </summary>
+    public const double WsjtxDtOffsetSec = 0.5;
+
+    /// <summary>
+    /// Converts an OscarWatch slot-relative DT to the display value. When
+    /// <paramref name="wsjtxConvention"/> is true the 0.5 s start offset is removed so the
+    /// value lines up with WSJT-X. This is display only; filtering uses the raw DT.
+    /// </summary>
+    public static double DisplayDt(double timeSec, bool wsjtxConvention) =>
+        wsjtxConvention ? timeSec - WsjtxDtOffsetSec : timeSec;
 }
