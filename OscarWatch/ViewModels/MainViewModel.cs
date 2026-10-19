@@ -1522,8 +1522,11 @@ public partial class MainViewModel : ViewModelBase
             && commanded != compass)
             return $"{commanded}° ({compass}° sat)";
 
+        // SPID reports signed angles down to -180°; 360-450° stays as the extended dial.
         if (status.AzimuthDeg is { } polled)
-            return $"{polled}°";
+            return polled < 0
+                ? $"{(int)Math.Round(RotatorAzimuthPlanner.Normalize360(polled))}°"
+                : $"{polled}°";
 
         if (status.CommandedAzimuthDeg is { } commandedOnly)
             return $"{commandedOnly}°";

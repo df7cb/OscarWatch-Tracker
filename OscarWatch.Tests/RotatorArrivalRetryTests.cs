@@ -20,6 +20,9 @@ public sealed class RotatorArrivalRetryTests
         rotator.ForcedElevation = 20;
 
         controller.UpdateSynchronously(settings, TrackTarget(40, 20));
+        Assert.Equal(1, rotator.SetPositionCallCount);
+
+        controller.UpdateSynchronously(settings, TrackTarget(40, 20));
         Assert.Equal(2, rotator.SetPositionCallCount);
         Assert.Equal(40, rotator.LastAzimuthDeg);
         Assert.Equal(20, rotator.LastElevationDeg);
@@ -116,6 +119,9 @@ public sealed class RotatorArrivalRetryTests
         rotator.ForcedElevation = 45;
 
         controller.UpdateSynchronously(settings, null);
+        Assert.Equal(callsAfterMove, rotator.SetPositionCallCount);
+
+        controller.UpdateSynchronously(settings, null);
         Assert.Equal(callsAfterMove + 1, rotator.SetPositionCallCount);
         Assert.Equal(90, rotator.LastAzimuthDeg);
         Assert.Equal(45, rotator.LastElevationDeg);
@@ -168,6 +174,9 @@ public sealed class RotatorArrivalRetryTests
         rotator.ForcedElevation = 0;
 
         controller.UpdateSynchronously(settings, null);
+        Assert.Equal(callsAfterPark, rotator.SetPositionCallCount);
+
+        controller.UpdateSynchronously(settings, null);
         Assert.Equal(callsAfterPark + 1, rotator.SetPositionCallCount);
         Assert.Equal(180, rotator.LastAzimuthDeg);
         Assert.Equal(0, rotator.LastElevationDeg);
@@ -188,8 +197,57 @@ public sealed class RotatorArrivalRetryTests
         rotator.ForcedElevation = 10;
 
         controller.UpdateSynchronously(settings, TrackTarget(40, 30));
+        Assert.Equal(1, rotator.SetPositionCallCount);
+
+        controller.UpdateSynchronously(settings, TrackTarget(40, 30));
         Assert.Equal(2, rotator.SetPositionCallCount);
         Assert.Equal(30, rotator.LastElevationDeg);
+    }
+
+    [Fact]
+    public void Tracking_does_not_reissue_while_rotator_is_still_slewing()
+    {
+        var rotator = new RecordingRotatorDriver
+        {
+            ForceReportedPosition = true,
+            ForcedAzimuth = 0,
+            ForcedElevation = 0
+        };
+        var controller = new RotatorController(_ => rotator);
+        var settings = EnabledSettings();
+
+        controller.UpdateSynchronously(settings, TrackTarget(90, 20));
+        Assert.Equal(1, rotator.SetPositionCallCount);
+
+        foreach (var azimuth in new[] { 20, 40, 60 })
+        {
+            rotator.ForcedAzimuth = azimuth;
+            controller.UpdateSynchronously(settings, TrackTarget(90, 20));
+        }
+
+        Assert.Equal(1, rotator.SetPositionCallCount);
+
+        controller.UpdateSynchronously(settings, TrackTarget(90, 20));
+        Assert.Equal(2, rotator.SetPositionCallCount);
+    }
+
+    [Fact]
+    public void One_degree_jitter_still_counts_as_stopped()
+    {
+        var rotator = new RecordingRotatorDriver();
+        var controller = new RotatorController(_ => rotator);
+        var settings = EnabledSettings();
+
+        controller.UpdateSynchronously(settings, TrackTarget(40, 20));
+        rotator.ForceReportedPosition = true;
+        rotator.ForcedAzimuth = 70;
+        rotator.ForcedElevation = 20;
+        controller.UpdateSynchronously(settings, TrackTarget(40, 20));
+        Assert.Equal(1, rotator.SetPositionCallCount);
+
+        rotator.ForcedAzimuth = 71;
+        controller.UpdateSynchronously(settings, TrackTarget(40, 20));
+        Assert.Equal(2, rotator.SetPositionCallCount);
     }
 
     private static RotatorSettings EnabledSettings(bool smart450 = false) =>

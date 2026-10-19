@@ -65,6 +65,8 @@ public static class SpidRotatorCodec
             return false;
         if (response[0] != StartByte || response[4] != EndByte)
             return false;
+        if (!AreDigits(response.Slice(1, 3)))
+            return false;
 
         azimuthDeg = response[1] * 100 + response[2] * 10 + response[3] - 360.0;
         return true;
@@ -83,11 +85,24 @@ public static class SpidRotatorCodec
             return false;
         if (response[0] != StartByte || response[11] != EndByte)
             return false;
+        if (!AreDigits(response.Slice(1, 4)) || !AreDigits(response.Slice(6, 4)))
+            return false;
 
         azimuthDeg = response[1] * 100 + response[2] * 10 + response[3] + response[4] / 10.0 - 360.0;
         elevationDeg = response[6] * 100 + response[7] * 10 + response[8] + response[9] / 10.0 - 360.0;
         pulsesPerDegree = response[5];
         return pulsesPerDegree > 0;
+    }
+
+    private static bool AreDigits(ReadOnlySpan<byte> values)
+    {
+        foreach (var value in values)
+        {
+            if (value > 9)
+                return false;
+        }
+
+        return true;
     }
 
     private static void BuildSimpleCommand(Span<byte> buffer, byte command)

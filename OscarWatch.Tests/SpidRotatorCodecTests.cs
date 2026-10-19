@@ -64,6 +64,22 @@ public sealed class SpidRotatorCodecTests
     }
 
     [Fact]
+    public void TryParseRot2Status_rejects_out_of_range_digits()
+    {
+        var badAzimuth = new byte[] { 0x57, 0x03, 0x0A, 0x02, 0x05, 0x02, 0x03, 0x09, 0x04, 0x00, 0x02, 0x20 };
+        var badElevation = new byte[] { 0x57, 0x03, 0x07, 0x02, 0x05, 0x02, 0x03, 0x39, 0x04, 0x00, 0x02, 0x20 };
+
+        Assert.False(SpidRotatorCodec.TryParseRot2Status(badAzimuth, out _, out _, out _));
+        Assert.False(SpidRotatorCodec.TryParseRot2Status(badElevation, out _, out _, out _));
+    }
+
+    [Fact]
+    public void TryParseRot1Status_rejects_out_of_range_digits()
+    {
+        Assert.False(SpidRotatorCodec.TryParseRot1Status([0x57, 0x33, 0x07, 0x02, 0x20], out _));
+    }
+
+    [Fact]
     public void TryParseRot2Status_rejects_short_buffer()
     {
         Assert.False(SpidRotatorCodec.TryParseRot2Status([0x57, 0x03], out _, out _, out _));

@@ -24,6 +24,12 @@ public sealed class RotatorController : IRotatorController, IDisposable
     /// </summary>
     internal const int ParkAfterPassConfirmTicks = 3;
 
+    /// <summary>
+    /// Polled change between consecutive reads that counts as still slewing. One degree of
+    /// encoder jitter on a stopped rotator must not suppress the arrival retry.
+    /// </summary>
+    internal const int StillSlewingThresholdDeg = 2;
+
     private readonly Func<RotatorSettings, IRotatorDriver>? _driverFactory;
     private readonly IOrbitPropagator? _propagator;
     private readonly ISettingsService? _settingsService;
@@ -56,6 +62,8 @@ public sealed class RotatorController : IRotatorController, IDisposable
     /// Cleared by Stop so a cancelled slew is not restarted.
     /// </summary>
     private bool _retryUntilArrived;
+    /// <summary>True when the last poll moved by at least <see cref="StillSlewingThresholdDeg"/> since the one before.</summary>
+    private bool _stillSlewing;
     /// <summary>True after we have commanded track for the current pass (el ≥ track start).</summary>
     private bool _passTrackingActive;
     private int _parkAfterPassStreak;
@@ -625,6 +633,7 @@ public sealed class RotatorController : IRotatorController, IDisposable
         _standbyManualActive = false;
         _trackingHoldAfterStop = false;
         _retryUntilArrived = false;
+        _stillSlewing = false;
         _passTrackingActive = false;
         _parkAfterPassStreak = 0;
         _displayAzimuth = null;
@@ -997,12 +1006,14 @@ public sealed class RotatorController : IRotatorController, IDisposable
     }
 
     /// <summary>
-    /// True when polled az or el is still outside the movement threshold of the commanded position.
-    /// Missing feedback (null poll, SAEBRTrack) is treated as unknown, not as a miss, so we do not spam.
+    /// True when polled az or el is still outside the movement threshold of the commanded position
+    /// and the rotator has stopped moving. A rotator that is still slewing is not sent the same
+    /// target again. Missing feedback (null poll, SAEBRTrack) is treated as unknown, not as a miss,
+    /// so we do not spam.
     /// </summary>
     private bool HasOutstandingArrivalError(RotatorSettings settings, double commandAz, double commandEl)
     {
-        if (!_retryUntilArrived)
+        if (!_retryUntilArrived || _stillSlewing)
             return false;
 
         var threshold = settings.MovementThresholdDeg;
@@ -1021,6 +1032,7 @@ public sealed class RotatorController : IRotatorController, IDisposable
         try
         {
             var (az, el) = _rotator.GetPosition();
+            _stillSlewing = MovedSinceLastPoll(_displayAzimuth, az) || MovedSinceLastPoll(_displayElevation, el);
             if (az is not null)
                 _displayAzimuth = az;
             if (el is not null)
@@ -1032,6 +1044,11 @@ public sealed class RotatorController : IRotatorController, IDisposable
             TearDownRotator();
         }
     }
+
+    private static bool MovedSinceLastPoll(int? previous, int? current) =>
+        previous is { } before
+        && current is { } now
+        && Math.Abs(now - before) >= StillSlewingThresholdDeg;
 
     private enum RotatorCommandKind
     {

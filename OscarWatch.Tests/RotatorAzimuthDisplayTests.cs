@@ -22,6 +22,22 @@ public sealed class RotatorAzimuthDisplayTests
     }
 
     [Fact]
+    public void FormatRotatorAzimuthText_folds_negative_polled_azimuth_to_compass()
+    {
+        var text = MainViewModel.FormatRotatorAzimuthText(
+            new RotatorPositionStatus(true, -86, 80));
+        Assert.Equal("274°", text);
+    }
+
+    [Fact]
+    public void FormatRotatorAzimuthText_keeps_extended_dial_polled_azimuth()
+    {
+        var text = MainViewModel.FormatRotatorAzimuthText(
+            new RotatorPositionStatus(true, 400, 20));
+        Assert.Equal("400°", text);
+    }
+
+    [Fact]
     public void FormatRotatorAzimuthText_disconnected_shows_dash()
     {
         var text = MainViewModel.FormatRotatorAzimuthText(

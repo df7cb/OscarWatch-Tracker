@@ -8,8 +8,16 @@ namespace OscarWatch.Rotator;
 /// </summary>
 public sealed class SpidRotator : IRotatorDriver
 {
+    internal const int MaxQueryAttempts = 3;
+    internal const int StatusCacheMs = 750;
+    private const int CommandGapMs = 50;
+    private const int MaxSkippedBytes = 32;
+    private const double MinValidElevationDeg = -90;
+
     private readonly IRotatorSerialTransport _port;
     private readonly bool _expectSetPositionResponse;
+    private readonly int _commandPacingMs;
+    private readonly Func<long> _clockMs;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private readonly byte[] _commandBuffer = new byte[SpidRotatorCodec.CommandLength];
     private readonly byte[] _responseBuffer = new byte[SpidRotatorCodec.Rot2ResponseLength];
@@ -17,17 +25,35 @@ public sealed class SpidRotator : IRotatorDriver
     private bool _variantDetected;
     private bool _rot1Mode;
     private int _pulsesPerDegree = 2;
+    private (int? Azimuth, int? Elevation)? _cachedPosition;
+    private long _cachedAtMs;
 
     public SpidRotator(string portName, int baudRate)
-        : this(new SerialRotatorTransport(portName, baudRate, 2000, 2000, "\n"), expectSetPositionResponse: false)
+        : this(new SerialRotatorTransport(portName, baudRate, 1000, 1000, "\n"), baudRate: baudRate)
     {
     }
 
-    internal SpidRotator(IRotatorSerialTransport transport, bool expectSetPositionResponse = false)
+    /// <param name="baudRate">
+    /// Serial line speed used to wait out a command's wire time after a set-position.
+    /// Zero disables pacing (TCP).
+    /// </param>
+    internal SpidRotator(
+        IRotatorSerialTransport transport,
+        bool expectSetPositionResponse = false,
+        int baudRate = 0,
+        Func<long>? clockMs = null)
     {
         _port = transport;
         _expectSetPositionResponse = expectSetPositionResponse;
+        _commandPacingMs = CommandPacingMs(baudRate);
+        _clockMs = clockMs ?? (() => Environment.TickCount64);
     }
+
+    /// <summary>Time for one 13-byte command at 8-N-1 plus a short gap, or 0 when unpaced.</summary>
+    internal static int CommandPacingMs(int baudRate) =>
+        baudRate <= 0
+            ? 0
+            : (int)Math.Ceiling(SpidRotatorCodec.CommandLength * 10 * 1000.0 / baudRate) + CommandGapMs;
 
     public void Open()
     {
@@ -56,11 +82,12 @@ public sealed class SpidRotator : IRotatorDriver
             if (_expectSetPositionResponse)
             {
                 // MD-01/MD-02 return current position after set; drain it so GetPosition stays in sync.
-                ReadAndApplyResponse();
+                if (TryReadFrame(out var length))
+                    TryApplyPosition(length, out _);
             }
-            else
+            else if (_commandPacingMs > 0)
             {
-                Thread.Sleep(150);
+                Thread.Sleep(_commandPacingMs);
             }
         }
         finally
@@ -75,8 +102,8 @@ public sealed class SpidRotator : IRotatorDriver
         try
         {
             SpidRotatorCodec.BuildStopCommand(_commandBuffer);
-            WriteCommand(_commandBuffer);
-            ReadAndApplyResponse();
+            var length = Query(_commandBuffer);
+            TryApplyPosition(length, out _);
         }
         catch
         {
@@ -93,11 +120,12 @@ public sealed class SpidRotator : IRotatorDriver
         _gate.Wait();
         try
         {
-            EnsureVariantDetectedWithinGate();
+            if (_cachedPosition is { } cached && _clockMs() - _cachedAtMs < StatusCacheMs)
+                return cached;
 
             SpidRotatorCodec.BuildStatusCommand(_commandBuffer);
-            WriteCommand(_commandBuffer);
-            return ReadPosition();
+            var length = Query(_commandBuffer);
+            return TryApplyPosition(length, out var position) ? position : (null, null);
         }
         catch
         {
@@ -135,7 +163,12 @@ public sealed class SpidRotator : IRotatorDriver
         _gate.Wait();
         try
         {
-            EnsureVariantDetectedWithinGate();
+            if (_variantDetected)
+                return;
+
+            SpidRotatorCodec.BuildStatusCommand(_commandBuffer);
+            var length = Query(_commandBuffer);
+            TryApplyPosition(length, out _);
         }
         finally
         {
@@ -143,15 +176,20 @@ public sealed class SpidRotator : IRotatorDriver
         }
     }
 
-    private void EnsureVariantDetectedWithinGate()
+    /// <summary>
+    /// Sends a command that the controller answers with a status frame, resending when the
+    /// reply is missing or garbled. Returns the length of the valid frame in the response buffer.
+    /// </summary>
+    private int Query(byte[] command)
     {
-        if (_variantDetected)
-            return;
+        for (var attempt = 0; attempt < MaxQueryAttempts; attempt++)
+        {
+            WriteCommand(command);
+            if (TryReadFrame(out var length) && IsValidFrame(length))
+                return length;
+        }
 
-        SpidRotatorCodec.BuildStatusCommand(_commandBuffer);
-        WriteCommand(_commandBuffer);
-        var length = ReadResponseLength();
-        ApplyVariantFromResponseLength(length);
+        throw new InvalidOperationException("SPID rotator did not return a valid status frame.");
     }
 
     private void WriteCommand(byte[] command)
@@ -160,58 +198,79 @@ public sealed class SpidRotator : IRotatorDriver
         _port.Write(command, 0, command.Length);
     }
 
-    private int ReadResponseLength()
+    /// <summary>
+    /// Reads one frame, skipping any bytes before the start byte. A Rot1 frame has the end byte
+    /// at index 4; a Rot2 frame has a 0 to 9 digit there and the end byte at index 11.
+    /// </summary>
+    private bool TryReadFrame(out int length)
     {
-        var offset = 0;
-        while (offset < SpidRotatorCodec.Rot2ResponseLength)
+        length = 0;
+        try
         {
-            var read = _port.Read(_responseBuffer, offset, SpidRotatorCodec.Rot2ResponseLength - offset);
+            var skipped = 0;
+            while (true)
+            {
+                if (!ReadExactly(0, 1))
+                    return false;
+                if (_responseBuffer[0] == SpidRotatorCodec.StartByte)
+                    break;
+                if (++skipped > MaxSkippedBytes)
+                    return false;
+            }
+
+            if (!ReadExactly(1, SpidRotatorCodec.Rot1ResponseLength - 1))
+                return false;
+
+            if (_responseBuffer[SpidRotatorCodec.Rot1ResponseLength - 1] == SpidRotatorCodec.EndByte)
+            {
+                length = SpidRotatorCodec.Rot1ResponseLength;
+                return true;
+            }
+
+            if (!ReadExactly(
+                    SpidRotatorCodec.Rot1ResponseLength,
+                    SpidRotatorCodec.Rot2ResponseLength - SpidRotatorCodec.Rot1ResponseLength))
+                return false;
+
+            if (_responseBuffer[SpidRotatorCodec.Rot2ResponseLength - 1] != SpidRotatorCodec.EndByte)
+                return false;
+
+            length = SpidRotatorCodec.Rot2ResponseLength;
+            return true;
+        }
+        catch (TimeoutException)
+        {
+            return false;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+    }
+
+    private bool ReadExactly(int offset, int count)
+    {
+        var end = offset + count;
+        while (offset < end)
+        {
+            var read = _port.Read(_responseBuffer, offset, end - offset);
             if (read <= 0)
-                break;
+                return false;
             offset += read;
         }
 
-        if (offset == SpidRotatorCodec.Rot1ResponseLength)
-            return SpidRotatorCodec.Rot1ResponseLength;
-
-        if (offset >= SpidRotatorCodec.Rot2ResponseLength)
-            return SpidRotatorCodec.Rot2ResponseLength;
-
-        throw new InvalidOperationException($"Unexpected SPID response length: {offset} bytes.");
+        return true;
     }
 
-    private void ReadAndApplyResponse()
-    {
-        var length = ReadResponseLength();
-        ApplyVariantFromResponseLength(length);
-    }
+    private bool IsValidFrame(int length) =>
+        length == SpidRotatorCodec.Rot1ResponseLength
+            ? SpidRotatorCodec.TryParseRot1Status(_responseBuffer.AsSpan(0, length), out _)
+            : SpidRotatorCodec.TryParseRot2Status(_responseBuffer.AsSpan(0, length), out _, out _, out _);
 
-    private void ApplyVariantFromResponseLength(int length)
+    /// <summary>Decodes the frame in the response buffer, updating the variant and the status cache.</summary>
+    private bool TryApplyPosition(int length, out (int? Azimuth, int? Elevation) position)
     {
-        if (length == SpidRotatorCodec.Rot1ResponseLength)
-        {
-            _rot1Mode = true;
-            _pulsesPerDegree = 1;
-            _variantDetected = true;
-            return;
-        }
-
-        if (length == SpidRotatorCodec.Rot2ResponseLength
-            && SpidRotatorCodec.TryParseRot2Status(
-                _responseBuffer.AsSpan(0, length),
-                out _,
-                out _,
-                out var pulse))
-        {
-            _rot1Mode = false;
-            _pulsesPerDegree = pulse;
-            _variantDetected = true;
-        }
-    }
-
-    private (int? Azimuth, int? Elevation) ReadPosition()
-    {
-        var length = ReadResponseLength();
+        position = (null, null);
 
         if (length == SpidRotatorCodec.Rot1ResponseLength
             && SpidRotatorCodec.TryParseRot1Status(_responseBuffer.AsSpan(0, length), out var rot1Az))
@@ -219,10 +278,9 @@ public sealed class SpidRotator : IRotatorDriver
             _rot1Mode = true;
             _pulsesPerDegree = 1;
             _variantDetected = true;
-            return ((int)Math.Round(rot1Az), null);
+            position = ((int)Math.Round(rot1Az), null);
         }
-
-        if (length == SpidRotatorCodec.Rot2ResponseLength
+        else if (length == SpidRotatorCodec.Rot2ResponseLength
             && SpidRotatorCodec.TryParseRot2Status(
                 _responseBuffer.AsSpan(0, length),
                 out var az,
@@ -232,9 +290,17 @@ public sealed class SpidRotator : IRotatorDriver
             _rot1Mode = false;
             _pulsesPerDegree = pulse;
             _variantDetected = true;
-            return ((int)Math.Round(az), (int)Math.Round(el));
+            // Azimuth-only controllers can send zero elevation digits, which decode to -360°.
+            int? elevation = el < MinValidElevationDeg ? null : (int)Math.Round(el);
+            position = ((int)Math.Round(az), elevation);
+        }
+        else
+        {
+            return false;
         }
 
-        return (null, null);
+        _cachedPosition = position;
+        _cachedAtMs = _clockMs();
+        return true;
     }
 }

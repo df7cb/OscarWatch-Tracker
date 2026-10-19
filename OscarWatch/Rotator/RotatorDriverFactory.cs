@@ -8,7 +8,9 @@ public static class RotatorDriverFactory
         settings.Type switch
         {
             RotatorType.EasyComm => new EasyCommRotator(CreateTransport(settings, 1000, 1000, "\n")),
-            RotatorType.Spid => new SpidRotator(CreateTransport(settings, 2000, 2000, "\n")),
+            RotatorType.Spid => new SpidRotator(
+                CreateTransport(settings, 1000, 1000, "\n"),
+                baudRate: settings.TransportKind == RotatorTransportKind.Tcp ? 0 : settings.BaudRate),
             RotatorType.SpidMd01 => CreateSpidMd01(settings),
             RotatorType.Saebrt => new SaebrtRotator(
                 CreateTransport(settings, 200, 200, "\n", dtrEnable: false, rtsEnable: false)),
