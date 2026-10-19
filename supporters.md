@@ -26,6 +26,7 @@ Thank you to everyone who has donated to support OscarWatch development.
 | George                   | GI4SJQ         |
 | Dave                     | M0SAT          |
 | Alan                     | WA4SCA         |
+| Mark                     | N8MH           |
 
 
 If you donate and would like to be listed here, let Peter know your name and callsign.
