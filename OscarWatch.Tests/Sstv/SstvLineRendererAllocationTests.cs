@@ -53,6 +53,35 @@ public sealed class SstvLineRendererAllocationTests
         Assert.Equal(reference.Rgb, actual.Rgb);
     }
 
+    /// <summary>
+    /// Robot 36 is stateful across lines (even lines carry R-Y, odd lines B-Y, paired across
+    /// line boundaries), so it keeps its own per-line arrays and is excluded from the stateless
+    /// exact-equality reuse test above. It therefore has no exact-equality guard, only the
+    /// tolerance-based round-trip tests. This renders the same signal twice with two separate
+    /// renderers and asserts byte-identical RGB output, proving the rendering is deterministic
+    /// and leaks no state between renderer instances.
+    /// </summary>
+    [Fact]
+    public void Robot36_renders_deterministically_across_renderers()
+    {
+        var mode = SstvModeTable.Robot36;
+        var buffer = SweepBuffer(mode);
+        var samplesPerMs = Rate / 1000.0;
+        var lineSamples = mode.LineMs * samplesPerMs;
+
+        var first = new SstvImage(mode.Width, mode.Height);
+        var firstRenderer = new SstvLineRenderer(mode, first);
+        for (var line = 0; line < mode.TransmittedLines; line++)
+            firstRenderer.Render(buffer, buffer.Start + line * lineSamples, samplesPerMs, 0, line);
+
+        var second = new SstvImage(mode.Width, mode.Height);
+        var secondRenderer = new SstvLineRenderer(mode, second);
+        for (var line = 0; line < mode.TransmittedLines; line++)
+            secondRenderer.Render(buffer, buffer.Start + line * lineSamples, samplesPerMs, 0, line);
+
+        Assert.Equal(first.Rgb, second.Rgb);
+    }
+
     [Theory]
     [InlineData(SstvModeId.Pd120)]
     [InlineData(SstvModeId.ScottieS1)]
