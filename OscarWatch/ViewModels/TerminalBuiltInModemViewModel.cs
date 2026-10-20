@@ -51,6 +51,12 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
     private bool _loadingDevices;
     private string? _meterError;
 
+    /// <summary>
+    /// Last non-empty PTT port. The combo's TwoWay binding clears <see cref="SeparatePttPort"/>
+    /// when the value is not in <see cref="PttPortOptions"/>, including while that list is rebuilt.
+    /// </summary>
+    private string _rememberedSeparatePttPort = "";
+
     public TerminalBuiltInModemViewModel(
         ISettingsService settings,
         ILocalizationService localization,
@@ -106,7 +112,12 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         _selectedPttMethod = PttMethodOptions.FirstOrDefault(o => o.Value == m.PttMethod) ?? PttMethodOptions[0];
         _selectedPttLine = PttLineOptions.FirstOrDefault(o => o.Value == m.PttLine) ?? PttLineOptions[0];
         _pttInvert = m.PttInvert;
-        _separatePttPort = m.SeparatePttPort;
+        _separatePttPort = (m.SeparatePttPort ?? "").Trim();
+        _rememberedSeparatePttPort = _separatePttPort;
+        // The combo binds before Refresh() lists ports. An empty list makes the TwoWay
+        // selection binding clear the saved port, so keep that port in the list now.
+        if (_separatePttPort.Length > 0)
+            PttPortOptions.Add(_separatePttPort);
         _pttLeadMs = m.PttLeadMs;
         _pttTailMs = m.PttTailMs;
         _selectedDuplex = DuplexOptions.First(o => o.Value == m.Duplex);
@@ -198,7 +209,12 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         RefreshSeparatePttConflict();
     }
 
-    partial void OnSeparatePttPortChanged(string value) => RefreshSeparatePttConflict();
+    partial void OnSeparatePttPortChanged(string value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+            _rememberedSeparatePttPort = value.Trim();
+        RefreshSeparatePttConflict();
+    }
 
     partial void OnSeparatePttConflictTextChanged(string value) => OnPropertyChanged(nameof(ShowSeparatePttConflict));
 
@@ -260,12 +276,21 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         }
 
         var savedPort = SeparatePttPort?.Trim() ?? "";
+        if (savedPort.Length == 0)
+            savedPort = _rememberedSeparatePttPort;
         PttPortOptions.Clear();
         foreach (var port in SerialPortDiscovery.GetAvailablePorts(forceRefresh: true))
             PttPortOptions.Add(port);
-        if (savedPort.Length > 0 && !PttPortOptions.Contains(savedPort, StringComparer.OrdinalIgnoreCase))
+        var listed = PttPortOptions.FirstOrDefault(port =>
+            string.Equals(port, savedPort, StringComparison.OrdinalIgnoreCase));
+        if (listed is null && savedPort.Length > 0)
+        {
             PttPortOptions.Insert(0, savedPort);
-        SeparatePttPort = savedPort;
+            listed = savedPort;
+        }
+
+        // Clear() above drops the combo selection. Assign the string that is actually in the list.
+        SeparatePttPort = listed ?? "";
         RefreshSeparatePttConflict();
     }
 

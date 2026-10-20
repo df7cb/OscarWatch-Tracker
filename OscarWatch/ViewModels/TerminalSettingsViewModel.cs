@@ -170,7 +170,12 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
         _autoConnect = t.Agwpe.AutoConnect;
         _kissHost = t.KissTcp.Host;
         _kissTcpPort = t.KissTcp.Port;
-        _kissSerialPort = t.KissSerial.PortName;
+        _kissSerialPort = t.KissSerial.PortName ?? "";
+        _rememberedKissSerialPort = _kissSerialPort.Trim();
+        // Same as the PTT port: the combo binds before the port list is filled, and an empty
+        // list clears the TwoWay selection.
+        if (_rememberedKissSerialPort.Length > 0)
+            KissSerialPortOptions.Add(_rememberedKissSerialPort);
         _kissBaudRate = t.KissSerial.BaudRate;
         KissBaudOptions = TerminalKissSerialSettings.CommonBaudRates.Contains(t.KissSerial.BaudRate)
             ? TerminalKissSerialSettings.CommonBaudRates
@@ -348,7 +353,15 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
     public ObservableCollection<string> KissSerialPortOptions { get; } = [];
     public IReadOnlyList<int> KissBaudOptions { get; }
 
-    partial void OnKissSerialPortChanged(string value) => RefreshKissSerialConflict();
+    /// <summary>Last non-empty KISS COM port. The combo binding clears <see cref="KissSerialPort"/> when it is not in the list.</summary>
+    private string _rememberedKissSerialPort = "";
+
+    partial void OnKissSerialPortChanged(string value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+            _rememberedKissSerialPort = value.Trim();
+        RefreshKissSerialConflict();
+    }
 
     partial void OnKissSerialConflictTextChanged(string value) => OnPropertyChanged(nameof(ShowKissSerialConflict));
 
@@ -362,12 +375,20 @@ public sealed partial class TerminalSettingsViewModel : ViewModelBase
     private void RefreshKissSerialPorts()
     {
         var saved = KissSerialPort?.Trim() ?? "";
+        if (saved.Length == 0)
+            saved = _rememberedKissSerialPort;
         KissSerialPortOptions.Clear();
         foreach (var port in SerialPortDiscovery.GetAvailablePorts(forceRefresh: true))
             KissSerialPortOptions.Add(port);
-        if (saved.Length > 0 && !KissSerialPortOptions.Contains(saved, StringComparer.OrdinalIgnoreCase))
+        var listed = KissSerialPortOptions.FirstOrDefault(port =>
+            string.Equals(port, saved, StringComparison.OrdinalIgnoreCase));
+        if (listed is null && saved.Length > 0)
+        {
             KissSerialPortOptions.Insert(0, saved);
-        KissSerialPort = saved;
+            listed = saved;
+        }
+
+        KissSerialPort = listed ?? "";
         RefreshKissSerialConflict();
     }
 
