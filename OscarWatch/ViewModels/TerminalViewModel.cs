@@ -1050,9 +1050,9 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
             TerminalTransportState.Connected => _l.Get("Terminal.Modem.Connected", endpoint,
                 string.IsNullOrWhiteSpace(_service.ModemDescription) ? "AGWPE" : _service.ModemDescription),
             TerminalTransportState.Connecting => _l.Get("Terminal.Modem.Connecting", endpoint),
-            TerminalTransportState.Error => _l.Get("Terminal.Modem.Error", endpoint, _service.LastConnectionError ?? ""),
+            TerminalTransportState.Error => _l.Get("Terminal.Modem.Error", endpoint, DescribeConnectionError(_service.LastConnectionError)),
             _ when _service.IsRunning && !string.IsNullOrWhiteSpace(_service.LastConnectionError) =>
-                _l.Get("Terminal.Modem.Error", endpoint, _service.LastConnectionError),
+                _l.Get("Terminal.Modem.Error", endpoint, DescribeConnectionError(_service.LastConnectionError)),
             _ when _service.IsRunning => _l.Get("Terminal.Modem.Connecting", endpoint),
             _ => _l.Get("Terminal.Modem.Disconnected"),
         };
@@ -1101,6 +1101,20 @@ public sealed partial class TerminalViewModel : ViewModelBase, IDisposable
             _ => _l.Get("Terminal.Uhm.Status.Off"),
         };
         UhmServerText = _service.UhmServerMessage ?? "";
+    }
+
+    /// <summary>
+    /// PortAudio's own text is only "Error opening PortAudio Stream". Say what that usually means.
+    /// </summary>
+    private string DescribeConnectionError(string? error)
+    {
+        if (!PacketAudioOpenFailure.IsStreamOpenFailure(error))
+            return error ?? "";
+
+        var name = _settings.Current.Terminal.BuiltIn.OutputDeviceDisplayName?.Trim();
+        if (string.IsNullOrWhiteSpace(name))
+            name = _l.Get("Terminal.Modem.Soundcard");
+        return _l.Get("Terminal.Modem.SoundcardBusy", name);
     }
 
     private void RefreshStations(DateTime now)

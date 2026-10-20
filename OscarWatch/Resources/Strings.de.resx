@@ -5228,6 +5228,9 @@ Aktuell: {1} ({2})</value>
   <data name="Terminal.Modem.Error">
     <value>Modem: {0} nicht erreichbar. {1}</value>
   </data>
+  <data name="Terminal.Modem.SoundcardBusy" xml:space="preserve">
+    <value>{0} konnte nicht geöffnet werden. Die Soundkarte wird möglicherweise bereits verwendet, zum Beispiel von FT4. Beenden Sie alles andere, das sie benutzt, und versuchen Sie es erneut.</value>
+  </data>
   <data name="Terminal.Profile.None">
     <value>Der gewählte Satellit hat keinen Packet-Digipeater</value>
   </data>
@@ -5935,6 +5938,12 @@ Aktuell: {1} ({2})</value>
   </data>
   <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
     <value>Testton fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusy" xml:space="preserve">
+    <value>Testton fehlgeschlagen: das Terminal-Modem hat {0} bereits geöffnet. Trennen Sie das Modem und senden Sie den Testton erneut.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusyOther" xml:space="preserve">
+    <value>Testton fehlgeschlagen: {0} konnte nicht geöffnet werden. Die Soundkarte wird möglicherweise bereits verwendet, zum Beispiel von FT4. Beenden Sie alles andere, das sie benutzt, und versuchen Sie es erneut.</value>
   </data>
   <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
     <value>Tastet das Funkgerät 5 Sekunden lang mit dem obigen Sendepegel. Bei FM etwa 3 kHz Hub einstellen. In eine Kunstantenne oder auf einer freien Frequenz senden.</value>

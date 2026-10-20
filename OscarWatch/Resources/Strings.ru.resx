@@ -5228,6 +5228,9 @@ LOS: {2}
   <data name="Terminal.Modem.Error">
     <value>Модем: нет связи с {0}. {1}</value>
   </data>
+  <data name="Terminal.Modem.SoundcardBusy" xml:space="preserve">
+    <value>Не удалось открыть {0}. Звуковая карта, возможно, уже занята, например FT4. Остановите всё остальное, что её использует, и повторите попытку.</value>
+  </data>
   <data name="Terminal.Profile.None">
     <value>У выбранного спутника нет пакетного дигипитера</value>
   </data>
@@ -5935,6 +5938,12 @@ LOS: {2}
   </data>
   <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
     <value>Ошибка тестового тона: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusy" xml:space="preserve">
+    <value>Ошибка тестового тона: модем терминала уже открыл {0}. Отключите модем и отправьте тестовый тон снова.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusyOther" xml:space="preserve">
+    <value>Ошибка тестового тона: не удалось открыть {0}. Звуковая карта, возможно, уже занята, например FT4. Остановите всё остальное, что её использует, и повторите попытку.</value>
   </data>
   <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
     <value>Включает передачу на 5 секунд с указанным выше уровнем TX. Для ЧМ-радиостанции установите уровень для девиации около 3 кГц. Передавайте на эквивалент нагрузки или на свободной частоте.</value>

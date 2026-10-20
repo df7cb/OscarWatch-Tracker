@@ -5228,6 +5228,9 @@ LOS: {2}
   <data name="Terminal.Modem.Error">
     <value>โมเด็ม: ติดต่อ {0} ไม่ได้ {1}</value>
   </data>
+  <data name="Terminal.Modem.SoundcardBusy" xml:space="preserve">
+    <value>เปิด {0} ไม่ได้ การ์ดเสียงอาจถูกใช้งานอยู่แล้ว เช่น โดย FT4 หยุดสิ่งอื่นที่ใช้การ์ดเสียง แล้วลองอีกครั้ง</value>
+  </data>
   <data name="Terminal.Profile.None">
     <value>ดาวเทียมที่เลือกไม่มีดิจิพีทเตอร์แพ็กเก็ต</value>
   </data>
@@ -5935,6 +5938,12 @@ LOS: {2}
   </data>
   <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
     <value>เสียงทดสอบล้มเหลว: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusy" xml:space="preserve">
+    <value>เสียงทดสอบล้มเหลว: โมเด็มของเทอร์มินัลเปิด {0} อยู่แล้ว ตัดการเชื่อมต่อโมเด็ม แล้วส่งเสียงทดสอบอีกครั้ง</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusyOther" xml:space="preserve">
+    <value>เสียงทดสอบล้มเหลว: เปิด {0} ไม่ได้ การ์ดเสียงอาจถูกใช้งานอยู่แล้ว เช่น โดย FT4 หยุดสิ่งอื่นที่ใช้การ์ดเสียง แล้วลองอีกครั้ง</value>
   </data>
   <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
     <value>สั่งส่งวิทยุ 5 วินาทีที่ระดับ TX ด้านบน สำหรับวิทยุ FM ให้ตั้งระดับให้ดีวิเอชันประมาณ 3 kHz ส่งเข้าดัมมีโหลดหรือบนความถี่ที่ว่าง</value>

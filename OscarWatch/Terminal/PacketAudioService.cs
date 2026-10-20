@@ -279,7 +279,10 @@ public sealed class PacketAudioService : IPacketAudio
         }
         catch (Exception ex) when (info.maxOutputChannels >= 2)
         {
-            Log.Warning(ex, "Terminal modem mono output open failed; retrying stereo");
+            Log.Warning(
+                "Terminal modem mono output open failed on '{Device}'; retrying stereo. {Reason}",
+                info.name,
+                ex.Message);
             OpenOutputStream(index, info, channels: 2);
         }
 

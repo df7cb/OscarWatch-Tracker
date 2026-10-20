@@ -295,6 +295,12 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
 
     private bool ModemConnected => _service.BuiltInModem is { State: TerminalTransportState.Connected };
 
+    private string OutputDeviceLabel()
+    {
+        var name = SelectedOutputDevice?.DisplayName?.Trim();
+        return string.IsNullOrWhiteSpace(name) ? _l.Get("Terminal.Modem.Soundcard") : name;
+    }
+
     private void StopMonitor()
     {
         _monitor?.Dispose();
@@ -389,8 +395,24 @@ public sealed partial class TerminalBuiltInModemViewModel : ObservableObject, ID
         }
         catch (Exception ex)
         {
-            Log.Information(ex, "Terminal test tone failed");
-            TestToneText = _l.Get("Terminal.Modem.TestTone.Failed", ex.Message);
+            if (PacketAudioOpenFailure.IsStreamOpenFailure(ex))
+            {
+                var device = OutputDeviceLabel();
+                Log.Warning(
+                    "Terminal test tone could not open '{Device}' (modem connected={Connected})",
+                    device,
+                    ModemConnected);
+                TestToneText = _l.Get(
+                    ModemConnected
+                        ? "Terminal.Modem.TestTone.SoundcardBusy"
+                        : "Terminal.Modem.TestTone.SoundcardBusyOther",
+                    device);
+            }
+            else
+            {
+                Log.Information(ex, "Terminal test tone failed");
+                TestToneText = _l.Get("Terminal.Modem.TestTone.Failed", ex.Message);
+            }
         }
         finally
         {

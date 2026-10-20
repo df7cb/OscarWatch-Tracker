@@ -783,7 +783,17 @@ public sealed class TerminalService : IAsyncDisposable
             catch (Exception ex)
             {
                 LastConnectionError = ex.Message;
-                Log.Information("Terminal modem connection failed: {Message}", ex.Message);
+                if (PacketAudioOpenFailure.IsStreamOpenFailure(ex))
+                {
+                    var output = Settings.BuiltIn.OutputDeviceDisplayName;
+                    Log.Warning(
+                        "Terminal modem could not open the sound card '{Device}'. It may already be in use, for example by FT4",
+                        string.IsNullOrWhiteSpace(output) ? "(default)" : output);
+                }
+                else
+                {
+                    Log.Information("Terminal modem connection failed: {Message}", ex.Message);
+                }
                 Changed?.Invoke();
             }
 

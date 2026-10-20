@@ -5223,6 +5223,9 @@ Está utilizando la versión {0}.
   <data name="Terminal.Modem.Error">
     <value>Módem: no se puede conectar a {0}. {1}</value>
   </data>
+  <data name="Terminal.Modem.SoundcardBusy" xml:space="preserve">
+    <value>No se pudo abrir {0}. Puede que ya esté en uso, por ejemplo por FT4. Detenga cualquier otra cosa que lo esté usando y vuelva a intentarlo.</value>
+  </data>
   <data name="Terminal.Profile.None">
     <value>El satélite enfocado no tiene digipeater de paquetes</value>
   </data>
@@ -5930,6 +5933,12 @@ Está utilizando la versión {0}.
   </data>
   <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
     <value>Falló el tono de prueba: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusy" xml:space="preserve">
+    <value>Falló el tono de prueba: el módem del Terminal ya tiene {0} abierto. Desconecte el módem y vuelva a enviar el tono de prueba.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusyOther" xml:space="preserve">
+    <value>Falló el tono de prueba: no se pudo abrir {0}. Puede que ya esté en uso, por ejemplo por FT4. Detenga cualquier otra cosa que lo esté usando y vuelva a intentarlo.</value>
   </data>
   <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
     <value>Activa la radio durante 5 segundos con el nivel de TX indicado arriba. En FM, ajuste el nivel para unos 3 kHz de desviación. Transmita a una carga artificial o en una frecuencia libre.</value>

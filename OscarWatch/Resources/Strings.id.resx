@@ -5228,6 +5228,9 @@ Terbaru: {1} ({2})</value>
   <data name="Terminal.Modem.Error">
     <value>Modem: tidak dapat menjangkau {0}. {1}</value>
   </data>
+  <data name="Terminal.Modem.SoundcardBusy" xml:space="preserve">
+    <value>{0} tidak dapat dibuka. Kartu suara mungkin sedang dipakai, misalnya oleh FT4. Hentikan yang lain yang memakainya, lalu coba lagi.</value>
+  </data>
   <data name="Terminal.Profile.None">
     <value>Satelit terpilih tidak memiliki digipeater paket</value>
   </data>
@@ -5935,6 +5938,12 @@ Terbaru: {1} ({2})</value>
   </data>
   <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
     <value>Nada uji gagal: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusy" xml:space="preserve">
+    <value>Nada uji gagal: modem Terminal sudah membuka {0}. Putuskan modem, lalu kirim nada uji lagi.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusyOther" xml:space="preserve">
+    <value>Nada uji gagal: {0} tidak dapat dibuka. Kartu suara mungkin sedang dipakai, misalnya oleh FT4. Hentikan yang lain yang memakainya, lalu coba lagi.</value>
   </data>
   <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
     <value>Memancarkan radio selama 5 detik pada level TX di atas. Pada radio FM, atur level untuk deviasi sekitar 3 kHz. Pancarkan ke beban dummy atau pada frekuensi kosong.</value>

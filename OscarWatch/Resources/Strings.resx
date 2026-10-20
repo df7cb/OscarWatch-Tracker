@@ -5223,6 +5223,9 @@ Latest: {1} ({2})</value>
   <data name="Terminal.Modem.Error">
     <value>Modem: cannot reach {0}. {1}</value>
   </data>
+  <data name="Terminal.Modem.SoundcardBusy" xml:space="preserve">
+    <value>{0} could not be opened. It may already be in use, for example by FT4. Stop anything else using it, then try again.</value>
+  </data>
   <data name="Terminal.Profile.None">
     <value>No packet digipeater on the focused satellite</value>
   </data>
@@ -5930,6 +5933,12 @@ Latest: {1} ({2})</value>
   </data>
   <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
     <value>Test tone failed: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusy" xml:space="preserve">
+    <value>Test tone failed: the Terminal modem already has {0} open. Disconnect the modem, then send the test tone.</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusyOther" xml:space="preserve">
+    <value>Test tone failed: {0} could not be opened. It may already be in use, for example by FT4. Stop anything else using it, then try again.</value>
   </data>
   <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
     <value>Keys the radio for 5 seconds at the TX level above. On an FM radio, set the level for about 3 kHz deviation. Transmit into a dummy load or on a clear frequency.</value>

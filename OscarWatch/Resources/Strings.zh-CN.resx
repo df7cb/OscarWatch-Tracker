@@ -5224,6 +5224,9 @@
   <data name="Terminal.Modem.Error">
     <value>调制解调器:无法连接 {0}。{1}</value>
   </data>
+  <data name="Terminal.Modem.SoundcardBusy" xml:space="preserve">
+    <value>无法打开 {0}。它可能已被占用，例如被 FT4 占用。请先停止其他正在使用它的程序，然后再试。</value>
+  </data>
   <data name="Terminal.Profile.None">
     <value>所选卫星没有分组转发器</value>
   </data>
@@ -5931,6 +5934,12 @@
   </data>
   <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
     <value>测试音失败：{0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusy" xml:space="preserve">
+    <value>测试音失败：终端调制解调器已经打开了 {0}。请先断开调制解调器，再发送测试音。</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusyOther" xml:space="preserve">
+    <value>测试音失败：无法打开 {0}。它可能已被占用，例如被 FT4 占用。请先停止其他正在使用它的程序，然后再试。</value>
   </data>
   <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
     <value>以上方的发射电平让电台发射 5 秒。FM 电台请将电平调至约 3 kHz 频偏。请发射到假负载或空闲频率上。</value>

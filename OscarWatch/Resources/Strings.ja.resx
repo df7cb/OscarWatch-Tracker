@@ -5224,6 +5224,9 @@
   <data name="Terminal.Modem.Error">
     <value>モデム: {0} に接続できません。{1}</value>
   </data>
+  <data name="Terminal.Modem.SoundcardBusy" xml:space="preserve">
+    <value>{0} を開けませんでした。FT4 など、別の機能が既に使っている可能性があります。使っているものを停止してから、もう一度試してください。</value>
+  </data>
   <data name="Terminal.Profile.None">
     <value>選択中の衛星にパケットデジピーターはありません</value>
   </data>
@@ -5931,6 +5934,12 @@
   </data>
   <data name="Terminal.Modem.TestTone.Failed" xml:space="preserve">
     <value>テストトーンに失敗しました: {0}</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusy" xml:space="preserve">
+    <value>テストトーンに失敗しました: ターミナルのモデムが {0} を既に開いています。モデムを切断してから、テストトーンを送ってください。</value>
+  </data>
+  <data name="Terminal.Modem.TestTone.SoundcardBusyOther" xml:space="preserve">
+    <value>テストトーンに失敗しました: {0} を開けませんでした。FT4 など、別の機能が既に使っている可能性があります。使っているものを停止してから、もう一度試してください。</value>
   </data>
   <data name="Terminal.Modem.TestTone.Help" xml:space="preserve">
     <value>上の送信レベルで無線機を 5 秒間送信します。FM 機では約 3 kHz のデビエーションになるようレベルを合わせてください。ダミーロードか空き周波数で送信してください。</value>
