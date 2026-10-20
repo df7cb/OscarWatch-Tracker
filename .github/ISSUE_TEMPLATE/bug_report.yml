@@ -9,7 +9,7 @@ body:
       value: |
         Thanks for taking the time to report a problem. The sections below help us reproduce and fix it faster.
 
-        **Before you submit:** check [Problems?](https://github.com/magicbug/OscarWatch-Tracker/blob/main/help/troubleshooting.html) and confirm you are on the [latest release](https://github.com/magicbug/OscarWatch-Tracker/releases) if you can.
+        **Before you submit:** check [Problems?](https://oscarwatch.org/docs/troubleshooting) and confirm you are on the [latest release](https://github.com/magicbug/OscarWatch-Tracker/releases) if you can.
 
   - type: input
     id: version

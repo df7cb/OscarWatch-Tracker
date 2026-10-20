@@ -1994,7 +1994,7 @@ public partial class SettingsViewModel : ViewModelBase, IDisposable
         }
     }
 
-    public void OpenSatelliteLinkHelp() => Help.HelpLauncher.TryOpenHelp("satellite-link.html");
+    public void OpenSatelliteLinkHelp() => Help.HelpLauncher.TryOpenHelp("satellite-link");
 
     public async Task TestHamsAtAsync()
     {

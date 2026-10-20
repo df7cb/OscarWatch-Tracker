@@ -787,7 +787,7 @@
     <value>Calculando pases…</value>
   </data>
   <data name="Status.HelpMissing">
-    <value>No se encontraron los archivos de ayuda. Reinstale el programa o ejecute una versión publicada.</value>
+    <value>No se pudo abrir la guía del operador en el navegador. Visite oscarwatch.org/docs/tracker</value>
   </data>
   <data name="Status.SupportOpenFailed">
     <value>No se pudo abrir la página de soporte</value>

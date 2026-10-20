@@ -1115,7 +1115,7 @@ Lanjutkan?</value>
     <value>Menghitung lintasan…</value>
   </data>
   <data name="Status.HelpMissing">
-    <value>Berkas bantuan tidak ditemukan. Instal ulang atau jalankan dari build yang dipublikasikan</value>
+    <value>Panduan operator tidak dapat dibuka di browser. Kunjungi oscarwatch.org/docs/tracker</value>
   </data>
   <data name="Status.SupportOpenFailed">
     <value>Tidak dapat membuka halaman dukungan</value>

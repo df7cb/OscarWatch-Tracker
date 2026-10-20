@@ -1115,7 +1115,7 @@ LOS: {2}
     <value>กำลังคำนวณพาส…</value>
   </data>
   <data name="Status.HelpMissing">
-    <value>ไม่พบไฟล์วิธีใช้: ติดตั้งใหม่หรือรันจากบิลด์ที่เผยแพร่</value>
+    <value>ไม่สามารถเปิดคู่มือผู้ใช้งานในเบราว์เซอร์ได้ ไปที่ oscarwatch.org/docs/tracker</value>
   </data>
   <data name="Status.SupportOpenFailed">
     <value>ไม่สามารถเปิดหน้าสนับสนุนได้</value>

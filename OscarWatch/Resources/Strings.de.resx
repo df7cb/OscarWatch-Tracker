@@ -1115,7 +1115,7 @@ Fortfahren?</value>
     <value>Überflüge werden berechnet…</value>
   </data>
   <data name="Status.HelpMissing">
-    <value>Hilfedateien nicht gefunden: neu installieren oder aus einem veröffentlichten Build starten</value>
+    <value>Die Bedienungsanleitung konnte nicht im Browser geöffnet werden. Besuchen Sie oscarwatch.org/docs/tracker</value>
   </data>
   <data name="Status.SupportOpenFailed">
     <value>Supportseite konnte nicht geöffnet werden</value>

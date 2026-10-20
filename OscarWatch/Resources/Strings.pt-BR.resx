@@ -787,7 +787,7 @@ Continuar?</value>
     <value>Calculando passagens…</value>
   </data>
   <data name="Status.HelpMissing">
-    <value>Arquivos de ajuda não encontrados — reinstale ou execute a partir de uma versão publicada</value>
+    <value>Não foi possível abrir o guia do operador no navegador. Acesse oscarwatch.org/docs/tracker</value>
   </data>
   <data name="Status.SupportOpenFailed">
     <value>Não foi possível abrir a página de suporte</value>

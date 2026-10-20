@@ -4,7 +4,7 @@ contact_links:
     url: https://github.com/magicbug/OscarWatch-Tracker/discussions
     about: How-do-I questions, shack setup, hardware chat, and general operator talk. Not for bugs or code changes.
   - name: Operator guide (Problems?)
-    url: https://github.com/magicbug/OscarWatch-Tracker/blob/main/help/troubleshooting.html
+    url: https://oscarwatch.org/docs/troubleshooting
     about: Common fixes for passes, CAT, rotator, recording, and logs before opening an issue.
   - name: Contributing
     url: https://github.com/magicbug/OscarWatch-Tracker/blob/main/README.md#contributing

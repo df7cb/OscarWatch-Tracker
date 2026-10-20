@@ -1115,7 +1115,7 @@ LOS: {2}
     <value>Расчёт пролётов…</value>
   </data>
   <data name="Status.HelpMissing">
-    <value>Файлы справки не найдены: переустановите или запускайте из опубликованной сборки</value>
+    <value>Не удалось открыть руководство оператора в браузере. Откройте oscarwatch.org/docs/tracker</value>
   </data>
   <data name="Status.SupportOpenFailed">
     <value>Не удалось открыть страницу поддержки</value>

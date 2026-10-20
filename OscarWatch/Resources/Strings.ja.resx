@@ -769,7 +769,7 @@
     <value>ログフォルダを開けませんでした</value>
   </data>
   <data name="Status.HelpMissing">
-    <value>ヘルプファイルが見つかりません — 再インストールまたは公開ビルドから実行</value>
+    <value>ブラウザーでオペレーターガイドを開けませんでした。oscarwatch.org/docs/tracker を開いてください</value>
   </data>
   <data name="Status.SupportOpenFailed">
     <value>サポートページを開けませんでした</value>

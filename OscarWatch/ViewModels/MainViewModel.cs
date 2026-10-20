@@ -3250,7 +3250,7 @@ public partial class MainViewModel : ViewModelBase
         if (HelpLauncher.TryOpenHelp())
             return;
 
-        Log.Warning("Help folder not found next to the application");
+        Log.Warning("Could not open the operator guide at {Url}", HelpLauncher.BuildUrl());
         StatusText = _l.Get("Status.HelpMissing");
     }
 

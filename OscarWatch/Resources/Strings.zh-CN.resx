@@ -787,7 +787,7 @@
     <value>正在计算过境...</value>
   </data>
   <data name="Status.HelpMissing">
-    <value>帮助文件缺失 — 请重新安装或从正式发布版运行</value>
+    <value>无法在浏览器中打开操作指南。请访问 oscarwatch.org/docs/tracker</value>
   </data>
   <data name="Status.SupportOpenFailed">
     <value>无法打开支持页面</value>

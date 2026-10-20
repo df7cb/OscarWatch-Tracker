@@ -1111,7 +1111,7 @@ Continue?</value>
     <value>Computing passes…</value>
   </data>
   <data name="Status.HelpMissing">
-    <value>Help files not found — reinstall or run from a published build</value>
+    <value>Could not open the operator guide in your browser. Visit oscarwatch.org/docs/tracker</value>
   </data>
   <data name="Status.SupportOpenFailed">
     <value>Could not open the support page</value>

@@ -1115,7 +1115,7 @@ Continuare?</value>
     <value>Calcolo dei passaggi…</value>
   </data>
   <data name="Status.HelpMissing">
-    <value>File della guida non trovati: reinstalla o avvia da una build pubblicata</value>
+    <value>Impossibile aprire la guida operatore nel browser. Visita oscarwatch.org/docs/tracker</value>
   </data>
   <data name="Status.SupportOpenFailed">
     <value>Impossibile aprire la pagina di supporto</value>

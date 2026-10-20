@@ -1,0 +1,18 @@
+---
+description: Operator help lives on the OscarWatch website, not in this repo
+alwaysApply: true
+---
+
+# Operator help lives in the website repo
+
+The operator guide is published at **https://oscarwatch.org/docs** and maintained as markdown in the OscarWatch **website** repo (locally `C:\Users\peter\Herd\oscarwatch`):
+
+- Pages: `docs/*.md` (for example `docs/ft4.md`, `docs/settings.md`, `docs/tracker.md` for the introduction)
+- Page list, titles, sidebar groups and icons: `config/docs.php`
+
+Rules:
+
+- When a Tracker feature or setting changes, update the matching page in the website repo's `docs/` folder. Note it in the summary if you cannot edit that repo.
+- Do **not** recreate a `help/` folder or add HTML help pages to this repo, and do not bundle help files in `OscarWatch.csproj`.
+- App help buttons go through `OscarWatch/Help/HelpLauncher.cs`, which opens `https://oscarwatch.org/docs/{slug}#{anchor}`. A slug is the docs file name without `.md`. Keep anchors that the app or other pages link to (for example `settings#gps`, `settings#ffmpeg`, `rotators#keyhole-avoidance`). In markdown they are written as `## Heading {#id}`.
+- New help pages need an entry in `config/docs.php` with `'section' => 'tracker'` and a `group`, or they will not appear on the site.

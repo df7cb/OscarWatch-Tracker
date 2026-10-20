@@ -16,9 +16,9 @@ You do **not** need to be a programmer to use published builds.
 
 - **Map and sky plot**: subpoint, ground track, footprint, and a polar view from your QTH; optional **pass elevation timeline** below the map (upcoming passes as elevation profiles over UTC time — click to focus); optional **DX station** marker and live Az/El at a remote grid for the focused satellite; status-bar **map time** buttons (−15m / −5m / Now / +5m / +15m) to preview footprints (rotator and CAT stay on live time)
 - **Pass list**: upcoming passes with max elevation and time-to-AOS; right-click a row for a polar **pass plot** at your QTH; sidebar scrolls on smaller windows
-- **Frequency panel**: transponder modes from a built-in database, live uplink/downlink with Doppler, RX offsets (separate for Voice and CW on linear SSB), and CTCSS (access/arm tones). Keyboard shortcuts: [help/keyboard-shortcuts.html](help/keyboard-shortcuts.html) (**Ctrl+W**, numpad **+** / **−** for RX offset, **S** for solo map view, map arrows, etc.)
+- **Frequency panel**: transponder modes from a built-in database, live uplink/downlink with Doppler, RX offsets (separate for Voice and CW on linear SSB), and CTCSS (access/arm tones). Keyboard shortcuts: [oscarwatch.org/docs/keyboard-shortcuts](https://oscarwatch.org/docs/keyboard-shortcuts) (**Ctrl+W**, numpad **+** / **−** for RX offset, **S** for solo map view, map arrows, etc.)
 - **Optional automation**: serial **rotator** tracking and **radio CAT** (Doppler, satellite/split layout, tones) during a pass
-- **Optional extras**: voice “satellite rising” alerts, pass **WAV recording**, **Cloudlog** frequency sync, **GPS** (NMEA serial) for station position and optional UTC for tracking, local **OscarWatch Logbook** with ADIF export (**Tools → OscarWatch Logbook**), in-app **OscarWatch FT4** modem for duplex satellite digital (**Tools → OscarWatch FT4**; [help](help/ft4.html))
+- **Optional extras**: voice “satellite rising” alerts, pass **WAV recording**, **Cloudlog** frequency sync, **GPS** (NMEA serial) for station position and optional UTC for tracking, local **OscarWatch Logbook** with ADIF export (**Tools → OscarWatch Logbook**), in-app **OscarWatch FT4** modem for duplex satellite digital (**Tools → OscarWatch FT4**; [help](https://oscarwatch.org/docs/ft4))
 
 OscarWatch does **not** decode telemetry; it is a pass-tracking and station-assist tool for the shack or field, with a built-in lightweight logbook for satellite QSOs during a pass (export ADIF for your main logger).
 
@@ -28,7 +28,7 @@ OscarWatch does **not** decode telemetry; it is a pass-tracking and station-assi
 
 Pre-built packages for Windows, macOS, and Linux are on the **[Releases](https://github.com/magicbug/OscarWatch-Tracker/releases)** page (see [Cross-platform publish](#cross-platform-publish) for platform names). Extract the archive for your OS and run `OscarWatch`.
 
-**macOS (first install):** release builds are not code-signed or notarised. Expect a few one-time security prompts — full step-by-step help is in [help/macos-install.html](help/macos-install.html) (thanks to Tim GW4VXE for the operator walkthrough).
+**macOS (first install):** release builds are not code-signed or notarised. Expect a few one-time security prompts — full step-by-step help is in [oscarwatch.org/docs/macos-install](https://oscarwatch.org/docs/macos-install) (thanks to Tim GW4VXE for the operator walkthrough).
 
 1. Download **`OscarWatch-osx-arm64`** (Apple Silicon) or **`OscarWatch-osx-x64`** (Intel) from Releases.
 2. In Finder, right-click the archive → **Open With → Archive Utility**. Rename the extracted folder to `OscarWatch` if you like.
@@ -56,7 +56,7 @@ To build from source instead, see [Build and run](#build-and-run) below.
 
 ### During a pass
 
-1. Confirm the correct **transponder mode** in the frequency panel on the map (e.g. FM voice, Mode B USB/LSB). On linear SSB modes, use **Voice** / **CW** in the panel title bar (or **Ctrl+W**). See [frequencies help](help/frequencies.html).
+1. Confirm the correct **transponder mode** in the frequency panel on the map (e.g. FM voice, Mode B USB/LSB). On linear SSB modes, use **Voice** / **CW** in the panel title bar (or **Ctrl+W**). See [frequencies help](https://oscarwatch.org/docs/frequencies).
 2. Watch **azimuth** and **elevation** in the sidebar. Point your antenna there (or let the rotator track if enabled).
 3. Set your radio from the **Radio** / **Sat** columns in the overlay, or enable CAT so OscarWatch updates frequencies for Doppler.
 4. On FM satellites, pick the correct **CTCSS** tone when access and arm are both listed.
@@ -67,7 +67,7 @@ Press **Standby** in the sidebar when you are only planning or browsing: the rot
 
 ### Operator guide
 
-Plain-language help ships with the app: **Help → Operator guide** (also in the `[help/](help/)` folder). The guide is **English only**; the app UI can be switched under **Settings → Appearance → Language** (restart required). Topics include quick start, map and pass elevation timeline, frequencies, TLEs, pass planning, radio/rotator setup, recording, OscarWatch Logbook, and troubleshooting.
+Plain-language help is on the website at [oscarwatch.org/docs/tracker](https://oscarwatch.org/docs/tracker), and **Help → Operator guide** in the app opens it in your browser (an internet connection is needed). The guide is **English only**; the app UI can be switched under **Settings → Appearance → Language** (restart required). Topics include quick start, map and pass elevation timeline, frequencies, TLEs, pass planning, radio/rotator setup, recording, OscarWatch Logbook, and troubleshooting.
 
 ---
 
@@ -91,14 +91,14 @@ Plain-language help ships with the app: **Help → Operator guide** (also in the
 - **Radio CAT**: doppler tracking, satellite/split setup, Main/Sub VFOs, uplink CTCSS where supported; Settings → Radio (see [Supported hardware](#supported-hardware))
 - **Rotator control**: serial pass tracking, manual park, and **manual rotator** (az/el dialog in Standby for quick contacts between passes); Settings → Rotator (see [Supported hardware](#supported-hardware))
 - **Cloudlog**: optional Radio API v2 uplink/downlink when tracking (Settings → Cloudlog)
-- **OscarWatch Logbook**: local satellite logging (**Tools → OscarWatch Logbook**): UTC timestamps, multiple logbooks, fast entry during a pass (satellite/mode/frequencies from tracking), grid-line multi-grid support, ADIF export ([help](help/qso-logbook.html))
-- **OscarWatch FT4**: in-app duplex FT4 (**Tools → OscarWatch FT4**) with waterfall, auto-sequence, PTT methods, slot-gated Doppler, echo calibration, and logbook save ([help](help/ft4.html))
-- **OscarWatch SSTV**: receive-only SSTV (**Tools → OscarWatch SSTV**) for Robot 36/72, Scottie S1/S2/DX, Martin M1/M2, Wraase SC2-180 and PD 50 to 290, with automatic mode pick, slant correction, AFC, SSB Doppler correction, signal spectrum and waterfall, PNG saving, a picture library filtered by date, satellite and mode, and decoding of recordings ([help](help/sstv.html))
+- **OscarWatch Logbook**: local satellite logging (**Tools → OscarWatch Logbook**): UTC timestamps, multiple logbooks, fast entry during a pass (satellite/mode/frequencies from tracking), grid-line multi-grid support, ADIF export ([help](https://oscarwatch.org/docs/qso-logbook))
+- **OscarWatch FT4**: in-app duplex FT4 (**Tools → OscarWatch FT4**) with waterfall, auto-sequence, PTT methods, slot-gated Doppler, echo calibration, and logbook save ([help](https://oscarwatch.org/docs/ft4))
+- **OscarWatch SSTV**: receive-only SSTV (**Tools → OscarWatch SSTV**) for Robot 36/72, Scottie S1/S2/DX, Martin M1/M2, Wraase SC2-180 and PD 50 to 290, with automatic mode pick, slant correction, AFC, SSB Doppler correction, signal spectrum and waterfall, PNG saving, a picture library filtered by date, satellite and mode, and decoding of recordings ([help](https://oscarwatch.org/docs/sstv))
 - **Appearance**: light, dark, or system theme (sky plot adapts; world map image stays light); 12- or 24-hour clock; optional greyline and footprint motion arrows on the map
 
 ## Supported hardware
 
-OscarWatch talks to rigs and rotators over **serial CAT** (COM port on Windows, device path on Linux/macOS). Rig and rotator must use **different** ports. On Linux, use a stable `by-id` or udev alias so `ttyUSB` numbers do not swap after reboot — see [help/linux-serial.html](help/linux-serial.html).
+OscarWatch talks to rigs and rotators over **serial CAT** (COM port on Windows, device path on Linux/macOS). Rig and rotator must use **different** ports. On Linux, use a stable `by-id` or udev alias so `ttyUSB` numbers do not swap after reboot — see [oscarwatch.org/docs/linux-serial](https://oscarwatch.org/docs/linux-serial).
 
 ### Radios
 
@@ -119,9 +119,9 @@ OscarWatch talks to rigs and rotators over **serial CAT** (COM port on Windows, 
 | **ICOM IC-706 / IC-706MKII / IC-706MKIIG** | CI-V | **Dual radio only**: shared CI-V driver; default addresses `48` / `4C` / `58`. All three cover HF/6 m and 2m; MKIIG adds 70cm (AO-07 Mode A downlink on 10 m). 23cm not supported |
 | **Yaesu FT-991 / FT-991A** | Yaesu ASCII CAT (8N2) | **Dual radio only**: one or two FT-991(A)s, or mixed with other dual legs; VFO-A per radio; FM dial lock via `LK` |
 | **Yaesu FTX-1 Field / FTX-1optima** | Yaesu ASCII CAT (8N2) | **Dual radio only**: same newcat subset as FT-991; use CAT-1 (Enhanced COM) per leg; HF/50/144/430 coverage |
-| **SDR (rigctl TCP)** | Hamlib-style rigctl over TCP | **Dual radio downlink only**: SDR++, SDR Connect, or any rigctl server; bidirectional frequency for passband trim ([help](help/radio-sdr-dual.html)) |
+| **SDR (rigctl TCP)** | Hamlib-style rigctl over TCP | **Dual radio downlink only**: SDR++, SDR Connect, or any rigctl server; bidirectional frequency for passband trim ([help](https://oscarwatch.org/docs/radio-sdr-dual)) |
 | **Kenwood TS-2000** | Kenwood ASCII CAT | **Beta**: put the radio in **SAT** and turn **memory mode off** when you can; OscarWatch enters/maintains SATL via CAT (`SA` / `FA` / `FB`), programs pass frequencies, Doppler-tracks, and exits SATL on disconnect |
-| **FlexRadio (SmartSDR API)** | SmartSDR TCP/IP API to the radio | **Single radio**: LAN UDP discovery (port 4992), full duplex, RX/TX slices for Doppler and uplink CTCSS ([help](help/radio-flex.html)). Dual-SCU models required for true FDX (e.g. **8600** / **8600M**; also 6600/6700) |
+| **FlexRadio (SmartSDR API)** | SmartSDR TCP/IP API to the radio | **Single radio**: LAN UDP discovery (port 4992), full duplex, RX/TX slices for Doppler and uplink CTCSS ([help](https://oscarwatch.org/docs/radio-flex)). Dual-SCU models required for true FDX (e.g. **8600** / **8600M**; also 6600/6700) |
 | **Dummy rig**       | n/a               | No serial I/O; for UI and doppler testing without a radio                                                  |
 
 
@@ -151,7 +151,7 @@ Pull requests for more native rig support are welcome. A HamLib backend is not o
 GS-232, SPID, EasyComm, and SAEBRTrack can also use **TCP serial** (e.g. ser2net) instead of a local COM port: choose **Connection → TCP serial** under Settings → Rotator.
 
 
-Pass tracking when elevation is above the track-start threshold; manual **Park** in the sidebar; **manual rotator** in Standby (menu **Rotator…**: set az/el, Rotate, Stop, Park for a quick contact without resuming pass tracking). Azimuth range **360°** or **450°** (e.g. G-5500). On **450°** rotators, optional **smart azimuth** chooses 361–450° commands for the shortest path when the pass will cross north (Settings → Rotator). Elevation range **0–90°** or **0–180°** (over-the-top). Optional **keyhole avoidance** on **0–180°** mounts pre-positions for high-elevation zenith passes; see [help](help/rotators.html#keyhole-avoidance). Optional **calibration offsets** correct pass tracking and manual moves; park uses your configured park az/el exactly.
+Pass tracking when elevation is above the track-start threshold; manual **Park** in the sidebar; **manual rotator** in Standby (menu **Rotator…**: set az/el, Rotate, Stop, Park for a quick contact without resuming pass tracking). Azimuth range **360°** or **450°** (e.g. G-5500). On **450°** rotators, optional **smart azimuth** chooses 361–450° commands for the shortest path when the pass will cross north (Settings → Rotator). Elevation range **0–90°** or **0–180°** (over-the-top). Optional **keyhole avoidance** on **0–180°** mounts pre-positions for high-elevation zenith passes; see [help](https://oscarwatch.org/docs/rotators#keyhole-avoidance). Optional **calibration offsets** correct pass tracking and manual moves; park uses your configured park az/el exactly.
 
 More controllers: [building rotator drivers](documents/building-rotator-drivers.md).
 
@@ -169,8 +169,8 @@ Open **Settings** from the menu. Tabs:
 | **Voice**      | Enable announcements, trigger elevation (default −3°), voice selection, test button                                                                                                                                                            |
 | **Recording**  | Automatic pass WAV capture, input device, start/stop elevation, output folder, test clip                                                                                                                                                       |
 | **Rotator**    | Type (GS-232 / SPID / SPID MD-01 TCP / EasyComm / SAEBRTrack / OZ9AAR URC TCP / Green Heron RT-21), Serial or TCP serial connection (COM or host/port), 360°/450° azimuth, smart 450°, **0–90° / 0–180° elevation**, optional keyhole avoidance (0–180° only), park, track-start elevation, calibration offsets |
-| **Radio**      | Rig type, COM port, **Dual radio** (FT-817/818, FT-857, FT-991(A), IC-705, IC-7300, IC-905, IC-7100, IC-706 series, SDR rigctl downlink, or mixed; separate downlink/uplink), region, per-leg CI-V address for ICOM dual legs, linear CW receive mode (USB/LSB vs CW on both VFOs), Doppler CAT thresholds (FM default 350 Hz, SSB/CW default 50 Hz; adaptive and lead on by default), resume CAT after dial / uplink wait after dial (see [help](help/radio-doppler-tuning.html#passband-knob)), pause CAT |
-| **Integrations** | **GPS** (NMEA serial: COM port, auto-update station, optional GPS UTC for tracking — see [help](help/settings.html#gps)); **hams.at** roves; **Cloudlog** (URL, API key, logbook, radio API)                                              |
+| **Radio**      | Rig type, COM port, **Dual radio** (FT-817/818, FT-857, FT-991(A), IC-705, IC-7300, IC-905, IC-7100, IC-706 series, SDR rigctl downlink, or mixed; separate downlink/uplink), region, per-leg CI-V address for ICOM dual legs, linear CW receive mode (USB/LSB vs CW on both VFOs), Doppler CAT thresholds (FM default 350 Hz, SSB/CW default 50 Hz; adaptive and lead on by default), resume CAT after dial / uplink wait after dial (see [help](https://oscarwatch.org/docs/radio-doppler-tuning#passband-knob)), pause CAT |
+| **Integrations** | **GPS** (NMEA serial: COM port, auto-update station, optional GPS UTC for tracking — see [help](https://oscarwatch.org/docs/settings#gps)); **hams.at** roves; **Cloudlog** (URL, API key, logbook, radio API)                                              |
 
 
 Settings are stored in `%AppData%/OscarWatch/settings.json`.
@@ -187,7 +187,7 @@ Configure under **Settings → Integrations → GPS**. Choose **Serial (COM port
 - **Automatically update station position** — writes lat/lon (and grid square) from a valid fix; optional altitude from GGA
 - **Use GPS UTC for satellite tracking** — orbit propagation uses GPS time instead of the PC clock (does **not** change the Windows system clock)
 - **Apply fix to station** — one-shot update of **Settings → Station** fields
-- Status bar shows **GPS** (green = fix, red = no fix) and **GPS Time** (when time sync is enabled) — see [help](help/map-and-sidebar.html#status-bar)
+- Status bar shows **GPS** (green = fix, red = no fix) and **GPS Time** (when time sync is enabled) — see [help](https://oscarwatch.org/docs/map-and-sidebar#status-bar)
 
 Serial GPS must use a **different** COM port from the radio and rotator. Network gpsd does not use a COM port.
 
@@ -213,7 +213,7 @@ Audio capture uses [PortAudio](https://www.portaudio.com/) (via PortAudioSharp2)
 | Platform    | Notes                                                                                                                                    |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | **Windows** | Select your radio interface or sound card input in Settings → Recording                                                                  |
-| **macOS**   | Core Audio devices; see [macOS install](help/macos-install.html) if `libportaudio.dylib` is blocked; grant microphone permission when prompted |
+| **macOS**   | Core Audio devices; see [macOS install](https://oscarwatch.org/docs/macos-install) if `libportaudio.dylib` is blocked; grant microphone permission when prompted |
 | **Linux**   | Requires PulseAudio or ALSA; install `libasound2` / PulseAudio as needed for your distro                                                 |
 
 
@@ -252,7 +252,7 @@ sudo dnf install ffmpeg
 sudo pacman -S ffmpeg
 ```
 
-Step-by-step operator notes: [help/settings.html#ffmpeg](help/settings.html#ffmpeg).
+Step-by-step operator notes: [oscarwatch.org/docs/settings#ffmpeg](https://oscarwatch.org/docs/settings#ffmpeg).
 
 ## Settings location
 
@@ -305,7 +305,7 @@ OscarWatch strings live in `.resx` files under `OscarWatch/Resources/`. **Britis
 3. `OscarWatch/ViewModels/SettingsViewModel.cs` — add a `LanguageOption` so it appears in Settings.
 4. `Settings.Language.*` entries in **all** `.resx` files for the language name shown in the picker.
 
-The bundled **operator help** (`help/`) is not localized yet; translation PRs cover the desktop UI only. A few labels (rig and rotator type names in Settings) are still hard-coded in English.
+The **operator guide** on [oscarwatch.org/docs](https://oscarwatch.org/docs/tracker) is not localized yet; translation PRs cover the desktop UI only. A few labels (rig and rotator type names in Settings) are still hard-coded in English.
 
 After editing `.resx` files, run `dotnet build OscarWatch/OscarWatch.csproj` and spot-check the UI in your locale.
 
@@ -395,7 +395,7 @@ Publish profiles are under `OscarWatch/Properties/PublishProfiles/` (e.g. `dotne
 ### Developer documentation
 
 - [documents/](documents/): how to add **radio** and **rotator** drivers (`IRigDriver`, `IRotatorDriver`); [satellite transponder database](documents/satellite-database.md) (remote updates, merge policy, schema)
-- [help/](help/): operator HTML help (bundled with the app)
+- **Help docs**: the operator guide is not in this repo. It lives in the OscarWatch website repo as markdown (`docs/*.md`, registered in `config/docs.php`) and is published at [oscarwatch.org/docs](https://oscarwatch.org/docs/tracker). When a feature changes, update the matching page there. `OscarWatch/Help/HelpLauncher.cs` maps app help buttons to those URLs.
 - [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md): UI contrast, colour-blind-safe tracking colours, keyboard, pass elevation timeline automation
 
 ### Orbit propagation
