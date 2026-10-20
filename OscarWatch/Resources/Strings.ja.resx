@@ -663,6 +663,9 @@
   <data name="Settings.Language.German">
     <value>Deutsch</value>
   </data>
+  <data name="Settings.Language.Italian">
+    <value>Italiano</value>
+  </data>
   <data name="Settings.Language.RestartNote">
     <value>言語を変更した場合は、OscarWatchを再起動してください。</value>
   </data>

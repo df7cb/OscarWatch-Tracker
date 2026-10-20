@@ -18,6 +18,7 @@ public static class LocalizationCulture
     public const string IndonesianLanguage = "id";
     public const string RussianLanguage = "ru";
     public const string GermanLanguage = "de";
+    public const string ItalianLanguage = "it";
 
     public static void ApplyFromSettings(ISettingsService settings) =>
         Apply(NormalizeLanguageCode(settings.Current.UiLanguage));
@@ -58,6 +59,9 @@ public static class LocalizationCulture
 
         if (string.Equals(uiLanguage, GermanLanguage, StringComparison.OrdinalIgnoreCase))
             return CultureInfo.GetCultureInfo(GermanLanguage);
+
+        if (string.Equals(uiLanguage, ItalianLanguage, StringComparison.OrdinalIgnoreCase))
+            return CultureInfo.GetCultureInfo(ItalianLanguage);
 
         if (string.IsNullOrWhiteSpace(uiLanguage)
             || string.Equals(uiLanguage, "en", StringComparison.OrdinalIgnoreCase)

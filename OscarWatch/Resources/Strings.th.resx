@@ -1021,6 +1021,9 @@ LOS: {2}
   <data name="Settings.Language.German">
     <value>Deutsch</value>
   </data>
+  <data name="Settings.Language.Italian">
+    <value>Italiano</value>
+  </data>
   <data name="Settings.Language.RestartNote">
     <value>ต้องรีสตาร์ท OscarWatch จึงจะเปลี่ยนภาษาได้</value>
   </data>

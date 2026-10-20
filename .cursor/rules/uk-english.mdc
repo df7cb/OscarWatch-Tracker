@@ -9,7 +9,7 @@ OscarWatch uses **British English** for operator-facing text. Default UI culture
 
 ## Where this applies
 
-- `OscarWatch/Resources/Strings.resx` **and** all sibling locale files (`Strings.es.resx`, `Strings.ja.resx`, `Strings.pt-BR.resx`, `Strings.zh-CN.resx`)
+- `OscarWatch/Resources/Strings.resx` **and** all sibling locale files (`Strings.de.resx`, `Strings.es.resx`, `Strings.id.resx`, `Strings.it.resx`, `Strings.ja.resx`, `Strings.pt-BR.resx`, `Strings.ru.resx`, `Strings.th.resx`, `Strings.zh-CN.resx`)
 - `help/**/*.html`, `README.md`, operator docs
 - Accessibility strings, tooltips, menu labels, dialogues, error messages
 - Commit messages and PR descriptions for this repo (when writing prose for the user)
@@ -31,9 +31,14 @@ Use **English (UK)** in the language picker label. Keep **License** when citing 
 
 - Add user-visible English (UK) to `Strings.resx`; avoid new hardcoded English in controls or view models.
 - **Always** add the **same keys** to every supported locale file in the same change:
+  - `Strings.de.resx` (German)
   - `Strings.es.resx` (Spanish)
+  - `Strings.id.resx` (Indonesian)
+  - `Strings.it.resx` (Italian)
   - `Strings.ja.resx` (Japanese)
   - `Strings.pt-BR.resx` (Portuguese, Brazil)
+  - `Strings.ru.resx` (Russian)
+  - `Strings.th.resx` (Thai)
   - `Strings.zh-CN.resx` (Chinese, Simplified)
 - Do not ship English-only new keys and leave translations for later — missing keys fall back poorly for operators.
 - Use `LocalizationService` / `loc:Localize` — do not assume `en-US` culture.

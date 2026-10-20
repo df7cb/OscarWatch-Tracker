@@ -1017,6 +1017,9 @@ Continue?</value>
   <data name="Settings.Language.German">
     <value>Deutsch</value>
   </data>
+  <data name="Settings.Language.Italian">
+    <value>Italiano</value>
+  </data>
   <data name="Settings.Language.RestartNote">
     <value>You must restart OscarWatch for a language change to take effect.</value>
   </data>

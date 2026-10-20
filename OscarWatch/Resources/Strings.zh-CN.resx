@@ -693,6 +693,9 @@
   <data name="Settings.Language.German">
     <value>Deutsch</value>
   </data>
+  <data name="Settings.Language.Italian">
+    <value>Italiano</value>
+  </data>
   <data name="Settings.Language.RestartNote">
     <value>更改语言后须重启 OscarWatch 方可生效。</value>
   </data>

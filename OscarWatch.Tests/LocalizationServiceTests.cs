@@ -77,6 +77,14 @@ public sealed class LocalizationServiceTests
     }
 
     [Fact]
+    public void Get_returns_italian_when_culture_is_it()
+    {
+        using var _ = TestUiCulture.Apply(LocalizationCulture.ItalianLanguage);
+        var text = LocalizationService.Instance.Get("Menu.File.Close");
+        Assert.Equal("_Chiudi", text);
+    }
+
+    [Fact]
     public void Get_returns_spanish_rotator_park_label()
     {
         using var _ = TestUiCulture.Apply(LocalizationCulture.SpanishLanguage);
