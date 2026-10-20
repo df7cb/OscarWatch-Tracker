@@ -558,6 +558,9 @@
   <data name="Menu.Help.OperatorGuide">
     <value>操作指南</value>
   </data>
+  <data name="Menu.Help.Support">
+    <value>支持(_S)</value>
+  </data>
   <data name="Menu.Help.CheckForUpdates">
     <value>检查更新(_U)</value>
   </data>
@@ -785,6 +788,9 @@
   </data>
   <data name="Status.HelpMissing">
     <value>帮助文件缺失 — 请重新安装或从正式发布版运行</value>
+  </data>
+  <data name="Status.SupportOpenFailed">
+    <value>无法打开支持页面</value>
   </data>
   <data name="Status.LoadingSettings">
     <value>正在启动…</value>

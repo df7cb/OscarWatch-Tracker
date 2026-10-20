@@ -562,6 +562,9 @@ LOS: {2}
   <data name="Menu.Help.OperatorGuide">
     <value>_Руководство оператора</value>
   </data>
+  <data name="Menu.Help.Support">
+    <value>_Поддержка</value>
+  </data>
   <data name="Menu.Help.CheckForUpdates">
     <value>Проверить _обновления</value>
   </data>
@@ -1113,6 +1116,9 @@ LOS: {2}
   </data>
   <data name="Status.HelpMissing">
     <value>Файлы справки не найдены: переустановите или запускайте из опубликованной сборки</value>
+  </data>
+  <data name="Status.SupportOpenFailed">
+    <value>Не удалось открыть страницу поддержки</value>
   </data>
   <data name="Status.LoadingSettings">
     <value>Запуск…</value>

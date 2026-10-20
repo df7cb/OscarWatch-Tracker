@@ -82,6 +82,7 @@ public partial class MainViewModel : ViewModelBase
     public const double MapTimeOffsetMaxMinutes = 120;
     private const double MapTimeOffsetStepMinutes = 5;
     private const double MapTimeOffsetLargeStepMinutes = 15;
+    private const string SupportUrl = "https://oscarwatch.org/support";
     /// <summary>Coalesce spinner clicks into one CAT write after the user pauses.</summary>
 
     [ObservableProperty]
@@ -3251,6 +3252,24 @@ public partial class MainViewModel : ViewModelBase
 
         Log.Warning("Help folder not found next to the application");
         StatusText = _l.Get("Status.HelpMissing");
+    }
+
+    [RelayCommand]
+    private void OpenSupport()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = SupportUrl,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Could not open the support page");
+            StatusText = _l.Get("Status.SupportOpenFailed");
+        }
     }
 
     [RelayCommand]

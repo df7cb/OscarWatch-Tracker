@@ -562,6 +562,9 @@ LOS: {2}
   <data name="Menu.Help.OperatorGuide">
     <value>คู่มือผู้ปฏิบัติการ(_O)</value>
   </data>
+  <data name="Menu.Help.Support">
+    <value>สนับสนุน(_S)</value>
+  </data>
   <data name="Menu.Help.CheckForUpdates">
     <value>ตรวจหาการอัปเดต(_U)</value>
   </data>
@@ -1113,6 +1116,9 @@ LOS: {2}
   </data>
   <data name="Status.HelpMissing">
     <value>ไม่พบไฟล์วิธีใช้: ติดตั้งใหม่หรือรันจากบิลด์ที่เผยแพร่</value>
+  </data>
+  <data name="Status.SupportOpenFailed">
+    <value>ไม่สามารถเปิดหน้าสนับสนุนได้</value>
   </data>
   <data name="Status.LoadingSettings">
     <value>กำลังเริ่ม…</value>

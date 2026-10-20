@@ -562,6 +562,9 @@ Lanjutkan?</value>
   <data name="Menu.Help.OperatorGuide">
     <value>_Panduan Operator</value>
   </data>
+  <data name="Menu.Help.Support">
+    <value>Du_kungan</value>
+  </data>
   <data name="Menu.Help.CheckForUpdates">
     <value>Periksa Pem_baruan</value>
   </data>
@@ -1113,6 +1116,9 @@ Lanjutkan?</value>
   </data>
   <data name="Status.HelpMissing">
     <value>Berkas bantuan tidak ditemukan. Instal ulang atau jalankan dari build yang dipublikasikan</value>
+  </data>
+  <data name="Status.SupportOpenFailed">
+    <value>Tidak dapat membuka halaman dukungan</value>
   </data>
   <data name="Status.LoadingSettings">
     <value>Memulai…</value>

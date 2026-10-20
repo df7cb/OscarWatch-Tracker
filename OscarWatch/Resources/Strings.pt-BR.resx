@@ -558,6 +558,9 @@ Continuar?</value>
   <data name="Menu.Help.OperatorGuide">
     <value>Guia do Usuário</value>
   </data>
+  <data name="Menu.Help.Support">
+    <value>Su_porte</value>
+  </data>
   <data name="Menu.Help.CheckForUpdates">
     <value>Verificar _atualizações</value>
   </data>
@@ -785,6 +788,9 @@ Continuar?</value>
   </data>
   <data name="Status.HelpMissing">
     <value>Arquivos de ajuda não encontrados — reinstale ou execute a partir de uma versão publicada</value>
+  </data>
+  <data name="Status.SupportOpenFailed">
+    <value>Não foi possível abrir a página de suporte</value>
   </data>
   <data name="Status.LoadingSettings">
     <value>Iniciando…</value>

@@ -562,6 +562,9 @@ Continuare?</value>
   <data name="Menu.Help.OperatorGuide">
     <value>_Guida per l'operatore</value>
   </data>
+  <data name="Menu.Help.Support">
+    <value>_Supporto</value>
+  </data>
   <data name="Menu.Help.CheckForUpdates">
     <value>Controlla _aggiornamenti</value>
   </data>
@@ -1113,6 +1116,9 @@ Continuare?</value>
   </data>
   <data name="Status.HelpMissing">
     <value>File della guida non trovati: reinstalla o avvia da una build pubblicata</value>
+  </data>
+  <data name="Status.SupportOpenFailed">
+    <value>Impossibile aprire la pagina di supporto</value>
   </data>
   <data name="Status.LoadingSettings">
     <value>Avvio…</value>

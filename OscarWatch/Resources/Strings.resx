@@ -558,6 +558,9 @@ Continue?</value>
   <data name="Menu.Help.OperatorGuide">
     <value>_Operator Guide</value>
   </data>
+  <data name="Menu.Help.Support">
+    <value>_Support</value>
+  </data>
   <data name="Menu.Help.CheckForUpdates">
     <value>Check for _Updates</value>
   </data>
@@ -1109,6 +1112,9 @@ Continue?</value>
   </data>
   <data name="Status.HelpMissing">
     <value>Help files not found — reinstall or run from a published build</value>
+  </data>
+  <data name="Status.SupportOpenFailed">
+    <value>Could not open the support page</value>
   </data>
   <data name="Status.LoadingSettings">
     <value>Starting…</value>

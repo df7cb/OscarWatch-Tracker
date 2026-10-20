@@ -562,6 +562,9 @@ Fortfahren?</value>
   <data name="Menu.Help.OperatorGuide">
     <value>_Bedienungsanleitung</value>
   </data>
+  <data name="Menu.Help.Support">
+    <value>_Support</value>
+  </data>
   <data name="Menu.Help.CheckForUpdates">
     <value>Auf _Updates prüfen</value>
   </data>
@@ -1113,6 +1116,9 @@ Fortfahren?</value>
   </data>
   <data name="Status.HelpMissing">
     <value>Hilfedateien nicht gefunden: neu installieren oder aus einem veröffentlichten Build starten</value>
+  </data>
+  <data name="Status.SupportOpenFailed">
+    <value>Supportseite konnte nicht geöffnet werden</value>
   </data>
   <data name="Status.LoadingSettings">
     <value>Starten…</value>
