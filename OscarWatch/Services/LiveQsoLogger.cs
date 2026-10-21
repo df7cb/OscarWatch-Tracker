@@ -1,3 +1,4 @@
+using OscarWatch.Core.Dxcc;
 using OscarWatch.Core.Models;
 using OscarWatch.Core.Services;
 using OscarWatch.Localization;
@@ -30,6 +31,7 @@ public sealed class LiveQsoLogger
     private readonly ILiveTrackingService _tracking;
     private readonly FrequencyOverlayViewModel _frequencies;
     private readonly ILocalizationService _l;
+    private readonly IDxccLookupService _dxccLookup;
 
     public LiveQsoLogger(
         ISettingsService settings,
@@ -39,7 +41,8 @@ public sealed class LiveQsoLogger
         ILiveTrackerSnapshotProvider snapshot,
         ILiveTrackingService tracking,
         FrequencyOverlayViewModel frequencies,
-        ILocalizationService localization)
+        ILocalizationService localization,
+        IDxccLookupService dxccLookup)
     {
         _settings = settings;
         _logbook = logbook;
@@ -49,6 +52,7 @@ public sealed class LiveQsoLogger
         _tracking = tracking;
         _frequencies = frequencies;
         _l = localization;
+        _dxccLookup = dxccLookup;
     }
 
     public async Task<QsoRecord> LogAsync(LiveQsoEntry entry)
@@ -64,6 +68,7 @@ public sealed class LiveQsoLogger
         var cloudlogUpload = book.CloudlogAutoUpload && book.CloudlogStationProfileId.HasValue
             ? CloudlogUploadStatus.Pending
             : CloudlogUploadStatus.None;
+        ResolveDxccFields(entry.Call, out var dxcc, out var country);
         var record = await _logbook.AddQsoAsync(new QsoRecordCreateRequest
         {
             LogbookId = book.Id,
@@ -81,6 +86,8 @@ public sealed class LiveQsoLogger
             BandRx = snap.IsAvailable ? snap.BandRx : "",
             PropMode = "SAT",
             Comment = entry.Comment,
+            Dxcc = dxcc,
+            Country = country,
             CloudlogUploadStatus = cloudlogUpload
         }).ConfigureAwait(false);
 
@@ -89,5 +96,18 @@ public sealed class LiveQsoLogger
 
         _satelliteLink.PublishQso(record, book, SatelliteLinkQsoEventKind.Logged, _tracking.FocusedNoradId);
         return record;
+    }
+
+    private void ResolveDxccFields(string call, out int? dxcc, out string country)
+    {
+        if (_dxccLookup.TryResolve(call, out var match))
+        {
+            dxcc = match.Dxcc;
+            country = match.Country;
+            return;
+        }
+
+        dxcc = null;
+        country = "";
     }
 }
