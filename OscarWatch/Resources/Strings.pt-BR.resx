@@ -1215,6 +1215,21 @@ Continuar?</value>
   <data name="Sstv.Status.Idle">
     <value>Parado. Pressione Iniciar para ouvir imagens.</value>
   </data>
+  <data name="Sstv.Status.Waiting">
+    <value>Pronto. Aguardando {0} subir acima de {1}°.</value>
+  </data>
+  <data name="Sstv.Status.WaitingAbove">
+    <value>Pronto. {0} está acima de {1}°. A escuta começa sozinha.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoElevation">
+    <value>Pronto. Aguardando {0}.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoSatellite">
+    <value>O início automático está ligado. Selecione um satélite.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNextPass">
+    <value>Parado nesta passagem de {0}. O início automático retoma depois que ele se põe.</value>
+  </data>
   <data name="Sstv.Status.NoAudio">
     <value>Nenhuma entrada de áudio disponível (o PortAudio não pôde iniciar).</value>
   </data>

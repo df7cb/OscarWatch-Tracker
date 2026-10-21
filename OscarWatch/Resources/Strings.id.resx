@@ -862,6 +862,21 @@ Lanjutkan?</value>
   <data name="Sstv.Status.Idle">
     <value>Berhenti. Tekan Mulai untuk mendengarkan gambar.</value>
   </data>
+  <data name="Sstv.Status.Waiting">
+    <value>Siap. Menunggu {0} naik di atas {1}°.</value>
+  </data>
+  <data name="Sstv.Status.WaitingAbove">
+    <value>Siap. {0} berada di atas {1}°. Pendengaran dimulai otomatis.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoElevation">
+    <value>Siap. Menunggu {0}.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoSatellite">
+    <value>Mulai otomatis aktif. Pilih satelit.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNextPass">
+    <value>Dihentikan untuk lintasan {0} ini. Mulai otomatis dilanjutkan setelah satelit terbenam.</value>
+  </data>
   <data name="Sstv.Status.NoAudio">
     <value>Tidak ada masukan audio (PortAudio gagal dimulai).</value>
   </data>

@@ -51,6 +51,12 @@ public sealed class SstvAutoStartCoordinator
     private int _belowStopTicks;
     private bool _armed = true;
 
+    /// <summary>
+    /// True when the next rise above the start elevation will start listening.
+    /// False after a start, until the satellite has set, so a manual Stop is left alone.
+    /// </summary>
+    public bool IsArmed => _armed;
+
     public SstvAutoStartAction Process(SstvAutoStartInput input)
     {
         if (!input.Enabled)

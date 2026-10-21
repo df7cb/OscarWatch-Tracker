@@ -858,6 +858,21 @@ Continue?</value>
   <data name="Sstv.Status.Idle">
     <value>Stopped. Press Start to listen for pictures.</value>
   </data>
+  <data name="Sstv.Status.Waiting">
+    <value>Ready. Waiting for {0} to rise above {1}°.</value>
+  </data>
+  <data name="Sstv.Status.WaitingAbove">
+    <value>Ready. {0} is above {1}°. Listening starts automatically.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoElevation">
+    <value>Ready. Waiting for {0}.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoSatellite">
+    <value>Automatic start is on. Select a satellite.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNextPass">
+    <value>Stopped for this pass of {0}. Automatic start resumes after it sets.</value>
+  </data>
   <data name="Sstv.Status.NoAudio">
     <value>No audio input is available (PortAudio could not start).</value>
   </data>

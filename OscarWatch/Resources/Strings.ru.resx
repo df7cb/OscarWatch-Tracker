@@ -862,6 +862,21 @@ LOS: {2}
   <data name="Sstv.Status.Idle">
     <value>Остановлено. Нажмите «Старт» для приёма.</value>
   </data>
+  <data name="Sstv.Status.Waiting">
+    <value>Готово. Ожидание, пока {0} поднимется выше {1}°.</value>
+  </data>
+  <data name="Sstv.Status.WaitingAbove">
+    <value>Готово. {0} выше {1}°. Приём начнётся сам.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoElevation">
+    <value>Готово. Ожидание {0}.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoSatellite">
+    <value>Автозапуск включён. Выберите спутник.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNextPass">
+    <value>Остановлено для этого прохода {0}. Автозапуск возобновится после захода.</value>
+  </data>
   <data name="Sstv.Status.NoAudio">
     <value>Нет аудиовхода (PortAudio не запустился).</value>
   </data>

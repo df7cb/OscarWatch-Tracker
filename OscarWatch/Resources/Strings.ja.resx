@@ -2553,6 +2553,21 @@
   <data name="Sstv.Status.Idle">
     <value>停止中。開始を押すと画像の受信を待ちます。</value>
   </data>
+  <data name="Sstv.Status.Waiting">
+    <value>準備完了。{0} が {1}° を超えるのを待っています。</value>
+  </data>
+  <data name="Sstv.Status.WaitingAbove">
+    <value>準備完了。{0} は {1}° を超えています。受信は自動で始まります。</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoElevation">
+    <value>準備完了。{0} を待っています。</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoSatellite">
+    <value>自動開始がオンです。衛星を選択してください。</value>
+  </data>
+  <data name="Sstv.Status.WaitingNextPass">
+    <value>{0} のこのパスは停止しました。自動開始は地平線下に沈んだ後に再開します。</value>
+  </data>
   <data name="Sstv.Status.NoAudio">
     <value>音声入力を使用できません (PortAudio を開始できませんでした)。</value>
   </data>

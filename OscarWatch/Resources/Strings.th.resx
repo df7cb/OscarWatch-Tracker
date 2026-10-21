@@ -862,6 +862,21 @@ LOS: {2}
   <data name="Sstv.Status.Idle">
     <value>หยุดอยู่ กดเริ่มเพื่อรอรับภาพ</value>
   </data>
+  <data name="Sstv.Status.Waiting">
+    <value>พร้อมแล้ว กำลังรอ {0} ขึ้นเหนือ {1}°</value>
+  </data>
+  <data name="Sstv.Status.WaitingAbove">
+    <value>พร้อมแล้ว {0} อยู่เหนือ {1}° การรับจะเริ่มเอง</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoElevation">
+    <value>พร้อมแล้ว กำลังรอ {0}</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoSatellite">
+    <value>เปิดเริ่มอัตโนมัติแล้ว เลือกดาวเทียม</value>
+  </data>
+  <data name="Sstv.Status.WaitingNextPass">
+    <value>หยุดสำหรับพาสนี้ของ {0} การเริ่มอัตโนมัติจะกลับมาหลังดาวตกขอบฟ้า</value>
+  </data>
   <data name="Sstv.Status.NoAudio">
     <value>ไม่มีอินพุตเสียง (PortAudio เริ่มไม่ได้)</value>
   </data>

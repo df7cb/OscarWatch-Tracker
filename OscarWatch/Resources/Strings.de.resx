@@ -862,6 +862,21 @@ Fortfahren?</value>
   <data name="Sstv.Status.Idle">
     <value>Gestoppt. Start drücken, um auf Bilder zu warten.</value>
   </data>
+  <data name="Sstv.Status.Waiting">
+    <value>Bereit. Warten, bis {0} über {1}° steigt.</value>
+  </data>
+  <data name="Sstv.Status.WaitingAbove">
+    <value>Bereit. {0} ist über {1}°. Der Empfang startet automatisch.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoElevation">
+    <value>Bereit. Warten auf {0}.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoSatellite">
+    <value>Automatischer Start ist an. Wählen Sie einen Satelliten.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNextPass">
+    <value>Für diesen Überflug von {0} gestoppt. Der automatische Start setzt nach dem Untergang wieder ein.</value>
+  </data>
   <data name="Sstv.Status.NoAudio">
     <value>Kein Audioeingang verfügbar (PortAudio konnte nicht starten).</value>
   </data>

@@ -862,6 +862,21 @@ Continuare?</value>
   <data name="Sstv.Status.Idle">
     <value>Fermo. Premi Avvia per metterti in ascolto delle immagini.</value>
   </data>
+  <data name="Sstv.Status.Waiting">
+    <value>Pronto. In attesa che {0} salga sopra {1}°.</value>
+  </data>
+  <data name="Sstv.Status.WaitingAbove">
+    <value>Pronto. {0} è sopra {1}°. L'ascolto parte da solo.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoElevation">
+    <value>Pronto. In attesa di {0}.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoSatellite">
+    <value>L'avvio automatico è attivo. Seleziona un satellite.</value>
+  </data>
+  <data name="Sstv.Status.WaitingNextPass">
+    <value>Fermato per questo passaggio di {0}. L'avvio automatico riprende dopo il tramonto.</value>
+  </data>
   <data name="Sstv.Status.NoAudio">
     <value>Nessun ingresso audio disponibile (impossibile avviare PortAudio).</value>
   </data>

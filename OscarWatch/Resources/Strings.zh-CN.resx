@@ -1215,6 +1215,21 @@
   <data name="Sstv.Status.Idle">
     <value>已停止。按开始以监听图像。</value>
   </data>
+  <data name="Sstv.Status.Waiting">
+    <value>就绪。正在等待 {0} 升到 {1}° 以上。</value>
+  </data>
+  <data name="Sstv.Status.WaitingAbove">
+    <value>就绪。{0} 已高于 {1}°。监听会自动开始。</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoElevation">
+    <value>就绪。正在等待 {0}。</value>
+  </data>
+  <data name="Sstv.Status.WaitingNoSatellite">
+    <value>已开启自动开始。请选择一颗卫星。</value>
+  </data>
+  <data name="Sstv.Status.WaitingNextPass">
+    <value>已停止本次 {0} 过境。卫星落下后自动开始会恢复。</value>
+  </data>
   <data name="Sstv.Status.NoAudio">
     <value>没有可用的音频输入（PortAudio 无法启动）。</value>
   </data>

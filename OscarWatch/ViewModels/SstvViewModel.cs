@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -40,6 +41,8 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
     private readonly SstvAutoStartCoordinator _autoStart = new();
     private bool _startedByAuto;
     private DateTime _lastAutoStartCheckUtc = DateTime.MinValue;
+    /// <summary>While stopped, keep the idle or waiting line in step with automatic start.</summary>
+    private bool _statusFollowsAutoStart = true;
 
     public SstvViewModel(
         ISettingsService settings,
@@ -250,6 +253,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         _autoStart.ResetTracking();
         _lastAutoStartCheckUtc = DateTime.MinValue;
         RefreshShareAvailability();
+        ShowStoppedStatus();
         _uiTimer.Start();
     }
 
@@ -270,6 +274,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
     {
         if (!_receiver.Audio.IsAvailable)
         {
+            _statusFollowsAutoStart = false;
             StatusText = _l.Get("Sstv.Status.NoAudio");
             return;
         }
@@ -281,11 +286,13 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
             _receiver.StartLive(_settings.Current.Sstv, SaveSessionAudio);
             IsRunning = true;
             _startedByAuto = automatic;
+            _statusFollowsAutoStart = true;
             StatusText = ListeningText();
         }
         catch (Exception ex)
         {
             Log.Warning(ex, "SSTV start failed");
+            _statusFollowsAutoStart = false;
             StatusText = _l.Get("Sstv.Status.Error", ex.Message);
             IsRunning = false;
             _startedByAuto = false;
@@ -549,7 +556,15 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         _startedByAuto = false;
         IsDecodingFile = false;
         InputLevelPercent = 0;
-        StatusText = _lastError ?? _l.Get("Sstv.Status.Idle");
+        if (_lastError is not null)
+        {
+            _statusFollowsAutoStart = false;
+            StatusText = _lastError;
+        }
+        else
+        {
+            ShowStoppedStatus();
+        }
     }
 
     private string? CurrentSatelliteName()
@@ -564,13 +579,56 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         return sat is null ? _l.Get("Sstv.Status.Listening") : _l.Get("Sstv.Status.ListeningSat", sat);
     }
 
+    /// <summary>
+    /// Idle line while listening is off. With automatic start armed, say which satellite is being waited for
+    /// instead of telling the operator to press Start.
+    /// </summary>
+    private void ShowStoppedStatus()
+    {
+        _statusFollowsAutoStart = true;
+        StatusText = StoppedStatusText();
+    }
+
+    private string StoppedStatusText()
+    {
+        if (!AutoStartEnabled)
+            return _l.Get("Sstv.Status.Idle");
+
+        var snapshot = _tracker.GetCurrent();
+        var name = string.IsNullOrWhiteSpace(snapshot.SatelliteName) ? null : snapshot.SatelliteName.Trim();
+        if (name is null)
+            return _l.Get("Sstv.Status.WaitingNoSatellite");
+
+        if (!_autoStart.IsArmed)
+            return _l.Get("Sstv.Status.WaitingNextPass", name);
+
+        var start = FormatElevation(SstvSettings.ClampAutoStartElevationDeg(AutoStartElevationDeg));
+        if (snapshot.ElevationDeg is not { } elevation || !double.IsFinite(elevation))
+            return _l.Get("Sstv.Status.WaitingNoElevation", name);
+
+        if (elevation >= SstvSettings.ClampAutoStartElevationDeg(AutoStartElevationDeg))
+            return _l.Get("Sstv.Status.WaitingAbove", name, start);
+
+        return _l.Get("Sstv.Status.Waiting", name, start);
+    }
+
+    private static string FormatElevation(double degrees)
+    {
+        var text = Math.Abs(degrees).ToString("0.#", CultureInfo.CurrentCulture);
+        return degrees < 0 ? "−" + text : text;
+    }
+
     private void RefreshUiTick()
     {
         UpdateDoppler();
         ProcessAutoStartTick();
 
         if (!IsRunning)
+        {
+            if (_statusFollowsAutoStart)
+                ShowStoppedStatus();
             return;
+        }
 
         if (_receiver.TryGetSpectrum(ref _spectrumVersion) is { } row)
             Spectrum = row;
@@ -747,11 +805,19 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
             ClockText = "";
             LineProgressPercent = 0;
             if (_lastError is not null)
+            {
+                _statusFollowsAutoStart = false;
                 StatusText = _lastError;
+            }
             else if (wasFile)
+            {
+                _statusFollowsAutoStart = false;
                 StatusText = _l.Get("Sstv.Status.FileDone", _fileName!, _filePictures);
+            }
             else
-                StatusText = _l.Get("Sstv.Status.Idle");
+            {
+                ShowStoppedStatus();
+            }
             _fileName = null;
         });
 
