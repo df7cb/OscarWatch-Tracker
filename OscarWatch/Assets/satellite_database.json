@@ -104,16 +104,16 @@
         "type": "Packet",
         "downlink": 145825,
         "uplink": 145825,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       },
       {
         "type": "UHF Packet",
         "downlink": 437550,
         "uplink": 437550,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       },
       {
@@ -357,8 +357,8 @@
         "type": "APRS",
         "downlink": 145825,
         "uplink": 145825,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       },
       {
@@ -618,8 +618,8 @@
         "type": "Packet",
         "downlink": 145825,
         "uplink": 145825,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       }
     ]
@@ -744,8 +744,8 @@
         "type": "APRS",
         "downlink": 145825,
         "uplink": 145825,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       }
     ]
@@ -758,8 +758,8 @@
         "type": "Packet (9k6 GFSK/G3RUH)",
         "downlink": 436925,
         "uplink": 436925,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       }
     ]
@@ -772,8 +772,8 @@
         "type": "Packet (9k6 APRS)",
         "downlink": 145825,
         "uplink": 145825,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       }
     ]
@@ -794,16 +794,16 @@
         "type": "APRS",
         "downlink": 145825,
         "uplink": 145825,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       },
       {
         "type": "SSDV 1k2 IL2P",
         "downlink": 145880,
         "uplink": 0,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       }
     ]
@@ -816,8 +816,8 @@
         "type": "Packet (9k6 GMSK/Skylink)",
         "downlink": 437125,
         "uplink": 437125,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       }
     ]
@@ -830,8 +830,8 @@
         "type": "Packet (9k6 GFSK/G3RUH)",
         "downlink": 436775,
         "uplink": 436775,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       }
     ]
@@ -866,8 +866,8 @@
         "type": "Digipeater (9k6 FSK)",
         "downlink": 435900,
         "uplink": 435900,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       },
       {
@@ -896,8 +896,8 @@
         "type": "FM Digipeater",
         "downlink": 435175,
         "uplink": 145950,
-        "downlink_mode": "FM",
-        "uplink_mode": "FM",
+        "downlink_mode": "DATA-FM",
+        "uplink_mode": "DATA-FM",
         "doppler": "NOR"
       },
       {

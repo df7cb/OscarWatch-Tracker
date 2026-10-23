@@ -39,6 +39,10 @@
       <Link>Assets\dxcc-prefix-map.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\OscarWatch\Assets\satellite_database.json">
+      <Link>Assets\satellite_database.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\OscarWatch\runtimes\win-x64\native\oscarwatch_ft8.dll" Condition="Exists('..\OscarWatch\runtimes\win-x64\native\oscarwatch_ft8.dll')">
       <Link>oscarwatch_ft8.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
