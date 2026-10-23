@@ -1435,6 +1435,12 @@ LOS: {2}
   <data name="Logbook.Comment">
     <value>หมายเหตุ</value>
   </data>
+  <data name="Logbook.QsoDate">
+    <value>วันที่ (UTC)</value>
+  </data>
+  <data name="Logbook.QsoTime">
+    <value>เวลา (UTC)</value>
+  </data>
   <data name="Logbook.ClearFieldsHint">
     <value>Alt+W ล้างช่องกรอก</value>
   </data>
@@ -1548,6 +1554,9 @@ LOS: {2}
   </data>
   <data name="Logbook.Status.Updated">
     <value>อัปเดต {0} เมื่อ {1} UTC</value>
+  </data>
+  <data name="Logbook.Status.InvalidQsoTime">
+    <value>ป้อนวันที่และเวลาของ QSO เป็น UTC</value>
   </data>
   <data name="Logbook.Status.Removed">
     <value>ลบ {0} แล้ว</value>

@@ -1435,6 +1435,12 @@ LOS: {2}
   <data name="Logbook.Comment">
     <value>Комментарий</value>
   </data>
+  <data name="Logbook.QsoDate">
+    <value>Дата (UTC)</value>
+  </data>
+  <data name="Logbook.QsoTime">
+    <value>Время (UTC)</value>
+  </data>
   <data name="Logbook.ClearFieldsHint">
     <value>Alt+W очищает поля ввода</value>
   </data>
@@ -1548,6 +1554,9 @@ LOS: {2}
   </data>
   <data name="Logbook.Status.Updated">
     <value>Обновлён {0} в {1} UTC.</value>
+  </data>
+  <data name="Logbook.Status.InvalidQsoTime">
+    <value>Укажите дату и время QSO в UTC.</value>
   </data>
   <data name="Logbook.Status.Removed">
     <value>Удалён {0}.</value>

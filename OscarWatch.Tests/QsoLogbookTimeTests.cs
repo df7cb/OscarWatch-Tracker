@@ -49,4 +49,20 @@ public sealed class QsoLogbookTimeTests
         Assert.Contains("PM", formatted, StringComparison.OrdinalIgnoreCase);
         Assert.EndsWith("UTC", formatted);
     }
+
+    [Fact]
+    public void TryCombineUtcCalendar_keeps_the_picker_date_when_the_offset_is_not_utc()
+    {
+        var date = new DateTimeOffset(2026, 10, 23, 0, 0, 0, TimeSpan.FromHours(1));
+        Assert.True(QsoLogbookTime.TryCombineUtcCalendar(date, new TimeSpan(23, 30, 5), out var utc));
+        Assert.Equal(new DateTime(2026, 10, 23, 23, 30, 5, DateTimeKind.Utc), utc);
+    }
+
+    [Fact]
+    public void TryCombineUtcCalendar_rejects_a_time_outside_one_day()
+    {
+        var date = new DateTimeOffset(2026, 10, 23, 0, 0, 0, TimeSpan.Zero);
+        Assert.False(QsoLogbookTime.TryCombineUtcCalendar(date, TimeSpan.FromHours(24), out _));
+        Assert.False(QsoLogbookTime.TryCombineUtcCalendar(date, TimeSpan.FromMinutes(-1), out _));
+    }
 }

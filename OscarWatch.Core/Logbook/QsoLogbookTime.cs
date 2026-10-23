@@ -23,6 +23,21 @@ public static class QsoLogbookTime
         return instant.ToString($"{datePattern} {timePattern}", culture);
     }
 
+    /// <summary>
+    /// Builds a UTC instant from the calendar date and clock time shown in the pickers.
+    /// Uses the date picker's own year, month, and day, so a local offset on
+    /// <paramref name="date"/> does not move the QSO onto the previous UTC date.
+    /// </summary>
+    public static bool TryCombineUtcCalendar(DateTimeOffset date, TimeSpan time, out DateTime utc)
+    {
+        utc = default;
+        if (time < TimeSpan.Zero || time >= TimeSpan.FromDays(1))
+            return false;
+
+        utc = new DateTime(date.Year, date.Month, date.Day, time.Hours, time.Minutes, time.Seconds, DateTimeKind.Utc);
+        return true;
+    }
+
     public static string FormatLiveUtcClock(DateTime utc, bool use24HourClock, CultureInfo? culture = null)
     {
         culture ??= CultureInfo.CurrentUICulture;

@@ -1428,6 +1428,12 @@
   <data name="Logbook.Comment">
     <value>备注</value>
   </data>
+  <data name="Logbook.QsoDate">
+    <value>日期 (UTC)</value>
+  </data>
+  <data name="Logbook.QsoTime">
+    <value>时间 (UTC)</value>
+  </data>
   <data name="Logbook.ClearFieldsHint">
     <value>Alt+W 清除输入字段</value>
   </data>
@@ -1541,6 +1547,9 @@
   </data>
   <data name="Logbook.Status.Updated">
     <value>已于 {1} UTC 更新 {0}。</value>
+  </data>
+  <data name="Logbook.Status.InvalidQsoTime">
+    <value>请用 UTC 填写通联日期和时间。</value>
   </data>
   <data name="Logbook.Status.Removed">
     <value>已删除 {0}。</value>

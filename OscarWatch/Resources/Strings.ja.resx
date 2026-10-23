@@ -2766,6 +2766,12 @@
   <data name="Logbook.Comment">
     <value>コメント</value>
   </data>
+  <data name="Logbook.QsoDate">
+    <value>日付 (UTC)</value>
+  </data>
+  <data name="Logbook.QsoTime">
+    <value>時刻 (UTC)</value>
+  </data>
   <data name="Logbook.ClearFieldsHint">
     <value>Alt+W で入力欄をクリア</value>
   </data>
@@ -2879,6 +2885,9 @@
   </data>
   <data name="Logbook.Status.Updated">
     <value>{0} を {1} UTC に更新しました。</value>
+  </data>
+  <data name="Logbook.Status.InvalidQsoTime">
+    <value>QSOの日付と時刻をUTCで入力してください。</value>
   </data>
   <data name="Logbook.Status.Removed">
     <value>{0} を削除しました。</value>

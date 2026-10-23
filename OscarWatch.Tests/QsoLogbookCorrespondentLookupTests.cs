@@ -79,6 +79,73 @@ public class QsoLogbookCorrespondentLookupTests
         Assert.Equal("note", vm.Comment);
     }
 
+    [Fact]
+    public async Task Editing_a_qso_saves_the_utc_date_time_and_mode()
+    {
+        var saved = new QsoRecord
+        {
+            Id = 7,
+            LogbookId = 1,
+            Call = "G0ABC",
+            GridSquare = "JO62",
+            QsoUtc = new DateTime(2026, 10, 23, 8, 15, 42, 123, DateTimeKind.Utc),
+            Mode = "FM",
+            ModeRx = "FM",
+            SatName = "SO-50",
+            CreatedUtc = DateTime.UtcNow
+        };
+        var repo = new FakeLogbookRepository();
+        using var vm = CreateViewModel(repo);
+        await SelectLogbookAsync(vm);
+
+        vm.SelectedQso = QsoRowViewModel.From(saved, use24Hour: true, LocalizationService.Instance);
+        vm.BeginEditSelectedQsoCommand.Execute(null);
+        vm.EditQsoDate = new DateTimeOffset(2026, 10, 22, 0, 0, 0, TimeSpan.FromHours(1));
+        vm.EditQsoTime = new TimeSpan(19, 4, 5);
+        vm.EditMode = "usb/lsb";
+
+        await vm.CommitQsoCommand.ExecuteAsync(null);
+
+        Assert.NotNull(repo.LastUpdate);
+        Assert.Equal(new DateTime(2026, 10, 22, 19, 4, 5, DateTimeKind.Utc), repo.LastUpdate.QsoUtc);
+        Assert.Equal("USB", repo.LastUpdate.Mode);
+        Assert.Equal("LSB", repo.LastUpdate.ModeRx);
+        Assert.Equal("SO-50", repo.LastUpdate.SatName);
+        Assert.False(vm.IsEditingQso);
+    }
+
+    [Fact]
+    public async Task Editing_a_qso_keeps_modes_and_subsecond_time_when_those_fields_are_unchanged()
+    {
+        var qsoUtc = new DateTime(2026, 10, 23, 8, 15, 42, 123, DateTimeKind.Utc);
+        var saved = new QsoRecord
+        {
+            Id = 8,
+            LogbookId = 1,
+            Call = "G0ABC",
+            GridSquare = "JO62",
+            QsoUtc = qsoUtc,
+            Mode = "USB",
+            ModeRx = "LSB",
+            CreatedUtc = DateTime.UtcNow
+        };
+        var repo = new FakeLogbookRepository();
+        using var vm = CreateViewModel(repo);
+        await SelectLogbookAsync(vm);
+
+        vm.SelectedQso = QsoRowViewModel.From(saved, use24Hour: true, LocalizationService.Instance);
+        vm.BeginEditSelectedQsoCommand.Execute(null);
+        vm.Comment = "corrected";
+
+        await vm.CommitQsoCommand.ExecuteAsync(null);
+
+        Assert.NotNull(repo.LastUpdate);
+        Assert.Equal(qsoUtc, repo.LastUpdate.QsoUtc);
+        Assert.Equal("USB", repo.LastUpdate.Mode);
+        Assert.Equal("LSB", repo.LastUpdate.ModeRx);
+        Assert.Equal("corrected", repo.LastUpdate.Comment);
+    }
+
     private static QsoLogbookViewModel CreateViewModel(FakeLogbookRepository repo) =>
         new(
             repo,
@@ -151,8 +218,26 @@ public class QsoLogbookCorrespondentLookupTests
             Task.FromResult<QsoRecord?>(null);
         public Task<QsoRecord> AddQsoAsync(QsoRecordCreateRequest request, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
-        public Task<QsoRecord> UpdateQsoAsync(QsoRecordUpdateRequest request, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+        public QsoRecordUpdateRequest? LastUpdate { get; private set; }
+
+        public Task<QsoRecord> UpdateQsoAsync(QsoRecordUpdateRequest request, CancellationToken cancellationToken = default)
+        {
+            LastUpdate = request;
+            return Task.FromResult(new QsoRecord
+            {
+                Id = request.Id,
+                LogbookId = 1,
+                QsoUtc = request.QsoUtc,
+                Call = request.Call,
+                GridSquare = request.GridSquare,
+                Name = request.Name,
+                Comment = request.Comment,
+                SatName = request.SatName,
+                Mode = request.Mode,
+                ModeRx = request.ModeRx,
+                CreatedUtc = DateTime.UtcNow
+            });
+        }
         public Task DeleteQsoAsync(long qsoId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
         public Task<QsoLogbook?> GetLogbookByIdAsync(long logbookId, CancellationToken cancellationToken = default) =>

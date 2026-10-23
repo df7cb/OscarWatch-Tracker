@@ -153,6 +153,14 @@
             <Setter Property="MinHeight" Value="32" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
           </Style>
+          <Style Selector="DatePicker">
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+          </Style>
+          <Style Selector="TimePicker">
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+          </Style>
         </Border.Styles>
         <StackPanel Spacing="10">
           <Border Background="{DynamicResource ThemeInsetBackgroundBrush}"
@@ -176,6 +184,48 @@
                      IsVisible="{Binding IsEditingQso}"
                      Foreground="{DynamicResource ThemeSecondaryForegroundBrush}"
                      FontStyle="Italic" />
+          <Grid ColumnDefinitions="Auto,Auto,160"
+                RowDefinitions="Auto,Auto"
+                ColumnSpacing="12"
+                RowSpacing="4"
+                IsVisible="{Binding IsEditingQso}">
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="{loc:Localize Key=Logbook.QsoDate}"
+                       FontSize="12"
+                       Foreground="{DynamicResource ThemeSecondaryForegroundBrush}" />
+            <TextBlock Grid.Row="0" Grid.Column="1"
+                       Text="{loc:Localize Key=Logbook.QsoTime}"
+                       FontSize="12"
+                       Foreground="{DynamicResource ThemeSecondaryForegroundBrush}" />
+            <TextBlock Grid.Row="0" Grid.Column="2"
+                       Text="{loc:Localize Key=Logbook.Column.Mode}"
+                       FontSize="12"
+                       Foreground="{DynamicResource ThemeSecondaryForegroundBrush}" />
+            <DatePicker Grid.Row="1" Grid.Column="0"
+                        SelectedDate="{Binding EditQsoDate, Mode=TwoWay}"
+                        DayFormat="dd"
+                        MonthFormat="MM"
+                        YearFormat="yyyy"
+                        MinWidth="220"
+                        HorizontalAlignment="Left"
+                        Loaded="OnQsoWhenLoaded"
+                        KeyDown="OnEntryKeyDown" />
+            <TimePicker Grid.Row="1" Grid.Column="1"
+                        SelectedTime="{Binding EditQsoTime, Mode=TwoWay}"
+                        ClockIdentifier="{Binding EditClockIdentifier}"
+                        UseSeconds="True"
+                        MinWidth="280"
+                        HorizontalAlignment="Left"
+                        Loaded="OnQsoWhenLoaded"
+                        KeyDown="OnEntryKeyDown" />
+            <ComboBox Grid.Row="1" Grid.Column="2"
+                      ItemsSource="{Binding ModeOptions}"
+                      Text="{Binding EditMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      IsEditable="True"
+                      MinWidth="140"
+                      HorizontalAlignment="Stretch"
+                      KeyDown="OnEntryKeyDown" />
+          </Grid>
           <Grid ColumnDefinitions="*,72,72,*,*,*,Auto,Auto"
                 RowDefinitions="Auto,Auto"
                 ColumnSpacing="8"

@@ -7,6 +7,7 @@ using OscarWatch.Core.Geo;
 using OscarWatch.Core.Logbook;
 using OscarWatch.Core.Models;
 using OscarWatch.Core.Qrz;
+using OscarWatch.Core.Radio;
 using OscarWatch.Core.Services;
 using OscarWatch.Localization;
 using Serilog;
@@ -58,6 +59,7 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
         _qrz = qrz;
         _hamQth = hamQth;
         _l = localization;
+        EditClockIdentifier = settings.Current.Use24HourClock ? "24HourClock" : "12HourClock";
         StatusText = _l.Get("Logbook.Status.Ready");
         StationStatusText = _l.Get("Logbook.Station.Unavailable");
 
@@ -121,6 +123,29 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     private string _comment = "";
+
+    [ObservableProperty]
+    private DateTimeOffset? _editQsoDate;
+
+    [ObservableProperty]
+    private TimeSpan? _editQsoTime;
+
+    [ObservableProperty]
+    private string _editMode = "";
+
+    [ObservableProperty]
+    private string _editClockIdentifier = "12HourClock";
+
+    public IReadOnlyList<string> ModeOptions { get; } =
+    [
+        .. TransponderCatModes.EditorOptions,
+        "FT4",
+        "FT8",
+        "PKT",
+        "SSTV"
+    ];
+
+    private string _loadedModeText = "";
 
     [ObservableProperty]
     private string _callHint = "";
@@ -462,11 +487,25 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
 
         ++_callLookupGeneration;
 
+        if (EditQsoDate is not { } qsoDate
+            || EditQsoTime is not { } qsoTime
+            || !QsoLogbookTime.TryCombineUtcCalendar(qsoDate, qsoTime, out var editedUtc))
+        {
+            StatusText = _l.Get("Logbook.Status.InvalidQsoTime");
+            return;
+        }
+
+        var originalUtc = QsoLogbookTime.NormalizeToUtc(_editingSource.QsoUtc);
+        var qsoUtc = SameUtcToTheSecond(originalUtc, editedUtc) ? originalUtc : editedUtc;
+        var (mode, modeRx) = string.Equals(EditMode.Trim(), _loadedModeText, StringComparison.OrdinalIgnoreCase)
+            ? (_editingSource.Mode, _editingSource.ModeRx)
+            : QsoModeText.Split(EditMode);
+
         ResolveDxccFields(Call, out var dxcc, out var country);
         var record = await _repository.UpdateQsoAsync(new QsoRecordUpdateRequest
         {
             Id = _editingSource.Id,
-            QsoUtc = _editingSource.QsoUtc,
+            QsoUtc = qsoUtc,
             Call = Call,
             RstSent = FormatRstForLog(RstSent),
             RstRcvd = FormatRstForLog(RstRcvd),
@@ -474,8 +513,8 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
             Name = Name,
             Comment = Comment,
             SatName = _editingSource.SatName,
-            Mode = _editingSource.Mode,
-            ModeRx = _editingSource.ModeRx,
+            Mode = mode,
+            ModeRx = modeRx,
             FreqHz = _editingSource.FreqHz,
             FreqRxHz = _editingSource.FreqRxHz,
             Band = _editingSource.Band,
@@ -504,6 +543,10 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
         Grid = "";
         Name = "";
         Comment = "";
+        EditQsoDate = null;
+        EditQsoTime = null;
+        EditMode = "";
+        _loadedModeText = "";
         CallHint = "";
         ResolvedCountry = "";
         ResolvedDxcc = null;
@@ -516,12 +559,17 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
     {
         _suppressCallLookup = true;
         _suppressFieldCoercion = true;
+        var qsoUtc = QsoLogbookTime.NormalizeToUtc(record.QsoUtc);
         Call = record.Call;
         RstSent = record.RstSent;
         RstRcvd = record.RstRcvd;
         Grid = record.GridSquare;
         Name = record.Name;
         Comment = record.Comment;
+        EditQsoDate = new DateTimeOffset(qsoUtc.Year, qsoUtc.Month, qsoUtc.Day, 0, 0, 0, TimeSpan.Zero);
+        EditQsoTime = new TimeSpan(qsoUtc.Hour, qsoUtc.Minute, qsoUtc.Second);
+        _loadedModeText = QsoModeText.Format(record.Mode, record.ModeRx);
+        EditMode = _loadedModeText;
         CallHint = "";
         ResolvedCountry = record.Country;
         ResolvedDxcc = record.Dxcc;
@@ -529,8 +577,17 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
         GridIsValid = MaidenheadLocator.GetLiveValidationState(record.GridSquare);
         _suppressFieldCoercion = false;
         _suppressCallLookup = false;
+        ApplyEditedModeRstOptions();
         CommitQsoCommand.NotifyCanExecuteChanged();
     }
+
+    private static bool SameUtcToTheSecond(DateTime left, DateTime right) =>
+        left.Year == right.Year
+        && left.Month == right.Month
+        && left.Day == right.Day
+        && left.Hour == right.Hour
+        && left.Minute == right.Minute
+        && left.Second == right.Second;
 
     [RelayCommand(CanExecute = nameof(CanExport))]
     public async Task<int> CountQsosForExportAsync(QsoAdifExportOptions options)
@@ -678,6 +735,8 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
         OnPropertyChanged(nameof(EntryCommitLabel));
         OnPropertyChanged(nameof(ShowCancelEdit));
         OnPropertyChanged(nameof(EditingStatusText));
+        if (!value)
+            RestoreStationRstOptions();
     }
 
     partial void OnSelectedQsoChanged(QsoRowViewModel? value)
@@ -704,6 +763,23 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
 
     private void UpdateGridValidationState() =>
         GridIsValid = MaidenheadLocator.GetLiveValidationState(Grid);
+
+    partial void OnEditModeChanged(string value)
+    {
+        if (_suppressFieldCoercion)
+            return;
+
+        var upper = value.ToUpperInvariant();
+        if (!string.Equals(upper, value, StringComparison.Ordinal))
+        {
+            _suppressFieldCoercion = true;
+            EditMode = upper;
+            _suppressFieldCoercion = false;
+        }
+
+        if (IsEditingQso)
+            ApplyEditedModeRstOptions();
+    }
 
     partial void OnRstSentChanged(string value) => CommitQsoCommand.NotifyCanExecuteChanged();
 
@@ -1156,6 +1232,10 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
 
     private void RefreshStationPanel()
     {
+        var clockIdentifier = _settings.Current.Use24HourClock ? "24HourClock" : "12HourClock";
+        if (!string.Equals(EditClockIdentifier, clockIdentifier, StringComparison.Ordinal))
+            EditClockIdentifier = clockIdentifier;
+
         UtcClock = QsoLogbookTime.FormatLiveUtcClock(
             DateTime.UtcNow,
             _settings.Current.Use24HourClock,
@@ -1193,6 +1273,21 @@ public partial class QsoLogbookViewModel : ViewModelBase, IDisposable
 
         RstSent = report;
         RstRcvd = report;
+    }
+
+    private void ApplyEditedModeRstOptions()
+    {
+        var (uplink, downlink) = QsoModeText.Split(EditMode);
+        _snrRst = QsoRstSuggestions.UsesSnr(uplink, downlink);
+        SetRstOptions(_snrRst ? QsoRstSuggestions.SnrOptions : QsoRstSuggestions.VoiceOptions);
+    }
+
+    private void RestoreStationRstOptions()
+    {
+        var snapshot = _tracker.GetCurrent();
+        _lastRstModeKey = QsoRstSuggestions.ModeKey(snapshot.Mode, snapshot.ModeType);
+        _snrRst = QsoRstSuggestions.UsesSnr(snapshot.Mode, snapshot.ModeType);
+        SetRstOptions(_snrRst ? QsoRstSuggestions.SnrOptions : QsoRstSuggestions.VoiceOptions);
     }
 
     private string CurrentDefaultReport()
@@ -1309,9 +1404,7 @@ public sealed class QsoRowViewModel
     public static QsoRowViewModel From(QsoRecord record, bool use24Hour, ILocalizationService localization)
     {
         var dateTimeText = QsoLogbookTime.FormatQsoUtc(record.QsoUtc, use24Hour);
-        var mode = string.Equals(record.Mode, record.ModeRx, StringComparison.OrdinalIgnoreCase)
-            ? record.Mode
-            : $"{record.Mode}/{record.ModeRx}";
+        var mode = QsoModeText.Format(record.Mode, record.ModeRx);
 
         return new QsoRowViewModel
         {

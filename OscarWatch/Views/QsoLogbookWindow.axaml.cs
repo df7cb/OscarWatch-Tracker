@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -63,6 +64,36 @@ public partial class QsoLogbookWindow : Window
     }
 
     private void OnCancelEditClick(object? sender, RoutedEventArgs e) => CallTextBox?.Focus();
+
+    private void OnQsoWhenLoaded(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not TemplatedControl picker)
+            return;
+
+        CenterPickerText(picker);
+        picker.TemplateApplied += (_, _) => CenterPickerText(picker);
+    }
+
+    /// <summary>
+    /// The Fluent date and time pickers pad the digits 3px from the top and 6px from the bottom,
+    /// so the numbers sit above the mode box. Centre them on the same line.
+    /// </summary>
+    private static void CenterPickerText(TemplatedControl picker)
+    {
+        foreach (var text in picker.GetVisualDescendants().OfType<TextBlock>())
+        {
+            if (text.Name is not (
+                "PART_DayTextBlock" or "PART_MonthTextBlock" or "PART_YearTextBlock"
+                or "PART_HourTextBlock" or "PART_MinuteTextBlock" or "PART_SecondTextBlock"
+                or "PART_PeriodTextBlock"))
+            {
+                continue;
+            }
+
+            text.Padding = new Thickness(0);
+            text.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+        }
+    }
 
     private void OnQsoHistoryPointerPressed(object? sender, PointerPressedEventArgs e)
     {

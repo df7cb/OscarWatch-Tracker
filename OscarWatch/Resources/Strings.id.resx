@@ -1435,6 +1435,12 @@ Lanjutkan?</value>
   <data name="Logbook.Comment">
     <value>Komentar</value>
   </data>
+  <data name="Logbook.QsoDate">
+    <value>Tanggal (UTC)</value>
+  </data>
+  <data name="Logbook.QsoTime">
+    <value>Waktu (UTC)</value>
+  </data>
   <data name="Logbook.ClearFieldsHint">
     <value>Alt+W mengosongkan kolom entri</value>
   </data>
@@ -1548,6 +1554,9 @@ Lanjutkan?</value>
   </data>
   <data name="Logbook.Status.Updated">
     <value>Memperbarui {0} pada {1} UTC.</value>
+  </data>
+  <data name="Logbook.Status.InvalidQsoTime">
+    <value>Masukkan tanggal dan waktu QSO dalam UTC.</value>
   </data>
   <data name="Logbook.Status.Removed">
     <value>Menghapus {0}.</value>

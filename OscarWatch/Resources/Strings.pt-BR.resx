@@ -1428,6 +1428,12 @@ Continuar?</value>
   <data name="Logbook.Comment">
     <value>Comentário</value>
   </data>
+  <data name="Logbook.QsoDate">
+    <value>Data (UTC)</value>
+  </data>
+  <data name="Logbook.QsoTime">
+    <value>Hora (UTC)</value>
+  </data>
   <data name="Logbook.ClearFieldsHint">
     <value>Alt+W limpa os campos de entrada</value>
   </data>
@@ -1541,6 +1547,9 @@ Continuar?</value>
   </data>
   <data name="Logbook.Status.Updated">
     <value>{0} atualizado às {1} UTC.</value>
+  </data>
+  <data name="Logbook.Status.InvalidQsoTime">
+    <value>Informe a data e a hora do QSO em UTC.</value>
   </data>
   <data name="Logbook.Status.Removed">
     <value>{0} removido.</value>
