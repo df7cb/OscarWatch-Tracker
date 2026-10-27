@@ -58,6 +58,15 @@ public sealed class Ft4PounceTargetTests
     }
 
     [Fact]
+    public void Callsign_fires_on_a_call_and_grid_without_cq()
+    {
+        var line = Line("SM/R1CR KP04");
+        Assert.True(Target("SM/R1CR").Matches(line, My));
+        Assert.True(Target("R1CR").Matches(line, My));
+        Assert.True(Target("KP04").Matches(line, My));
+    }
+
+    [Fact]
     public void Callsign_fires_on_cq()
     {
         Assert.True(Target("MM0ABC").Matches(Line("CQ MM0ABC IO85"), My));

@@ -37,6 +37,17 @@ public static partial class Ft4MessageCodec
         if (parts.Length < 2)
             return false;
 
+        // A compound call cannot share CQ with a grid, so the station sends
+        // "SM/R1CR KP04": their call, then their grid, and no CQ. The grid is not
+        // another station.
+        if (parts.Length == 2 && IsCallAndGrid(parts[0], parts[1]))
+        {
+            callTo = "CQ";
+            callDe = NormalizeCall(parts[0]);
+            extra = parts[1].ToUpperInvariant();
+            return callDe.Length > 0;
+        }
+
         callTo = NormalizeCall(parts[0]);
         callDe = NormalizeCall(parts[1]);
         if (parts.Length >= 3)
@@ -58,6 +69,36 @@ public static partial class Ft4MessageCodec
         && char.IsLetter(extra[1])
         && char.IsDigit(extra[2])
         && char.IsDigit(extra[3]);
+
+    /// <summary>
+    /// Two tokens, callsign then locator: the station is announcing where they are.
+    /// RR73 matches the locator shape, and a locator is not a callsign.
+    /// </summary>
+    private static bool IsCallAndGrid(string call, string grid)
+    {
+        if (!IsGrid(grid) || IsClosing(grid))
+            return false;
+
+        var station = NormalizeCall(call);
+        if (station.Length < 3 || station is "CQ" or "DE" or "QRZ")
+            return false;
+        if (IsGrid(station) && !IsClosing(station))
+            return false;
+
+        var hasLetter = false;
+        var hasDigit = false;
+        foreach (var ch in station)
+        {
+            if (char.IsAsciiLetter(ch))
+                hasLetter = true;
+            else if (char.IsAsciiDigit(ch))
+                hasDigit = true;
+            else if (ch != '/')
+                return false;
+        }
+
+        return hasLetter && hasDigit;
+    }
 
     public static bool IsReport(string? extra) =>
         !string.IsNullOrWhiteSpace(extra)

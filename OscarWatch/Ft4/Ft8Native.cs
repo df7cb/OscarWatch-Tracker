@@ -188,8 +188,15 @@ internal static class Ft8Native
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
     private static extern void ow_ft8_clear_callsigns();
 
-    public static void RememberCallsign(string callsign) =>
-        ow_ft8_remember_callsign(callsign);
+    public static void RememberCallsign(string callsign)
+    {
+        var call = Ft4MessageCodec.NormalizeCall(callsign);
+        // A locator such as KP04 packs like a hashed call. It is not one.
+        if (call.Length == 0 || (Ft4MessageCodec.IsGrid(call) && !Ft4MessageCodec.IsClosing(call)))
+            return;
+
+        ow_ft8_remember_callsign(call);
+    }
 
     public static void ClearCallsigns() =>
         ow_ft8_clear_callsigns();
@@ -301,7 +308,7 @@ internal static class Ft8Native
         {
             var call = part.Trim('<', '>');
             if (Ft4MessageCodec.IsHashedCall(call))
-                ow_ft8_remember_callsign(call);
+                RememberCallsign(call);
         }
     }
 

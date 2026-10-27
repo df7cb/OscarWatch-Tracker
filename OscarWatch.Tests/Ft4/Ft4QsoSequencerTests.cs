@@ -383,6 +383,17 @@ public sealed class Ft4QsoSequencerTests
     }
 
     [Fact]
+    public void Answering_a_call_and_grid_without_cq_calls_the_station()
+    {
+        var seq = new Ft4QsoSequencer(() => "MM9SQL", () => "IO87", () => true);
+        seq.StartAnswer(Msg("SM/R1CR KP04"), oppositeEvenSlot: false);
+
+        Assert.Equal("SM/R1CR", seq.TheirCall);
+        Assert.Equal("KP04", seq.TheirGrid);
+        Assert.Equal("<SM/R1CR> MM9SQL IO87", seq.CurrentTxMessage);
+    }
+
+    [Fact]
     public void Their_compound_call_is_sent_as_a_hash_when_ours_is_standard()
     {
         var seq = new Ft4QsoSequencer(() => "MM9SQL", () => "IO87", () => true);

@@ -110,6 +110,33 @@ public sealed class Ft4MessageCodecTests
         Assert.Equal("G4ABC MM9SQL/M RR73", Ft4MessageCodec.BuildRr73("G4ABC", "MM9SQL/M"));
     }
 
+    [Theory]
+    [InlineData("SM/R1CR KP04", "CQ", "SM/R1CR", "KP04")]
+    [InlineData("sm/r1cr kp04", "CQ", "SM/R1CR", "KP04")]
+    [InlineData("<SM/R1CR> KP04", "CQ", "SM/R1CR", "KP04")]
+    [InlineData("G4ABC JO01", "CQ", "G4ABC", "JO01")]
+    [InlineData("G4ABC/P IO91", "CQ", "G4ABC/P", "IO91")]
+    public void TryParse_call_and_grid_without_cq_is_that_station(string text, string to, string de, string extra)
+    {
+        Assert.True(Ft4MessageCodec.TryParse(text, out var callTo, out var callDe, out var parsedExtra));
+        Assert.Equal(to, callTo);
+        Assert.Equal(de, callDe);
+        Assert.Equal(extra, parsedExtra);
+    }
+
+    [Theory]
+    [InlineData("G4ABC MM9SQL", "G4ABC", "MM9SQL")]
+    [InlineData("G4ABC RR73", "G4ABC", "RR73")]
+    [InlineData("KP04 IO87", "KP04", "IO87")]
+    [InlineData("HELLO KP04", "HELLO", "KP04")]
+    public void TryParse_two_tokens_that_are_not_a_grid_announcement(string text, string to, string de)
+    {
+        Assert.True(Ft4MessageCodec.TryParse(text, out var callTo, out var callDe, out var extra));
+        Assert.Equal(to, callTo);
+        Assert.Equal(de, callDe);
+        Assert.Null(extra);
+    }
+
     [Fact]
     public void Their_compound_call_is_bracketed_when_ours_is_standard()
     {
