@@ -910,6 +910,12 @@ LOS: {2}
   <data name="Sstv.Status.FileDone">
     <value>ถอดรหัส {0} เสร็จ: {1} ภาพ</value>
   </data>
+  <data name="Sstv.Status.FileSilent">
+    <value>{0} ไม่มีเสียง จึงไม่มีอะไรให้ถอดรหัส ตรวจสอบอุปกรณ์อินพุตในการตั้งค่าก่อนรอบผ่านถัดไป</value>
+  </data>
+  <data name="Sstv.Status.SilentInput">
+    <value>ไม่มีเสียงจาก {0} เข้ามาที่ OscarWatch เลือกอินเทอร์เฟซเสียงของวิทยุในการตั้งค่า</value>
+  </data>
   <data name="Sstv.Line">
     <value>เส้น {0} จาก {1}</value>
   </data>

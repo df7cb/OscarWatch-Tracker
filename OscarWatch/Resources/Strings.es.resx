@@ -1263,6 +1263,12 @@
   <data name="Sstv.Status.FileDone">
     <value>{0} decodificado: {1} imágenes</value>
   </data>
+  <data name="Sstv.Status.FileSilent">
+    <value>{0} está en silencio, así que no hay nada que decodificar. Revisa el dispositivo de entrada en Ajustes antes del próximo pase.</value>
+  </data>
+  <data name="Sstv.Status.SilentInput">
+    <value>No llega audio a OscarWatch desde {0}. Elige la interfaz de audio de tu radio en Ajustes.</value>
+  </data>
   <data name="Sstv.Line">
     <value>Línea {0} de {1}</value>
   </data>

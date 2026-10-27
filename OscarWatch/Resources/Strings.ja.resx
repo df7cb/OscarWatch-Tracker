@@ -2601,6 +2601,12 @@
   <data name="Sstv.Status.FileDone">
     <value>{0} のデコード完了: {1} 枚</value>
   </data>
+  <data name="Sstv.Status.FileSilent">
+    <value>{0} は無音のため、デコードするものがありません。次のパスの前に設定で入力デバイスを確認してください。</value>
+  </data>
+  <data name="Sstv.Status.SilentInput">
+    <value>{0} から OscarWatch に音声が届いていません。設定で無線機のオーディオインターフェースを選択してください。</value>
+  </data>
   <data name="Sstv.Line">
     <value>ライン {0}/{1}</value>
   </data>

@@ -910,6 +910,12 @@ Fortfahren?</value>
   <data name="Sstv.Status.FileDone">
     <value>{0} dekodiert: {1} Bilder</value>
   </data>
+  <data name="Sstv.Status.FileSilent">
+    <value>{0} ist still, es gibt nichts zu dekodieren. Prüfe vor dem nächsten Überflug das Eingabegerät in den Einstellungen.</value>
+  </data>
+  <data name="Sstv.Status.SilentInput">
+    <value>Von {0} kommt kein Ton bei OscarWatch an. Wähle in den Einstellungen das Audio-Interface deines Funkgeräts.</value>
+  </data>
   <data name="Sstv.Line">
     <value>Zeile {0} von {1}</value>
   </data>

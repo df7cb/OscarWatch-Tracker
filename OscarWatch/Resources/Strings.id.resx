@@ -910,6 +910,12 @@ Lanjutkan?</value>
   <data name="Sstv.Status.FileDone">
     <value>Selesai mendekode {0}: {1} gambar</value>
   </data>
+  <data name="Sstv.Status.FileSilent">
+    <value>{0} hening, jadi tidak ada yang bisa didekode. Periksa perangkat input di Pengaturan sebelum lintasan berikutnya.</value>
+  </data>
+  <data name="Sstv.Status.SilentInput">
+    <value>Tidak ada audio yang masuk ke OscarWatch dari {0}. Pilih antarmuka audio radio Anda di Pengaturan.</value>
+  </data>
   <data name="Sstv.Line">
     <value>Baris {0} dari {1}</value>
   </data>

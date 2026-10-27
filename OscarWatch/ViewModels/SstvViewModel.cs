@@ -386,6 +386,15 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
                 return;
             }
 
+            if (SstvInputSilence.IsSilentRecording(loaded.Samples))
+            {
+                Log.Warning("SSTV recording {File} is silent; nothing to decode", _fileName);
+                _statusFollowsAutoStart = false;
+                StatusText = _l.Get("Sstv.Status.FileSilent", _fileName);
+                _fileName = null;
+                return;
+            }
+
             SelectedGalleryItem = null;
             _receiver.StartFile(loaded.Samples, loaded.SampleRate, _settings.Current.Sstv, Path.GetFileNameWithoutExtension(path));
             IsRunning = true;
@@ -668,7 +677,9 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         {
             StatusText = _receiver.IsDecodingFile
                 ? _l.Get("Sstv.Status.DecodingFile", _fileName ?? "", _receiver.FileProgress * 100)
-                : ListeningText();
+                : _receiver.IsInputSilent
+                    ? _l.Get("Sstv.Status.SilentInput", SelectedInputDevice?.DisplayName ?? _l.Get("Ft4.Audio.SystemDefault"))
+                    : ListeningText();
             LineText = "";
             LineProgressPercent = 0;
             LockText = "";

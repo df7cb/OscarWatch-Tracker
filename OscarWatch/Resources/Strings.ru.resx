@@ -910,6 +910,12 @@ LOS: {2}
   <data name="Sstv.Status.FileDone">
     <value>{0} декодирован: изображений {1}</value>
   </data>
+  <data name="Sstv.Status.FileSilent">
+    <value>В {0} тишина, декодировать нечего. Перед следующим пролётом проверьте устройство ввода в настройках.</value>
+  </data>
+  <data name="Sstv.Status.SilentInput">
+    <value>Звук от {0} не поступает в OscarWatch. Выберите в настройках аудиоинтерфейс вашей радиостанции.</value>
+  </data>
   <data name="Sstv.Line">
     <value>Строка {0} из {1}</value>
   </data>

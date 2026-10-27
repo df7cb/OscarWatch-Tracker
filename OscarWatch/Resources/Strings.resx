@@ -906,6 +906,12 @@ Continue?</value>
   <data name="Sstv.Status.FileDone">
     <value>Finished decoding {0}: {1} pictures</value>
   </data>
+  <data name="Sstv.Status.FileSilent">
+    <value>{0} is silent, so there is nothing to decode. Check the input device in Settings before the next pass.</value>
+  </data>
+  <data name="Sstv.Status.SilentInput">
+    <value>No audio is reaching OscarWatch from {0}. Choose your radio's audio interface in Settings.</value>
+  </data>
   <data name="Sstv.Line">
     <value>Line {0} of {1}</value>
   </data>

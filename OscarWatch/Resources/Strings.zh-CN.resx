@@ -1263,6 +1263,12 @@
   <data name="Sstv.Status.FileDone">
     <value>{0} 解码完成：{1} 幅图像</value>
   </data>
+  <data name="Sstv.Status.FileSilent">
+    <value>{0} 没有声音，无可解码。请在下次过境前到设置中检查输入设备。</value>
+  </data>
+  <data name="Sstv.Status.SilentInput">
+    <value>OscarWatch 没有收到来自 {0} 的音频。请在设置中选择电台的音频接口。</value>
+  </data>
   <data name="Sstv.Line">
     <value>第 {0} 行，共 {1} 行</value>
   </data>

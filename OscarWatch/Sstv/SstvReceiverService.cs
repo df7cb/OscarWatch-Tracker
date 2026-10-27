@@ -46,6 +46,7 @@ public sealed class SstvReceiverService : IDisposable
     private long _previewVersion;
     private volatile SstvLiveStatus? _status;
     private SstvCaptureHealth _captureHealth = new(true, false, 0);
+    private volatile bool _inputSilent;
     private double _feedForwardHz;
     private readonly object _spectrumGate = new();
     private float[]? _spectrum;
@@ -69,6 +70,9 @@ public sealed class SstvReceiverService : IDisposable
     public SstvLiveStatus? Status => _status;
 
     public SstvCaptureHealth CaptureHealth => _captureHealth;
+
+    /// <summary>True while live input has carried no audio for a while (likely the wrong soundcard).</summary>
+    public bool IsInputSilent => _inputSilent;
 
     /// <summary>Fraction of the file decoded so far (0 to 1) while decoding a recording.</summary>
     public double FileProgress { get; private set; }
@@ -225,6 +229,12 @@ public sealed class SstvReceiverService : IDisposable
         string? inputId, string? inputName, CancellationToken token)
     {
         WavWriter? wav = null;
+        var device = string.IsNullOrWhiteSpace(inputName) ? "system default" : inputName;
+        var silence = new SstvInputSilence(rate);
+        var heardSound = false;
+        var loudestPeak = 0f;
+        var warnedSilent = false;
+        _inputSilent = false;
         try
         {
             var decoder = CreateDecoder(rate, options, autoSave, satelliteOverride: null, fileStart: null);
@@ -261,6 +271,7 @@ public sealed class SstvReceiverService : IDisposable
                     rate = _audio.CaptureSampleRate;
                     decoder = CreateDecoder(rate, options, autoSave, satelliteOverride: null, fileStart: null);
                     tap = new SstvSpectrumTap(rate, SpectrumRowsPerSecond);
+                    silence = new SstvInputSilence(rate);
                     if (wavResampler is not null)
                         wavResampler = new SstvResampler(rate, SstvDecoder.InternalRate);
                 }
@@ -269,6 +280,18 @@ public sealed class SstvReceiverService : IDisposable
                 {
                     Thread.Sleep(20);
                     continue;
+                }
+
+                silence.Add(buffer.AsSpan(0, n));
+                heardSound |= silence.HeardSound;
+                loudestPeak = Math.Max(loudestPeak, silence.LoudestPeak);
+                _inputSilent = silence.IsSilent;
+                if (silence.IsSilent && !warnedSilent)
+                {
+                    warnedSilent = true;
+                    Log.Warning(
+                        "SSTV input '{Device}' has carried no audio for {Seconds:0} s. Check the SSTV input device is the radio's audio interface",
+                        device, SstvInputSilence.SilentSeconds);
                 }
 
                 decoder.FeedForwardHz = FeedForwardHz;
@@ -311,6 +334,19 @@ public sealed class SstvReceiverService : IDisposable
             catch (Exception ex)
             {
                 Log.Warning(ex, "SSTV session audio close failed");
+            }
+
+            _inputSilent = false;
+            var loudestDb = loudestPeak > 0 ? 20 * Math.Log10(loudestPeak) : double.NegativeInfinity;
+            if (heardSound)
+            {
+                Log.Information("SSTV session on '{Device}' ended; loudest input {Peak:0.0} dBFS", device, loudestDb);
+            }
+            else if (warnedSilent)
+            {
+                Log.Warning(
+                    "SSTV session on '{Device}' ended without any audio (loudest {Peak:0.0} dBFS); the recording {Path} is silent. Check the SSTV input device",
+                    device, loudestDb, wavPath ?? "(not saved)");
             }
 
             Stopped?.Invoke(this, session);
