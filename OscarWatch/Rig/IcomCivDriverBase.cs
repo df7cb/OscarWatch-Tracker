@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using OscarWatch.Diagnostics;
 using OscarWatch.Core.Models;
 using OscarWatch.Core.Radio;
 using Serilog;
@@ -7,6 +9,7 @@ namespace OscarWatch.Rig;
 public abstract class IcomCivDriverBase : IRigDriver
 {
     private static readonly ILogger Log = Serilog.Log.ForContext<IcomCivDriverBase>();
+    private static readonly ConcurrentDictionary<string, ThrottledLogger> OpenFailureLogs = new(StringComparer.OrdinalIgnoreCase);
     private IIcomCivTransport? _transport;
     private readonly IIcomCivTransport? _injectedTransport;
     private readonly int _catDelayMs;
@@ -82,7 +85,8 @@ public abstract class IcomCivDriverBase : IRigDriver
             }
             catch (Exception ex)
             {
-                Log.Warning(ex, "Failed to open injected CI-V transport");
+                OpenFailureLogs.GetOrAdd("injected", _ => new ThrottledLogger(Log))
+                    .Warning(ex, "Failed to open injected CI-V transport");
             }
 
             return;
@@ -93,10 +97,13 @@ public abstract class IcomCivDriverBase : IRigDriver
         try
         {
             _transport.Open();
+            if (_transport.IsOpen)
+                OpenFailureLogs.GetOrAdd(Port, _ => new ThrottledLogger(Log)).Reset();
         }
         catch (Exception ex)
         {
-            Log.Warning(ex, "Failed to open CI-V port {Port} at {BaudRate}", Port, BaudRate);
+            OpenFailureLogs.GetOrAdd(Port, _ => new ThrottledLogger(Log))
+                .Warning(ex, "Failed to open CI-V port {Port} at {BaudRate}", Port, BaudRate);
             _transport.Dispose();
             _transport = null;
         }

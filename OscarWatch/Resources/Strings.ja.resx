@@ -2571,6 +2571,9 @@
   <data name="Sstv.Status.NoAudio">
     <value>音声入力を使用できません (PortAudio を開始できませんでした)。</value>
   </data>
+  <data name="Sstv.Status.CaptureRetrying">
+    <value>サウンドカードから音声がありません。再接続中（{0} 回目）…</value>
+  </data>
   <data name="Sstv.Status.Error">
     <value>SSTV が停止しました: {0}</value>
   </data>

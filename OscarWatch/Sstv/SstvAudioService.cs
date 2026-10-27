@@ -14,18 +14,10 @@ public sealed class SstvAudioService : IDisposable
     private readonly object _gate = new();
     private readonly ConcurrentQueue<float> _captureRing = new();
     private PaStream? _input;
-    private bool _portAudioReady;
     private int _captureSampleRate = 48000;
     private float _peak;
 
-    public bool IsAvailable
-    {
-        get
-        {
-            EnsurePortAudio();
-            return _portAudioReady;
-        }
-    }
+    public bool IsAvailable => PortAudioRuntime.EnsureInitialized();
 
     public bool IsCapturing
     {
@@ -51,8 +43,7 @@ public sealed class SstvAudioService : IDisposable
 
     public IReadOnlyList<AudioInputDevice> GetInputDevices()
     {
-        EnsurePortAudio();
-        if (!_portAudioReady)
+        if (!PortAudioRuntime.EnsureInitialized())
             return [];
 
         var candidates = new List<RecordingDeviceCandidate>();
@@ -71,8 +62,7 @@ public sealed class SstvAudioService : IDisposable
     {
         lock (_gate)
         {
-            EnsurePortAudio();
-            if (!_portAudioReady)
+            if (!PortAudioRuntime.EnsureInitialized())
                 throw new InvalidOperationException("PortAudio is not available.");
 
             StopCaptureUnlocked();
@@ -82,19 +72,48 @@ public sealed class SstvAudioService : IDisposable
 
             try
             {
-                OpenCaptureUnlocked(deviceId, deviceDisplayName, preferLowLatencyShared: true);
+                OpenCaptureWithFallback(deviceId, deviceDisplayName);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (TryRefreshAndReopen(deviceId, deviceDisplayName, ex))
             {
-                var lowLatency = ResolveDeviceIndex(deviceId, deviceDisplayName, preferLowLatencyShared: true);
-                var shared = ResolveDeviceIndex(deviceId, deviceDisplayName, preferLowLatencyShared: false);
-                if (shared < 0 || shared == lowLatency)
-                    throw;
-
-                Log.Warning(ex, "SSTV low-latency capture open failed; retrying the shareable device");
-                StopCaptureUnlocked();
-                OpenCaptureUnlocked(deviceId, deviceDisplayName, preferLowLatencyShared: false);
             }
+        }
+    }
+
+    private void OpenCaptureWithFallback(string? deviceId, string? deviceDisplayName)
+    {
+        try
+        {
+            OpenCaptureUnlocked(deviceId, deviceDisplayName, preferLowLatencyShared: true);
+        }
+        catch (Exception ex)
+        {
+            var lowLatency = ResolveDeviceIndex(deviceId, deviceDisplayName, preferLowLatencyShared: true);
+            var shared = ResolveDeviceIndex(deviceId, deviceDisplayName, preferLowLatencyShared: false);
+            if (shared < 0 || shared == lowLatency)
+                throw;
+
+            Log.Warning(ex, "SSTV low-latency capture open failed; retrying the shareable device");
+            StopCaptureUnlocked();
+            OpenCaptureUnlocked(deviceId, deviceDisplayName, preferLowLatencyShared: false);
+        }
+    }
+
+    private bool TryRefreshAndReopen(string? deviceId, string? deviceDisplayName, Exception firstError)
+    {
+        StopCaptureUnlocked();
+        if (!PortAudioRuntime.TryRefreshHost())
+            throw firstError;
+
+        Log.Information("SSTV retrying capture after refreshing the PortAudio host");
+        try
+        {
+            OpenCaptureWithFallback(deviceId, deviceDisplayName);
+            return true;
+        }
+        catch (Exception retryEx)
+        {
+            throw new AggregateException(firstError, retryEx);
         }
     }
 
@@ -132,15 +151,26 @@ public sealed class SstvAudioService : IDisposable
             hostApiSpecificStreamInfo = IntPtr.Zero,
         };
 
-        _input = new PaStream(
-            inParams: param,
-            outParams: null,
-            sampleRate: _captureSampleRate,
-            framesPerBuffer: 1024,
-            streamFlags: StreamFlags.ClipOff,
-            callback: OnInput,
-            userData: IntPtr.Zero);
-        _input.Start();
+        try
+        {
+            _input = new PaStream(
+                inParams: param,
+                outParams: null,
+                sampleRate: _captureSampleRate,
+                framesPerBuffer: 1024,
+                streamFlags: StreamFlags.ClipOff,
+                callback: OnInput,
+                userData: IntPtr.Zero);
+            _input.Start();
+            PortAudioRuntime.NotifyStreamOpened();
+        }
+        catch
+        {
+            try { _input?.Dispose(); } catch { /* ignore */ }
+            _input = null;
+            throw;
+        }
+
         Log.Information("SSTV capture started on '{Device}' (index {Index}) at {Rate} Hz", info.name, deviceIndex, _captureSampleRate);
     }
 
@@ -179,32 +209,13 @@ public sealed class SstvAudioService : IDisposable
 
     private void StopCaptureUnlocked()
     {
-        try { _input?.Stop(); } catch { /* ignore */ }
-        try { _input?.Dispose(); } catch { /* ignore */ }
-        _input = null;
-    }
-
-    private void EnsurePortAudio()
-    {
-        if (_portAudioReady)
+        if (_input is null)
             return;
 
-        try
-        {
-            if (!PortAudioOutOfProcessProbe.TryRun(out _))
-            {
-                _portAudioReady = false;
-                return;
-            }
-
-            PortAudio.Initialize();
-            _portAudioReady = true;
-        }
-        catch (Exception ex)
-        {
-            Log.Warning(ex, "SSTV PortAudio init failed");
-            _portAudioReady = false;
-        }
+        try { _input.Stop(); } catch { /* ignore */ }
+        try { _input.Dispose(); } catch { /* ignore */ }
+        _input = null;
+        PortAudioRuntime.NotifyStreamClosed();
     }
 
     private static int ResolveDeviceIndex(string? deviceId, string? deviceDisplayName, bool preferLowLatencyShared)

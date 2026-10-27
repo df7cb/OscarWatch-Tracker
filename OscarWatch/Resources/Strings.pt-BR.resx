@@ -1233,6 +1233,9 @@ Continuar?</value>
   <data name="Sstv.Status.NoAudio">
     <value>Nenhuma entrada de áudio disponível (o PortAudio não pôde iniciar).</value>
   </data>
+  <data name="Sstv.Status.CaptureRetrying">
+    <value>Sem áudio da placa de som. Reconectando (tentativa {0})…</value>
+  </data>
   <data name="Sstv.Status.Error">
     <value>SSTV parado: {0}</value>
   </data>

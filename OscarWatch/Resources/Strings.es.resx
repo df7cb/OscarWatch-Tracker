@@ -1233,6 +1233,9 @@
   <data name="Sstv.Status.NoAudio">
     <value>No hay entrada de audio disponible (PortAudio no pudo iniciarse).</value>
   </data>
+  <data name="Sstv.Status.CaptureRetrying">
+    <value>Sin audio de la tarjeta de sonido. Reconectando (intento {0})…</value>
+  </data>
   <data name="Sstv.Status.Error">
     <value>SSTV detenido: {0}</value>
   </data>

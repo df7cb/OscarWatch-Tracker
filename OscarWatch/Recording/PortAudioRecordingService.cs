@@ -81,25 +81,9 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
                 return _initialized;
 
             _initializationAttempted = true;
-            try
-            {
-                if (!PortAudioOutOfProcessProbe.TryRun(out var probeError))
-                {
-                    _initError = probeError;
-                    Log.Warning("PortAudio out-of-process probe failed: {Reason}", probeError);
-                    return false;
-                }
-
-                Log.Information("Initialising PortAudio (device enumeration or capture)");
-                PortAudio.Initialize();
-                _initialized = true;
-                Log.Information("PortAudio initialized ({Version})", PortAudio.VersionInfo.versionText);
-            }
-            catch (Exception ex)
-            {
-                _initError = ex.Message;
-                Log.Warning(ex, "PortAudio initialization failed");
-            }
+            _initialized = PortAudioRuntime.EnsureInitialized();
+            if (!_initialized)
+                _initError = "PortAudio is not available.";
 
             return _initialized;
         }
@@ -217,20 +201,35 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
 
             lock (_streamGate)
             {
-                _stream = OpenCaptureStream(
-                    deviceIndex,
-                    deviceInfo,
-                    channels,
-                    preferredSampleRate,
-                    callback,
-                    out actualSampleRate,
-                    out framesPerBuffer);
+                try
+                {
+                    _stream = OpenCaptureStream(
+                        deviceIndex,
+                        deviceInfo,
+                        channels,
+                        preferredSampleRate,
+                        callback,
+                        out actualSampleRate,
+                        out framesPerBuffer);
+                }
+                catch (InvalidOperationException) when (PortAudioRuntime.TryRefreshHost())
+                {
+                    _stream = OpenCaptureStream(
+                        deviceIndex,
+                        deviceInfo,
+                        channels,
+                        preferredSampleRate,
+                        callback,
+                        out actualSampleRate,
+                        out framesPerBuffer);
+                }
 
                 _wavWriter = new WavWriter(outputPath, actualSampleRate, (short)channels);
                 StartWriterThread();
 
                 _captureActive = true;
                 _stream.Start();
+                PortAudioRuntime.NotifyStreamOpened();
             }
 
             IsRecording = true;
@@ -358,9 +357,13 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
         lock (_streamGate)
         {
             _captureActive = false;
-            try { _stream?.Stop(); } catch (Exception ex) { Log.Debug(ex, "PortAudio stream stop"); }
-            try { _stream?.Dispose(); } catch (Exception ex) { Log.Debug(ex, "PortAudio stream dispose"); }
-            _stream = null;
+            if (_stream is not null)
+            {
+                try { _stream.Stop(); } catch (Exception ex) { Log.Debug(ex, "PortAudio stream stop"); }
+                try { _stream.Dispose(); } catch (Exception ex) { Log.Debug(ex, "PortAudio stream dispose"); }
+                _stream = null;
+                PortAudioRuntime.NotifyStreamClosed();
+            }
         }
 
         _dataAvailable.Set();
@@ -730,20 +733,6 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
                 Log.Warning(ex, "Recording dispose stop failed");
             }
 
-            if (_initialized)
-            {
-                try
-                {
-                    PortAudio.Terminate();
-                }
-                catch (Exception ex)
-                {
-                    Log.Debug(ex, "PortAudio terminate failed");
-                }
-
-                _initialized = false;
-                Log.Information("PortAudio terminated");
-            }
         }
         finally
         {

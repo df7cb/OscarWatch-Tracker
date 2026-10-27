@@ -880,6 +880,9 @@ LOS: {2}
   <data name="Sstv.Status.NoAudio">
     <value>ไม่มีอินพุตเสียง (PortAudio เริ่มไม่ได้)</value>
   </data>
+  <data name="Sstv.Status.CaptureRetrying">
+    <value>ไม่มีเสียงจากการ์ดเสียง กำลังเชื่อมต่อใหม่ (ครั้งที่ {0})…</value>
+  </data>
   <data name="Sstv.Status.Error">
     <value>SSTV หยุด: {0}</value>
   </data>

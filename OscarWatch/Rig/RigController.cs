@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using OscarWatch.Diagnostics;
 using OscarWatch.Core.Hardware;
 using OscarWatch.Core.Models;
 using OscarWatch.Core.Orbit;
@@ -14,6 +15,7 @@ namespace OscarWatch.Rig;
 public sealed class RigController : IRigController, IDisposable
 {
     private static readonly ILogger Log = Serilog.Log.ForContext<RigController>();
+    private readonly ThrottledLogger _connectFailureLog = new(Log);
     /// <summary>Ring buffer of recent Main dial reads used to detect operator movement.</summary>
     private const int DialHistoryLength = 8;
     /// <summary>After operator moves the Main dial, defer Sub (uplink) CAT so brief pauses while scanning do not select Sub.</summary>
@@ -1561,6 +1563,7 @@ public sealed class RigController : IRigController, IDisposable
             if (ConfirmDriver(_driver, settings.Port, endpointLabel: null, settings.Type))
             {
                 Log.Information("Rig connected: type={RigType}, endpoint={Endpoint}", settings.Type, FormatSingleEndpoint(settings));
+                _connectFailureLog.Reset();
                 _lastConnectError = null;
                 _lastConnectErrorKind = SerialPortConnectErrorKind.None;
                 _lastConnectErrorPort = null;
@@ -1596,7 +1599,7 @@ public sealed class RigController : IRigController, IDisposable
                 endpoint,
                 endpointLabel: null,
                 englishDetail: ex.Message);
-            Log.Warning(ex, "Rig connect failed for {RigType} on {Endpoint}", settings.Type, endpoint);
+            _connectFailureLog.Warning(ex, "Rig connect failed for {RigType} on {Endpoint}", settings.Type, endpoint);
             _driver?.Dispose();
             _driver = null;
             return false;
@@ -1701,6 +1704,7 @@ public sealed class RigController : IRigController, IDisposable
                 return false;
             }
 
+            _connectFailureLog.Reset();
             _lastConnectError = null;
             _lastConnectErrorKind = SerialPortConnectErrorKind.None;
             _lastConnectErrorPort = null;
@@ -1719,7 +1723,7 @@ public sealed class RigController : IRigController, IDisposable
             }
 
             RecordConnectFailure(ClassifyConnectError(ex), failedPort, failedEndpoint, ex.Message);
-            Log.Warning(ex, "Dual rig connect failed (down {DownEndpoint}, up {UpEndpoint})",
+            _connectFailureLog.Warning(ex, "Dual rig connect failed (down {DownEndpoint}, up {UpEndpoint})",
                 FormatEndpointLabel(settings.Downlink), FormatEndpointLabel(settings.Uplink));
             TearDownRig();
             return false;

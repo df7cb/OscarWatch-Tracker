@@ -880,6 +880,9 @@ LOS: {2}
   <data name="Sstv.Status.NoAudio">
     <value>Нет аудиовхода (PortAudio не запустился).</value>
   </data>
+  <data name="Sstv.Status.CaptureRetrying">
+    <value>Нет звука с аудиокарты. Повторное подключение (попытка {0})…</value>
+  </data>
   <data name="Sstv.Status.Error">
     <value>SSTV остановлен: {0}</value>
   </data>

@@ -880,6 +880,9 @@ Fortfahren?</value>
   <data name="Sstv.Status.NoAudio">
     <value>Kein Audioeingang verfügbar (PortAudio konnte nicht starten).</value>
   </data>
+  <data name="Sstv.Status.CaptureRetrying">
+    <value>Kein Audio von der Soundkarte. Verbindung wird wiederhergestellt (Versuch {0})…</value>
+  </data>
   <data name="Sstv.Status.Error">
     <value>SSTV gestoppt: {0}</value>
   </data>

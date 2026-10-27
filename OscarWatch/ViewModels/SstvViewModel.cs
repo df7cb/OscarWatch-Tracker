@@ -636,6 +636,20 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         if (!_receiver.IsDecodingFile)
             InputLevelPercent = Math.Clamp(_receiver.Audio.InputPeak * 100, 0, 100);
 
+        var capture = _receiver.CaptureHealth;
+        if (!_receiver.IsDecodingFile && capture.IsReconnecting)
+        {
+            StatusText = _l.Get("Sstv.Status.CaptureRetrying", capture.ReconnectAttempts);
+            LineText = "";
+            LineProgressPercent = 0;
+            LockText = "";
+            TuningText = "";
+            ClockText = "";
+            if (_receiver.TryGetPreview(ref _previewVersion) is { } stalledPreview)
+                UpdateLiveBitmap(stalledPreview);
+            return;
+        }
+
         var status = _receiver.Status;
         if (status is { State: SstvDecoderState.Decoding, Mode: { } mode })
         {

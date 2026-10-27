@@ -166,8 +166,8 @@ public sealed class PlatformAlertSoundService : IAlertSoundService
                         return false;
                     }
 
-                    PortAudio.Initialize();
-                    _portAudioReady = true;
+                    if (Recording.PortAudioRuntime.EnsureInitialized())
+                        _portAudioReady = true;
                 }
 
                 return PlayPcmViaPortAudio(AlertToneWav.CreatePcm16());
@@ -260,17 +260,25 @@ public sealed class PlatformAlertSoundService : IAlertSoundService
             userData: IntPtr.Zero);
 
         stream.Start();
-        finished.Wait(PlayerTimeout);
+        Recording.PortAudioRuntime.NotifyStreamOpened();
         try
         {
-            stream.Stop();
-        }
-        catch (Exception ex)
-        {
-            Log.Debug(ex, "PortAudio alert stream stop failed");
-        }
+            finished.Wait(PlayerTimeout);
+            try
+            {
+                stream.Stop();
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex, "PortAudio alert stream stop failed");
+            }
 
-        return offset > 0;
+            return offset > 0;
+        }
+        finally
+        {
+            Recording.PortAudioRuntime.NotifyStreamClosed();
+        }
     }
 
     private static short[] Resample(short[] input, int fromRate, int toRate)

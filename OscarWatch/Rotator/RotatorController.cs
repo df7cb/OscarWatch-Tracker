@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using OscarWatch.Diagnostics;
 using OscarWatch.Core.Hardware;
 using OscarWatch.Core.Models;
 using OscarWatch.Core.Orbit;
@@ -14,6 +15,7 @@ namespace OscarWatch.Rotator;
 public sealed class RotatorController : IRotatorController, IDisposable
 {
     private static readonly ILogger Log = Serilog.Log.ForContext<RotatorController>();
+    private readonly ThrottledLogger _connectFailureLog = new(Log);
     private static readonly TimeSpan LoopInterval = TimeSpan.FromSeconds(1);
     private static readonly TimeSpan CommandWaitTimeout = TimeSpan.FromSeconds(10);
 
@@ -842,11 +844,12 @@ public sealed class RotatorController : IRotatorController, IDisposable
             _connectedNetworkPort = settings.NetworkPort;
             _connectedUsesNetworkEndpoint = settings.UsesNetworkEndpoint;
             _connectedType = settings.Type;
+            _connectFailureLog.Reset();
             return true;
         }
         catch (Exception ex)
         {
-            Log.Warning(ex, "Rotator connect failed on {Endpoint}", endpoint);
+            _connectFailureLog.Warning(ex, "Rotator connect failed on {Endpoint}", endpoint);
             _connectionKind = RotatorConnectionKind.ConnectFailed;
             _connectionDetail = ex.Message;
             TearDownRotator();
