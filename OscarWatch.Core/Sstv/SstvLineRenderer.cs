@@ -10,8 +10,16 @@ internal sealed class SstvLineRenderer
     private const double BlackHz = 1500;
     private const double SpanHz = 800;
 
+    /// <summary>
+    /// Robot 36 chroma is averaged over a pair of rows. Taking 3/4 of the pair partner and 1/4
+    /// of the other neighbour centres the missing channel on the row and lowers its noise.
+    /// </summary>
+    private const double RobotPartnerShare = 0.75;
+
     private readonly SstvMode _mode;
     private readonly SstvImage _image;
+    private readonly bool _chromaSmoothing;
+    private double[]? _robotBlend;
 
     // Robot 36: Y and the single chroma channel of every line, kept for pairing.
     private readonly double[][]? _robotY;
@@ -24,10 +32,12 @@ internal sealed class SstvLineRenderer
     // except Robot 36, which keeps its line arrays for pairing and so allocates its own.
     private readonly double[]?[]? _scratch;
 
-    public SstvLineRenderer(SstvMode mode, SstvImage image)
+    /// <param name="chromaSmoothing">Smooth colour-difference channels to reduce colour speckle.</param>
+    public SstvLineRenderer(SstvMode mode, SstvImage image, bool chromaSmoothing = false)
     {
         _mode = mode;
         _image = image;
+        _chromaSmoothing = chromaSmoothing && mode.ColourSpace == SstvColourSpace.YCbCr;
         if (mode.Id == SstvModeId.Robot36)
         {
             var lines = mode.TransmittedLines;
@@ -68,6 +78,8 @@ internal sealed class SstvLineRenderer
             {
                 var values = ChannelBuffer(seg.Channel, w);
                 Scan(buffer, lineStart + t * samplesPerMs, seg.Ms * samplesPerMs, offsetHz, values);
+                if (_chromaSmoothing && seg.Channel is SstvChannel.RMinusY or SstvChannel.BMinusY or SstvChannel.AlternatingChroma)
+                    Smooth(values);
                 switch (seg.Channel)
                 {
                     case SstvChannel.Red: r = values; break;
@@ -125,6 +137,25 @@ internal sealed class SstvLineRenderer
                 var (rr, gg, bb) = YCbCrToRgb(Level(y1, x), Level(by, x, 128), Level(ry, x, 128));
                 _image.SetPixel(x, row + 1, rr, gg, bb);
             }
+        }
+    }
+
+    /// <summary>
+    /// [1, 2, 1] / 4 along the line, in place. The eye resolves colour far less finely than
+    /// brightness, and the colour conversion amplifies chroma noise.
+    /// </summary>
+    private static void Smooth(double[] values)
+    {
+        var w = values.Length;
+        if (w < 3)
+            return;
+        var prev = values[0];
+        for (var x = 0; x < w; x++)
+        {
+            var cur = values[x];
+            var next = x + 1 < w ? values[x + 1] : cur;
+            values[x] = (prev + 2 * cur + next) / 4;
+            prev = cur;
         }
     }
 
@@ -212,12 +243,21 @@ internal sealed class SstvLineRenderer
         // Lines pair up (even R-Y, odd B-Y); prefer the pair partner, then the other neighbour.
         var partner = line % 2 == 0 ? line + 1 : line - 1;
         var neighbour = line % 2 == 0 ? line - 1 : line + 1;
-        foreach (var n in new[] { partner, neighbour })
+        var fromPartner = RobotChroma(partner, wantBlue);
+        var fromNeighbour = RobotChroma(neighbour, wantBlue);
+        if (_chromaSmoothing && fromPartner is not null && fromNeighbour is not null)
         {
-            if (n >= 0 && n < _robotHas!.Length && _robotHas[n] && _robotIsBlue![n] == wantBlue)
-                return _robotChroma![n];
+            var blend = _robotBlend ??= new double[_mode.Width];
+            for (var x = 0; x < blend.Length; x++)
+                blend[x] = RobotPartnerShare * fromPartner[x] + (1 - RobotPartnerShare) * fromNeighbour[x];
+            return blend;
         }
 
-        return null;
+        return fromPartner ?? fromNeighbour;
     }
+
+    private double[]? RobotChroma(int line, bool wantBlue) =>
+        line >= 0 && line < _robotHas!.Length && _robotHas[line] && _robotIsBlue![line] == wantBlue
+            ? _robotChroma![line]
+            : null;
 }

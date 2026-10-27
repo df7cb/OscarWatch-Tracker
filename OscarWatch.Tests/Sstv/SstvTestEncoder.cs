@@ -15,6 +15,15 @@ internal static class SstvTestEncoder
         public double DriftHzPerSecond { get; init; }
         /// <summary>Gaussian noise RMS. Tones have amplitude 0.5.</summary>
         public double NoiseRms { get; init; }
+        /// <summary>Average rate of short impulses, like the pops of a receiver near FM threshold.</summary>
+        public double ClicksPerSecond { get; init; }
+        /// <summary>Peak amplitude of each impulse. Tones have amplitude 0.5.</summary>
+        public double ClickAmplitude { get; init; } = 1.5;
+        /// <summary>Period of noise bursts in milliseconds, like a fading signal. Zero for none.</summary>
+        public double BurstEveryMs { get; init; }
+        public double BurstMs { get; init; }
+        /// <summary>Gaussian noise RMS added during a burst, on top of <see cref="NoiseRms"/>.</summary>
+        public double BurstNoiseRms { get; init; }
         public int Seed { get; init; } = 1234;
         public bool IncludeVis { get; init; } = true;
         /// <summary>Overrides the VIS code sent, for example to send a bad parity.</summary>
@@ -150,8 +159,12 @@ internal static class SstvTestEncoder
     {
         private readonly List<float> _samples = new();
         private readonly Random _random = new(settings.Seed);
+        private readonly Random _clickRandom = new(settings.Seed + 1);
         private double _phase;
         private double _timeMs;
+        private int _clickLeft;
+        private int _clickLength;
+        private double _clickPeak;
 
         public void Silence(double seconds)
         {
@@ -195,13 +208,45 @@ internal static class SstvTestEncoder
             _timeMs = endMs;
         }
 
+        /// <summary>Impairments for the next sample: Gaussian noise, noise bursts and impulses.</summary>
         private double Noise()
         {
-            if (settings.NoiseRms <= 0)
-                return 0;
-            var u1 = 1.0 - _random.NextDouble();
-            var u2 = _random.NextDouble();
-            return settings.NoiseRms * Math.Sqrt(-2 * Math.Log(u1)) * Math.Cos(2 * Math.PI * u2);
+            var n = _samples.Count;
+            var rms = settings.NoiseRms;
+            if (settings.BurstEveryMs > 0 && settings.BurstMs > 0)
+            {
+                var period = settings.BurstEveryMs * rate / 1000.0;
+                if (n % period < settings.BurstMs * rate / 1000.0)
+                    rms = Math.Sqrt(rms * rms + settings.BurstNoiseRms * settings.BurstNoiseRms);
+            }
+
+            var value = 0.0;
+            if (rms > 0)
+            {
+                var u1 = 1.0 - _random.NextDouble();
+                var u2 = _random.NextDouble();
+                value = rms * Math.Sqrt(-2 * Math.Log(u1)) * Math.Cos(2 * Math.PI * u2);
+            }
+
+            if (settings.ClicksPerSecond > 0)
+            {
+                if (_clickLeft == 0 && _clickRandom.NextDouble() < settings.ClicksPerSecond / rate)
+                {
+                    // About 0.3 ms long, one lobe, either polarity.
+                    _clickLength = Math.Max(3, rate * 3 / 10000);
+                    _clickLeft = _clickLength;
+                    _clickPeak = settings.ClickAmplitude * (_clickRandom.NextDouble() < 0.5 ? -1 : 1);
+                }
+
+                if (_clickLeft > 0)
+                {
+                    var t = (double)(_clickLength - _clickLeft) / _clickLength;
+                    value += _clickPeak * Math.Sin(Math.PI * t);
+                    _clickLeft--;
+                }
+            }
+
+            return value;
         }
 
         public float[] ToArray() => _samples.ToArray();

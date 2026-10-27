@@ -35,22 +35,25 @@ public sealed class SstvLineRendererAllocationTests
         var samplesPerMs = Rate / 1000.0;
         var lineSamples = mode.LineMs * samplesPerMs;
 
-        // Reference: a brand-new renderer+image per line, so no scratch is ever reused.
-        // Valid only for modes that render a line without state from earlier lines.
-        var reference = new SstvImage(mode.Width, mode.Height);
-        for (var line = 0; line < mode.TransmittedLines; line++)
+        foreach (var chromaSmoothing in new[] { false, true })
         {
-            var fresh = new SstvLineRenderer(mode, reference);
-            fresh.Render(buffer, buffer.Start + line * lineSamples, samplesPerMs, 0, line);
+            // Reference: a brand-new renderer+image per line, so no scratch is ever reused.
+            // Valid only for modes that render a line without state from earlier lines.
+            var reference = new SstvImage(mode.Width, mode.Height);
+            for (var line = 0; line < mode.TransmittedLines; line++)
+            {
+                var fresh = new SstvLineRenderer(mode, reference, chromaSmoothing);
+                fresh.Render(buffer, buffer.Start + line * lineSamples, samplesPerMs, 0, line);
+            }
+
+            // Under test: one renderer reusing its scratch buffers across every line.
+            var actual = new SstvImage(mode.Width, mode.Height);
+            var renderer = new SstvLineRenderer(mode, actual, chromaSmoothing);
+            for (var line = 0; line < mode.TransmittedLines; line++)
+                renderer.Render(buffer, buffer.Start + line * lineSamples, samplesPerMs, 0, line);
+
+            Assert.Equal(reference.Rgb, actual.Rgb);
         }
-
-        // Under test: one renderer reusing its scratch buffers across every line.
-        var actual = new SstvImage(mode.Width, mode.Height);
-        var renderer = new SstvLineRenderer(mode, actual);
-        for (var line = 0; line < mode.TransmittedLines; line++)
-            renderer.Render(buffer, buffer.Start + line * lineSamples, samplesPerMs, 0, line);
-
-        Assert.Equal(reference.Rgb, actual.Rgb);
     }
 
     /// <summary>
@@ -94,7 +97,7 @@ public sealed class SstvLineRendererAllocationTests
         var lineSamples = mode.LineMs * samplesPerMs;
 
         var image = new SstvImage(mode.Width, mode.Height);
-        var renderer = new SstvLineRenderer(mode, image);
+        var renderer = new SstvLineRenderer(mode, image, chromaSmoothing: true);
 
         // Warm up: first lines allocate the scratch buffers once.
         for (var line = 0; line < 8; line++)

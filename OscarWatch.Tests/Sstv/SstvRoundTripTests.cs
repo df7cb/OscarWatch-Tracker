@@ -105,9 +105,9 @@ public sealed class SstvRoundTripTests
     /// because the colour conversion amplifies chroma noise.
     /// </summary>
     [Theory]
-    [InlineData(SstvModeId.Pd120, 55)]
-    [InlineData(SstvModeId.MartinM1, 30)]
-    [InlineData(SstvModeId.Robot36, 55)]
+    [InlineData(SstvModeId.Pd120, 47)]
+    [InlineData(SstvModeId.MartinM1, 28)]
+    [InlineData(SstvModeId.Robot36, 47)]
     public void Noisy_signal_still_decodes(SstvModeId id, double maxMeanError)
     {
         var mode = SstvModeTable.Get(id);
@@ -120,8 +120,8 @@ public sealed class SstvRoundTripTests
     }
 
     [Theory]
-    [InlineData(SstvModeId.Pd120, 0.2, 36)]
-    [InlineData(SstvModeId.MartinM1, 0.2, 18)]
+    [InlineData(SstvModeId.Pd120, 0.2, 29)]
+    [InlineData(SstvModeId.MartinM1, 0.2, 17)]
     public void Moderate_noise_keeps_detail(SstvModeId id, double noiseRms, double maxMeanError)
     {
         var mode = SstvModeTable.Get(id);
@@ -264,6 +264,12 @@ public sealed class SstvRoundTripTests
     /// <summary>Mean absolute error per channel, ignoring a margin at the image edges.</summary>
     internal static void AssertImageClose(SstvMode mode, SstvImage image, double maxMeanError)
     {
+        var mean = MeanError(mode, image);
+        Assert.True(mean <= maxMeanError, $"{mode.Name}: mean error {mean:0.00} > {maxMeanError}");
+    }
+
+    internal static double MeanError(SstvMode mode, SstvImage image)
+    {
         var margin = Math.Max(2, mode.Width / 64);
         double total = 0;
         var count = 0;
@@ -280,7 +286,6 @@ public sealed class SstvRoundTripTests
             }
         }
 
-        var mean = total / count;
-        Assert.True(mean <= maxMeanError, $"{mode.Name}: mean error {mean:0.00} > {maxMeanError}");
+        return total / count;
     }
 }

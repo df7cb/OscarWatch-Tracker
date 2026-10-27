@@ -28,6 +28,9 @@ public sealed class SstvDecoderOptions
 
     /// <summary>Look for a regular run of sync pulses when the VIS header was lost.</summary>
     public bool DetectWithoutVis { get; set; } = true;
+
+    /// <summary>Smooth colour-difference channels in the Robot and PD modes to reduce colour speckle.</summary>
+    public bool ChromaSmoothing { get; set; } = true;
 }
 
 public sealed class SstvImageStartedEventArgs(SstvMode mode, bool fromVis, double offsetHz) : EventArgs
@@ -307,7 +310,7 @@ public sealed class SstvDecoder
     {
         _mode = mode;
         _image = new SstvImage(mode.Width, mode.Height);
-        _renderer = new SstvLineRenderer(mode, _image);
+        _renderer = new SstvLineRenderer(mode, _image, Options.ChromaSmoothing);
         var nominal = mode.LineMs * InternalRate / 1000.0;
         _tracker = new SstvLineTracker(nominal)
         {
