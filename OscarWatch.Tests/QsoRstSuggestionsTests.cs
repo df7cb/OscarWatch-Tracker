@@ -17,12 +17,27 @@ public class QsoRstSuggestionsTests
     public void DefaultReport_uses_signal_reports_for_ft4_even_when_the_uplink_is_usb()
     {
         Assert.Equal("+00", QsoRstSuggestions.DefaultReport("USB", "FT4"));
-        Assert.Equal("599", QsoRstSuggestions.DefaultReport("USB", "SSB"));
+        Assert.Equal("59", QsoRstSuggestions.DefaultReport("USB", "SSB"));
         Assert.Equal("59", QsoRstSuggestions.DefaultReport("FM", ""));
         Assert.Contains("+05", QsoRstSuggestions.SnrOptions);
         Assert.Contains("-12", QsoRstSuggestions.SnrOptions);
         Assert.DoesNotContain("59", QsoRstSuggestions.SnrOptions);
     }
+
+    [Theory]
+    [InlineData("USB", "", "59")]
+    [InlineData("LSB", "SSB", "59")]
+    [InlineData("AM", "", "59")]
+    [InlineData("FM", "FM", "59")]
+    [InlineData("PKT", "", "59")]
+    [InlineData("CW", "", "599")]
+    [InlineData("CW-R", "", "599")]
+    [InlineData("USB", "CW", "599")]
+    [InlineData("DATA-USB", "", "599")]
+    [InlineData("", "SSB", null)]
+    public void DefaultReport_uses_two_digits_for_voice_and_three_for_cw_and_data(
+        string mode, string modeType, string? expected) =>
+        Assert.Equal(expected, QsoRstSuggestions.DefaultReport(mode, modeType));
 
     [Theory]
     [InlineData("R+05", true, "+05")]

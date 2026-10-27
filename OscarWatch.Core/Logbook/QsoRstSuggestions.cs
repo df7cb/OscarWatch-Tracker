@@ -23,11 +23,18 @@ public static class QsoRstSuggestions
         if (UsesSnr(mode, modeType))
             return "+00";
 
-        var normalized = NormalizeToken(mode);
-        if (normalized is "FM" or "PKT")
-            return "59";
+        if (NormalizeToken(mode).Length == 0)
+            return null;
 
-        return normalized.Length == 0 ? null : "599";
+        return UsesToneReport(mode) || UsesToneReport(modeType) ? "599" : "59";
+    }
+
+    private static bool UsesToneReport(string? value)
+    {
+        var normalized = NormalizeToken(value);
+        return normalized.StartsWith("CW", StringComparison.Ordinal)
+            || normalized is "RTTY" or "PSK" or "PSK31" or "DATA-USB" or "DATA-LSB" or "DIGU" or "DIGL"
+                or "PKTUSB" or "PKTLSB" or "USB-D" or "LSB-D";
     }
 
     /// <summary>
