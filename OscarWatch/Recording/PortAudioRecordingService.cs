@@ -27,7 +27,6 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
     private readonly FfmpegLocator _ffmpegLocator;
     private readonly FfmpegMp3Converter _mp3Converter;
 
-    private bool _initialized;
     private bool _initializationAttempted;
     private bool _disposed;
     private string? _initError;
@@ -53,10 +52,10 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
         _mp3Converter = mp3Converter ?? new FfmpegMp3Converter(locator: _ffmpegLocator);
     }
 
-    public bool IsAvailable => !_initializationAttempted || _initialized;
+    public bool IsAvailable => !_initializationAttempted || PortAudioRuntime.IsInitialized;
 
     public string? UnavailableReason =>
-        _initializationAttempted && !_initialized
+        _initializationAttempted && !PortAudioRuntime.IsInitialized
             ? _initError ?? "PortAudio is not available."
             : null;
 
@@ -67,9 +66,10 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
     public string? LastCompletedOutputPath { get; private set; }
 
     /// <summary>
-    /// Initialises PortAudio on first recording use. In particular, do not enumerate Windows audio
-    /// devices while the main window is being constructed: some SmartSDR/DAX installations can block
-    /// inside the native PortAudio initialiser.
+    /// Initialises PortAudio on recording use. Each call asks the shared runtime again, because a
+    /// host refresh can terminate PortAudio after an earlier success. Do not call this while the
+    /// main window is being constructed: some SmartSDR/DAX installations can block inside the
+    /// native PortAudio initialiser.
     /// </summary>
     private bool EnsureInitialized()
     {
@@ -77,15 +77,10 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
 
-            if (_initializationAttempted)
-                return _initialized;
-
             _initializationAttempted = true;
-            _initialized = PortAudioRuntime.EnsureInitialized();
-            if (!_initialized)
-                _initError = "PortAudio is not available.";
-
-            return _initialized;
+            var ready = PortAudioRuntime.EnsureInitialized();
+            _initError = ready ? null : "PortAudio is not available.";
+            return ready;
         }
     }
 
@@ -157,36 +152,6 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
             _activeContainer = container;
             var (preferredSampleRate, channels) = format.GetFormat();
 
-            var inputs = SnapshotInputDevices();
-            var deviceIndex = RecordingDeviceResolver.ResolveIndex(deviceId, deviceName, inputs);
-            if (deviceIndex < 0)
-            {
-                Log.Warning("Could not find device: id='{DeviceId}' name='{DeviceName}'", deviceId, deviceName ?? "(not provided)");
-                throw new InvalidOperationException(
-                    "Audio device is no longer available. " +
-                    "Please go to Settings → Recording, click Refresh, and re-select your radio input device.");
-            }
-
-            var deviceInfo = PortAudio.GetDeviceInfo(deviceIndex);
-            Log.Information(
-                "Resolved recording device '{RawName}' to index {Index} (saved id='{DeviceId}', display='{DisplayName}')",
-                deviceInfo.name,
-                deviceIndex,
-                deviceId,
-                deviceName ?? "");
-
-            if (deviceInfo.maxInputChannels <= 0)
-            {
-                Log.Warning("Device at index {DeviceIndex} ('{Device}') has no input channels", deviceIndex, deviceInfo.name);
-                throw new InvalidOperationException(
-                    $"Device '{deviceInfo.name}' does not support audio input. " +
-                    $"Please go to Settings → Recording, click Refresh, and re-select your radio input device.");
-            }
-            
-            if (deviceInfo.maxInputChannels < channels)
-                throw new InvalidOperationException(
-                    $"Device '{deviceInfo.name}' does not support {channels} input channel(s).");
-
             _maxCallbackBytes = MaxCallbackFrameCount * channels * 2;
             _ringBuffer = new PcmRingBuffer(RingBufferBytes);
             _ringBuffer.ResetStats();
@@ -198,9 +163,12 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
             PortAudioSharp.Stream.Callback callback = OnAudioCallback;
             int actualSampleRate;
             uint framesPerBuffer;
+            int deviceIndex;
+            DeviceInfo deviceInfo;
 
             lock (_streamGate)
             {
+                (deviceIndex, deviceInfo) = ResolveInputDevice(deviceId, deviceName, channels);
                 try
                 {
                     _stream = OpenCaptureStream(
@@ -214,6 +182,8 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
                 }
                 catch (InvalidOperationException) when (PortAudioRuntime.TryRefreshHost())
                 {
+                    Log.Information("Retrying recording capture after refreshing the PortAudio host");
+                    (deviceIndex, deviceInfo) = ResolveInputDevice(deviceId, deviceName, channels);
                     _stream = OpenCaptureStream(
                         deviceIndex,
                         deviceInfo,
@@ -224,12 +194,14 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
                         out framesPerBuffer);
                 }
 
+                // Count the handle before writer setup and Start. A later failure still runs
+                // cleanup, which decrements, so another service's stream is not erased.
+                PortAudioRuntime.NotifyStreamOpened();
                 _wavWriter = new WavWriter(outputPath, actualSampleRate, (short)channels);
                 StartWriterThread();
 
                 _captureActive = true;
                 _stream.Start();
-                PortAudioRuntime.NotifyStreamOpened();
             }
 
             IsRecording = true;
@@ -494,6 +466,41 @@ public sealed class PortAudioRecordingService : IAudioRecordingService, IDisposa
             rates.Add(44100);
 
         return rates;
+    }
+
+    private (int Index, DeviceInfo Info) ResolveInputDevice(string deviceId, string? deviceName, int channels)
+    {
+        var inputs = SnapshotInputDevices();
+        var deviceIndex = RecordingDeviceResolver.ResolveIndex(deviceId, deviceName, inputs);
+        if (deviceIndex < 0)
+        {
+            Log.Warning("Could not find device: id='{DeviceId}' name='{DeviceName}'", deviceId, deviceName ?? "(not provided)");
+            throw new InvalidOperationException(
+                "Audio device is no longer available. " +
+                "Please go to Settings → Recording, click Refresh, and re-select your radio input device.");
+        }
+
+        var deviceInfo = PortAudio.GetDeviceInfo(deviceIndex);
+        Log.Information(
+            "Resolved recording device '{RawName}' to index {Index} (saved id='{DeviceId}', display='{DisplayName}')",
+            deviceInfo.name,
+            deviceIndex,
+            deviceId,
+            deviceName ?? "");
+
+        if (deviceInfo.maxInputChannels <= 0)
+        {
+            Log.Warning("Device at index {DeviceIndex} ('{Device}') has no input channels", deviceIndex, deviceInfo.name);
+            throw new InvalidOperationException(
+                $"Device '{deviceInfo.name}' does not support audio input. " +
+                $"Please go to Settings → Recording, click Refresh, and re-select your radio input device.");
+        }
+
+        if (deviceInfo.maxInputChannels < channels)
+            throw new InvalidOperationException(
+                $"Device '{deviceInfo.name}' does not support {channels} input channel(s).");
+
+        return (deviceIndex, deviceInfo);
     }
 
     private List<RecordingDeviceResolver.InputDeviceSnapshot> SnapshotInputDevices()

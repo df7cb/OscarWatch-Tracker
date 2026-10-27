@@ -21,7 +21,6 @@ public sealed class PlatformAlertSoundService : IAlertSoundService
 
     private readonly FfmpegLocator? _ffmpegLocator;
     private readonly object _portAudioGate = new();
-    private bool _portAudioReady;
     private bool _portAudioFailed;
 
     public PlatformAlertSoundService(FfmpegLocator? ffmpegLocator = null)
@@ -157,17 +156,10 @@ public sealed class PlatformAlertSoundService : IAlertSoundService
 
             try
             {
-                if (!_portAudioReady)
+                if (!Recording.PortAudioRuntime.EnsureInitialized())
                 {
-                    if (!PortAudioOutOfProcessProbe.TryRun(out var probeError))
-                    {
-                        Log.Debug("PortAudio probe failed for alert sound: {Reason}", probeError);
-                        _portAudioFailed = true;
-                        return false;
-                    }
-
-                    if (Recording.PortAudioRuntime.EnsureInitialized())
-                        _portAudioReady = true;
+                    Log.Debug("PortAudio is not available for the alert sound");
+                    return false;
                 }
 
                 return PlayPcmViaPortAudio(AlertToneWav.CreatePcm16());
@@ -250,19 +242,23 @@ public sealed class PlatformAlertSoundService : IAlertSoundService
             suggestedLatency = info.defaultLowOutputLatency
         };
 
-        using var stream = new PortAudioSharp.Stream(
-            inParams: null,
-            outParams: param,
-            sampleRate: sampleRate,
-            framesPerBuffer: 256,
-            streamFlags: StreamFlags.ClipOff,
-            callback: Callback,
-            userData: IntPtr.Zero);
-
-        stream.Start();
-        Recording.PortAudioRuntime.NotifyStreamOpened();
+        PortAudioSharp.Stream? stream = null;
+        var registered = false;
         try
         {
+            stream = new PortAudioSharp.Stream(
+                inParams: null,
+                outParams: param,
+                sampleRate: sampleRate,
+                framesPerBuffer: 256,
+                streamFlags: StreamFlags.ClipOff,
+                callback: Callback,
+                userData: IntPtr.Zero);
+
+            stream.Start();
+            Recording.PortAudioRuntime.NotifyStreamOpened();
+            registered = true;
+
             finished.Wait(PlayerTimeout);
             try
             {
@@ -277,7 +273,20 @@ public sealed class PlatformAlertSoundService : IAlertSoundService
         }
         finally
         {
-            Recording.PortAudioRuntime.NotifyStreamClosed();
+            if (stream is not null)
+            {
+                try
+                {
+                    stream.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex, "PortAudio alert stream dispose failed");
+                }
+            }
+
+            if (registered)
+                Recording.PortAudioRuntime.NotifyStreamClosed();
         }
     }
 

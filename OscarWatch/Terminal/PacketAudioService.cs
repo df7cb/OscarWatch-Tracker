@@ -239,8 +239,18 @@ public sealed class PacketAudioService : IPacketAudio
             hostApiSpecificStreamInfo = IntPtr.Zero
         };
         _input = new PaStream(param, null, CaptureSampleRate, 256, StreamFlags.ClipOff, OnInput, IntPtr.Zero);
-        _input.Start();
         PortAudioRuntime.NotifyStreamOpened();
+        try
+        {
+            _input.Start();
+        }
+        catch
+        {
+            try { _input.Dispose(); } catch { /* ignore */ }
+            _input = null;
+            PortAudioRuntime.NotifyStreamClosed();
+            throw;
+        }
         Log.Information("Terminal modem capture on '{Device}' (index {Index}) at {Rate} Hz", info.name, index, CaptureSampleRate);
     }
 
