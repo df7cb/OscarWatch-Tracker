@@ -132,6 +132,8 @@ public sealed class SstvRoundTripTests
     }
 
     [Theory]
+    [InlineData(SstvModeId.Robot36)]
+    [InlineData(SstvModeId.Robot72)]
     [InlineData(SstvModeId.Pd120)]
     [InlineData(SstvModeId.MartinM1)]
     [InlineData(SstvModeId.ScottieS1)]
