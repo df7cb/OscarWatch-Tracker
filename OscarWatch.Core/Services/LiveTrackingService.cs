@@ -177,22 +177,32 @@ public sealed class LiveTrackingService : ILiveTrackingService
         {
             while (!_shutdownRequested)
             {
-                var commands = _commands;
-                if (commands is null)
-                    break;
-
-                if (commands.TryTake(out var command, LoopInterval))
+                try
                 {
-                    var refreshedByCommand = ProcessCommand(command);
-                    refreshedByCommand |= DrainPendingCommands();
-                    if (refreshedByCommand || _shutdownRequested)
-                        continue;
+                    var commands = _commands;
+                    if (commands is null)
+                        break;
+
+                    if (commands.TryTake(out var command, LoopInterval))
+                    {
+                        var refreshedByCommand = ProcessCommand(command);
+                        refreshedByCommand |= DrainPendingCommands();
+                        if (refreshedByCommand || _shutdownRequested)
+                            continue;
+                    }
+
+                    if (_shutdownRequested)
+                        break;
+
+                    RefreshSnapshot();
                 }
-
-                if (_shutdownRequested)
-                    break;
-
-                RefreshSnapshot();
+                catch (Exception ex)
+                {
+                    Trace.TraceError(
+                        "Live tracking worker iteration failed; continuing (shutdown={0}): {1}",
+                        _shutdownRequested,
+                        ex);
+                }
             }
         }
         finally

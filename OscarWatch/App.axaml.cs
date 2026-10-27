@@ -37,6 +37,8 @@ public partial class App : Application
     public static Window? MainWindow { get; private set; }
     public static IServiceProvider Services { get; private set; } = null!;
 
+    private static int _desktopShutdownHandlersRan;
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -247,14 +249,24 @@ public partial class App : Application
     private static void OnDesktopShutdownRequested(object? sender, ShutdownRequestedEventArgs e)
     {
         AppShutdownWatchdog.Start();
-        Services?.GetService<MainViewModel>()?.DisconnectHardwareForShutdown();
-        WaitForShutdownTask(
-            Services?.GetService<ISatelliteLinkBroadcastService>()?.StopAsync(),
-            "Satellite Link");
+        if (Interlocked.CompareExchange(ref _desktopShutdownHandlersRan, 1, 0) != 0)
+            return;
 
-        // Flush pending settings save on shutdown
-        var settings = Services?.GetService<ISettingsService>();
-        WaitForShutdownTask(settings?.FlushAsync(), "settings");
+        try
+        {
+            Services.GetService<MainViewModel>()?.DisconnectHardwareForShutdown();
+            WaitForShutdownTask(
+                Services.GetService<ISatelliteLinkBroadcastService>()?.StopAsync(),
+                "Satellite Link");
+
+            // Flush pending settings save on shutdown
+            var settings = Services.GetService<ISettingsService>();
+            WaitForShutdownTask(settings?.FlushAsync(), "settings");
+        }
+        catch (ObjectDisposedException ex)
+        {
+            Log.Warning(ex, "Desktop shutdown skipped; service provider already disposed");
+        }
     }
 
     private static void WaitForShutdownTask(Task? task, string operation)

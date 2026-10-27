@@ -17,6 +17,8 @@ public static class SatelliteCatalogMatching
     /// </summary>
     private static IReadOnlySet<string>? _lastEnabledSet;
 
+    private static readonly object ParenthesisIndexLock = new();
+
     /// <summary>
     /// True when the satellite is enabled by normalised catalogue ID, or else by name alias rules.
     /// </summary>
@@ -203,27 +205,31 @@ public static class SatelliteCatalogMatching
     /// </summary>
     private static Dictionary<string, bool> GetOrBuildParenthesisIndex(IReadOnlySet<string> enabled)
     {
-        if (ReferenceEquals(_lastEnabledSet, enabled) && _parenthesisIndex is not null)
-            return _parenthesisIndex;
-
-        _parenthesisIndex = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
-        _lastEnabledSet = enabled;
-
-        foreach (var name in enabled)
+        lock (ParenthesisIndexLock)
         {
-            if (string.IsNullOrWhiteSpace(name)) continue;
+            if (ReferenceEquals(_lastEnabledSet, enabled) && _parenthesisIndex is not null)
+                return _parenthesisIndex;
 
-            var openParen = name.IndexOf('(');
-            var closeParen = name.IndexOf(')');
-            if (openParen >= 0 && closeParen > openParen + 1)
+            var index = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var name in enabled)
             {
-                var alias = name[(openParen + 1)..closeParen].Trim();
-                if (!string.IsNullOrWhiteSpace(alias))
-                    _parenthesisIndex[alias] = true;
-            }
-        }
+                if (string.IsNullOrWhiteSpace(name)) continue;
 
-        return _parenthesisIndex;
+                var openParen = name.IndexOf('(');
+                var closeParen = name.IndexOf(')');
+                if (openParen >= 0 && closeParen > openParen + 1)
+                {
+                    var alias = name[(openParen + 1)..closeParen].Trim();
+                    if (!string.IsNullOrWhiteSpace(alias))
+                        index[alias] = true;
+                }
+            }
+
+            _parenthesisIndex = index;
+            _lastEnabledSet = enabled;
+            return _parenthesisIndex;
+        }
     }
 
     /// <summary>
@@ -231,7 +237,10 @@ public static class SatelliteCatalogMatching
     /// </summary>
     internal static void ResetCache()
     {
-        _parenthesisIndex = null;
-        _lastEnabledSet = null;
+        lock (ParenthesisIndexLock)
+        {
+            _parenthesisIndex = null;
+            _lastEnabledSet = null;
+        }
     }
 }
