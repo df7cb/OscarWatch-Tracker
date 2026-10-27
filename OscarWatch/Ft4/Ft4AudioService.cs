@@ -37,18 +37,10 @@ public sealed class Ft4AudioService : IDisposable
         /// <summary>When true, playback wraps so a Tune tone stays up until stopped.</summary>
         public bool Loop;
     }
-    private bool _portAudioReady;
     private int _captureSampleRate = 48000;
     private int _playbackSampleRate = 48000;
 
-    public bool IsAvailable
-    {
-        get
-        {
-            EnsurePortAudio();
-            return _portAudioReady;
-        }
-    }
+    public bool IsAvailable => PortAudioRuntime.EnsureInitialized();
 
     public int CaptureSampleRate => _captureSampleRate;
     public int PlaybackSampleRate => _playbackSampleRate;
@@ -70,8 +62,7 @@ public sealed class Ft4AudioService : IDisposable
 
     public IReadOnlyList<AudioInputDevice> GetInputDevices()
     {
-        EnsurePortAudio();
-        if (!_portAudioReady)
+        if (!PortAudioRuntime.EnsureInitialized())
             return [];
 
         var candidates = new List<RecordingDeviceCandidate>();
@@ -91,8 +82,7 @@ public sealed class Ft4AudioService : IDisposable
 
     public IReadOnlyList<AudioInputDevice> GetOutputDevices()
     {
-        EnsurePortAudio();
-        if (!_portAudioReady)
+        if (!PortAudioRuntime.EnsureInitialized())
             return [];
 
         var candidates = new List<RecordingDeviceCandidate>();
@@ -114,8 +104,7 @@ public sealed class Ft4AudioService : IDisposable
     {
         lock (_gate)
         {
-            EnsurePortAudio();
-            if (!_portAudioReady)
+            if (!PortAudioRuntime.EnsureInitialized())
                 throw new InvalidOperationException("PortAudio is not available.");
 
             StopCaptureUnlocked();
@@ -125,20 +114,42 @@ public sealed class Ft4AudioService : IDisposable
 
             try
             {
-                OpenCaptureUnlocked(deviceId, deviceDisplayName, preferLowLatencyShared: true);
+                OpenCaptureWithFallback(deviceId, deviceDisplayName);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (TryRefreshAndReopenCapture(deviceId, deviceDisplayName, ex))
             {
-                var lowLatency = ResolveDeviceIndex(deviceId, deviceDisplayName, input: true, preferLowLatencyShared: true);
-                var shared = ResolveDeviceIndex(deviceId, deviceDisplayName, input: true, preferLowLatencyShared: false);
-                if (shared < 0 || shared == lowLatency)
-                    throw;
-
-                Log.Warning(ex, "FT4 low-latency capture open failed; retrying the shareable device");
-                StopCaptureUnlocked();
-                OpenCaptureUnlocked(deviceId, deviceDisplayName, preferLowLatencyShared: false);
             }
         }
+    }
+
+    private void OpenCaptureWithFallback(string? deviceId, string? deviceDisplayName)
+    {
+        try
+        {
+            OpenCaptureUnlocked(deviceId, deviceDisplayName, preferLowLatencyShared: true);
+        }
+        catch (Exception ex)
+        {
+            var lowLatency = ResolveDeviceIndex(deviceId, deviceDisplayName, input: true, preferLowLatencyShared: true);
+            var shared = ResolveDeviceIndex(deviceId, deviceDisplayName, input: true, preferLowLatencyShared: false);
+            if (shared < 0 || shared == lowLatency)
+                throw;
+
+            Log.Warning(ex, "FT4 low-latency capture open failed; retrying the shareable device");
+            StopCaptureUnlocked();
+            OpenCaptureUnlocked(deviceId, deviceDisplayName, preferLowLatencyShared: false);
+        }
+    }
+
+    private bool TryRefreshAndReopenCapture(string? deviceId, string? deviceDisplayName, Exception firstError)
+    {
+        StopCaptureUnlocked();
+        if (!PortAudioRuntime.TryRefreshHost())
+            throw firstError;
+
+        Log.Information("FT4 retrying capture after refreshing the PortAudio host");
+        OpenCaptureWithFallback(deviceId, deviceDisplayName);
+        return true;
     }
 
     private void OpenCaptureUnlocked(string? deviceId, string? deviceDisplayName, bool preferLowLatencyShared)
@@ -165,15 +176,26 @@ public sealed class Ft4AudioService : IDisposable
             hostApiSpecificStreamInfo = IntPtr.Zero
         };
 
-        _input = new PaStream(
-            inParams: param,
-            outParams: null,
-            sampleRate: _captureSampleRate,
-            framesPerBuffer: 256,
-            streamFlags: StreamFlags.ClipOff,
-            callback: OnInput,
-            userData: IntPtr.Zero);
-        _input.Start();
+        try
+        {
+            _input = new PaStream(
+                inParams: param,
+                outParams: null,
+                sampleRate: _captureSampleRate,
+                framesPerBuffer: 256,
+                streamFlags: StreamFlags.ClipOff,
+                callback: OnInput,
+                userData: IntPtr.Zero);
+            _input.Start();
+            PortAudioRuntime.NotifyStreamOpened();
+        }
+        catch
+        {
+            try { _input?.Dispose(); } catch { /* ignore */ }
+            _input = null;
+            throw;
+        }
+
         Log.Information(
             "FT4 capture started on '{Device}' (index {Index}) at {Rate} Hz",
             info.name,
@@ -219,8 +241,7 @@ public sealed class Ft4AudioService : IDisposable
     {
         lock (_gate)
         {
-            EnsurePortAudio();
-            if (!_portAudioReady)
+            if (!PortAudioRuntime.EnsureInitialized())
                 return;
 
             try
@@ -245,8 +266,7 @@ public sealed class Ft4AudioService : IDisposable
         {
             try
             {
-                EnsurePortAudio();
-                if (!_portAudioReady)
+                if (!PortAudioRuntime.EnsureInitialized())
                     return false;
 
                 EnsureOutputUnlocked(deviceId, deviceDisplayName);
@@ -268,8 +288,7 @@ public sealed class Ft4AudioService : IDisposable
     {
         lock (_gate)
         {
-            EnsurePortAudio();
-            if (!_portAudioReady)
+            if (!PortAudioRuntime.EnsureInitialized())
                 throw new InvalidOperationException("PortAudio is not available.");
 
             EnsureOutputUnlocked(deviceId, deviceDisplayName);
@@ -293,8 +312,7 @@ public sealed class Ft4AudioService : IDisposable
 
         lock (_gate)
         {
-            EnsurePortAudio();
-            if (!_portAudioReady)
+            if (!PortAudioRuntime.EnsureInitialized())
                 throw new InvalidOperationException("PortAudio is not available.");
 
             EnsureOutputUnlocked(deviceId, deviceDisplayName);
@@ -493,9 +511,13 @@ public sealed class Ft4AudioService : IDisposable
 
     private void StopCaptureUnlocked()
     {
-        try { _input?.Stop(); } catch { /* ignore */ }
-        try { _input?.Dispose(); } catch { /* ignore */ }
+        if (_input is null)
+            return;
+
+        try { _input.Stop(); } catch { /* ignore */ }
+        try { _input.Dispose(); } catch { /* ignore */ }
         _input = null;
+        PortAudioRuntime.NotifyStreamClosed();
     }
 
     private void SilencePlaybackUnlocked()
@@ -580,6 +602,7 @@ public sealed class Ft4AudioService : IDisposable
                 callback: OnOutput,
                 userData: IntPtr.Zero);
             stream.Start();
+            PortAudioRuntime.NotifyStreamOpened();
             _output = stream;
             _outputChannels = channels;
             _outputDeviceIndex = deviceIndex;
@@ -607,34 +630,15 @@ public sealed class Ft4AudioService : IDisposable
     private void StopOutputUnlocked()
     {
         SilencePlaybackUnlocked();
-        try { _output?.Stop(); } catch { /* ignore */ }
-        try { _output?.Dispose(); } catch { /* ignore */ }
+        if (_output is null)
+            return;
+
+        try { _output.Stop(); } catch { /* ignore */ }
+        try { _output.Dispose(); } catch { /* ignore */ }
         _output = null;
         _outputDeviceIndex = -1;
         _outputChannels = 1;
-    }
-
-    private void EnsurePortAudio()
-    {
-        if (_portAudioReady)
-            return;
-
-        try
-        {
-            if (!PortAudioOutOfProcessProbe.TryRun(out _))
-            {
-                _portAudioReady = false;
-                return;
-            }
-
-            PortAudio.Initialize();
-            _portAudioReady = true;
-        }
-        catch (Exception ex)
-        {
-            Log.Warning(ex, "FT4 PortAudio init failed");
-            _portAudioReady = false;
-        }
+        PortAudioRuntime.NotifyStreamClosed();
     }
 
     private static int ResolveDeviceIndex(

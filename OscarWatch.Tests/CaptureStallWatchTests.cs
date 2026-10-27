@@ -49,4 +49,22 @@ public sealed class CaptureStallWatchTests
         Assert.False(watch.OnRead(T0.AddSeconds(12), gotSamples: false));
         Assert.True(watch.OnRead(T0.AddSeconds(13), gotSamples: false));
     }
+
+    [Fact]
+    public void Failed_reopen_doubles_retry_delay_up_to_the_cap()
+    {
+        var watch = new CaptureStallWatch(T0);
+        Assert.True(watch.OnRead(T0.AddSeconds(3), gotSamples: false));
+        watch.NoteReopenResult(succeeded: false);
+        Assert.Equal(TimeSpan.FromSeconds(6), watch.RetryDelay);
+
+        watch.NoteReopenResult(succeeded: false);
+        watch.NoteReopenResult(succeeded: false);
+        watch.NoteReopenResult(succeeded: false);
+        watch.NoteReopenResult(succeeded: false);
+        Assert.Equal(CaptureStallWatch.MaxRetryDelay, watch.RetryDelay);
+
+        watch.NoteReopenResult(succeeded: true);
+        Assert.Equal(CaptureStallWatch.DefaultTimeout, watch.RetryDelay);
+    }
 }

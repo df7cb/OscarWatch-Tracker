@@ -32,23 +32,7 @@ public sealed class PacketAudioService : IPacketAudio
     private long _queuedSamples;
     private TaskCompletionSource? _drained;
     private float _inputPeak;
-    private bool _portAudioReady;
-
-    private static readonly object PortAudioGate = new();
-    private static bool s_portAudioTried;
-    private static bool s_portAudioReady;
-
-    public bool IsAvailable
-    {
-        get
-        {
-            lock (_gate)
-            {
-                EnsurePortAudio();
-                return _portAudioReady;
-            }
-        }
-    }
+    public bool IsAvailable => PortAudioRuntime.EnsureInitialized();
 
     public int CaptureSampleRate { get; private set; } = 48000;
 
@@ -76,8 +60,7 @@ public sealed class PacketAudioService : IPacketAudio
     {
         lock (_gate)
         {
-            EnsurePortAudio();
-            if (!_portAudioReady)
+            if (!PortAudioRuntime.EnsureInitialized())
                 return [];
 
             var candidates = new List<RecordingDeviceCandidate>();
@@ -100,8 +83,7 @@ public sealed class PacketAudioService : IPacketAudio
     {
         lock (_gate)
         {
-            EnsurePortAudio();
-            if (!_portAudioReady)
+            if (!PortAudioRuntime.EnsureInitialized())
                 throw new InvalidOperationException("PortAudio is not available.");
 
             StopUnlocked();
@@ -123,8 +105,7 @@ public sealed class PacketAudioService : IPacketAudio
     {
         lock (_gate)
         {
-            EnsurePortAudio();
-            if (!_portAudioReady)
+            if (!PortAudioRuntime.EnsureInitialized())
                 throw new InvalidOperationException("PortAudio is not available.");
 
             StopUnlocked();
@@ -137,8 +118,7 @@ public sealed class PacketAudioService : IPacketAudio
     {
         lock (_gate)
         {
-            EnsurePortAudio();
-            if (!_portAudioReady)
+            if (!PortAudioRuntime.EnsureInitialized())
                 throw new InvalidOperationException("PortAudio is not available.");
 
             CloseOutputUnlocked();
@@ -259,7 +239,18 @@ public sealed class PacketAudioService : IPacketAudio
             hostApiSpecificStreamInfo = IntPtr.Zero
         };
         _input = new PaStream(param, null, CaptureSampleRate, 256, StreamFlags.ClipOff, OnInput, IntPtr.Zero);
-        _input.Start();
+        PortAudioRuntime.NotifyStreamOpened();
+        try
+        {
+            _input.Start();
+        }
+        catch
+        {
+            try { _input.Dispose(); } catch { /* ignore */ }
+            _input = null;
+            PortAudioRuntime.NotifyStreamClosed();
+            throw;
+        }
         Log.Information("Terminal modem capture on '{Device}' (index {Index}) at {Rate} Hz", info.name, index, CaptureSampleRate);
     }
 
@@ -309,6 +300,7 @@ public sealed class PacketAudioService : IPacketAudio
             stream = new PaStream(null, param, PlaybackSampleRate, PortAudio.FramesPerBufferUnspecified,
                 StreamFlags.ClipOff, OnOutput, IntPtr.Zero);
             stream.Start();
+            PortAudioRuntime.NotifyStreamOpened();
             _output = stream;
             _outputChannels = channels;
             stream = null;
@@ -404,17 +396,27 @@ public sealed class PacketAudioService : IPacketAudio
 
     private void StopUnlocked()
     {
-        try { _input?.Stop(); } catch { /* ignore */ }
-        try { _input?.Dispose(); } catch { /* ignore */ }
-        _input = null;
+        if (_input is not null)
+        {
+            try { _input.Stop(); } catch { /* ignore */ }
+            try { _input.Dispose(); } catch { /* ignore */ }
+            _input = null;
+            PortAudioRuntime.NotifyStreamClosed();
+        }
+
         CloseOutputUnlocked();
     }
 
     private void CloseOutputUnlocked()
     {
-        try { _output?.Stop(); } catch { /* ignore */ }
-        try { _output?.Dispose(); } catch { /* ignore */ }
-        _output = null;
+        if (_output is not null)
+        {
+            try { _output.Stop(); } catch { /* ignore */ }
+            try { _output.Dispose(); } catch { /* ignore */ }
+            _output = null;
+            PortAudioRuntime.NotifyStreamClosed();
+        }
+
         _outputChannels = 1;
         while (_playQueue.TryDequeue(out _))
         {
@@ -425,31 +427,6 @@ public sealed class PacketAudioService : IPacketAudio
         var tcs = _drained;
         _drained = null;
         tcs?.TrySetResult();
-    }
-
-    private void EnsurePortAudio()
-    {
-        lock (PortAudioGate)
-        {
-            if (!s_portAudioTried)
-            {
-                s_portAudioTried = true;
-                try
-                {
-                    if (PortAudioOutOfProcessProbe.TryRun(out _))
-                    {
-                        PortAudio.Initialize();
-                        s_portAudioReady = true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Warning(ex, "Terminal modem PortAudio init failed");
-                }
-            }
-
-            _portAudioReady = s_portAudioReady;
-        }
     }
 
     private static int ResolveDeviceIndex(string? deviceId, string? deviceName, bool input)

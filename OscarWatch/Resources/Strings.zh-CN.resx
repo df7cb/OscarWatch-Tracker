@@ -1233,6 +1233,9 @@
   <data name="Sstv.Status.NoAudio">
     <value>没有可用的音频输入（PortAudio 无法启动）。</value>
   </data>
+  <data name="Sstv.Status.CaptureRetrying">
+    <value>声卡无音频。正在重新连接（第 {0} 次）…</value>
+  </data>
   <data name="Sstv.Status.Error">
     <value>SSTV 已停止：{0}</value>
   </data>

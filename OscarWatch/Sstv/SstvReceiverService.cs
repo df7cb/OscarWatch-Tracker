@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using OscarWatch.Diagnostics;
 using OscarWatch.Core.Recording;
 using OscarWatch.Core.Sstv;
 using OscarWatch.Recording;
@@ -17,6 +18,9 @@ public sealed record SstvLiveStatus(
     double ClockPpm,
     double FeedForwardHz);
 
+/// <summary>Live soundcard health for the SSTV window (updated on the decoder thread).</summary>
+public sealed record SstvCaptureHealth(bool IsReceivingAudio, bool IsReconnecting, int ReconnectAttempts);
+
 /// <summary>A picture handed to the window: the decode plus where it was saved, if it was.</summary>
 public sealed record SstvReceivedPicture(SstvDecodedImage Decoded, DateTime ReceivedUtc, string? Satellite, string? SavedPath);
 
@@ -27,6 +31,7 @@ public sealed record SstvReceivedPicture(SstvDecodedImage Decoded, DateTime Rece
 public sealed class SstvReceiverService : IDisposable
 {
     private static readonly ILogger Log = Serilog.Log.ForContext<SstvReceiverService>();
+    private static readonly ThrottledLogger ReopenFailureLog = new(Log);
     private const int ChunkSamples = 2048;
     private static readonly TimeSpan PreviewInterval = TimeSpan.FromMilliseconds(250);
     private const int SpectrumWindow = 2048;
@@ -40,6 +45,7 @@ public sealed class SstvReceiverService : IDisposable
     private SstvImage? _preview;
     private long _previewVersion;
     private volatile SstvLiveStatus? _status;
+    private SstvCaptureHealth _captureHealth = new(true, false, 0);
     private double _feedForwardHz;
     private readonly object _spectrumGate = new();
     private float[]? _spectrum;
@@ -61,6 +67,8 @@ public sealed class SstvReceiverService : IDisposable
     public bool IsDecodingFile { get; private set; }
 
     public SstvLiveStatus? Status => _status;
+
+    public SstvCaptureHealth CaptureHealth => _captureHealth;
 
     /// <summary>Fraction of the file decoded so far (0 to 1) while decoding a recording.</summary>
     public double FileProgress { get; private set; }
@@ -192,17 +200,22 @@ public sealed class SstvReceiverService : IDisposable
         IsDecodingFile = false;
     }
 
-    private bool ReopenStalledCapture(string? inputId, string? inputName)
+    private bool ReopenStalledCapture(string? inputId, string? inputName, CaptureStallWatch stall)
     {
         Log.Warning("SSTV reopening the soundcard '{Device}' after it stopped delivering audio", inputName);
         try
         {
             _audio.StartCapture(inputId, inputName);
+            stall.NoteReopenResult(succeeded: true);
+            ReopenFailureLog.Reset();
+            _captureHealth = new SstvCaptureHealth(false, true, stall.Reopens);
             return true;
         }
         catch (Exception ex)
         {
-            Log.Warning(ex, "SSTV could not reopen the soundcard");
+            stall.NoteReopenResult(succeeded: false);
+            _captureHealth = new SstvCaptureHealth(false, true, stall.Reopens);
+            ReopenFailureLog.Warning(ex, "SSTV could not reopen the soundcard '{Device}'", inputName);
             return false;
         }
     }
@@ -229,11 +242,19 @@ public sealed class SstvReceiverService : IDisposable
             var lastPreview = DateTime.MinValue;
             var tap = new SstvSpectrumTap(rate, SpectrumRowsPerSecond);
             var stall = new CaptureStallWatch(DateTime.UtcNow);
+            _captureHealth = new SstvCaptureHealth(true, false, 0);
             while (!token.IsCancellationRequested)
             {
                 RunCommands(decoder);
                 var n = _audio.ReadCaptureSamples(buffer);
-                if (stall.OnRead(DateTime.UtcNow, n > 0) && ReopenStalledCapture(inputId, inputName)
+                var gotSamples = n > 0;
+                var reopen = stall.OnRead(DateTime.UtcNow, gotSamples);
+                if (gotSamples)
+                    _captureHealth = new SstvCaptureHealth(true, false, 0);
+                else if (reopen)
+                    _captureHealth = new SstvCaptureHealth(false, true, stall.Reopens);
+
+                if (reopen && ReopenStalledCapture(inputId, inputName, stall)
                     && _audio.CaptureSampleRate != rate)
                 {
                     Log.Information("SSTV capture reopened at {Rate} Hz (was {Old} Hz)", _audio.CaptureSampleRate, rate);

@@ -20,6 +20,7 @@ namespace OscarWatch.Ft4;
 public sealed class Ft4ModemService : IDisposable
 {
     private static readonly ILogger Log = Serilog.Log.ForContext<Ft4ModemService>();
+    private static readonly Diagnostics.ThrottledLogger CaptureReopenFailureLog = new(Log);
     private readonly ISettingsService _settings;
     private readonly ILiveTrackingService _tracking;
     private readonly FrequencyOverlayViewModel _frequencies;
@@ -1096,7 +1097,7 @@ public sealed class Ft4ModemService : IDisposable
                 if (_rxHealth.OnCapture(readUtc, n > 0) is { } captureEvent)
                     LogRxHealth(captureEvent);
                 if (_captureStall.OnRead(readUtc, n > 0))
-                    ReopenStalledCapture();
+                    ReopenStalledCapture(_captureStall);
                 if (n <= 0)
                 {
                     await Task.Delay(15, ct).ConfigureAwait(false);
@@ -1128,7 +1129,7 @@ public sealed class Ft4ModemService : IDisposable
         }
     }
 
-    private void ReopenStalledCapture()
+    private void ReopenStalledCapture(CaptureStallWatch stall)
     {
         var ft4 = _settings.Current.Ft4;
         Log.Warning("FT4 reopening the soundcard '{Device}' after it stopped delivering audio", ft4.InputDeviceDisplayName);
@@ -1136,10 +1137,13 @@ public sealed class Ft4ModemService : IDisposable
         {
             _audio.StartCapture(ft4.InputDeviceId, ft4.InputDeviceDisplayName);
             _deviceSampleRate = _audio.CaptureSampleRate;
+            stall.NoteReopenResult(succeeded: true);
+            CaptureReopenFailureLog.Reset();
         }
         catch (Exception ex)
         {
-            Log.Warning(ex, "FT4 could not reopen the soundcard");
+            stall.NoteReopenResult(succeeded: false);
+            CaptureReopenFailureLog.Warning(ex, "FT4 could not reopen the soundcard '{Device}'", ft4.InputDeviceDisplayName);
         }
     }
 
