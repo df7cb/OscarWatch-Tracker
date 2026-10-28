@@ -22,6 +22,11 @@ public sealed class SstvSettings
     public bool SaveSessionAudio { get; set; } = true;
 
     /// <summary>
+    /// Folder for pictures and session audio. Empty uses <see cref="SstvPaths.GetDefaultDirectory"/>.
+    /// </summary>
+    public string OutputFolder { get; set; } = "";
+
+    /// <summary>
     /// When true, finished pictures with a good lock are shared to the OscarWatch.org SSTV
     /// gallery after the satellite sets. Needs the OscarWatch API token. Default off.
     /// </summary>
@@ -72,6 +77,12 @@ public sealed class SstvSettings
         Enum.TryParse<SstvModeId>(ForcedMode, ignoreCase: true, out var id) ? id : null;
 }
 
+/// <summary>The folder SSTV saves into, and the configured folder when it could not be used.</summary>
+/// <param name="Path">Folder to save into.</param>
+/// <param name="FellBack">True when <paramref name="Requested"/> was set but missing or not writable.</param>
+/// <param name="Requested">The configured folder, or null when the setting was blank.</param>
+public sealed record SstvOutputDirectory(string Path, bool FellBack, string? Requested);
+
 /// <summary>Where SSTV pictures and session audio are kept.</summary>
 public static class SstvPaths
 {
@@ -81,6 +92,63 @@ public static class SstvPaths
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "OscarWatch",
             "sstv");
+
+    /// <summary>
+    /// The folder to save into. A blank setting uses the default folder. A custom folder must
+    /// already exist and accept a test file; otherwise the default is used and
+    /// <see cref="SstvOutputDirectory.FellBack"/> is set.
+    /// </summary>
+    public static SstvOutputDirectory ResolveOutputDirectory(string? configured)
+    {
+        var defaultDirectory = GetDefaultDirectory();
+        if (string.IsNullOrWhiteSpace(configured))
+            return new SstvOutputDirectory(defaultDirectory, false, null);
+
+        var requested = configured.Trim();
+        return IsWritableDirectory(requested)
+            ? new SstvOutputDirectory(requested, false, requested)
+            : new SstvOutputDirectory(defaultDirectory, true, requested);
+    }
+
+    /// <summary>
+    /// Operator-facing default path: <c>%APPDATA%\…</c> on Windows, <c>~/…</c> on Linux and macOS.
+    /// </summary>
+    public static string GetDefaultDirectoryDisplay()
+    {
+        var folder = GetDefaultDirectory();
+        if (OperatingSystem.IsWindows())
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            if (!string.IsNullOrEmpty(appData) && folder.StartsWith(appData, StringComparison.OrdinalIgnoreCase))
+                return "%APPDATA%\\" + folder[appData.Length..].TrimStart('\\', '/').Replace('/', '\\');
+            return folder;
+        }
+
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        if (!string.IsNullOrEmpty(home) && folder.StartsWith(home, StringComparison.Ordinal))
+            return "~/" + folder[home.Length..].Replace('\\', '/').TrimStart('/');
+        return folder.Replace('\\', '/');
+    }
+
+    private static bool IsWritableDirectory(string path)
+    {
+        try
+        {
+            if (!Directory.Exists(path))
+                return false;
+
+            var probe = Path.Combine(path, ".oscarwatch-write-test-" + Guid.NewGuid().ToString("N"));
+            using (File.Create(probe, 1, FileOptions.DeleteOnClose))
+            {
+            }
+
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+        {
+            return false;
+        }
+    }
 
     /// <summary>File name stem for a picture: UTC time, mode and an optional satellite.</summary>
     public static string PictureStem(DateTime utc, SstvMode mode, string? satellite)

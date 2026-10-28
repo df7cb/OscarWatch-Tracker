@@ -685,6 +685,18 @@ LOS: {2}
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>เก็บเสียงที่รับเป็นไฟล์ WAV (ประมาณ 1.4 MB ต่อนาที) ในโฟลเดอร์ SSTV เพื่อถอดรหัสซ้ำภายหลัง</value>
   </data>
+  <data name="Sstv.OutputFolder">
+    <value>โฟลเดอร์บันทึก</value>
+  </data>
+  <data name="Sstv.OutputFolder.Watermark">
+    <value>ค่าเริ่มต้น: {0}</value>
+  </data>
+  <data name="Sstv.OutputFolder.Tip">
+    <value>ภาพและเสียงที่รับจะถูกบันทึกที่นี่ เว้นว่างไว้เพื่อใช้โฟลเดอร์เริ่มต้น หากไม่มีโฟลเดอร์หรือเขียนไม่ได้ จะใช้โฟลเดอร์เริ่มต้นและบันทึกไว้ในล็อก ภาพที่บันทึกไว้แล้วจะไม่ถูกย้าย</value>
+  </data>
+  <data name="Sstv.OutputFolder.Browse">
+    <value>เลือกโฟลเดอร์บันทึก SSTV</value>
+  </data>
   <data name="Sstv.Share">
     <value>แชร์ภาพไปยังแกลเลอรี SSTV ของ OscarWatch.org</value>
   </data>

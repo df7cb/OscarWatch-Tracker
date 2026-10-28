@@ -140,11 +140,12 @@ public sealed class SstvReceiverService : IDisposable
         var rate = _audio.CaptureSampleRate;
         var options = NewOptions(settings);
         var autoSave = settings.AutoSavePictures;
+        var outputDir = ResolveOutputDirectory(settings.OutputFolder);
         string? wavPath = null;
         if (saveSessionAudio)
         {
             wavPath = Path.Combine(
-                SstvPaths.GetDefaultDirectory(),
+                outputDir,
                 SstvPaths.SessionAudioStem(DateTime.UtcNow, SatelliteNameProvider?.Invoke()) + ".wav");
         }
 
@@ -156,7 +157,7 @@ public sealed class SstvReceiverService : IDisposable
         var inputId = settings.InputDeviceId;
         var inputName = settings.InputDeviceDisplayName;
         _worker = Task.Factory.StartNew(
-            () => RunLive(rate, options, autoSave, wavPath, session, inputId, inputName, token),
+            () => RunLive(rate, options, autoSave, outputDir, wavPath, session, inputId, inputName, token),
             token,
             TaskCreationOptions.LongRunning,
             TaskScheduler.Default);
@@ -167,6 +168,7 @@ public sealed class SstvReceiverService : IDisposable
         Stop();
         var options = NewOptions(settings);
         var autoSave = settings.AutoSavePictures;
+        var outputDir = ResolveOutputDirectory(settings.OutputFolder);
         SessionAudioPath = null;
         IsDecodingFile = true;
         FileProgress = 0;
@@ -174,7 +176,7 @@ public sealed class SstvReceiverService : IDisposable
         var token = _cts.Token;
         var session = ++SessionId;
         _worker = Task.Factory.StartNew(
-            () => RunFile(samples, sampleRate, options, autoSave, sourceName, session, token),
+            () => RunFile(samples, sampleRate, options, autoSave, outputDir, sourceName, session, token),
             token,
             TaskCreationOptions.LongRunning,
             TaskScheduler.Default);
@@ -225,7 +227,7 @@ public sealed class SstvReceiverService : IDisposable
     }
 
     private void RunLive(
-        int rate, SstvDecoderOptions options, bool autoSave, string? wavPath, int session,
+        int rate, SstvDecoderOptions options, bool autoSave, string outputDir, string? wavPath, int session,
         string? inputId, string? inputName, CancellationToken token)
     {
         WavWriter? wav = null;
@@ -237,7 +239,7 @@ public sealed class SstvReceiverService : IDisposable
         _inputSilent = false;
         try
         {
-            var decoder = CreateDecoder(rate, options, autoSave, satelliteOverride: null, fileStart: null);
+            var decoder = CreateDecoder(rate, options, autoSave, outputDir, satelliteOverride: null, fileStart: null);
             SstvResampler? wavResampler = null;
             var resampled = new List<float>(ChunkSamples);
             byte[] pcm = [];
@@ -269,7 +271,7 @@ public sealed class SstvReceiverService : IDisposable
                 {
                     Log.Information("SSTV capture reopened at {Rate} Hz (was {Old} Hz)", _audio.CaptureSampleRate, rate);
                     rate = _audio.CaptureSampleRate;
-                    decoder = CreateDecoder(rate, options, autoSave, satelliteOverride: null, fileStart: null);
+                    decoder = CreateDecoder(rate, options, autoSave, outputDir, satelliteOverride: null, fileStart: null);
                     tap = new SstvSpectrumTap(rate, SpectrumRowsPerSecond);
                     silence = new SstvInputSilence(rate);
                     if (wavResampler is not null)
@@ -353,11 +355,11 @@ public sealed class SstvReceiverService : IDisposable
         }
     }
 
-    private void RunFile(float[] samples, int rate, SstvDecoderOptions options, bool autoSave, string sourceName, int session, CancellationToken token)
+    private void RunFile(float[] samples, int rate, SstvDecoderOptions options, bool autoSave, string outputDir, string sourceName, int session, CancellationToken token)
     {
         try
         {
-            var decoder = CreateDecoder(rate, options, autoSave, satelliteOverride: sourceName, fileStart: DateTime.UtcNow);
+            var decoder = CreateDecoder(rate, options, autoSave, outputDir, satelliteOverride: sourceName, fileStart: DateTime.UtcNow);
             var lastPreview = DateTime.MinValue;
             var tap = new SstvSpectrumTap(rate, SpectrumRowsPerSecond);
             for (var i = 0; i < samples.Length && !token.IsCancellationRequested; i += ChunkSamples)
@@ -384,7 +386,7 @@ public sealed class SstvReceiverService : IDisposable
         }
     }
 
-    private SstvDecoder CreateDecoder(int rate, SstvDecoderOptions options, bool autoSave, string? satelliteOverride, DateTime? fileStart)
+    private SstvDecoder CreateDecoder(int rate, SstvDecoderOptions options, bool autoSave, string outputDir, string? satelliteOverride, DateTime? fileStart)
     {
         var decoder = new SstvDecoder(rate, options);
         decoder.ImageStarted += (_, e) => PictureStarted?.Invoke(this, e);
@@ -395,7 +397,7 @@ public sealed class SstvReceiverService : IDisposable
             var satellite = satelliteOverride ?? SatelliteNameProvider?.Invoke();
             string? saved = null;
             if (autoSave)
-                saved = SavePicture(image, received, satellite);
+                saved = SavePicture(image, received, satellite, outputDir);
             QueueForSharing(image, received, satellite, saved, fromRecording: fileStart is not null);
             // The decoder has already let go of this picture, so the regular preview copy
             // never sees the last lines or the final re-sync redraw.
@@ -440,11 +442,26 @@ public sealed class SstvReceiverService : IDisposable
             temporary));
     }
 
-    /// <summary>Save as PNG in the SSTV folder. Returns the path, or null if it failed.</summary>
-    public static string? SavePicture(SstvDecodedImage image, DateTime utc, string? satellite) =>
-        SavePicture(image, utc, satellite, SstvPaths.GetDefaultDirectory());
+    /// <summary>
+    /// The SSTV save folder for <paramref name="configured"/>, logging a warning when a custom
+    /// folder is missing or not writable and the default is used instead.
+    /// </summary>
+    public static string ResolveOutputDirectory(string? configured)
+    {
+        var resolved = SstvPaths.ResolveOutputDirectory(configured);
+        if (resolved.FellBack)
+        {
+            Log.Warning(
+                "SSTV folder {Requested} is missing or not writable; saving to {Default} instead",
+                resolved.Requested,
+                resolved.Path);
+        }
 
-    private static string? SavePicture(SstvDecodedImage image, DateTime utc, string? satellite, string dir)
+        return resolved.Path;
+    }
+
+    /// <summary>Save as PNG in <paramref name="dir"/>. Returns the path, or null if it failed.</summary>
+    public static string? SavePicture(SstvDecodedImage image, DateTime utc, string? satellite, string dir)
     {
         try
         {

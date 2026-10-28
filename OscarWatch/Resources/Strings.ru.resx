@@ -685,6 +685,18 @@ LOS: {2}
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>Сохранять принятый звук в WAV (около 1,4 МБ в минуту) в папке SSTV для повторного декодирования.</value>
   </data>
+  <data name="Sstv.OutputFolder">
+    <value>Папка сохранения</value>
+  </data>
+  <data name="Sstv.OutputFolder.Watermark">
+    <value>По умолчанию: {0}</value>
+  </data>
+  <data name="Sstv.OutputFolder.Tip">
+    <value>Сюда сохраняются изображения и принятый звук. Оставьте пустым для папки по умолчанию. Если папка отсутствует или недоступна для записи, используется папка по умолчанию, и это отмечается в журнале. Уже сохранённые изображения не перемещаются.</value>
+  </data>
+  <data name="Sstv.OutputFolder.Browse">
+    <value>Выберите папку сохранения SSTV</value>
+  </data>
   <data name="Sstv.Share">
     <value>Публиковать изображения в галерее SSTV на OscarWatch.org</value>
   </data>

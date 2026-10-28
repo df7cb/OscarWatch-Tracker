@@ -135,6 +135,68 @@ public sealed class SstvSupportTests
         Assert.Equal("20241012_073105Z_ISS-(ZARYA)_Pd120", stem);
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Blank_output_folder_uses_the_default(string? configured)
+    {
+        var resolved = SstvPaths.ResolveOutputDirectory(configured);
+
+        Assert.Equal(SstvPaths.GetDefaultDirectory(), resolved.Path);
+        Assert.False(resolved.FellBack);
+        Assert.Null(resolved.Requested);
+    }
+
+    [Fact]
+    public void Writable_output_folder_is_used()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "oscarwatch-sstv-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            var resolved = SstvPaths.ResolveOutputDirectory(" " + dir + " ");
+
+            Assert.Equal(dir, resolved.Path);
+            Assert.False(resolved.FellBack);
+            Assert.Empty(Directory.EnumerateFileSystemEntries(dir));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Missing_output_folder_falls_back_without_creating_it()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "oscarwatch-sstv-missing-" + Guid.NewGuid().ToString("N"));
+
+        var resolved = SstvPaths.ResolveOutputDirectory(dir);
+
+        Assert.Equal(SstvPaths.GetDefaultDirectory(), resolved.Path);
+        Assert.True(resolved.FellBack);
+        Assert.Equal(dir, resolved.Requested);
+        Assert.False(Directory.Exists(dir));
+    }
+
+    [Fact]
+    public void Output_folder_that_is_a_file_falls_back()
+    {
+        var file = Path.GetTempFileName();
+        try
+        {
+            var resolved = SstvPaths.ResolveOutputDirectory(file);
+
+            Assert.Equal(SstvPaths.GetDefaultDirectory(), resolved.Path);
+            Assert.True(resolved.FellBack);
+        }
+        finally
+        {
+            File.Delete(file);
+        }
+    }
+
     [Fact]
     public void Clearing_rows_blanks_the_bottom_only()
     {

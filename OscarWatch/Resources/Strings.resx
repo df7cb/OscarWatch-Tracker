@@ -681,6 +681,18 @@ Continue?</value>
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>Keep the receive audio as a WAV file (about 1.4 MB a minute) in the SSTV folder, so a pass can be decoded again later.</value>
   </data>
+  <data name="Sstv.OutputFolder">
+    <value>Save folder</value>
+  </data>
+  <data name="Sstv.OutputFolder.Watermark">
+    <value>Default: {0}</value>
+  </data>
+  <data name="Sstv.OutputFolder.Tip">
+    <value>Pictures and receive audio are saved here. Leave blank for the default folder. If the folder is missing or cannot be written to, the default is used and the log says so. Pictures already saved are not moved.</value>
+  </data>
+  <data name="Sstv.OutputFolder.Browse">
+    <value>Choose the SSTV save folder</value>
+  </data>
   <data name="Sstv.Share">
     <value>Share pictures with the OscarWatch.org SSTV gallery</value>
   </data>

@@ -1,7 +1,9 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -69,6 +71,8 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         _detectWithoutVis = s.DetectWithoutVis;
         _autoSavePictures = s.AutoSavePictures;
         _saveSessionAudio = s.SaveSessionAudio;
+        _outputFolder = s.OutputFolder ?? "";
+        _pictureFolder = SstvReceiverService.ResolveOutputDirectory(_outputFolder);
         _canSharePictures = HasApiToken;
         _sharePictures = s.SharePicturesWithOscarWatch && _canSharePictures;
         if (s.SharePicturesWithOscarWatch && !_sharePictures)
@@ -229,7 +233,50 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
 
     public bool CanDecodeRecording => !IsRunning && !IsBusyLoading;
 
-    public string PictureFolder => SstvPaths.GetDefaultDirectory();
+    /// <summary>Folder pictures and session audio are saved into (the default when the setting cannot be used).</summary>
+    [ObservableProperty]
+    private string _pictureFolder;
+
+    /// <summary>Configured save folder. Empty uses the default.</summary>
+    [ObservableProperty]
+    private string _outputFolder;
+
+    public string OutputFolderWatermark =>
+        _l.Get("Sstv.OutputFolder.Watermark", SstvPaths.GetDefaultDirectoryDisplay());
+
+    partial void OnOutputFolderChanged(string value)
+    {
+        _settings.Current.Sstv.OutputFolder = value.Trim();
+        _settings.RequestSave();
+        PictureFolder = SstvPaths.ResolveOutputDirectory(value).Path;
+    }
+
+    public async Task BrowseOutputFolderAsync(Window owner)
+    {
+        var storage = TopLevel.GetTopLevel(owner)?.StorageProvider;
+        if (storage is null)
+            return;
+
+        IStorageFolder? start = null;
+        try
+        {
+            start = await storage.TryGetFolderFromPathAsync(PictureFolder).ConfigureAwait(true);
+        }
+        catch (Exception ex)
+        {
+            Log.Debug(ex, "SSTV folder picker could not start in {Folder}", PictureFolder);
+        }
+
+        var folders = await storage.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        {
+            Title = _l.Get("Sstv.OutputFolder.Browse"),
+            AllowMultiple = false,
+            SuggestedStartLocation = start,
+        }).ConfigureAwait(true);
+
+        if (folders.Count > 0 && folders[0].TryGetLocalPath() is { } path)
+            OutputFolder = path;
+    }
 
     public (double Width, double Height)? SavedWindowSize
     {
@@ -252,6 +299,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         // Opening the window mid-pass should listen straight away if the satellite is already up.
         _autoStart.ResetTracking();
         _lastAutoStartCheckUtc = DateTime.MinValue;
+        PictureFolder = SstvPaths.ResolveOutputDirectory(OutputFolder).Path;
         RefreshShareAvailability();
         ShowStoppedStatus();
         _uiTimer.Start();
@@ -284,6 +332,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
             _lastError = null;
             SelectedGalleryItem = null;
             _receiver.StartLive(_settings.Current.Sstv, SaveSessionAudio);
+            PictureFolder = SstvPaths.ResolveOutputDirectory(OutputFolder).Path;
             IsRunning = true;
             _startedByAuto = automatic;
             _statusFollowsAutoStart = true;
@@ -338,6 +387,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
     {
         try
         {
+            PictureFolder = SstvReceiverService.ResolveOutputDirectory(OutputFolder);
             Directory.CreateDirectory(PictureFolder);
             Process.Start(new ProcessStartInfo { FileName = PictureFolder, UseShellExecute = true });
         }
@@ -355,7 +405,9 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         if (SelectedGalleryItem is not { } item)
             return;
 
-        var path = SstvReceiverService.SavePicture(item.Picture.Decoded, item.Picture.ReceivedUtc, item.Picture.Satellite);
+        var dir = SstvReceiverService.ResolveOutputDirectory(OutputFolder);
+        PictureFolder = dir;
+        var path = SstvReceiverService.SavePicture(item.Picture.Decoded, item.Picture.ReceivedUtc, item.Picture.Satellite, dir);
         if (path is null)
             return;
 

@@ -685,6 +685,18 @@ Lanjutkan?</value>
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>Simpan audio penerimaan sebagai WAV (sekitar 1,4 MB per menit) di folder SSTV agar lintasan dapat didekode ulang nanti.</value>
   </data>
+  <data name="Sstv.OutputFolder">
+    <value>Folder penyimpanan</value>
+  </data>
+  <data name="Sstv.OutputFolder.Watermark">
+    <value>Bawaan: {0}</value>
+  </data>
+  <data name="Sstv.OutputFolder.Tip">
+    <value>Gambar dan audio penerimaan disimpan di sini. Biarkan kosong untuk folder bawaan. Jika folder tidak ada atau tidak dapat ditulisi, folder bawaan digunakan dan dicatat di log. Gambar yang sudah disimpan tidak dipindahkan.</value>
+  </data>
+  <data name="Sstv.OutputFolder.Browse">
+    <value>Pilih folder penyimpanan SSTV</value>
+  </data>
   <data name="Sstv.Share">
     <value>Bagikan gambar ke galeri SSTV OscarWatch.org</value>
   </data>

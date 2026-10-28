@@ -685,6 +685,18 @@ Fortfahren?</value>
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>Empfangsaudio als WAV-Datei (etwa 1,4 MB pro Minute) im SSTV-Ordner behalten, um einen Pass später erneut zu dekodieren.</value>
   </data>
+  <data name="Sstv.OutputFolder">
+    <value>Speicherordner</value>
+  </data>
+  <data name="Sstv.OutputFolder.Watermark">
+    <value>Standard: {0}</value>
+  </data>
+  <data name="Sstv.OutputFolder.Tip">
+    <value>Bilder und Empfangsaudio werden hier gespeichert. Leer lassen für den Standardordner. Fehlt der Ordner oder ist er nicht beschreibbar, wird der Standardordner verwendet und dies im Protokoll vermerkt. Bereits gespeicherte Bilder werden nicht verschoben.</value>
+  </data>
+  <data name="Sstv.OutputFolder.Browse">
+    <value>SSTV-Speicherordner wählen</value>
+  </data>
   <data name="Sstv.Share">
     <value>Bilder mit der SSTV-Galerie von OscarWatch.org teilen</value>
   </data>

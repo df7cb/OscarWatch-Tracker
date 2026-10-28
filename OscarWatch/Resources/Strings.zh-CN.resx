@@ -1038,6 +1038,18 @@
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>将接收音频保存为 WAV 文件（约每分钟 1.4 MB）到 SSTV 文件夹，以便之后重新解码。</value>
   </data>
+  <data name="Sstv.OutputFolder">
+    <value>保存文件夹</value>
+  </data>
+  <data name="Sstv.OutputFolder.Watermark">
+    <value>默认：{0}</value>
+  </data>
+  <data name="Sstv.OutputFolder.Tip">
+    <value>图片和接收音频保存在此处。留空则使用默认文件夹。如果文件夹不存在或无法写入，将改用默认文件夹并记录在日志中。已保存的图片不会被移动。</value>
+  </data>
+  <data name="Sstv.OutputFolder.Browse">
+    <value>选择 SSTV 保存文件夹</value>
+  </data>
   <data name="Sstv.Share">
     <value>将图片分享到 OscarWatch.org SSTV 图库</value>
   </data>

@@ -1038,6 +1038,18 @@ Continuar?</value>
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>Mantém o áudio recebido como WAV (cerca de 1,4 MB por minuto) na pasta SSTV para decodificar a passagem depois.</value>
   </data>
+  <data name="Sstv.OutputFolder">
+    <value>Pasta de salvamento</value>
+  </data>
+  <data name="Sstv.OutputFolder.Watermark">
+    <value>Padrão: {0}</value>
+  </data>
+  <data name="Sstv.OutputFolder.Tip">
+    <value>As imagens e o áudio de recepção são salvos aqui. Deixe em branco para usar a pasta padrão. Se a pasta não existir ou não puder ser gravada, a pasta padrão é usada e isso fica registrado no log. As imagens já salvas não são movidas.</value>
+  </data>
+  <data name="Sstv.OutputFolder.Browse">
+    <value>Escolher a pasta de salvamento do SSTV</value>
+  </data>
   <data name="Sstv.Share">
     <value>Compartilhar imagens com a galeria SSTV do OscarWatch.org</value>
   </data>

@@ -685,6 +685,18 @@ Continuare?</value>
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>Conserva l'audio di ricezione come file WAV (circa 1,4 MB al minuto) nella cartella SSTV, così un passaggio può essere decodificato di nuovo in seguito.</value>
   </data>
+  <data name="Sstv.OutputFolder">
+    <value>Cartella di salvataggio</value>
+  </data>
+  <data name="Sstv.OutputFolder.Watermark">
+    <value>Predefinita: {0}</value>
+  </data>
+  <data name="Sstv.OutputFolder.Tip">
+    <value>Le immagini e l'audio di ricezione vengono salvati qui. Lascia vuoto per la cartella predefinita. Se la cartella non esiste o non è scrivibile, viene usata quella predefinita e il registro lo segnala. Le immagini già salvate non vengono spostate.</value>
+  </data>
+  <data name="Sstv.OutputFolder.Browse">
+    <value>Scegli la cartella di salvataggio SSTV</value>
+  </data>
   <data name="Sstv.Share">
     <value>Condividi le immagini con la galleria SSTV di OscarWatch.org</value>
   </data>

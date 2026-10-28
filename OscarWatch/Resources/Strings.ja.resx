@@ -2376,6 +2376,18 @@
   <data name="Sstv.SaveSessionAudio.Tip">
     <value>受信音声を WAV ファイル (1 分あたり約 1.4 MB) として SSTV フォルダーに保存し、後で再デコードできるようにします。</value>
   </data>
+  <data name="Sstv.OutputFolder">
+    <value>保存フォルダー</value>
+  </data>
+  <data name="Sstv.OutputFolder.Watermark">
+    <value>既定: {0}</value>
+  </data>
+  <data name="Sstv.OutputFolder.Tip">
+    <value>画像と受信音声はここに保存されます。空欄にすると既定のフォルダーを使います。フォルダーが存在しないか書き込めない場合は既定のフォルダーを使い、ログに記録します。保存済みの画像は移動しません。</value>
+  </data>
+  <data name="Sstv.OutputFolder.Browse">
+    <value>SSTV の保存フォルダーを選択</value>
+  </data>
   <data name="Sstv.Share">
     <value>OscarWatch.org の SSTV ギャラリーに画像を共有</value>
   </data>
