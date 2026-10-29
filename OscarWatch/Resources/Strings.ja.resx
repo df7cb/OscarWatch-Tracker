@@ -4413,6 +4413,18 @@
   <data name="Ft4.AutoReply.Note">
     <value>CQ中は、最初に呼んできた局に応答します。オフにすると、局をクリックするまでCQを続けます。再度オンにすると、直前数秒の呼び出しを含め、次の局に応答します。</value>
   </data>
+  <data name="Ft4.BlockedCallsigns">
+    <value>ブロックするコールサイン</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Note">
+    <value>CQ中、これらの局には自動応答しません。デコード行をクリックすれば応答できます。/P と /R は、その接尾辞を除いたコールサインとして扱います。&lt;...&gt; だけの表示は、完全なコールサインが復号されるまで照合できません。</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Remove">
+    <value>削除</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Placeholder">
+    <value>コールサイン</value>
+  </data>
   <data name="Ft4.AutoLowerRfPower">
     <value>RF出力を30 Wまで下げる</value>
   </data>

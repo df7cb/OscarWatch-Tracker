@@ -18,6 +18,7 @@ public sealed class Ft4QsoSequencer
     private readonly Func<bool> _skipRrr;
     private readonly Func<bool> _holdTxFrequency;
     private readonly Func<bool> _autoReply;
+    private readonly Func<string, bool> _isBlockedCall;
     private readonly object _gate = new();
     private readonly Dictionary<string, string> _heardLocators = new(StringComparer.OrdinalIgnoreCase);
     private bool? _autoReplyOverride;
@@ -30,14 +31,20 @@ public sealed class Ft4QsoSequencer
         Func<string> myGrid,
         Func<bool> skipRrr,
         Func<bool>? holdTxFrequency = null,
-        Func<bool>? autoReply = null)
+        Func<bool>? autoReply = null,
+        Func<string, bool>? isBlockedCall = null)
     {
         _myCall = myCall;
         _myGrid = myGrid;
         _skipRrr = skipRrr;
         _holdTxFrequency = holdTxFrequency ?? (() => true);
         _autoReply = autoReply ?? (() => true);
+        _isBlockedCall = isBlockedCall ?? (_ => false);
     }
+
+    /// <summary>True when this callsign is on the block list. Does not change the contact.</summary>
+    public bool IsBlockedCall(string? call) =>
+        !string.IsNullOrWhiteSpace(call) && _isBlockedCall(call);
 
     /// <summary>
     /// The Auto reply checkbox. Overrides the settings read so a tick takes effect
@@ -475,6 +482,11 @@ public sealed class Ft4QsoSequencer
 
             // A 73 or RR73 is the end of a contact, not a station calling this CQ.
             if (Ft4MessageCodec.IsClosing(extra))
+                return false;
+
+            // A blocked callsign stays on the decode list. CQ continues until another
+            // station calls, or the operator clicks this one.
+            if (_isBlockedCall(callDe))
                 return false;
 
             AssignTheirStation(callDe, extra);

@@ -4417,6 +4417,18 @@ Ultima versione: {1} ({2})</value>
   <data name="Ft4.AutoReply.Note">
     <value>Durante la chiamata CQ, risponde alla prima stazione che ti chiama. Deseleziona per continuare a chiamare CQ finché non fai clic su una stazione. Seleziona di nuovo per rispondere al chiamante successivo, compresi quelli che hanno chiamato negli ultimi secondi.</value>
   </data>
+  <data name="Ft4.BlockedCallsigns">
+    <value>Nominativi bloccati</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Note">
+    <value>Durante la chiamata CQ, queste stazioni non ricevono risposta automatica. Fai clic su una decodifica per rispondere. /P e /R corrispondono al nominativo senza quel suffisso. Un nominativo mostrato solo come &lt;...&gt; non può essere confrontato finché il nominativo completo non è stato decodificato.</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Remove">
+    <value>Rimuovi</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Placeholder">
+    <value>Nominativo</value>
+  </data>
   <data name="Ft4.AutoLowerRfPower">
     <value>Riduci la potenza RF a 30 W</value>
   </data>

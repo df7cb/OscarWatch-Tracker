@@ -4413,6 +4413,18 @@
   <data name="Ft4.AutoReply.Note">
     <value>呼叫 CQ 时，应答第一个呼叫您的电台。取消后会继续呼叫 CQ，直到您点击某个电台。再次勾选后，将应答下一个呼叫，包括几秒前的呼叫。</value>
   </data>
+  <data name="Ft4.BlockedCallsigns">
+    <value>已阻止的呼号</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Note">
+    <value>呼叫 CQ 时，这些电台不会被自动应答。点击一条解码即可应答。/P 和 /R 与去掉该后缀的呼号相同。仅显示为 &lt;...&gt; 的呼号要等完整呼号被解码后才能匹配。</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Remove">
+    <value>移除</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Placeholder">
+    <value>呼号</value>
+  </data>
   <data name="Ft4.AutoLowerRfPower">
     <value>将射频功率降到 30 W</value>
   </data>

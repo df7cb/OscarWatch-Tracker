@@ -4417,6 +4417,18 @@ Terbaru: {1} ({2})</value>
   <data name="Ft4.AutoReply.Note">
     <value>Saat memanggil CQ, jawab stasiun pertama yang memanggil Anda. Nonaktifkan untuk terus memanggil CQ sampai Anda mengklik stasiun. Aktifkan lagi untuk menjawab pemanggil berikutnya, termasuk yang memanggil beberapa detik lalu.</value>
   </data>
+  <data name="Ft4.BlockedCallsigns">
+    <value>Callsign yang diblokir</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Note">
+    <value>Saat memanggil CQ, stasiun ini tidak dijawab secara otomatis. Klik hasil dekode untuk menjawab salah satunya. /P dan /R sama dengan callsign tanpa akhiran itu. Callsign yang hanya tampil sebagai &lt;...&gt; belum dapat dicocokkan sampai callsign lengkap terdekode.</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Remove">
+    <value>Hapus</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Placeholder">
+    <value>Callsign</value>
+  </data>
   <data name="Ft4.AutoLowerRfPower">
     <value>Turunkan daya RF ke 30 W</value>
   </data>

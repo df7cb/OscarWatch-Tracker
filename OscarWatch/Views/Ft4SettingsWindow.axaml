@@ -8,7 +8,7 @@
         x:DataType="vm:Ft4ViewModel"
         Title="{loc:Localize Key=Window.Ft4Settings.Title}"
         Width="600"
-        Height="560"
+        Height="640"
         MinWidth="540"
         MinHeight="420"
         WindowStartupLocation="CenterOwner"
@@ -186,6 +186,31 @@
             <TextBlock Classes="ft4-note"
                        Margin="24,0,0,0"
                        Text="{loc:Localize Key=Ft4.AutoReply.Note}" />
+            <TextBlock Classes="ft4-section"
+                       Margin="0,4,0,0"
+                       Text="{loc:Localize Key=Ft4.BlockedCallsigns}" />
+            <TextBlock Classes="ft4-note"
+                       Text="{loc:Localize Key=Ft4.BlockedCallsigns.Note}" />
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+              <TextBox Grid.Column="0"
+                       Text="{Binding BlockedCallsignDraft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       Watermark="{loc:Localize Key=Ft4.BlockedCallsigns.Placeholder}"
+                       AutomationProperties.Name="{loc:Localize Key=Ft4.BlockedCallsigns}"
+                       KeyDown="OnBlockedCallsignKeyDown" />
+              <Button Grid.Column="1"
+                      Content="{loc:Localize Key=Common.Add}"
+                      Command="{Binding AddBlockedCallsignCommand}"
+                      MinWidth="80" />
+              <Button Grid.Column="2"
+                      Content="{loc:Localize Key=Ft4.BlockedCallsigns.Remove}"
+                      Command="{Binding RemoveBlockedCallsignCommand}"
+                      MinWidth="88" />
+            </Grid>
+            <ListBox ItemsSource="{Binding BlockedCallsigns}"
+                     SelectedItem="{Binding SelectedBlockedCallsign, Mode=TwoWay}"
+                     Height="120"
+                     FontSize="13"
+                     AutomationProperties.Name="{loc:Localize Key=Ft4.BlockedCallsigns}" />
             <CheckBox Content="{loc:Localize Key=Ft4.ApEnabled}"
                       IsChecked="{Binding ApEnabled}" />
             <TextBlock Classes="ft4-note"

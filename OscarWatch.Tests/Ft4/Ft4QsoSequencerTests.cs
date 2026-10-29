@@ -475,6 +475,51 @@ public sealed class Ft4QsoSequencerTests
     }
 
     [Fact]
+    public void Blocked_callsign_is_not_auto_answered()
+    {
+        var blocked = new List<string> { "G4ABC" };
+        var seq = new Ft4QsoSequencer(
+            () => "MM9SQL",
+            () => "IO85",
+            () => true,
+            isBlockedCall: call => Ft4BlockedCallsigns.Matches(blocked, call));
+        seq.StartCq(evenSlot: true);
+
+        Assert.False(seq.OnDecoded(Msg("MM9SQL G4ABC IO91", snr: -6f)));
+        Assert.Equal(Ft4QsoPhase.CallingCq, seq.Phase);
+        Assert.Null(seq.TheirCall);
+        Assert.Equal("CQ MM9SQL IO85", seq.CurrentTxMessage);
+        Assert.True(seq.TransmitEnabled);
+
+        Assert.False(seq.OnDecoded(Msg("MM9SQL G4ABC/P +02", snr: 2f)));
+        Assert.Equal(Ft4QsoPhase.CallingCq, seq.Phase);
+        Assert.Null(seq.TheirCall);
+
+        Assert.False(seq.OnDecoded(Msg("MM9SQL M0XYZ IO92", snr: -4f)));
+        Assert.Equal(Ft4QsoPhase.InQso, seq.Phase);
+        Assert.Equal("M0XYZ", seq.TheirCall);
+        Assert.StartsWith("M0XYZ MM9SQL", seq.CurrentTxMessage);
+    }
+
+    [Fact]
+    public void Blocked_callsign_can_still_be_answered_by_clicking()
+    {
+        var seq = new Ft4QsoSequencer(
+            () => "MM9SQL",
+            () => "IO85",
+            () => true,
+            isBlockedCall: call => Ft4BlockedCallsigns.Matches(["G4ABC"], call));
+        seq.StartCq(evenSlot: true);
+        seq.OnDecoded(Msg("MM9SQL G4ABC IO91"));
+        Assert.Equal(Ft4QsoPhase.CallingCq, seq.Phase);
+
+        seq.StartAnswer(Msg("MM9SQL G4ABC IO91", snr: -4f), oppositeEvenSlot: false);
+        Assert.Equal(Ft4QsoPhase.InQso, seq.Phase);
+        Assert.Equal("G4ABC", seq.TheirCall);
+        Assert.StartsWith("G4ABC MM9SQL", seq.CurrentTxMessage);
+    }
+
+    [Fact]
     public void Auto_reply_off_keeps_calling_cq_until_a_station_is_clicked()
     {
         var seq = new Ft4QsoSequencer(

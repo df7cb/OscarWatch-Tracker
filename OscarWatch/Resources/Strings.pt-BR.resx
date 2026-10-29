@@ -4413,6 +4413,18 @@ Mais recente: {1} ({2})</value>
   <data name="Ft4.AutoReply.Note">
     <value>Ao chamar CQ, responde à primeira estação que o chamar. Desmarque para continuar chamando CQ até clicar numa estação. Marque de novo para responder à próxima, inclusive uma dos últimos segundos.</value>
   </data>
+  <data name="Ft4.BlockedCallsigns">
+    <value>Indicativos bloqueados</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Note">
+    <value>Ao chamar CQ, estas estações não são respondidas automaticamente. Clique numa decodificação para responder a uma. /P e /R correspondem ao indicativo sem esse sufixo. Um indicativo mostrado só como &lt;...&gt; não pode ser comparado até o indicativo completo ser decodificado.</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Remove">
+    <value>Remover</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Placeholder">
+    <value>Indicativo</value>
+  </data>
   <data name="Ft4.AutoLowerRfPower">
     <value>Reduzir a potência de RF para 30 W</value>
   </data>

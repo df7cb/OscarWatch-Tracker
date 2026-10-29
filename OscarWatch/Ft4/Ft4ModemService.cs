@@ -302,7 +302,8 @@ public sealed class Ft4ModemService : IDisposable
             },
             () => _settings.Current.Ft4.SkipRrr,
             () => _settings.Current.Ft4.HoldTxFrequency,
-            () => _settings.Current.Ft4.AutoReply);
+            () => _settings.Current.Ft4.AutoReply,
+            call => Ft4BlockedCallsigns.Matches(_settings.Current.Ft4.BlockedCallsigns, call));
         _sequencer.TxAudioHz = Math.Clamp(_settings.Current.Ft4.TxAudioHz, 200, 3000);
         RxAudioHz = _sequencer.TxAudioHz;
         _lastLoggedKey = null;
@@ -543,7 +544,10 @@ public sealed class Ft4ModemService : IDisposable
             var before = seq.Phase;
             var finished = seq.OnDecoded(msg);
             if (seq.Phase != Ft4QsoPhase.InQso || before == Ft4QsoPhase.InQso)
+            {
+                LogBlockedAutoReplySkip(before == Ft4QsoPhase.CallingCq, msg.CallTo, msg.CallDe);
                 continue;
+            }
 
             answeredText = msg.Text;
             Log.Information("FT4 auto reply to a recent call: {Text}", msg.Text);
@@ -553,6 +557,20 @@ public sealed class Ft4ModemService : IDisposable
         }
 
         return false;
+    }
+
+    /// <summary>CQ stayed up because the station that called us is on the block list.</summary>
+    private void LogBlockedAutoReplySkip(bool wasCallingCq, string? callTo, string? callDe)
+    {
+        var seq = _sequencer;
+        if (!wasCallingCq || seq is null || seq.Phase != Ft4QsoPhase.CallingCq || !seq.IsBlockedCall(callDe))
+            return;
+
+        var my = Ft4MessageCodec.NormalizeCall(_settings.Current.GroundStation.Callsign ?? "");
+        if (!Ft4TxWatchdog.IsReply(callTo, callDe, my))
+            return;
+
+        Log.Information("FT4 auto reply skipped, {Call} is blocked", callDe);
     }
 
     public bool QueueReport(float? snrDb)
@@ -2265,8 +2283,10 @@ public sealed class Ft4ModemService : IDisposable
             {
                 var wasCallingCq = _sequencer.Phase == Ft4QsoPhase.CallingCq;
                 var finished = _sequencer.OnDecoded(msg);
-                if (Ft4TxWatchdog.IsReply(callTo, callDe, my))
+                var blockedCaller = _sequencer.IsBlockedCall(callDe);
+                if (Ft4TxWatchdog.IsReply(callTo, callDe, my) && !blockedCaller)
                     _txWatchdogResetUtc = DateTime.UtcNow;
+                LogBlockedAutoReplySkip(wasCallingCq, callTo, callDe);
                 if (wasCallingCq && _sequencer.Phase == Ft4QsoPhase.InQso)
                 {
                     Log.Information(

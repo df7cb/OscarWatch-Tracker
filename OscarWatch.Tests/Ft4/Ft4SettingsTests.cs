@@ -34,6 +34,7 @@ public sealed class Ft4SettingsTests
         Assert.Equal(100, settings.PttTailMs);
         Assert.True(settings.HoldTxFrequency);
         Assert.True(settings.AutoReply);
+        Assert.Empty(settings.BlockedCallsigns);
         Assert.False(settings.AutoLowerRfPower);
         Assert.True(settings.AudioDopplerTx);
         Assert.True(settings.AudioDopplerRx);

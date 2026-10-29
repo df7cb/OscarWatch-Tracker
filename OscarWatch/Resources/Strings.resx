@@ -4413,6 +4413,18 @@ Latest: {1} ({2})</value>
   <data name="Ft4.AutoReply.Note">
     <value>While calling CQ, answer the first station that calls you. Clear this to keep calling CQ until you click a station. Tick it again to answer the next caller, including one from the last few seconds.</value>
   </data>
+  <data name="Ft4.BlockedCallsigns">
+    <value>Blocked callsigns</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Note">
+    <value>While calling CQ, these stations are not answered automatically. Click a decode to answer one. /P and /R match the callsign without that suffix. A call shown only as &lt;...&gt; cannot be matched until the full callsign has been decoded.</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Remove">
+    <value>Remove</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Placeholder">
+    <value>Callsign</value>
+  </data>
   <data name="Ft4.AutoLowerRfPower">
     <value>Lower RF power to 30 W</value>
   </data>

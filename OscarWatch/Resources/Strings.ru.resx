@@ -4417,6 +4417,18 @@ LOS: {2}
   <data name="Ft4.AutoReply.Note">
     <value>При вызове CQ отвечает первой станции, которая вас вызвала. Снимите флажок, чтобы продолжать CQ, пока вы не выберете станцию. Снова установите флажок, чтобы ответить следующей станции, в том числе вызвавшей несколько секунд назад.</value>
   </data>
+  <data name="Ft4.BlockedCallsigns">
+    <value>Заблокированные позывные</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Note">
+    <value>При вызове CQ эти станции не получают автоматический ответ. Щёлкните строку декодирования, чтобы ответить. /P и /R совпадают с позывным без этого суффикса. Позывной, показанный только как &lt;...&gt;, нельзя сопоставить, пока полный позывной не декодирован.</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Remove">
+    <value>Удалить</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Placeholder">
+    <value>Позывной</value>
+  </data>
   <data name="Ft4.AutoLowerRfPower">
     <value>Снизить мощность до 30 Вт</value>
   </data>

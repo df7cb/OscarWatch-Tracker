@@ -4417,6 +4417,18 @@ LOS: {2}
   <data name="Ft4.AutoReply.Note">
     <value>ขณะเรียก CQ จะตอบสถานีแรกที่เรียกคุณ ยกเลิกเพื่อเรียก CQ ต่อไปจนกว่าจะคลิกสถานี เลือกอีกครั้งเพื่อตอบสถานีถัดไป รวมถึงสถานีที่เรียกเมื่อไม่กี่วินาทีก่อน</value>
   </data>
+  <data name="Ft4.BlockedCallsigns">
+    <value>สายเรียกที่บล็อก</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Note">
+    <value>ขณะเรียก CQ สถานีเหล่านี้จะไม่ได้รับการตอบอัตโนมัติ คลิกบรรทัดที่ถอดรหัสเพื่อตอบ /P และ /R ตรงกับสายเรียกที่ไม่มีส่วนท้ายนั้น สายเรียกที่แสดงเป็น &lt;...&gt; อย่างเดียวจะเทียบไม่ได้จนกว่าจะถอดรหัสสายเรียกเต็มได้</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Remove">
+    <value>ลบ</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Placeholder">
+    <value>สายเรียก</value>
+  </data>
   <data name="Ft4.AutoLowerRfPower">
     <value>ลดกำลังส่ง RF เหลือ 30 W</value>
   </data>

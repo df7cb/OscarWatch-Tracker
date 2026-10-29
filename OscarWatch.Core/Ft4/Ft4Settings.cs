@@ -84,8 +84,16 @@ public sealed class Ft4Settings
     /// <summary>
     /// When true (default), the first station that calls while CQ is running is answered
     /// automatically. When false, CQ continues until the operator clicks a station.
+    /// A callsign in <see cref="BlockedCallsigns"/> is left unanswered either way until clicked.
     /// </summary>
     public bool AutoReply { get; set; } = true;
+
+    /// <summary>
+    /// Callsigns that are not answered automatically while calling CQ.
+    /// Clicking their decode still starts a contact. A trailing /P or /R matches the base callsign.
+    /// Replace the list when it changes. The sequencer reads it on the decode thread.
+    /// </summary>
+    public List<string> BlockedCallsigns { get; set; } = [];
 
     /// <summary>
     /// When true, FT4 sets the radio's RF power to <see cref="Ft4RfPowerLimit.MaxWatts"/>

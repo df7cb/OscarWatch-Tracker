@@ -4417,6 +4417,18 @@ Aktuell: {1} ({2})</value>
   <data name="Ft4.AutoReply.Note">
     <value>Beim CQ-Rufen wird die erste Station beantwortet, die Sie ruft. Abwählen, um CQ weiterzurufen, bis Sie eine Station anklicken. Erneut auswählen, um den nächsten Anrufer zu beantworten, auch einen aus den letzten Sekunden.</value>
   </data>
+  <data name="Ft4.BlockedCallsigns">
+    <value>Gesperrte Rufzeichen</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Note">
+    <value>Beim CQ-Rufen werden diese Stationen nicht automatisch beantwortet. Klicken Sie eine Dekodierung an, um trotzdem zu antworten. /P und /R gelten als dasselbe Rufzeichen ohne diesen Zusatz. Ein nur als &lt;...&gt; gezeigtes Rufzeichen kann erst verglichen werden, wenn das volle Rufzeichen dekodiert wurde.</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Remove">
+    <value>Entfernen</value>
+  </data>
+  <data name="Ft4.BlockedCallsigns.Placeholder">
+    <value>Rufzeichen</value>
+  </data>
   <data name="Ft4.AutoLowerRfPower">
     <value>HF-Leistung auf 30 W senken</value>
   </data>

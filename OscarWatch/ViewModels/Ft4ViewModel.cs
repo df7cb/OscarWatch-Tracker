@@ -75,6 +75,8 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
         _txLevel = Math.Clamp(ft4.TxLevel, 0.05, 1.0);
         _holdTxFrequency = ft4.HoldTxFrequency;
         _autoReply = ft4.AutoReply;
+        foreach (var call in Ft4BlockedCallsigns.Clean(ft4.BlockedCallsigns))
+            BlockedCallsigns.Add(call);
         _autoLowerRfPower = ft4.AutoLowerRfPower;
         _audioDopplerTx = ft4.AudioDopplerTx;
         _audioDopplerRx = ft4.AudioDopplerRx;
@@ -156,6 +158,9 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
 
     public ObservableCollection<string> EchoCalibrationSatelliteOptions { get; } = [];
 
+    /// <summary>Callsigns that are not answered automatically while calling CQ.</summary>
+    public ObservableCollection<string> BlockedCallsigns { get; } = [];
+
     public IReadOnlyList<PttMethodOption> PttMethodOptions { get; }
 
     public IReadOnlyList<PttLineOption> PttLineOptions { get; }
@@ -220,6 +225,8 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private bool _preferEvenSlot;
     [ObservableProperty] private bool _holdTxFrequency = true;
     [ObservableProperty] private bool _autoReply = true;
+    [ObservableProperty] private string _blockedCallsignDraft = "";
+    [ObservableProperty] private string? _selectedBlockedCallsign;
     [ObservableProperty] private bool _autoLowerRfPower;
     [ObservableProperty] private bool _audioDopplerTx = true;
     [ObservableProperty] private bool _audioDopplerRx = true;
@@ -288,6 +295,58 @@ public partial class Ft4ViewModel : ViewModelBase, IDisposable
         // The sequencer must see this tick immediately. A settings read alone
         // left CQ running after the box was cleared and ticked again.
         _modem.SetAutoReply(value);
+    }
+
+    partial void OnBlockedCallsignDraftChanged(string value) =>
+        AddBlockedCallsignCommand.NotifyCanExecuteChanged();
+
+    partial void OnSelectedBlockedCallsignChanged(string? value) =>
+        RemoveBlockedCallsignCommand.NotifyCanExecuteChanged();
+
+    private bool CanAddBlockedCallsign()
+    {
+        var call = Ft4BlockedCallsigns.Normalize(BlockedCallsignDraft);
+        if (call is null || BlockedCallsigns.Count >= Ft4BlockedCallsigns.MaxCount)
+            return false;
+        if (BlockedCallsigns.Any(c => c.Equals(call, StringComparison.OrdinalIgnoreCase)))
+            return false;
+        var mine = Ft4BlockedCallsigns.Normalize(StationCallsign);
+        return mine is null || !call.Equals(mine, StringComparison.Ordinal);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanAddBlockedCallsign))]
+    private void AddBlockedCallsign()
+    {
+        var call = Ft4BlockedCallsigns.Normalize(BlockedCallsignDraft);
+        if (call is null || !CanAddBlockedCallsign())
+            return;
+
+        BlockedCallsigns.Add(call);
+        BlockedCallsignDraft = "";
+        SelectedBlockedCallsign = call;
+        PersistBlockedCallsigns();
+        AddBlockedCallsignCommand.NotifyCanExecuteChanged();
+    }
+
+    private bool CanRemoveBlockedCallsign() => !string.IsNullOrWhiteSpace(SelectedBlockedCallsign);
+
+    [RelayCommand(CanExecute = nameof(CanRemoveBlockedCallsign))]
+    private void RemoveBlockedCallsign()
+    {
+        if (SelectedBlockedCallsign is null)
+            return;
+
+        BlockedCallsigns.Remove(SelectedBlockedCallsign);
+        SelectedBlockedCallsign = null;
+        PersistBlockedCallsigns();
+        AddBlockedCallsignCommand.NotifyCanExecuteChanged();
+    }
+
+    private void PersistBlockedCallsigns()
+    {
+        // Replace the list. The sequencer reads it on the decode thread.
+        _settings.Current.Ft4.BlockedCallsigns = BlockedCallsigns.ToList();
+        _settings.RequestSave();
     }
 
     partial void OnAutoLowerRfPowerChanged(bool value)
