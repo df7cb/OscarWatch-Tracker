@@ -48,7 +48,7 @@ public sealed class SstvSyncTrainTests
         buffer.Append(hz);
         var detector = new SstvSyncTrainDetector(Rate);
 
-        Assert.True(detector.TryFind(buffer, 0, 0, SstvModeTable.All, out var result));
+        Assert.True(detector.TryFind(buffer, 0, 0, SstvModeTable.SyncTrainCandidates, out var result));
         return result.Mode;
     }
 

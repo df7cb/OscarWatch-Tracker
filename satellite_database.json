@@ -122,7 +122,8 @@
         "uplink": 0,
         "downlink_mode": "FM",
         "uplink_mode": "FM",
-        "doppler": "NOR"
+        "doppler": "NOR",
+        "sstv_modes": ["Pd120", "Pd180", "Robot36"]
       },
       {
         "type": "SSTV (UHF)",
@@ -130,7 +131,8 @@
         "uplink": 0,
         "downlink_mode": "FM",
         "uplink_mode": "FM",
-        "doppler": "NOR"
+        "doppler": "NOR",
+        "sstv_modes": ["Pd120", "Pd180", "Robot36"]
       }
     ]
   },
@@ -690,7 +692,8 @@
         "uplink": 0,
         "downlink_mode": "FM",
         "uplink_mode": "FM",
-        "doppler": "NOR"
+        "doppler": "NOR",
+        "sstv_modes": ["Robot36"]
       }
     ]
   },
@@ -718,7 +721,8 @@
         "uplink": 0,
         "downlink_mode": "FM",
         "uplink_mode": "FM",
-        "doppler": "NOR"
+        "doppler": "NOR",
+        "sstv_modes": ["Robot36"]
       }
     ]
   },

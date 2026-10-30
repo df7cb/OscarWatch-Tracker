@@ -91,10 +91,24 @@
         <TextBlock Classes="sstv-note" Text="{loc:Localize Key=Sstv.CatFeedForward.Tip}" />
         <CheckBox Content="{loc:Localize Key=Sstv.DetectWithoutVis}" IsChecked="{Binding DetectWithoutVis}" />
         <TextBlock Classes="sstv-note" Text="{loc:Localize Key=Sstv.DetectWithoutVis.Tip}" />
+        <CheckBox Content="{loc:Localize Key=Sstv.UseSatelliteModes}" IsChecked="{Binding UseSatelliteModes}" />
+        <TextBlock Classes="sstv-note" Text="{loc:Localize Key=Sstv.UseSatelliteModes.Tip}" />
+        <CheckBox Content="{loc:Localize Key=Sstv.AlignAosFragments}" IsChecked="{Binding AlignAosFragments}" />
+        <TextBlock Classes="sstv-note" Text="{loc:Localize Key=Sstv.AlignAosFragments.Tip}" />
+        <CheckBox Content="{loc:Localize Key=Sstv.RepairBadLines}" IsChecked="{Binding RepairBadLines}" />
+        <TextBlock Classes="sstv-note" Text="{loc:Localize Key=Sstv.RepairBadLines.Tip}" />
+        <CheckBox Content="{loc:Localize Key=Sstv.HoldThroughFades}" IsChecked="{Binding HoldThroughFades}" />
+        <TextBlock Classes="sstv-note" Text="{loc:Localize Key=Sstv.HoldThroughFades.Tip}" />
+        <CheckBox Content="{loc:Localize Key=Sstv.AdaptiveBandwidth}" IsChecked="{Binding AdaptiveBandwidth}" />
+        <TextBlock Classes="sstv-note" Text="{loc:Localize Key=Sstv.AdaptiveBandwidth.Tip}" />
 
         <Separator Classes="sstv-rule" />
         <TextBlock Classes="sstv-section" Text="{loc:Localize Key=Sstv.Settings.Saving}" />
         <CheckBox Content="{loc:Localize Key=Sstv.AutoSave}" IsChecked="{Binding AutoSavePictures}" />
+        <CheckBox Content="{loc:Localize Key=Sstv.CombineRepeats}"
+                  IsChecked="{Binding CombineRepeats}"
+                  IsEnabled="{Binding AutoSavePictures}" />
+        <TextBlock Classes="sstv-note" Text="{loc:Localize Key=Sstv.CombineRepeats.Tip}" />
         <CheckBox Content="{loc:Localize Key=Sstv.SaveSessionAudio}" IsChecked="{Binding SaveSessionAudio}" />
         <TextBlock Classes="sstv-note" Text="{loc:Localize Key=Sstv.SaveSessionAudio.Tip}" />
         <CheckBox Content="{loc:Localize Key=Sstv.Share}"

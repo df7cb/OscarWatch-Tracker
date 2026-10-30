@@ -28,9 +28,42 @@ internal static class SstvTestEncoder
         public bool IncludeVis { get; init; } = true;
         /// <summary>Overrides the VIS code sent, for example to send a bad parity.</summary>
         public int? VisCodeOverride { get; init; }
+        /// <summary>Send this VIS data bit at 1200 Hz, halfway between a 1 and a 0.</summary>
+        public int? DoubtfulVisBit { get; init; }
         public bool FlipParity { get; init; }
         public double LeadSeconds { get; init; } = 0.5;
         public double TailSeconds { get; init; } = 1.0;
+
+        /// <summary>
+        /// Doppler time compression: the sender's timing runs this many ppm slow at the start
+        /// and fast by the same amount at the end, sweeping linearly (range rate over c on a pass).
+        /// </summary>
+        public double TimeCompressionPpm { get; init; }
+
+        /// <summary>
+        /// When set, the audio is sent over a simulated FM radio link at this carrier-to-noise
+        /// ratio in <see cref="IfBandwidthHz"/>, so the receiver's own discriminator produces the
+        /// threshold clicks, instead of noise being added to the audio.
+        /// </summary>
+        public double? CnrDb { get; init; }
+        public double IfBandwidthHz { get; init; } = 12000;
+        /// <summary>Peak FM deviation of a full-level tone (amplitude 0.5).</summary>
+        public double DeviationHz { get; init; } = 3000;
+        /// <summary>Receiver audio low-pass after the discriminator.</summary>
+        public double AudioLowPassHz { get; init; } = 3000;
+        /// <summary>
+        /// Uncompensated receiver de-emphasis time constant (0 for flat audio). 75 µs tilts
+        /// 2300 Hz about 2 dB below 1500 Hz, as from a speaker output on a flat transmitter.
+        /// </summary>
+        public double DeEmphasisUs { get; init; }
+        /// <summary>Spin fading of the carrier: period in seconds (0 for none) and depth in dB.</summary>
+        public double FadePeriodSeconds { get; init; }
+        public double FadeDepthDb { get; init; }
+        /// <summary>Carrier drop-outs (antenna nulls, obstructions): every so often, for so long.</summary>
+        public double DropoutEverySeconds { get; init; }
+        public double DropoutSeconds { get; init; }
+        /// <summary>Time of the first drop-out.</summary>
+        public double DropoutStartSeconds { get; init; }
     }
 
     public delegate (double R, double G, double B) PixelSource(int x, int y);
@@ -52,7 +85,14 @@ internal static class SstvTestEncoder
 
     public static float[] Encode(SstvMode mode, PixelSource pixel, int rate, Settings settings)
     {
-        var tone = new ToneWriter(rate, settings);
+        var audio = EncodeAudio(mode, pixel, rate, settings);
+        return settings.CnrDb is { } cnr ? FmLink(audio, rate, cnr, settings) : audio;
+    }
+
+    private static float[] EncodeAudio(SstvMode mode, PixelSource pixel, int rate, Settings settings)
+    {
+        var totalMs = 1000 * (settings.LeadSeconds + (settings.IncludeVis ? 0.91 : 0) + mode.ImageSeconds);
+        var tone = new ToneWriter(rate, settings, totalMs);
         tone.Silence(settings.LeadSeconds);
 
         if (settings.IncludeVis)
@@ -67,7 +107,7 @@ internal static class SstvTestEncoder
             {
                 var bit = (code >> i) & 1;
                 ones += bit;
-                tone.Add(bit == 1 ? 1100 : 1300, 30);
+                tone.Add(i == settings.DoubtfulVisBit ? 1200 : bit == 1 ? 1100 : 1300, 30);
             }
 
             var parity = (ones & 1) ^ (settings.FlipParity ? 1 : 0);
@@ -155,7 +195,106 @@ internal static class SstvTestEncoder
     public static double Cb((double R, double G, double B) p) => 128 - 0.168736 * p.R - 0.331264 * p.G + 0.5 * p.B;
     public static double Cr((double R, double G, double B) p) => 128 + 0.5 * p.R - 0.418688 * p.G - 0.081312 * p.B;
 
-    private sealed class ToneWriter(int rate, Settings settings)
+    /// <summary>
+    /// FM radio link: frequency-modulate the audio onto a carrier, fade it, add complex noise
+    /// at the carrier-to-noise ratio, IF filter, discriminate, then filter the audio as a
+    /// receiver does. Filter delays are removed so the timing matches the input.
+    /// </summary>
+    private static float[] FmLink(float[] audio, int rate, double cnrDb, Settings settings)
+    {
+        var random = new Random(settings.Seed + 7);
+        var kf = settings.DeviationHz / 0.5;
+        var cnr = Math.Pow(10, cnrDb / 10);
+        var sigma = Math.Sqrt(rate / (2 * settings.IfBandwidthHz * cnr));
+        var n = audio.Length;
+        var i = new double[n];
+        var q = new double[n];
+        var phase = 0.0;
+        for (var k = 0; k < n; k++)
+        {
+            phase += 2 * Math.PI * kf * audio[k] / rate;
+            if (phase > Math.PI)
+                phase -= 2 * Math.PI;
+            else if (phase < -Math.PI)
+                phase += 2 * Math.PI;
+            var a = CarrierLevel(k / (double)rate, settings);
+            i[k] = a * Math.Cos(phase) + sigma * Gaussian(random);
+            q[k] = a * Math.Sin(phase) + sigma * Gaussian(random);
+        }
+
+        var ifTaps = SstvFirFilter.LowPass(settings.IfBandwidthHz / 2, rate, Math.Max(31, rate / 600 | 1));
+        i = Filter(i, ifTaps);
+        q = Filter(q, ifTaps);
+
+        var output = new double[n];
+        for (var k = 1; k < n; k++)
+        {
+            var dphi = Math.Atan2(q[k] * i[k - 1] - i[k] * q[k - 1], i[k] * i[k - 1] + q[k] * q[k - 1]);
+            output[k] = dphi * rate / (2 * Math.PI) / kf;
+        }
+
+        output = Filter(output, SstvFirFilter.LowPass(settings.AudioLowPassHz, rate, Math.Max(31, rate / 400 | 1)));
+        if (settings.DeEmphasisUs > 0)
+        {
+            var alpha = 1 - Math.Exp(-1 / (rate * settings.DeEmphasisUs * 1e-6));
+            // Keep a 1900 Hz tone at its level, so only the tilt across the band changes.
+            var w = 2 * Math.PI * 1900 * settings.DeEmphasisUs * 1e-6;
+            var gain = Math.Sqrt(1 + w * w);
+            var y = 0.0;
+            for (var k = 0; k < n; k++)
+            {
+                y += alpha * (output[k] - y);
+                output[k] = y * gain;
+            }
+        }
+
+        var result = new float[n];
+        for (var k = 0; k < n; k++)
+            result[k] = (float)Math.Clamp(output[k], -1.5, 1.5);
+        return result;
+    }
+
+    private static double CarrierLevel(double seconds, Settings settings)
+    {
+        var sinceDropout = seconds - settings.DropoutStartSeconds;
+        if (settings.DropoutEverySeconds > 0 && settings.DropoutSeconds > 0
+            && sinceDropout >= 0 && sinceDropout % settings.DropoutEverySeconds < settings.DropoutSeconds)
+            return 0;
+        if (settings.FadePeriodSeconds <= 0 || settings.FadeDepthDb <= 0)
+            return 1;
+        var depth = 0.5 - 0.5 * Math.Cos(2 * Math.PI * seconds / settings.FadePeriodSeconds);
+        return Math.Pow(10, -settings.FadeDepthDb * depth / 20);
+    }
+
+    /// <summary>Zero-phase FIR: the filter's delay is taken out of the output.</summary>
+    private static double[] Filter(double[] input, double[] taps)
+    {
+        var delay = (taps.Length - 1) / 2;
+        var output = new double[input.Length];
+        for (var k = 0; k < input.Length; k++)
+        {
+            double sum = 0;
+            for (var t = 0; t < taps.Length; t++)
+            {
+                var j = k + delay - t;
+                if (j >= 0 && j < input.Length)
+                    sum += taps[t] * input[j];
+            }
+
+            output[k] = sum;
+        }
+
+        return output;
+    }
+
+    private static double Gaussian(Random random)
+    {
+        var u1 = 1.0 - random.NextDouble();
+        var u2 = random.NextDouble();
+        return Math.Sqrt(-2 * Math.Log(u1)) * Math.Cos(2 * Math.PI * u2);
+    }
+
+    private sealed class ToneWriter(int rate, Settings settings, double totalMs)
     {
         private readonly List<float> _samples = new();
         private readonly Random _random = new(settings.Seed);
@@ -190,7 +329,8 @@ internal static class SstvTestEncoder
         private void Generate(double ms, Func<double, double> hzAt)
         {
             var startMs = _timeMs;
-            var endMs = _timeMs + ms * settings.ClockRatio;
+            var compression = settings.TimeCompressionPpm * (1 - 2 * Math.Clamp(_timeMs / totalMs, 0, 1)) * 1e-6;
+            var endMs = _timeMs + ms * settings.ClockRatio * (1 + compression);
             var firstSample = (long)Math.Ceiling(startMs * rate / 1000.0);
             var lastSample = (long)Math.Ceiling(endMs * rate / 1000.0);
             for (var n = firstSample; n < lastSample; n++)

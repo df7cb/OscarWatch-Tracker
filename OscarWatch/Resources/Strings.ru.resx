@@ -664,6 +664,66 @@ LOS: {2}
   <data name="Sstv.DetectWithoutVis.Tip">
     <value>Если заголовок потерян (слабый сигнал в начале пролёта), распознать изображение и режим по регулярным синхроимпульсам.</value>
   </data>
+  <data name="Sstv.UseSatelliteModes">
+    <value>Использовать известные режимы SSTV спутника</value>
+  </data>
+  <data name="Sstv.UseSatelliteModes.Tip">
+    <value>Отдавать предпочтение режимам, которые передаёт отслеживаемый спутник (например, Robot 36 у UmKA-1). Не даёт принять шум за заголовок другого режима.</value>
+  </data>
+  <data name="Sstv.AlignAosFragments">
+    <value>Ставить изображения, принятые с середины, на нужные строки</value>
+  </data>
+  <data name="Sstv.AlignAosFragments.Tip">
+    <value>Если приём начался с середины изображения и продолжился до конца, принятая часть рисуется внизу изображения, где ей и место.</value>
+  </data>
+  <data name="Sstv.RepairBadLines">
+    <value>Восстанавливать короткие серии зашумлённых строк</value>
+  </data>
+  <data name="Sstv.RepairBadLines.Tip">
+    <value>Перерисовывать до трёх зашумлённых строк подряд по хорошим соседним строкам. Более длинные повреждения остаются как приняты.</value>
+  </data>
+  <data name="Sstv.HoldThroughFades">
+    <value>Продолжать изображение при долгих замираниях</value>
+  </data>
+  <data name="Sstv.HoldThroughFades.Tip">
+    <value>Когда изображение надёжно захвачено, продолжать рисовать во время замирания до 20 секунд, а не завершать его. Может соединить два фрагмента одного изображения.</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth">
+    <value>Подбирать фильтр под режим</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth.Tip">
+    <value>Когда режим известен, демодулировать заново с фильтром, подходящим для детализации этого режима. Помогает узким режимам при слабом сигнале.</value>
+  </data>
+  <data name="Sstv.CombineRepeats">
+    <value>Объединять повторные копии изображения</value>
+  </data>
+  <data name="Sstv.CombineRepeats.Tip">
+    <value>Если одно и то же изображение принято несколько раз, дополнительно сохранять объединённую копию из лучших строк каждой (с _combined в имени файла).</value>
+  </data>
+  <data name="Sstv.RedecodeSession">
+    <value>Декодировать последний сеанс заново</value>
+  </data>
+  <data name="Sstv.RedecodeSession.Tip">
+    <value>Заново декодировать звук, сохранённый в последнем сеансе приёма, с текущими настройками. Нужно включить сохранение звука сеанса.</value>
+  </data>
+  <data name="Sstv.FixSlant">
+    <value>Исправить наклон</value>
+  </data>
+  <data name="Sstv.FixSlant.Tip">
+    <value>Выпрямить выбранное изображение: щёлкните вверху, затем внизу края, который должен быть вертикальным, например края синхроимпульса.</value>
+  </data>
+  <data name="Sstv.FixSlant.First">
+    <value>Щёлкните вверху края, который должен быть вертикальным.</value>
+  </data>
+  <data name="Sstv.FixSlant.Second">
+    <value>Теперь щёлкните внизу того же края.</value>
+  </data>
+  <data name="Sstv.FixSlant.TooClose">
+    <value>Точки слишком близки по высоте. Щёлкните около верхнего конца края, затем около нижнего.</value>
+  </data>
+  <data name="Sstv.FixSlant.Done">
+    <value>Наклон исправлен. Сохраните изображение, чтобы оставить его.</value>
+  </data>
   <data name="Sstv.Settings.AutoStart">
     <value>Автоматический запуск</value>
   </data>

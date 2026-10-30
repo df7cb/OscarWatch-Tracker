@@ -3,6 +3,8 @@ namespace OscarWatch.Core.Sstv;
 /// <summary>
 /// Demodulated frequency samples addressed by absolute sample index, so positions stay
 /// valid after old samples are trimmed. Keeps a running sum for fast window means.
+/// Each sample may carry a weight (how much it can be trusted); window means use the
+/// weights when <see cref="Weighted"/> is set.
 /// </summary>
 public sealed class SstvSignalBuffer
 {
@@ -10,8 +12,11 @@ public sealed class SstvSignalBuffer
     private const double SquareCentre = 1900;
 
     private float[] _data = new float[1 << 16];
+    private float[] _weight = new float[1 << 16];
     private double[] _cumulative = new double[(1 << 16) + 1];
     private double[] _cumulativeSquares = new double[(1 << 16) + 1];
+    private double[] _cumulativeWeight = new double[(1 << 16) + 1];
+    private double[] _cumulativeWeighted = new double[(1 << 16) + 1];
     private int _count;
 
     /// <summary>Absolute index of the first retained sample.</summary>
@@ -20,20 +25,33 @@ public sealed class SstvSignalBuffer
     /// <summary>Absolute index one past the newest sample.</summary>
     public long End => Start + _count;
 
+    /// <summary>When true, window means are weighted by each sample's weight.</summary>
+    public bool Weighted { get; set; }
+
     public float this[long index] => _data[index - Start];
+
+    /// <summary>Weight of a sample: 1 when weighting is off.</summary>
+    public float Weight(long index) => Weighted ? _weight[index - Start] : 1f;
 
     public bool Contains(long start, long end) => start >= Start && end <= End && end >= start;
 
-    public void Append(IReadOnlyList<float> samples)
+    public void Append(IReadOnlyList<float> samples) => Append(samples, null);
+
+    /// <param name="weights">Weight per sample, or null for all 1.</param>
+    public void Append(IReadOnlyList<float> samples, IReadOnlyList<float>? weights)
     {
         EnsureCapacity(_count + samples.Count);
         for (var i = 0; i < samples.Count; i++)
         {
             var value = samples[i];
+            var w = weights is null ? 1f : weights[i];
             _data[_count] = value;
+            _weight[_count] = w;
             _cumulative[_count + 1] = _cumulative[_count] + value;
             var d = value - SquareCentre;
             _cumulativeSquares[_count + 1] = _cumulativeSquares[_count] + d * d;
+            _cumulativeWeight[_count + 1] = _cumulativeWeight[_count] + w;
+            _cumulativeWeighted[_count + 1] = _cumulativeWeighted[_count] + w * (value - SquareCentre);
             _count++;
         }
     }
@@ -45,7 +63,24 @@ public sealed class SstvSignalBuffer
         var b = Math.Min(end, End) - Start;
         if (b <= a)
             return double.NaN;
+        if (Weighted)
+        {
+            var w = _cumulativeWeight[b] - _cumulativeWeight[a];
+            if (w > 1e-9)
+                return SquareCentre + (_cumulativeWeighted[b] - _cumulativeWeighted[a]) / w;
+        }
+
         return (_cumulative[b] - _cumulative[a]) / (b - a);
+    }
+
+    /// <summary>Mean weight over [start, end): 1 when weighting is off.</summary>
+    public double MeanWeight(long start, long end)
+    {
+        var a = Math.Max(start, Start) - Start;
+        var b = Math.Min(end, End) - Start;
+        if (b <= a)
+            return double.NaN;
+        return Weighted ? (_cumulativeWeight[b] - _cumulativeWeight[a]) / (b - a) : 1;
     }
 
     /// <summary>Standard deviation over [start, end): low on a clean tone, high on noise.</summary>
@@ -80,12 +115,17 @@ public sealed class SstvSignalBuffer
 
         var keep = _count - drop;
         Array.Copy(_data, drop, _data, 0, keep);
+        Array.Copy(_weight, drop, _weight, 0, keep);
         var baseSum = _cumulative[drop];
         var baseSquares = _cumulativeSquares[drop];
+        var baseWeight = _cumulativeWeight[drop];
+        var baseWeighted = _cumulativeWeighted[drop];
         for (var i = 0; i <= keep; i++)
         {
             _cumulative[i] = _cumulative[i + drop] - baseSum;
             _cumulativeSquares[i] = _cumulativeSquares[i + drop] - baseSquares;
+            _cumulativeWeight[i] = _cumulativeWeight[i + drop] - baseWeight;
+            _cumulativeWeighted[i] = _cumulativeWeighted[i + drop] - baseWeighted;
         }
         _count = keep;
         Start += drop;
@@ -97,6 +137,15 @@ public sealed class SstvSignalBuffer
         _count = 0;
         _cumulative[0] = 0;
         _cumulativeSquares[0] = 0;
+        _cumulativeWeight[0] = 0;
+        _cumulativeWeighted[0] = 0;
+    }
+
+    /// <summary>Empty the buffer and number the next sample <paramref name="absoluteIndex"/>.</summary>
+    public void ResetTo(long absoluteIndex)
+    {
+        Clear();
+        Start = absoluteIndex;
     }
 
     private void EnsureCapacity(int needed)
@@ -108,7 +157,10 @@ public sealed class SstvSignalBuffer
         while (size < needed)
             size *= 2;
         Array.Resize(ref _data, size);
+        Array.Resize(ref _weight, size);
         Array.Resize(ref _cumulative, size + 1);
         Array.Resize(ref _cumulativeSquares, size + 1);
+        Array.Resize(ref _cumulativeWeight, size + 1);
+        Array.Resize(ref _cumulativeWeighted, size + 1);
     }
 }

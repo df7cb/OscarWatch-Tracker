@@ -17,6 +17,10 @@ public enum SstvModeId
     Pd180,
     Pd240,
     Pd290,
+    MartinM3,
+    MartinM4,
+    ScottieS3,
+    ScottieS4,
 }
 
 public enum SstvColourSpace
@@ -111,6 +115,18 @@ public sealed class SstvMode
     public double SyncMs { get; }
 
     public int TransmittedLines => Height / RowsPerLine;
+
+    /// <summary>Shortest pixel time of any picture channel, in milliseconds.</summary>
+    public double ShortestPixelMs => Segments
+        .Where(s => s.Channel is not (SstvChannel.Sync or SstvChannel.Gap))
+        .Min(s => s.Ms / Width);
+
+    /// <summary>
+    /// Pre-detection bandwidth (each side of 1900 Hz) that is enough for this mode: the ±400 Hz
+    /// picture swing plus half the video bandwidth, since each pixel is averaged over its slot
+    /// anyway. Fast modes need the full 1200 Hz the search demodulator uses; slow modes need less.
+    /// </summary>
+    public double PictureBandwidthHz => Math.Clamp(400 + 0.5 * 1000 / (2 * ShortestPixelMs), 500, 1200);
 
     public double ImageSeconds => (LeadInMs + LineMs * TransmittedLines) / 1000.0;
 

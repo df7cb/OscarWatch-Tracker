@@ -1017,6 +1017,66 @@
   <data name="Sstv.DetectWithoutVis.Tip">
     <value>如果丢失了头部（过境开始时信号弱），根据规律的同步脉冲识别图像及其模式。</value>
   </data>
+  <data name="Sstv.UseSatelliteModes">
+    <value>使用卫星已知的 SSTV 模式</value>
+  </data>
+  <data name="Sstv.UseSatelliteModes.Tip">
+    <value>优先使用所跟踪卫星已知会发送的模式 (例如 UmKA-1 的 Robot 36)。防止把噪声误读为其他模式的头部。</value>
+  </data>
+  <data name="Sstv.AlignAosFragments">
+    <value>把中途接收的图片放到正确的行</value>
+  </data>
+  <data name="Sstv.AlignAosFragments.Tip">
+    <value>当接收从图片中途开始并持续到结尾时，把收到的部分画在图片底部，即它本来的位置。</value>
+  </data>
+  <data name="Sstv.RepairBadLines">
+    <value>修复短段噪声行</value>
+  </data>
+  <data name="Sstv.RepairBadLines.Tip">
+    <value>用两侧良好的行重画最多连续三行噪声行。更长的损坏保持接收原样。</value>
+  </data>
+  <data name="Sstv.HoldThroughFades">
+    <value>在长时间衰落中继续图片</value>
+  </data>
+  <data name="Sstv.HoldThroughFades.Tip">
+    <value>图片锁定良好后，在最长 20 秒的衰落期间继续绘制，而不是结束图片。这可以把同一张图片的两个片段连接起来。</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth">
+    <value>使滤波器匹配模式</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth.Tip">
+    <value>确定模式后，用适合该模式图像细节的滤波器重新解调。有助于弱信号下的窄带模式。</value>
+  </data>
+  <data name="Sstv.CombineRepeats">
+    <value>合并图片的重复副本</value>
+  </data>
+  <data name="Sstv.CombineRepeats.Tip">
+    <value>同一张图片收到多次时，另外保存一张使用每份中最佳行的合并副本 (文件名中带 _combined)。</value>
+  </data>
+  <data name="Sstv.RedecodeSession">
+    <value>重新解码上次会话</value>
+  </data>
+  <data name="Sstv.RedecodeSession.Tip">
+    <value>使用当前设置重新解码上次实时会话保存的音频。需要开启会话音频保存。</value>
+  </data>
+  <data name="Sstv.FixSlant">
+    <value>校正倾斜</value>
+  </data>
+  <data name="Sstv.FixSlant.Tip">
+    <value>拉直所选图片：先点击应为垂直的边缘 (例如同步边缘) 的顶部，再点击底部。</value>
+  </data>
+  <data name="Sstv.FixSlant.First">
+    <value>点击应为垂直的边缘的顶部。</value>
+  </data>
+  <data name="Sstv.FixSlant.Second">
+    <value>现在点击同一边缘的底部。</value>
+  </data>
+  <data name="Sstv.FixSlant.TooClose">
+    <value>这两个点的高度太接近。请在边缘顶部附近点击，然后在底部附近点击。</value>
+  </data>
+  <data name="Sstv.FixSlant.Done">
+    <value>倾斜已校正。保存图片即可保留。</value>
+  </data>
   <data name="Sstv.Settings.AutoStart">
     <value>自动开始</value>
   </data>

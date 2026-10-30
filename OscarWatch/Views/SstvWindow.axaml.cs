@@ -1,5 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using OscarWatch.Localization;
 using OscarWatch.ViewModels;
@@ -42,6 +44,20 @@ public partial class SstvWindow : Window
     {
         if (DataContext is SstvViewModel vm)
             vm.SelectedGalleryItem = null;
+    }
+
+    private void OnPicturePointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (DataContext is not SstvViewModel { IsMarkingSlant: true } vm
+            || sender is not Image { Source: Bitmap bitmap } image
+            || image.Bounds.Width <= 0 || image.Bounds.Height <= 0)
+            return;
+
+        var p = e.GetPosition(image);
+        vm.AddSlantPoint(
+            p.X / image.Bounds.Width * bitmap.PixelSize.Width,
+            p.Y / image.Bounds.Height * bitmap.PixelSize.Height);
+        e.Handled = true;
     }
 
     private SstvLibraryWindow? _library;

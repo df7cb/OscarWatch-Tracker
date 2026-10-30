@@ -185,7 +185,8 @@ internal sealed class SstvLineRenderer
 
     /// <summary>
     /// Mean with every sample first limited to the picture range, so one noise click cannot
-    /// swing a whole pixel. Samples cut by the pixel edges count by the part inside.
+    /// swing a whole pixel. Samples cut by the pixel edges count by the part inside, and by
+    /// their weight when the buffer is weighted.
     /// </summary>
     private static double MeanClamped(SstvSignalBuffer buffer, double from, double to, double lo, double hi)
     {
@@ -202,6 +203,8 @@ internal sealed class SstvLineRenderer
             var w = Math.Min(i + 1, to) - Math.Max(i, from);
             if (w <= 0)
                 continue;
+            if (buffer.Weighted)
+                w *= buffer.Weight(i);
             sum += w * Math.Clamp(buffer[i], lo, hi);
             weight += w;
         }

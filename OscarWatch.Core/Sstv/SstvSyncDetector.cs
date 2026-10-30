@@ -12,16 +12,24 @@ public static class SstvSyncDetector
     public const double SyncHz = 1200;
     public const double ToleranceHz = 220;
 
+    /// <summary>Samples weighing less than this are left out of the tone measurement.</summary>
+    private const float MinMedianWeight = 0.2f;
+
     public static double SampleScore(float hz, double expectedHz) =>
         Math.Max(0, 1 - Math.Abs(hz - expectedHz) / ToleranceHz);
 
     /// <summary>Best sync start within ±<paramref name="halfWindow"/> of <paramref name="centre"/>.</summary>
+    /// <param name="baseband">
+    /// When given, each position also scores by how much of the subcarrier power is the sync
+    /// tone, and the two scores are averaged.
+    /// </param>
     public static SstvSyncHit? Find(
         SstvSignalBuffer buffer,
         double centre,
         int halfWindow,
         int syncLength,
-        double offsetHz)
+        double offsetHz,
+        SstvBasebandBuffer? baseband = null)
     {
         var from = (long)Math.Round(centre) - halfWindow;
         var to = (long)Math.Round(centre) + halfWindow;
@@ -43,25 +51,28 @@ public static class SstvSyncDetector
         var smooth = Math.Max(1, syncLength / 5);
         var lo = smooth / 2;
         var rawOrigin = origin - lo;
+        // With a weighted buffer, untrustworthy samples count for little in the running mean.
         var rawPrefix = new double[span + smooth + 1];
-        var rawCount = new int[span + smooth + 1];
+        var rawCount = new double[span + smooth + 1];
         for (var i = 0; i < span + smooth; i++)
         {
             var at = rawOrigin + i;
             var inside = at >= buffer.Start && at < buffer.End;
+            var w = inside ? buffer.Weight(at) : 0;
             var hz = inside ? Math.Clamp(buffer[at], expected - ToleranceHz, expected + ToleranceHz) : 0;
-            rawPrefix[i + 1] = rawPrefix[i] + hz;
-            rawCount[i + 1] = rawCount[i] + (inside ? 1 : 0);
+            rawPrefix[i + 1] = rawPrefix[i] + w * hz;
+            rawCount[i + 1] = rawCount[i] + w;
         }
 
         var prefix = new double[span + 1];
         for (var i = 0; i < span; i++)
         {
             var n = rawCount[i + smooth] - rawCount[i];
-            var score = n == 0 ? 0 : SampleScore((float)((rawPrefix[i + smooth] - rawPrefix[i]) / n), expected);
+            var score = n <= 1e-9 ? 0 : SampleScore((float)((rawPrefix[i + smooth] - rawPrefix[i]) / n), expected);
             prefix[i + 1] = prefix[i] + score;
         }
 
+        var tone = baseband is null ? null : ToneSums(baseband, origin, span, expected);
         var bestScore = double.MinValue;
         var bestStart = 0;
         var bestEnd = 0;
@@ -72,6 +83,11 @@ public static class SstvSyncDetector
             var before = (prefix[s] - prefix[s - side]) / side;
             var after = (prefix[s + syncLength + side] - prefix[s + syncLength]) / side;
             var score = (inside - 0.5 * (before + after)) * syncLength;
+            if (tone is { } t)
+            {
+                var toneScore = t.Fraction(s, syncLength) - 0.5 * (t.Fraction(s - side, side) + t.Fraction(s + syncLength, side));
+                score = 0.5 * (score + toneScore * syncLength);
+            }
             if (score > bestScore + 1e-9)
             {
                 bestScore = score;
@@ -90,6 +106,48 @@ public static class SstvSyncDetector
         return new SstvSyncHit(pos, normalised, MeasureHz(buffer, pos, syncLength, expected));
     }
 
+    /// <summary>Running sums for the fraction of subcarrier power at the sync tone.</summary>
+    private sealed class ToneWindow(double[] re, double[] im, double[] power)
+    {
+        /// <summary>Share of the power in [offset, offset + length) at the tone: 1 for a clean tone.</summary>
+        public double Fraction(int offset, int length)
+        {
+            var p = power[offset + length] - power[offset];
+            if (p <= 1e-12 || length <= 0)
+                return 0;
+            var r = re[offset + length] - re[offset];
+            var m = im[offset + length] - im[offset];
+            return (r * r + m * m) / (length * p);
+        }
+    }
+
+    private static ToneWindow ToneSums(SstvBasebandBuffer baseband, long origin, int span, double expectedHz)
+    {
+        var omega = 2 * Math.PI * (expectedHz - SstvFmDemodulator.CentreHz) / SstvDecoder.InternalRate;
+        var re = new double[span + 1];
+        var im = new double[span + 1];
+        var power = new double[span + 1];
+        for (var k = 0; k < span; k++)
+        {
+            var at = origin + k;
+            double i = 0, q = 0;
+            if (at >= baseband.Start && at < baseband.End)
+            {
+                i = baseband.I(at);
+                q = baseband.Q(at);
+            }
+
+            var phase = -omega * at;
+            var c = Math.Cos(phase);
+            var s = Math.Sin(phase);
+            re[k + 1] = re[k] + i * c - q * s;
+            im[k + 1] = im[k] + i * s + q * c;
+            power[k + 1] = power[k] + i * i + q * q;
+        }
+
+        return new ToneWindow(re, im, power);
+    }
+
     /// <summary>
     /// Median frequency over the middle of the pulse. Noise clicks pull an FM discriminator
     /// towards the middle of the band, which drags a mean off the tone but barely moves
@@ -102,7 +160,7 @@ public static class SstvSyncDetector
         var near = 0;
         for (var i = start + inset; i < start + syncLength - inset; i++)
         {
-            if (i < buffer.Start || i >= buffer.End)
+            if (i < buffer.Start || i >= buffer.End || buffer.Weight(i) < MinMedianWeight)
                 continue;
             var hz = buffer[i];
             values.Add(hz);

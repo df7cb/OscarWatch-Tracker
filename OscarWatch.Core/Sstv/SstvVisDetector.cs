@@ -39,6 +39,13 @@ public sealed class SstvVisDetector
     /// <summary>Samples needed after the start-bit edge to read the whole header.</summary>
     public int HeaderTailSamples => 10 * _bit;
 
+    /// <summary>
+    /// Modes the station is known to send, or null for no preference. A header for any other
+    /// mode must be complete (first leader and break), and a header with one doubtful bit
+    /// is read as the expected mode it is one bit away from.
+    /// </summary>
+    public IReadOnlyCollection<SstvModeId>? ExpectedModes { get; set; }
+
     /// <summary>Forget scan progress, for example after the buffer was cleared.</summary>
     public void Reset(long fromIndex) => _cursor = fromIndex;
 
@@ -134,12 +141,30 @@ public sealed class SstvVisDetector
         var ones = 0;
         var compression = Math.Clamp((leader - startBit) / (LeaderHz - SyncHz), 0.3, 1.2);
         var minSeparation = 25 * compression;
+        var expected = ExpectedModes;
+        var doubtful = -1;
+        var weakest = -1;
+        var weakestMargin = double.MaxValue;
         for (var i = 0; i < 8; i++)
         {
             var a = edge + (i + 1) * _bit;
             var m = b.Mean(a + guard, a + _bit - guard);
-            if (Math.Abs(m - startBit) < minSeparation || leader - m < MinStartBitDropHz * 0.6)
+            if (leader - m < MinStartBitDropHz * 0.6)
                 return false;
+            var margin = Math.Abs(m - startBit);
+            if (margin < minSeparation)
+            {
+                // With expected modes, one doubtful bit may be settled by the parity bit.
+                if (expected is null || doubtful >= 0)
+                    return false;
+                doubtful = i;
+            }
+
+            if (margin < weakestMargin)
+            {
+                weakestMargin = margin;
+                weakest = i;
+            }
 
             var bit = m < startBit;
             if (bit)
@@ -148,8 +173,23 @@ public sealed class SstvVisDetector
                 code |= 1 << i;
         }
 
+        var softened = false;
         if ((ones & 1) != 0)
+        {
+            if (expected is null)
+                return false;
+            // One bit is wrong: assume it is the least certain one, and accept only an expected mode.
+            var flip = doubtful >= 0 ? doubtful : weakest;
+            if (flip < 7)
+                code ^= 1 << flip;
+            if (SstvModeTable.FromVis(code) is not { } corrected || !expected.Contains(corrected.Id))
+                return false;
+            softened = true;
+        }
+        else if (doubtful >= 0 && (SstvModeTable.FromVis(code) is not { } read || !expected!.Contains(read.Id)))
+        {
             return false;
+        }
 
         var stopStart = edge + 9 * _bit;
         var stop = b.Mean(stopStart + guard, stopStart + _bit - guard);
@@ -161,6 +201,9 @@ public sealed class SstvVisDetector
 
         var mode = SstvModeTable.FromVis(code);
         if (mode is null)
+            return false;
+        if (expected is not null && !softened && !expected.Contains(mode.Id)
+            && !requireFullHeader && !HasFirstLeaderAndBreak(b, edge, leader))
             return false;
 
         result = new SstvVisResult(code, mode, edge, edge + 10 * _bit, leader - LeaderHz);

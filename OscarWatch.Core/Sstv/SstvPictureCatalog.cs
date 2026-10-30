@@ -34,7 +34,7 @@ public static class SstvPictureCatalog
     }
 
     /// <summary>
-    /// Reads <c>yyyyMMdd_HHmmssZ[_satellite]_Mode[_n].png</c>. Any other name falls back to
+    /// Reads <c>yyyyMMdd_HHmmssZ[_satellite]_Mode[_combined][_n].png</c>. Any other name falls back to
     /// <paramref name="fileTimeUtc"/> with no satellite or mode.
     /// </summary>
     public static SstvStoredPicture Describe(string path, DateTime fileTimeUtc, long bytes)
@@ -52,7 +52,11 @@ public static class SstvPictureCatalog
         {
             var rest = parts[2..].ToList();
             // A trailing number is the "_2" added when a name was already taken.
-            if (rest.Count >= 2 && rest[^1].All(char.IsAsciiDigit) && ModeFromToken(rest[^2]) is not null)
+            if (rest.Count >= 2 && rest[^1].All(char.IsAsciiDigit)
+                && (ModeFromToken(rest[^2]) is not null || IsCombinedToken(rest[^2])))
+                rest.RemoveAt(rest.Count - 1);
+            // A picture merged from several copies ends "_combined".
+            if (rest.Count >= 2 && IsCombinedToken(rest[^1]))
                 rest.RemoveAt(rest.Count - 1);
 
             if (ModeFromToken(rest[^1]) is { } mode)
@@ -64,6 +68,8 @@ public static class SstvPictureCatalog
 
         return new SstvStoredPicture(path, DateTime.SpecifyKind(fileTimeUtc, DateTimeKind.Utc), null, null, bytes);
     }
+
+    private static bool IsCombinedToken(string token) => string.Equals(token, "combined", StringComparison.OrdinalIgnoreCase);
 
     private static SstvMode? ModeFromToken(string token)
     {

@@ -28,6 +28,11 @@ public sealed class SatelliteTransponderMode
     [JsonPropertyName("ctcss_arm")]
     public double? CtcssArmHz { get; set; }
 
+    /// <summary>SSTV modes the satellite sends on this downlink (<c>SstvModeId</c> names), if known.</summary>
+    [JsonPropertyName("sstv_modes")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<string>? SstvModes { get; set; }
+
     public bool IsFmMode =>
         UplinkMode.Contains("FM", StringComparison.OrdinalIgnoreCase)
         || DownlinkMode.Contains("FM", StringComparison.OrdinalIgnoreCase);

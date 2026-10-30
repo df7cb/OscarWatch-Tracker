@@ -664,6 +664,66 @@ Fortfahren?</value>
   <data name="Sstv.DetectWithoutVis.Tip">
     <value>Wenn der Kopf verloren ging (schwaches Signal zu Passbeginn), Bild und Modus an den regelmäßigen Synchronimpulsen erkennen.</value>
   </data>
+  <data name="Sstv.UseSatelliteModes">
+    <value>Bekannte SSTV-Modi des Satelliten verwenden</value>
+  </data>
+  <data name="Sstv.UseSatelliteModes.Tip">
+    <value>Die Modi bevorzugen, die der verfolgte Satellit bekanntermaßen sendet (zum Beispiel Robot 36 bei UmKA-1). Verhindert, dass Rauschen als Kopf eines anderen Modus gelesen wird.</value>
+  </data>
+  <data name="Sstv.AlignAosFragments">
+    <value>Mitten im Bild begonnene Bilder in die richtigen Zeilen setzen</value>
+  </data>
+  <data name="Sstv.AlignAosFragments.Tip">
+    <value>Beginnt der Empfang mitten in einem Bild und läuft bis zu dessen Ende, wird das Empfangene unten im Bild gezeichnet, wo es hingehört.</value>
+  </data>
+  <data name="Sstv.RepairBadLines">
+    <value>Kurze Folgen verrauschter Zeilen reparieren</value>
+  </data>
+  <data name="Sstv.RepairBadLines.Tip">
+    <value>Bis zu drei verrauschte Zeilen hintereinander aus den guten Nachbarzeilen neu zeichnen. Längere Schäden bleiben wie empfangen.</value>
+  </data>
+  <data name="Sstv.HoldThroughFades">
+    <value>Bilder über lange Signaleinbrüche fortsetzen</value>
+  </data>
+  <data name="Sstv.HoldThroughFades.Tip">
+    <value>Ist ein Bild gut eingerastet, wird bei einem Signaleinbruch von bis zu 20 Sekunden weitergezeichnet statt das Bild zu beenden. So können zwei Teile eines Bildes zusammengefügt werden.</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth">
+    <value>Filter an den Modus anpassen</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth.Tip">
+    <value>Sobald der Modus bekannt ist, erneut mit einem Filter demodulieren, der zur Bildauflösung des Modus passt. Hilft schmalen Modi bei schwachen Signalen.</value>
+  </data>
+  <data name="Sstv.CombineRepeats">
+    <value>Wiederholte Kopien eines Bildes kombinieren</value>
+  </data>
+  <data name="Sstv.CombineRepeats.Tip">
+    <value>Wird dasselbe Bild mehrmals empfangen, zusätzlich eine zusammengeführte Kopie aus den besten Zeilen jeder Kopie speichern (mit _combined im Dateinamen).</value>
+  </data>
+  <data name="Sstv.RedecodeSession">
+    <value>Letzte Sitzung erneut dekodieren</value>
+  </data>
+  <data name="Sstv.RedecodeSession.Tip">
+    <value>Den aus der letzten Live-Sitzung gespeicherten Ton mit den aktuellen Einstellungen erneut dekodieren. Dazu muss das Speichern des Sitzungstons eingeschaltet sein.</value>
+  </data>
+  <data name="Sstv.FixSlant">
+    <value>Schräglage korrigieren</value>
+  </data>
+  <data name="Sstv.FixSlant.Tip">
+    <value>Das ausgewählte Bild begradigen: erst oben, dann unten auf eine Kante klicken, die senkrecht sein sollte, etwa die Sync-Kante.</value>
+  </data>
+  <data name="Sstv.FixSlant.First">
+    <value>Oben auf eine Kante klicken, die senkrecht sein sollte.</value>
+  </data>
+  <data name="Sstv.FixSlant.Second">
+    <value>Jetzt unten auf dieselbe Kante klicken.</value>
+  </data>
+  <data name="Sstv.FixSlant.TooClose">
+    <value>Die Punkte liegen in der Höhe zu dicht beieinander. Nahe dem oberen Ende der Kante klicken, dann nahe dem unteren.</value>
+  </data>
+  <data name="Sstv.FixSlant.Done">
+    <value>Schräglage korrigiert. Bild speichern, um es zu behalten.</value>
+  </data>
   <data name="Sstv.Settings.AutoStart">
     <value>Automatischer Start</value>
   </data>

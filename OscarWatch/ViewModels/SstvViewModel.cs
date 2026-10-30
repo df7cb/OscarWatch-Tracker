@@ -22,6 +22,8 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
     private const int MaxGalleryItems = 60;
 
     private readonly ISettingsService _settings;
+    private readonly ISatelliteDatabaseService _satelliteDatabase;
+    private (string? Name, string? Norad, SstvModeId[]? Modes, long CheckedMs) _expectedModes;
     private readonly FrequencyOverlayViewModel _frequencyOverlay;
     private readonly ILiveTrackerSnapshotProvider _tracker;
     private readonly IRigController _rig;
@@ -53,9 +55,11 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         IRigController rig,
         ILocalizationService localization,
         SstvReceiverService receiver,
-        SstvPictureUploader shareQueue)
+        SstvPictureUploader shareQueue,
+        ISatelliteDatabaseService satelliteDatabase)
     {
         _settings = settings;
+        _satelliteDatabase = satelliteDatabase;
         _frequencyOverlay = frequencyOverlay;
         _tracker = tracker;
         _rig = rig;
@@ -69,6 +73,13 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         _autoTune = s.AutoTune;
         _catDopplerFeedForward = s.CatDopplerFeedForward;
         _detectWithoutVis = s.DetectWithoutVis;
+        _useSatelliteModes = s.UseSatelliteModes;
+        _holdThroughFades = s.HoldThroughFades;
+        _adaptiveBandwidth = s.AdaptiveBandwidth;
+        _alignAosFragments = s.AlignAosFragments;
+        _repairBadLines = s.RepairBadLines;
+        _combineRepeats = s.CombineRepeats;
+        _receiver.CombineRepeats = s.CombineRepeats;
         _autoSavePictures = s.AutoSavePictures;
         _saveSessionAudio = s.SaveSessionAudio;
         _outputFolder = s.OutputFolder ?? "";
@@ -94,6 +105,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
 
         _receiver.SatelliteNameProvider = CurrentSatelliteName;
         _receiver.SatelliteNoradProvider = () => _tracker.FocusedNoradId;
+        _receiver.ExpectedModesProvider = ExpectedModes;
         _receiver.PictureReceived += OnPictureReceived;
         _shareQueue.StatusChanged += OnShareStatusChanged;
         _shareStatusText = ShareStatusFor(_shareQueue.Status);
@@ -134,6 +146,24 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
     private bool _detectWithoutVis;
 
     [ObservableProperty]
+    private bool _useSatelliteModes;
+
+    [ObservableProperty]
+    private bool _holdThroughFades;
+
+    [ObservableProperty]
+    private bool _adaptiveBandwidth;
+
+    [ObservableProperty]
+    private bool _alignAosFragments;
+
+    [ObservableProperty]
+    private bool _repairBadLines;
+
+    [ObservableProperty]
+    private bool _combineRepeats;
+
+    [ObservableProperty]
     private bool _autoSavePictures;
 
     [ObservableProperty]
@@ -163,13 +193,23 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanStart), nameof(CanDecodeRecording))]
-    [NotifyCanExecuteChangedFor(nameof(StartCommand), nameof(StopCommand), nameof(ReSyncCommand), nameof(SkipPictureCommand))]
+    [NotifyCanExecuteChangedFor(nameof(StartCommand), nameof(StopCommand), nameof(ReSyncCommand), nameof(SkipPictureCommand), nameof(RedecodeLastSessionCommand))]
     private bool _isRunning;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanStart), nameof(CanDecodeRecording))]
-    [NotifyCanExecuteChangedFor(nameof(StartCommand), nameof(StopCommand))]
+    [NotifyCanExecuteChangedFor(nameof(StartCommand), nameof(StopCommand), nameof(RedecodeLastSessionCommand))]
     private bool _isBusyLoading;
+
+    /// <summary>Waiting for the operator to click points on the selected picture to fix its slant.</summary>
+    [ObservableProperty]
+    private bool _isMarkingSlant;
+
+    private (double X, double Y)? _slantFirstPoint;
+    private bool _keepSlantPrompt;
+
+    [ObservableProperty]
+    private string _slantPromptText = "";
 
     [ObservableProperty]
     private string _statusText;
@@ -206,7 +246,7 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
     private string _displayedCaption = "";
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveSelectedPictureCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveSelectedPictureCommand), nameof(FixSlantCommand))]
     [NotifyPropertyChangedFor(nameof(SaveButtonText), nameof(SaveButtonTip))]
     private SstvGalleryItem? _selectedGalleryItem;
 
@@ -418,8 +458,69 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
         OnPropertyChanged(nameof(SaveButtonTip));
     }
 
+    private bool CanRedecodeLastSession() =>
+        CanDecodeRecording && _receiver.LastSessionAudioPath is { } path && File.Exists(path);
+
+    /// <summary>Decode the audio saved from the last live session again, with the current settings.</summary>
+    [RelayCommand(CanExecute = nameof(CanRedecodeLastSession))]
+    private Task RedecodeLastSession() =>
+        _receiver.LastSessionAudioPath is { } path
+            ? DecodeRecordingAsync(path, _receiver.LastSessionExpectedModes)
+            : Task.CompletedTask;
+
+    private bool CanFixSlant() => SelectedGalleryItem is not null;
+
+    /// <summary>Start (or cancel) marking an edge on the selected picture to straighten it.</summary>
+    [RelayCommand(CanExecute = nameof(CanFixSlant))]
+    private void FixSlant()
+    {
+        _slantFirstPoint = null;
+        IsMarkingSlant = !IsMarkingSlant && SelectedGalleryItem is not null;
+        SlantPromptText = IsMarkingSlant ? _l.Get("Sstv.FixSlant.First") : "";
+    }
+
+    /// <summary>A click on the displayed picture, in picture pixels, while marking the slant.</summary>
+    public void AddSlantPoint(double x, double y)
+    {
+        if (!IsMarkingSlant || SelectedGalleryItem is not { } item)
+            return;
+
+        if (_slantFirstPoint is not { } first)
+        {
+            _slantFirstPoint = (x, y);
+            SlantPromptText = _l.Get("Sstv.FixSlant.Second");
+            return;
+        }
+
+        var straight = SstvSlantFix.Straighten(item.Picture.Decoded.Image, first.X, first.Y, x, y);
+        if (straight is null)
+        {
+            _slantFirstPoint = null;
+            SlantPromptText = _l.Get("Sstv.FixSlant.TooClose");
+            return;
+        }
+
+        _slantFirstPoint = null;
+        IsMarkingSlant = false;
+        SlantPromptText = _l.Get("Sstv.FixSlant.Done");
+        var picture = item.Picture with
+        {
+            Decoded = SstvSlantFix.WithImage(item.Picture.Decoded, straight),
+            SavedPath = null,
+        };
+        var fixedItem = new SstvGalleryItem(picture, SstvBitmap.Create(straight), item.Caption);
+        var index = Gallery.IndexOf(item);
+        if (index >= 0)
+            Gallery[index] = fixedItem;
+        else
+            Gallery.Insert(0, fixedItem);
+        _keepSlantPrompt = true;
+        SelectedGalleryItem = fixedItem;
+        _keepSlantPrompt = false;
+    }
+
     /// <summary>Decode a WAV or MP3 recording (called by the window after the file picker).</summary>
-    public async Task DecodeRecordingAsync(string path)
+    public async Task DecodeRecordingAsync(string path, IReadOnlyCollection<SstvModeId>? expectedModes = null)
     {
         if (!CanDecodeRecording)
             return;
@@ -448,7 +549,9 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
             }
 
             SelectedGalleryItem = null;
-            _receiver.StartFile(loaded.Samples, loaded.SampleRate, _settings.Current.Sstv, Path.GetFileNameWithoutExtension(path));
+            _receiver.StartFile(
+                loaded.Samples, loaded.SampleRate, _settings.Current.Sstv, Path.GetFileNameWithoutExtension(path),
+                _settings.Current.Sstv.UseSatelliteModes ? expectedModes : null);
             IsRunning = true;
             IsDecodingFile = true;
         }
@@ -511,6 +614,61 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
     {
         _settings.Current.Sstv.DetectWithoutVis = value;
         OptionsChanged();
+    }
+
+    partial void OnUseSatelliteModesChanged(bool value)
+    {
+        _settings.Current.Sstv.UseSatelliteModes = value;
+        _settings.RequestSave();
+    }
+
+    partial void OnHoldThroughFadesChanged(bool value)
+    {
+        _settings.Current.Sstv.HoldThroughFades = value;
+        OptionsChanged();
+    }
+
+    partial void OnAdaptiveBandwidthChanged(bool value)
+    {
+        _settings.Current.Sstv.AdaptiveBandwidth = value;
+        OptionsChanged();
+    }
+
+    partial void OnAlignAosFragmentsChanged(bool value)
+    {
+        _settings.Current.Sstv.AlignAosFragments = value;
+        OptionsChanged();
+    }
+
+    partial void OnRepairBadLinesChanged(bool value)
+    {
+        _settings.Current.Sstv.RepairBadLines = value;
+        OptionsChanged();
+    }
+
+    partial void OnCombineRepeatsChanged(bool value)
+    {
+        _settings.Current.Sstv.CombineRepeats = value;
+        _receiver.CombineRepeats = value;
+        _settings.RequestSave();
+    }
+
+    /// <summary>Called on the decoder thread: modes the tracked satellite sends, looked up once per satellite.</summary>
+    private IReadOnlyCollection<SstvModeId>? ExpectedModes()
+    {
+        if (!_settings.Current.Sstv.UseSatelliteModes)
+            return null;
+        var now = Environment.TickCount64;
+        var cached = _expectedModes;
+        if (now - cached.CheckedMs < 2000)
+            return cached.Modes;
+        var name = CurrentSatelliteName();
+        var norad = _tracker.FocusedNoradId;
+        var modes = cached.Name == name && cached.Norad == norad
+            ? cached.Modes
+            : name is null ? null : SstvModePriors.For(_satelliteDatabase.TryGetEntry(name, norad));
+        _expectedModes = (name, norad, modes, now);
+        return modes;
     }
 
     partial void OnAutoSavePicturesChanged(bool value)
@@ -593,6 +751,13 @@ public partial class SstvViewModel : ViewModelBase, IDisposable
 
     partial void OnSelectedGalleryItemChanged(SstvGalleryItem? value)
     {
+        if (!_keepSlantPrompt)
+        {
+            IsMarkingSlant = false;
+            _slantFirstPoint = null;
+            SlantPromptText = "";
+        }
+
         if (value is null)
         {
             ShowLivePicture();

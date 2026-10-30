@@ -236,17 +236,25 @@ public sealed class SstvSyncTrainDetector
         var expected = SstvSyncDetector.SyncHz + offsetHz;
         var win = Math.Max(1, _rate / 500);
         var sum = 0.0;
+        var weight = 0.0;
+        var weighted = buffer.Weighted;
         var inRun = false;
         long runStart = 0;
         for (var i = from; i < to; i++)
         {
-            sum += SstvSyncDetector.SampleScore(buffer[i], expected);
+            var w = buffer.Weight(i);
+            sum += w * SstvSyncDetector.SampleScore(buffer[i], expected);
+            weight += w;
             if (i - win >= from)
-                sum -= SstvSyncDetector.SampleScore(buffer[i - win], expected);
+            {
+                var old = buffer.Weight(i - win);
+                sum -= old * SstvSyncDetector.SampleScore(buffer[i - win], expected);
+                weight -= old;
+            }
             if (i - from < win)
                 continue;
 
-            var on = sum / win > 0.5;
+            var on = weighted ? weight > 1e-6 && sum / weight > 0.5 : sum / win > 0.5;
             var centre = i - win / 2;
             if (on && !inRun)
             {

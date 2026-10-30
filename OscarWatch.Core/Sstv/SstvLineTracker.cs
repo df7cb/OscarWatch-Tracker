@@ -14,6 +14,9 @@ public sealed class SstvLineTracker
 
     private readonly List<(int Line, double Position, double Weight)> _points = new();
     private readonly double _nominal;
+    /// <summary>Known Doppler stretch per line in ppm, and its running total in samples before each line.</summary>
+    private readonly List<double> _dopplerPpm = new();
+    private readonly List<double> _dopplerShift = new() { 0 };
     private double _anchor;
     private bool _hasAnchor;
 
@@ -39,10 +42,38 @@ public sealed class SstvLineTracker
         _hasAnchor = true;
     }
 
+    /// <summary>
+    /// Doppler time compression known from the orbit for <paramref name="line"/> (positive when
+    /// the satellite is moving away and lines arrive stretched). Lines must be given in order.
+    /// The fit then only has to follow the clock error, which stays put through the pass.
+    /// </summary>
+    public void SetDopplerPpm(int line, double ppm)
+    {
+        if (line < _dopplerPpm.Count)
+        {
+            _dopplerPpm[line] = ppm;
+            return;
+        }
+
+        while (_dopplerPpm.Count <= line)
+        {
+            _dopplerShift.Add(_dopplerShift[^1] + _nominal * ppm * 1e-6);
+            _dopplerPpm.Add(ppm);
+        }
+    }
+
+    private double DopplerShift(int line) =>
+        line < 0 ? 0
+        : line < _dopplerShift.Count ? _dopplerShift[line]
+        : _dopplerShift[^1] + (line - _dopplerShift.Count + 1) * _nominal * (_dopplerPpm.Count > 0 ? _dopplerPpm[^1] : 0) * 1e-6;
+
+    private double DopplerPpm(int line) =>
+        _dopplerPpm.Count == 0 ? 0 : _dopplerPpm[Math.Clamp(line, 0, _dopplerPpm.Count - 1)];
+
     public void Accept(int line, double position, double weight)
     {
         _points.RemoveAll(p => p.Line == line);
-        _points.Add((line, position, Math.Max(weight, 1e-3)));
+        _points.Add((line, position - DopplerShift(line), Math.Max(weight, 1e-3)));
     }
 
     /// <summary>Predicted sync position for <paramref name="line"/>, using lines up to it.</summary>
@@ -52,12 +83,12 @@ public sealed class SstvLineTracker
     public double Fitted(int line) => Evaluate(line, centred: true);
 
     /// <summary>Line period in samples at <paramref name="line"/>.</summary>
-    public double PeriodAt(int line, bool centred) => Fit(line, centred).Slope;
+    public double PeriodAt(int line, bool centred) => Fit(line, centred).Slope + _nominal * DopplerPpm(line) * 1e-6;
 
     private double Evaluate(int line, bool centred)
     {
         var (slope, intercept) = Fit(line, centred);
-        return intercept + slope * line;
+        return intercept + slope * line + DopplerShift(line);
     }
 
     private (double Slope, double Intercept) Fit(int line, bool centred)

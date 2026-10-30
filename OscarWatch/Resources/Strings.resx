@@ -660,6 +660,66 @@ Continue?</value>
   <data name="Sstv.DetectWithoutVis.Tip">
     <value>When the header was lost (weak signal at the start of a pass), pick up the picture and its mode from its regular sync pulses.</value>
   </data>
+  <data name="Sstv.UseSatelliteModes">
+    <value>Use the satellite's known SSTV modes</value>
+  </data>
+  <data name="Sstv.UseSatelliteModes.Tip">
+    <value>Prefer the modes the tracked satellite is known to send (for example Robot 36 for UmKA-1). Stops noise being read as a header for another mode.</value>
+  </data>
+  <data name="Sstv.AlignAosFragments">
+    <value>Put pictures caught part way through on the right rows</value>
+  </data>
+  <data name="Sstv.AlignAosFragments.Tip">
+    <value>When reception starts part way through a picture and runs to its end, draw what was received at the bottom of the picture, where it belongs.</value>
+  </data>
+  <data name="Sstv.RepairBadLines">
+    <value>Repair short runs of noisy lines</value>
+  </data>
+  <data name="Sstv.RepairBadLines.Tip">
+    <value>Redraw up to three noisy lines in a row from the good lines either side. Longer damage is left as received.</value>
+  </data>
+  <data name="Sstv.HoldThroughFades">
+    <value>Keep pictures going through long fades</value>
+  </data>
+  <data name="Sstv.HoldThroughFades.Tip">
+    <value>Once a picture is well locked, keep drawing through a fade of up to 20 seconds instead of ending it. This can join two fragments of one picture.</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth">
+    <value>Match the filter to the mode</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth.Tip">
+    <value>After the mode is known, demodulate again with a filter suited to that mode's picture detail. Helps narrow modes on weak signals.</value>
+  </data>
+  <data name="Sstv.CombineRepeats">
+    <value>Combine repeat copies of a picture</value>
+  </data>
+  <data name="Sstv.CombineRepeats.Tip">
+    <value>When the same picture is received more than once, also save a merged copy that uses the best lines from each (with _combined in the file name).</value>
+  </data>
+  <data name="Sstv.RedecodeSession">
+    <value>Decode last session again</value>
+  </data>
+  <data name="Sstv.RedecodeSession.Tip">
+    <value>Decode the audio saved from the last live session again with the current settings. Needs session audio saving switched on.</value>
+  </data>
+  <data name="Sstv.FixSlant">
+    <value>Fix slant</value>
+  </data>
+  <data name="Sstv.FixSlant.Tip">
+    <value>Straighten the selected picture: click the top and then the bottom of an edge that should be vertical, such as the sync edge.</value>
+  </data>
+  <data name="Sstv.FixSlant.First">
+    <value>Click the top of an edge that should be vertical.</value>
+  </data>
+  <data name="Sstv.FixSlant.Second">
+    <value>Now click the bottom of the same edge.</value>
+  </data>
+  <data name="Sstv.FixSlant.TooClose">
+    <value>Those points are too close in height. Click near the top of the edge, then near the bottom.</value>
+  </data>
+  <data name="Sstv.FixSlant.Done">
+    <value>Slant fixed. Save the picture to keep it.</value>
+  </data>
   <data name="Sstv.Settings.AutoStart">
     <value>Automatic start</value>
   </data>

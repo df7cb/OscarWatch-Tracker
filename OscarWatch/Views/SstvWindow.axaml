@@ -81,6 +81,11 @@
                   IsEnabled="{Binding CanDecodeRecording}"
                   ToolTip.Tip="{loc:Localize Key=Sstv.DecodeRecording.Tip}"
                   Margin="0,0,6,4" />
+          <Button Content="{loc:Localize Key=Sstv.RedecodeSession}"
+                  Command="{Binding RedecodeLastSessionCommand}"
+                  ToolTip.Tip="{loc:Localize Key=Sstv.RedecodeSession.Tip}"
+                  ToolTip.ShowOnDisabled="True"
+                  Margin="0,0,6,4" />
           <Button Content="{loc:Localize Key=Sstv.OpenFolder}"
                   Command="{Binding OpenPictureFolderCommand}"
                   ToolTip.Tip="{Binding PictureFolder}"
@@ -155,9 +160,17 @@
                      Text="{Binding DisplayedCaption}"
                      Classes="sstv-label"
                      Margin="0,0,0,6" />
+          <TextBlock DockPanel.Dock="Top"
+                     Text="{Binding SlantPromptText}"
+                     FontWeight="SemiBold"
+                     TextWrapping="Wrap"
+                     Margin="0,0,0,6"
+                     IsVisible="{Binding SlantPromptText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           <Viewbox Stretch="Uniform" StretchDirection="Both">
-            <Image Source="{Binding DisplayedPicture}"
+            <Image x:Name="PictureImage"
+                   Source="{Binding DisplayedPicture}"
                    RenderOptions.BitmapInterpolationMode="MediumQuality"
+                   PointerPressed="OnPicturePointerPressed"
                    AutomationProperties.Name="{loc:Localize Key=Sstv.Picture}" />
           </Viewbox>
         </DockPanel>
@@ -189,6 +202,13 @@
                        FontWeight="SemiBold"
                        VerticalAlignment="Center" />
           </DockPanel>
+          <Button DockPanel.Dock="Bottom"
+                  Content="{loc:Localize Key=Sstv.FixSlant}"
+                  Command="{Binding FixSlantCommand}"
+                  ToolTip.Tip="{loc:Localize Key=Sstv.FixSlant.Tip}"
+                  ToolTip.ShowOnDisabled="True"
+                  Margin="0,6,0,0"
+                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
           <Grid DockPanel.Dock="Bottom"
                 ColumnDefinitions="*,*"
                 ColumnSpacing="6"

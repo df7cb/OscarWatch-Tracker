@@ -80,11 +80,29 @@ public sealed class SstvReceiverService : IDisposable
     /// <summary>Path of the session WAV being written, or null.</summary>
     public string? SessionAudioPath { get; private set; }
 
+    /// <summary>Session WAV from the most recent live session, kept after it stops so it can be decoded again.</summary>
+    public string? LastSessionAudioPath { get; private set; }
+
+    /// <summary>SSTV modes the satellite was expected to send during the most recent live session.</summary>
+    public IReadOnlyCollection<SstvModeId>? LastSessionExpectedModes { get; private set; }
+
     /// <summary>Called on the decoder thread for the satellite name to put in file names.</summary>
     public Func<string?>? SatelliteNameProvider { get; set; }
 
     /// <summary>Called on the decoder thread for the NORAD id of the satellite being received.</summary>
     public Func<string?>? SatelliteNoradProvider { get; set; }
+
+    /// <summary>
+    /// Called on the decoder thread for the SSTV modes the tracked satellite is known to send
+    /// (null for no preference). Live decoding only.
+    /// </summary>
+    public Func<IReadOnlyCollection<SstvModeId>?>? ExpectedModesProvider { get; set; }
+
+    /// <summary>Merge repeat copies of a picture and save the merged picture too (with automatic saving).</summary>
+    public bool CombineRepeats { get; set; }
+
+    /// <summary>Picture combiners by satellite, used only on the decoder thread.</summary>
+    private readonly Dictionary<string, SstvPictureCombiner> _combiners = new();
 
     /// <summary>Audio offset from rig control, applied to the live decoder.</summary>
     public double FeedForwardHz
@@ -150,6 +168,11 @@ public sealed class SstvReceiverService : IDisposable
         }
 
         SessionAudioPath = wavPath;
+        if (wavPath is not null)
+        {
+            LastSessionAudioPath = wavPath;
+            LastSessionExpectedModes = null;
+        }
         IsDecodingFile = false;
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
@@ -163,10 +186,13 @@ public sealed class SstvReceiverService : IDisposable
             TaskScheduler.Default);
     }
 
-    public void StartFile(float[] samples, int sampleRate, SstvSettings settings, string sourceName)
+    public void StartFile(
+        float[] samples, int sampleRate, SstvSettings settings, string sourceName,
+        IReadOnlyCollection<SstvModeId>? expectedModes = null)
     {
         Stop();
         var options = NewOptions(settings);
+        options.ExpectedModes = expectedModes;
         var autoSave = settings.AutoSavePictures;
         var outputDir = ResolveOutputDirectory(settings.OutputFolder);
         SessionAudioPath = null;
@@ -297,6 +323,9 @@ public sealed class SstvReceiverService : IDisposable
                 }
 
                 decoder.FeedForwardHz = FeedForwardHz;
+                decoder.Options.ExpectedModes = ExpectedModesProvider?.Invoke();
+                if (wavPath is not null && decoder.Options.ExpectedModes is { } expected)
+                    LastSessionExpectedModes = expected;
                 decoder.Process(buffer.AsSpan(0, n));
                 PublishSpectrum(tap.Add(buffer.AsSpan(0, n)));
 
@@ -398,6 +427,8 @@ public sealed class SstvReceiverService : IDisposable
             string? saved = null;
             if (autoSave)
                 saved = SavePicture(image, received, satellite, outputDir);
+            if (autoSave && CombineRepeats)
+                SaveCombined(image, received, satellite, outputDir);
             QueueForSharing(image, received, satellite, saved, fromRecording: fileStart is not null);
             // The decoder has already let go of this picture, so the regular preview copy
             // never sees the last lines or the final re-sync redraw.
@@ -461,6 +492,36 @@ public sealed class SstvReceiverService : IDisposable
     }
 
     /// <summary>Save as PNG in <paramref name="dir"/>. Returns the path, or null if it failed.</summary>
+    /// <summary>
+    /// Merge with earlier copies of the same picture from the same satellite (this run of the
+    /// app) and save the result next to the picture with a <c>_combined</c> suffix.
+    /// </summary>
+    private void SaveCombined(SstvDecodedImage image, DateTime utc, string? satellite, string dir)
+    {
+        if (string.IsNullOrWhiteSpace(satellite))
+            return;
+        try
+        {
+            var key = satellite.Trim().ToUpperInvariant();
+            if (!_combiners.TryGetValue(key, out var combiner))
+                _combiners[key] = combiner = new SstvPictureCombiner();
+            if (combiner.Add(image) is not { } combined)
+                return;
+
+            Directory.CreateDirectory(dir);
+            var stem = SstvPaths.PictureStem(utc, image.Mode, satellite) + "_combined";
+            var path = Path.Combine(dir, stem + ".png");
+            for (var n = 2; File.Exists(path); n++)
+                path = Path.Combine(dir, $"{stem}_{n}.png");
+            SstvPngWriter.Save(combined.Image, path);
+            Log.Information("SSTV picture merged from {Copies} copies, saved to {Path}", combined.Copies, path);
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "SSTV picture merge failed");
+        }
+    }
+
     public static string? SavePicture(SstvDecodedImage image, DateTime utc, string? satellite, string dir)
     {
         try
@@ -542,6 +603,10 @@ public sealed class SstvReceiverService : IDisposable
         options.SlantTrimPpm = settings.SlantTrimPpm;
         options.AutoTune = settings.AutoTune;
         options.DetectWithoutVis = settings.DetectWithoutVis;
+        options.HoldThroughFades = settings.HoldThroughFades;
+        options.AdaptiveBandwidth = settings.AdaptiveBandwidth;
+        options.AlignAosFragments = settings.AlignAosFragments;
+        options.RepairBadLines = settings.RepairBadLines;
     }
 
     public void Dispose() => Stop();

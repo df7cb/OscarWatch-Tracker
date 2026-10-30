@@ -45,11 +45,25 @@ public sealed class SstvModeTableTests
     }
 
     [Fact]
-    public void Table_has_fifteen_modes_with_unique_vis_codes()
+    public void Table_has_nineteen_modes_with_unique_vis_codes()
     {
-        Assert.Equal(15, SstvModeTable.All.Count);
-        Assert.Equal(15, SstvModeTable.All.Select(m => m.VisCode).Distinct().Count());
+        Assert.Equal(19, SstvModeTable.All.Count);
+        Assert.Equal(19, SstvModeTable.All.Select(m => m.VisCode).Distinct().Count());
         Assert.All(SstvModeTable.All, m => Assert.InRange(m.VisCode, 0, 0x7F));
+    }
+
+    [Theory]
+    [InlineData(SstvModeId.MartinM3, 0x24, SstvModeId.MartinM1)]
+    [InlineData(SstvModeId.MartinM4, 0x20, SstvModeId.MartinM2)]
+    [InlineData(SstvModeId.ScottieS3, 0x34, SstvModeId.ScottieS1)]
+    [InlineData(SstvModeId.ScottieS4, 0x30, SstvModeId.ScottieS2)]
+    public void Half_height_modes_share_line_timing_with_their_full_height_versions(SstvModeId id, int vis, SstvModeId full)
+    {
+        var mode = SstvModeTable.Get(id);
+        Assert.Equal(vis, mode.VisCode);
+        Assert.Equal(128, mode.Height);
+        Assert.Equal(SstvModeTable.Get(full).LineMs, mode.LineMs, 6);
+        Assert.DoesNotContain(mode, SstvModeTable.SyncTrainCandidates);
     }
 
     [Fact]

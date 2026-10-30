@@ -54,6 +54,27 @@ public sealed class SstvSettings
     public bool DetectWithoutVis { get; set; } = true;
 
     /// <summary>
+    /// Use the SSTV modes listed for the tracked satellite in the satellite database to reject
+    /// pictures in other modes that are really noise. Default on.
+    /// </summary>
+    public bool UseSatelliteModes { get; set; } = true;
+
+    /// <summary>Keep a picture going through a long fade once its line timing is known. Default off.</summary>
+    public bool HoldThroughFades { get; set; }
+
+    /// <summary>Demodulate slower modes through a narrower filter to let less noise in. Default off.</summary>
+    public bool AdaptiveBandwidth { get; set; }
+
+    /// <summary>Move a picture caught part way through at AOS down to the rows it belongs on. Default on.</summary>
+    public bool AlignAosFragments { get; set; } = true;
+
+    /// <summary>Redraw short runs of noisy lines from the lines either side. Default on.</summary>
+    public bool RepairBadLines { get; set; } = true;
+
+    /// <summary>Merge repeat copies of a picture and save the merged picture as well. Default on.</summary>
+    public bool CombineRepeats { get; set; } = true;
+
+    /// <summary>
     /// When true, SSTV starts listening when the focused satellite rises above
     /// <see cref="AutoStartElevationDeg"/>, and stops when it sets. Default off.
     /// </summary>

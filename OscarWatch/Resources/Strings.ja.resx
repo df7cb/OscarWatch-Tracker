@@ -2355,6 +2355,66 @@
   <data name="Sstv.DetectWithoutVis.Tip">
     <value>ヘッダーを受信できなかった場合 (パス開始時の弱い信号)、規則的な同期パルスから画像とモードを検出します。</value>
   </data>
+  <data name="Sstv.UseSatelliteModes">
+    <value>衛星の既知の SSTV モードを使う</value>
+  </data>
+  <data name="Sstv.UseSatelliteModes.Tip">
+    <value>追跡中の衛星が送信することが分かっているモードを優先します (例: UmKA-1 は Robot 36)。ノイズを別のモードのヘッダーと誤認するのを防ぎます。</value>
+  </data>
+  <data name="Sstv.AlignAosFragments">
+    <value>途中から受信した画像を正しい行に配置する</value>
+  </data>
+  <data name="Sstv.AlignAosFragments.Tip">
+    <value>画像の途中から受信が始まり最後まで続いた場合、受信した部分を本来の位置である画像の下部に描画します。</value>
+  </data>
+  <data name="Sstv.RepairBadLines">
+    <value>短いノイズ行の連続を修復する</value>
+  </data>
+  <data name="Sstv.RepairBadLines.Tip">
+    <value>連続する最大 3 行のノイズの多い行を、両側の良好な行から描き直します。それより長い損傷は受信したままにします。</value>
+  </data>
+  <data name="Sstv.HoldThroughFades">
+    <value>長いフェードの間も画像を続ける</value>
+  </data>
+  <data name="Sstv.HoldThroughFades.Tip">
+    <value>画像がしっかりロックされた後は、最大 20 秒のフェードの間も画像を終了せずに描画を続けます。1 枚の画像の 2 つの断片をつなげることがあります。</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth">
+    <value>フィルターをモードに合わせる</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth.Tip">
+    <value>モードが判明した後、そのモードの画像の細かさに合ったフィルターで復調し直します。弱い信号での狭帯域モードに有効です。</value>
+  </data>
+  <data name="Sstv.CombineRepeats">
+    <value>同じ画像の繰り返しを合成する</value>
+  </data>
+  <data name="Sstv.CombineRepeats.Tip">
+    <value>同じ画像を複数回受信したとき、それぞれの良い行を使った合成画像も保存します (ファイル名に _combined が付きます)。</value>
+  </data>
+  <data name="Sstv.RedecodeSession">
+    <value>前回のセッションを再デコード</value>
+  </data>
+  <data name="Sstv.RedecodeSession.Tip">
+    <value>前回のライブセッションで保存した音声を、現在の設定で再度デコードします。セッション音声の保存をオンにしておく必要があります。</value>
+  </data>
+  <data name="Sstv.FixSlant">
+    <value>傾きを補正</value>
+  </data>
+  <data name="Sstv.FixSlant.Tip">
+    <value>選択した画像をまっすぐにします: 垂直であるべき縁 (同期の縁など) の上端、次に下端をクリックします。</value>
+  </data>
+  <data name="Sstv.FixSlant.First">
+    <value>垂直であるべき縁の上端をクリックしてください。</value>
+  </data>
+  <data name="Sstv.FixSlant.Second">
+    <value>次に同じ縁の下端をクリックしてください。</value>
+  </data>
+  <data name="Sstv.FixSlant.TooClose">
+    <value>2 点の高さが近すぎます。縁の上端付近、次に下端付近をクリックしてください。</value>
+  </data>
+  <data name="Sstv.FixSlant.Done">
+    <value>傾きを補正しました。残すには画像を保存してください。</value>
+  </data>
   <data name="Sstv.Settings.AutoStart">
     <value>自動開始</value>
   </data>

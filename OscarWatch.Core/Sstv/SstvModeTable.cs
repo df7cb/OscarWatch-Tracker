@@ -35,9 +35,13 @@ public static class SstvModeTable
     public static readonly SstvMode ScottieS1 = Scottie(SstvModeId.ScottieS1, "Scottie S1", 0x3C, 0.4320);
     public static readonly SstvMode ScottieS2 = Scottie(SstvModeId.ScottieS2, "Scottie S2", 0x38, 0.2752);
     public static readonly SstvMode ScottieDx = Scottie(SstvModeId.ScottieDx, "Scottie DX", 0x4C, 1.0800);
+    public static readonly SstvMode ScottieS3 = Scottie(SstvModeId.ScottieS3, "Scottie S3", 0x34, 0.4320, 128);
+    public static readonly SstvMode ScottieS4 = Scottie(SstvModeId.ScottieS4, "Scottie S4", 0x30, 0.2752, 128);
 
     public static readonly SstvMode MartinM1 = Martin(SstvModeId.MartinM1, "Martin M1", 0x2C, 0.4576);
     public static readonly SstvMode MartinM2 = Martin(SstvModeId.MartinM2, "Martin M2", 0x28, 0.2288);
+    public static readonly SstvMode MartinM3 = Martin(SstvModeId.MartinM3, "Martin M3", 0x24, 0.4576, 128);
+    public static readonly SstvMode MartinM4 = Martin(SstvModeId.MartinM4, "Martin M4", 0x20, 0.2288, 128);
 
     public static readonly SstvMode WraaseSc2180 = new(
         SstvModeId.WraaseSc2180, "Wraase SC2-180", 0x37, 320, 256, SstvColourSpace.Rgb,
@@ -60,22 +64,30 @@ public static class SstvModeTable
     public static IReadOnlyList<SstvMode> All { get; } =
     [
         Robot36, Robot72,
-        ScottieS1, ScottieS2, ScottieDx,
-        MartinM1, MartinM2,
+        ScottieS1, ScottieS2, ScottieDx, ScottieS3, ScottieS4,
+        MartinM1, MartinM2, MartinM3, MartinM4,
         WraaseSc2180,
         Pd50, Pd90, Pd120, Pd160, Pd180, Pd240, Pd290,
     ];
+
+    /// <summary>
+    /// Modes a picture can be recognised in from its sync pulses alone. The 128-line Martin
+    /// and Scottie modes have the same line timing as their 256-line versions, so only the
+    /// VIS can tell them apart.
+    /// </summary>
+    public static IReadOnlyList<SstvMode> SyncTrainCandidates { get; } =
+        All.Where(m => m.Id is not (SstvModeId.MartinM3 or SstvModeId.MartinM4 or SstvModeId.ScottieS3 or SstvModeId.ScottieS4)).ToArray();
 
     public static SstvMode? FromVis(int visCode) =>
         All.FirstOrDefault(m => m.VisCode == visCode);
 
     public static SstvMode Get(SstvModeId id) => All.First(m => m.Id == id);
 
-    private static SstvMode Scottie(SstvModeId id, string name, int vis, double pixelMs)
+    private static SstvMode Scottie(SstvModeId id, string name, int vis, double pixelMs, int height = 256)
     {
         var scan = pixelMs * 320;
         return new SstvMode(
-            id, name, vis, 320, 256, SstvColourSpace.Rgb,
+            id, name, vis, 320, height, SstvColourSpace.Rgb,
             [
                 new(SstvChannel.Gap, 1.5),
                 new(SstvChannel.Green, scan),
@@ -88,11 +100,11 @@ public static class SstvModeTable
             leadInMs: 9.0);
     }
 
-    private static SstvMode Martin(SstvModeId id, string name, int vis, double pixelMs)
+    private static SstvMode Martin(SstvModeId id, string name, int vis, double pixelMs, int height = 256)
     {
         var scan = pixelMs * 320;
         return new SstvMode(
-            id, name, vis, 320, 256, SstvColourSpace.Rgb,
+            id, name, vis, 320, height, SstvColourSpace.Rgb,
             [
                 new(SstvChannel.Sync, 4.862),
                 new(SstvChannel.Gap, 0.572),

@@ -664,6 +664,66 @@ Lanjutkan?</value>
   <data name="Sstv.DetectWithoutVis.Tip">
     <value>Jika header hilang (sinyal lemah di awal lintasan), kenali gambar dan modenya dari pulsa sinkron yang teratur.</value>
   </data>
+  <data name="Sstv.UseSatelliteModes">
+    <value>Gunakan mode SSTV satelit yang diketahui</value>
+  </data>
+  <data name="Sstv.UseSatelliteModes.Tip">
+    <value>Utamakan mode yang diketahui dikirim oleh satelit yang dilacak (misalnya Robot 36 untuk UmKA-1). Mencegah derau terbaca sebagai header mode lain.</value>
+  </data>
+  <data name="Sstv.AlignAosFragments">
+    <value>Letakkan gambar yang tertangkap di tengah jalan pada baris yang benar</value>
+  </data>
+  <data name="Sstv.AlignAosFragments.Tip">
+    <value>Jika penerimaan dimulai di tengah gambar dan berlanjut sampai akhir, bagian yang diterima digambar di bawah gambar, di tempat seharusnya.</value>
+  </data>
+  <data name="Sstv.RepairBadLines">
+    <value>Perbaiki rangkaian pendek baris berderau</value>
+  </data>
+  <data name="Sstv.RepairBadLines.Tip">
+    <value>Gambar ulang hingga tiga baris berderau berturut-turut dari baris baik di kedua sisinya. Kerusakan yang lebih panjang dibiarkan seperti diterima.</value>
+  </data>
+  <data name="Sstv.HoldThroughFades">
+    <value>Lanjutkan gambar melewati fading panjang</value>
+  </data>
+  <data name="Sstv.HoldThroughFades.Tip">
+    <value>Setelah gambar terkunci dengan baik, terus menggambar selama fading hingga 20 detik alih-alih mengakhirinya. Ini dapat menyatukan dua potongan dari satu gambar.</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth">
+    <value>Sesuaikan filter dengan mode</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth.Tip">
+    <value>Setelah mode diketahui, demodulasi ulang dengan filter yang sesuai dengan detail gambar mode tersebut. Membantu mode sempit pada sinyal lemah.</value>
+  </data>
+  <data name="Sstv.CombineRepeats">
+    <value>Gabungkan salinan ulang sebuah gambar</value>
+  </data>
+  <data name="Sstv.CombineRepeats.Tip">
+    <value>Jika gambar yang sama diterima lebih dari sekali, simpan juga salinan gabungan yang memakai baris terbaik dari masing-masing (dengan _combined di nama berkas).</value>
+  </data>
+  <data name="Sstv.RedecodeSession">
+    <value>Dekode ulang sesi terakhir</value>
+  </data>
+  <data name="Sstv.RedecodeSession.Tip">
+    <value>Dekode ulang audio yang disimpan dari sesi langsung terakhir dengan pengaturan saat ini. Perlu penyimpanan audio sesi diaktifkan.</value>
+  </data>
+  <data name="Sstv.FixSlant">
+    <value>Perbaiki kemiringan</value>
+  </data>
+  <data name="Sstv.FixSlant.Tip">
+    <value>Luruskan gambar yang dipilih: klik bagian atas lalu bagian bawah tepi yang seharusnya tegak, seperti tepi sinkronisasi.</value>
+  </data>
+  <data name="Sstv.FixSlant.First">
+    <value>Klik bagian atas tepi yang seharusnya tegak.</value>
+  </data>
+  <data name="Sstv.FixSlant.Second">
+    <value>Sekarang klik bagian bawah tepi yang sama.</value>
+  </data>
+  <data name="Sstv.FixSlant.TooClose">
+    <value>Titik-titik itu terlalu dekat secara vertikal. Klik dekat bagian atas tepi, lalu dekat bagian bawahnya.</value>
+  </data>
+  <data name="Sstv.FixSlant.Done">
+    <value>Kemiringan diperbaiki. Simpan gambar untuk menyimpannya.</value>
+  </data>
   <data name="Sstv.Settings.AutoStart">
     <value>Mulai otomatis</value>
   </data>

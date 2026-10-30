@@ -11,6 +11,61 @@ public enum SstvLineQuality : byte
     Locked,
 }
 
+/// <summary>Why a line was not placed on its own sync pulse, or why its sync looked wrong.</summary>
+public enum SstvLineFailure : byte
+{
+    None,
+    /// <summary>Nothing shaped like a sync pulse near where the line was expected.</summary>
+    NoPulse,
+    /// <summary>A pulse was there but scored under the sync threshold.</summary>
+    WeakSync,
+    /// <summary>The sync was accepted but sat off the line grid fitted through the picture.</summary>
+    OffGrid,
+}
+
+/// <summary>Counts of unlocked lines by cause, and how they cluster.</summary>
+public sealed record SstvLineStats(
+    int Lines,
+    int Locked,
+    int NoPulse,
+    int WeakSync,
+    int OffGrid,
+    int UnlockedRuns,
+    int LongestUnlockedRun)
+{
+    public static SstvLineStats From(IReadOnlyList<SstvLineQuality> quality, IReadOnlyList<SstvLineFailure> failures)
+    {
+        int lines = 0, locked = 0, noPulse = 0, weak = 0, offGrid = 0, runs = 0, longest = 0, run = 0;
+        for (var i = 0; i < quality.Count; i++)
+        {
+            if (quality[i] == SstvLineQuality.Missing)
+                continue;
+            lines++;
+            var failure = i < failures.Count ? failures[i] : SstvLineFailure.None;
+            switch (failure)
+            {
+                case SstvLineFailure.NoPulse: noPulse++; break;
+                case SstvLineFailure.WeakSync: weak++; break;
+                case SstvLineFailure.OffGrid: offGrid++; break;
+            }
+
+            if (quality[i] == SstvLineQuality.Locked)
+            {
+                locked++;
+                run = 0;
+                continue;
+            }
+
+            if (run == 0)
+                runs++;
+            run++;
+            longest = Math.Max(longest, run);
+        }
+
+        return new SstvLineStats(lines, locked, noPulse, weak, offGrid, runs, longest);
+    }
+}
+
 /// <summary>24-bit RGB picture, row-major.</summary>
 public sealed class SstvImage
 {
@@ -44,6 +99,17 @@ public sealed class SstvImage
     {
         fromRow = Math.Clamp(fromRow, 0, Height);
         Array.Clear(Rgb, fromRow * Width * 3, (Height - fromRow) * Width * 3);
+    }
+
+    /// <summary>Move every row down by <paramref name="rows"/>, clearing the rows left at the top.</summary>
+    public void ShiftDown(int rows)
+    {
+        rows = Math.Clamp(rows, 0, Height);
+        if (rows == 0)
+            return;
+        var stride = Width * 3;
+        Array.Copy(Rgb, 0, Rgb, rows * stride, (Height - rows) * stride);
+        Array.Clear(Rgb, 0, rows * stride);
     }
 
     public SstvImage Clone()

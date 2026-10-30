@@ -1017,6 +1017,66 @@ Continuar?</value>
   <data name="Sstv.DetectWithoutVis.Tip">
     <value>Se o cabeçalho foi perdido (sinal fraco no início da passagem), detecta a imagem e o modo pelos pulsos de sincronismo regulares.</value>
   </data>
+  <data name="Sstv.UseSatelliteModes">
+    <value>Usar os modos SSTV conhecidos do satélite</value>
+  </data>
+  <data name="Sstv.UseSatelliteModes.Tip">
+    <value>Preferir os modos que o satélite rastreado sabidamente transmite (por exemplo Robot 36 no UmKA-1). Evita que ruído seja lido como cabeçalho de outro modo.</value>
+  </data>
+  <data name="Sstv.AlignAosFragments">
+    <value>Colocar nas linhas certas as imagens captadas pela metade</value>
+  </data>
+  <data name="Sstv.AlignAosFragments.Tip">
+    <value>Quando a recepção começa no meio de uma imagem e vai até o fim, o que foi recebido é desenhado na parte de baixo da imagem, onde pertence.</value>
+  </data>
+  <data name="Sstv.RepairBadLines">
+    <value>Reparar trechos curtos de linhas com ruído</value>
+  </data>
+  <data name="Sstv.RepairBadLines.Tip">
+    <value>Redesenhar até três linhas ruidosas seguidas a partir das linhas boas de cada lado. Danos mais longos ficam como recebidos.</value>
+  </data>
+  <data name="Sstv.HoldThroughFades">
+    <value>Manter as imagens durante desvanecimentos longos</value>
+  </data>
+  <data name="Sstv.HoldThroughFades.Tip">
+    <value>Quando a imagem está bem travada, continuar desenhando durante um desvanecimento de até 20 segundos em vez de encerrá-la. Pode juntar dois fragmentos de uma mesma imagem.</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth">
+    <value>Ajustar o filtro ao modo</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth.Tip">
+    <value>Quando o modo é conhecido, demodular novamente com um filtro adequado ao detalhe de imagem desse modo. Ajuda os modos estreitos com sinais fracos.</value>
+  </data>
+  <data name="Sstv.CombineRepeats">
+    <value>Combinar cópias repetidas de uma imagem</value>
+  </data>
+  <data name="Sstv.CombineRepeats.Tip">
+    <value>Quando a mesma imagem é recebida mais de uma vez, salvar também uma cópia combinada com as melhores linhas de cada uma (com _combined no nome do arquivo).</value>
+  </data>
+  <data name="Sstv.RedecodeSession">
+    <value>Decodificar novamente a última sessão</value>
+  </data>
+  <data name="Sstv.RedecodeSession.Tip">
+    <value>Decodificar novamente, com as configurações atuais, o áudio salvo da última sessão ao vivo. Requer a gravação do áudio da sessão ativada.</value>
+  </data>
+  <data name="Sstv.FixSlant">
+    <value>Corrigir inclinação</value>
+  </data>
+  <data name="Sstv.FixSlant.Tip">
+    <value>Endireitar a imagem selecionada: clique no topo e depois na base de uma borda que deveria ser vertical, como a borda de sincronismo.</value>
+  </data>
+  <data name="Sstv.FixSlant.First">
+    <value>Clique no topo de uma borda que deveria ser vertical.</value>
+  </data>
+  <data name="Sstv.FixSlant.Second">
+    <value>Agora clique na base da mesma borda.</value>
+  </data>
+  <data name="Sstv.FixSlant.TooClose">
+    <value>Esses pontos estão próximos demais na altura. Clique perto do topo da borda e depois perto da base.</value>
+  </data>
+  <data name="Sstv.FixSlant.Done">
+    <value>Inclinação corrigida. Salve a imagem para mantê-la.</value>
+  </data>
   <data name="Sstv.Settings.AutoStart">
     <value>Início automático</value>
   </data>

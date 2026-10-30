@@ -664,6 +664,66 @@ LOS: {2}
   <data name="Sstv.DetectWithoutVis.Tip">
     <value>เมื่อส่วนหัวหาย (สัญญาณอ่อนตอนเริ่มผ่าน) ให้จับภาพและโหมดจากพัลส์ซิงค์ที่สม่ำเสมอ</value>
   </data>
+  <data name="Sstv.UseSatelliteModes">
+    <value>ใช้โหมด SSTV ที่ทราบของดาวเทียม</value>
+  </data>
+  <data name="Sstv.UseSatelliteModes.Tip">
+    <value>ให้ความสำคัญกับโหมดที่ทราบว่าดาวเทียมที่ติดตามส่ง (เช่น Robot 36 สำหรับ UmKA-1) ป้องกันไม่ให้สัญญาณรบกวนถูกอ่านเป็นส่วนหัวของโหมดอื่น</value>
+  </data>
+  <data name="Sstv.AlignAosFragments">
+    <value>วางภาพที่รับได้กลางคันในแถวที่ถูกต้อง</value>
+  </data>
+  <data name="Sstv.AlignAosFragments.Tip">
+    <value>เมื่อเริ่มรับกลางภาพและรับต่อจนจบ ส่วนที่รับได้จะถูกวาดไว้ด้านล่างของภาพซึ่งเป็นตำแหน่งที่ถูกต้อง</value>
+  </data>
+  <data name="Sstv.RepairBadLines">
+    <value>ซ่อมช่วงสั้น ๆ ของเส้นที่มีสัญญาณรบกวน</value>
+  </data>
+  <data name="Sstv.RepairBadLines.Tip">
+    <value>วาดเส้นที่มีสัญญาณรบกวนติดกันไม่เกินสามเส้นใหม่จากเส้นที่ดีทั้งสองข้าง ความเสียหายที่ยาวกว่านั้นจะคงไว้ตามที่รับได้</value>
+  </data>
+  <data name="Sstv.HoldThroughFades">
+    <value>วาดภาพต่อระหว่างสัญญาณจางหายนาน</value>
+  </data>
+  <data name="Sstv.HoldThroughFades.Tip">
+    <value>เมื่อภาพล็อกได้ดีแล้ว ให้วาดต่อระหว่างสัญญาณจางหายได้นานถึง 20 วินาทีแทนการจบภาพ อาจรวมสองส่วนของภาพเดียวกันเข้าด้วยกัน</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth">
+    <value>ปรับตัวกรองให้เข้ากับโหมด</value>
+  </data>
+  <data name="Sstv.AdaptiveBandwidth.Tip">
+    <value>เมื่อทราบโหมดแล้ว ให้ดีมอดูเลตใหม่ด้วยตัวกรองที่เหมาะกับรายละเอียดภาพของโหมดนั้น ช่วยโหมดแบนด์แคบเมื่อสัญญาณอ่อน</value>
+  </data>
+  <data name="Sstv.CombineRepeats">
+    <value>รวมสำเนาซ้ำของภาพ</value>
+  </data>
+  <data name="Sstv.CombineRepeats.Tip">
+    <value>เมื่อได้รับภาพเดียวกันมากกว่าหนึ่งครั้ง ให้บันทึกสำเนารวมที่ใช้เส้นที่ดีที่สุดจากแต่ละสำเนาด้วย (มี _combined ในชื่อไฟล์)</value>
+  </data>
+  <data name="Sstv.RedecodeSession">
+    <value>ถอดรหัสเซสชันล่าสุดอีกครั้ง</value>
+  </data>
+  <data name="Sstv.RedecodeSession.Tip">
+    <value>ถอดรหัสเสียงที่บันทึกจากเซสชันสดล่าสุดอีกครั้งด้วยการตั้งค่าปัจจุบัน ต้องเปิดการบันทึกเสียงเซสชันไว้</value>
+  </data>
+  <data name="Sstv.FixSlant">
+    <value>แก้ภาพเอียง</value>
+  </data>
+  <data name="Sstv.FixSlant.Tip">
+    <value>ทำให้ภาพที่เลือกตรง: คลิกด้านบนแล้วคลิกด้านล่างของขอบที่ควรเป็นแนวตั้ง เช่น ขอบซิงก์</value>
+  </data>
+  <data name="Sstv.FixSlant.First">
+    <value>คลิกด้านบนของขอบที่ควรเป็นแนวตั้ง</value>
+  </data>
+  <data name="Sstv.FixSlant.Second">
+    <value>ตอนนี้คลิกด้านล่างของขอบเดียวกัน</value>
+  </data>
+  <data name="Sstv.FixSlant.TooClose">
+    <value>จุดทั้งสองอยู่ใกล้กันเกินไปในแนวสูง คลิกใกล้ด้านบนของขอบ แล้วคลิกใกล้ด้านล่าง</value>
+  </data>
+  <data name="Sstv.FixSlant.Done">
+    <value>แก้ภาพเอียงแล้ว บันทึกภาพเพื่อเก็บไว้</value>
+  </data>
   <data name="Sstv.Settings.AutoStart">
     <value>เริ่มอัตโนมัติ</value>
   </data>

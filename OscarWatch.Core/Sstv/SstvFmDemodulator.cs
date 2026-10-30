@@ -40,7 +40,14 @@ public sealed class SstvFmDemodulator
     /// <summary>Filter delay in samples: output n describes input n minus this.</summary>
     public double DelaySamples => (_taps.Length - 1) / 2.0;
 
-    public void Process(ReadOnlySpan<float> input, List<float> output)
+    public void Process(ReadOnlySpan<float> input, List<float> output) => Process(input, output, null);
+
+    public void Process(ReadOnlySpan<float> input, List<float> output, List<float>? envelope) =>
+        Process(input, output, envelope, null);
+
+    /// <param name="envelope">When given, receives the subcarrier amplitude for every sample.</param>
+    /// <param name="baseband">When given, receives the filtered I/Q (1900 Hz at 0 Hz) for every sample.</param>
+    public void Process(ReadOnlySpan<float> input, List<float> output, List<float>? envelope, SstvBasebandBuffer? baseband)
     {
         var n = _taps.Length;
         var scale = _sampleRate / (2 * Math.PI);
@@ -69,6 +76,8 @@ public sealed class SstvFmDemodulator
             _prevQ = q;
             var hz = (float)(CentreHz + dphi * scale);
             output.Add(Math.Clamp(hz, MinReportedHz, MaxReportedHz));
+            envelope?.Add((float)Math.Sqrt(i * i + q * q));
+            baseband?.Add((float)i, (float)q);
         }
     }
 }
