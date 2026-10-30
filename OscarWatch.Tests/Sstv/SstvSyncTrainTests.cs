@@ -28,6 +28,29 @@ public sealed class SstvSyncTrainTests
     }
 
     [Fact]
+    public void Weak_in_between_robot36_syncs_are_not_read_as_robot72()
+    {
+        // ISS 23 Oct pass start: every other Robot 36 sync came through only a few ms long,
+        // too short to count as a sync, so Robot 36 failed and Robot 72 got through.
+        var hz = new float[(int)(4.0 * Rate)];
+        Array.Fill(hz, 1900f);
+        var line = (int)Math.Round(0.150 * Rate);
+        var first = (int)Math.Round(0.20 * Rate);
+        var weak = (int)Math.Round(0.0025 * Rate);
+        for (var n = 0; first + n * line + 200 < hz.Length; n++)
+        {
+            if (n % 2 == 0)
+                AddSync(hz, first + n * line, split: false);
+            else
+                Fill(hz, first + n * line, weak);
+        }
+
+        var mode = Find(hz);
+
+        Assert.Equal(SstvModeId.Robot36, mode.Id);
+    }
+
+    [Fact]
     public void Robot72_pulse_train_stays_robot72()
     {
         var hz = new float[(int)(4.0 * Rate)];

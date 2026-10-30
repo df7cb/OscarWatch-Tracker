@@ -24,6 +24,16 @@ public sealed class SstvSyncTrainDetector
     /// <summary>How far from the middle of a line another sync may sit and still count.</summary>
     private const double GapSyncWindowMs = 20;
 
+    /// <summary>Syncs exactly mid-line that switch a long mode to its half-length mode.</summary>
+    private const int HalfModeGapSyncs = 3;
+
+    /// <summary>
+    /// Shortest mid-line pulse, as a fraction of the sync length, that counts towards
+    /// <see cref="HalfModeGapSyncs"/>. Weak syncs on a fading start come out much shorter than
+    /// full length, and picture content never dips to the sync tone exactly on the line grid.
+    /// </summary>
+    private const double HalfModeMinPulseFraction = 0.12;
+
     private readonly int _rate;
 
     public SstvSyncTrainDetector(int sampleRate) => _rate = sampleRate;
@@ -85,20 +95,37 @@ public sealed class SstvSyncTrainDetector
                 if (GapsHoldAnotherSync(pulses, p.Start, period, syncLen))
                     continue;
 
+                // On a weak start the shorter mode can miss too many syncs to pass on its
+                // own while the longer one, needing only every other pulse, gets through.
+                // A sync-length pulse never belongs mid-line, so a few lined up there
+                // mean the half-length mode is the one being sent.
+                var found = mode;
+                var foundPeriod = period;
+                var foundSync = syncLen;
+                var foundTol = tol;
+                if (HalfPeriodMode(candidates, period, syncLen) is { } half
+                    && GapSyncsOnGrid(pulses, p.Start, period, syncLen, tol) >= HalfModeGapSyncs)
+                {
+                    found = half;
+                    foundPeriod = half.LineMs * _rate / 1000.0;
+                    foundSync = half.SyncMs * _rate / 1000.0;
+                    foundTol = 0.004 * foundPeriod + 0.002 * _rate;
+                }
+
                 error /= hits;
-                if (bestMode is not null && IsHarmonicPeriod(period, bestPeriod, syncLen, bestSync))
+                if (bestMode is not null && IsHarmonicPeriod(foundPeriod, bestPeriod, foundSync, bestSync))
                     break;
 
-                var shorterFits = bestMode is not null && IsHarmonicPeriod(bestPeriod, period, bestSync, syncLen);
+                var shorterFits = bestMode is not null && IsHarmonicPeriod(bestPeriod, foundPeriod, bestSync, foundSync);
                 if (shorterFits || hits > bestHits || (hits == bestHits && error < bestError))
                 {
-                    bestMode = mode;
+                    bestMode = found;
                     bestStart = p.Start;
                     bestHits = hits;
                     bestError = error;
-                    bestPeriod = period;
-                    bestSync = syncLen;
-                    bestTol = tol;
+                    bestPeriod = foundPeriod;
+                    bestSync = foundSync;
+                    bestTol = foundTol;
                 }
 
                 break;
@@ -153,6 +180,40 @@ public sealed class SstvSyncTrainDetector
         }
 
         return found >= (StepsChecked + 1) / 2;
+    }
+
+    /// <summary>A candidate with half of <paramref name="period"/> and the same sync length, if any.</summary>
+    private SstvMode? HalfPeriodMode(IReadOnlyList<SstvMode> candidates, double period, double syncLen)
+    {
+        foreach (var other in candidates)
+        {
+            var otherPeriod = other.LineMs * _rate / 1000.0;
+            var otherSync = other.SyncMs * _rate / 1000.0;
+            if (Math.Abs(period / otherPeriod - 2) <= 0.04 && IsHarmonicPeriod(period, otherPeriod, syncLen, otherSync))
+                return other;
+        }
+
+        return null;
+    }
+
+    /// <summary>Pulses, even weak short ones, exactly half way between lines within the line tolerance.</summary>
+    private static int GapSyncsOnGrid(
+        List<(long Start, double Length)> pulses,
+        long start,
+        double period,
+        double syncLen,
+        double tol)
+    {
+        var minLength = HalfModeMinPulseFraction * syncLen;
+        var found = 0;
+        for (var k = 0; k < StepsChecked; k++)
+        {
+            var mid = start + (k + 0.5) * period;
+            if (pulses.Any(p => Math.Abs(p.Start - mid) <= tol && p.Length >= minLength && p.Length <= syncLen * 1.6))
+                found++;
+        }
+
+        return found;
     }
 
     private static bool HasPulseBetween(
