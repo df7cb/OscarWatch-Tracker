@@ -65,6 +65,7 @@ public sealed class BruteForcePassPredictor : IPassPredictor
                         {
                             SatelliteName = satellite.Name,
                             NoradId = satellite.NoradId,
+                            CatalogEntry = satellite,
                             AosUtc = PassUtc.Normalize(aos!.Value),
                             LosUtc = PassUtc.Normalize(los),
                             MaxElevationDeg = maxEl,

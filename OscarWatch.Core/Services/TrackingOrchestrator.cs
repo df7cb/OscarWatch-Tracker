@@ -244,6 +244,7 @@ public sealed class TrackingOrchestrator
                 {
                     Name = ResolveDisplayName(sat),
                     NoradId = sat.NoradId,
+                    CatalogEntry = sat,
                     Subpoint = subpoint,
                     LookAngles = look,
                     MotionHeadingDeg = motionHeadingDeg,
@@ -329,6 +330,7 @@ public sealed class TrackingOrchestrator
                         {
                             Name = s.Name,
                             NoradId = s.NoradId,
+                            CatalogEntry = s.CatalogEntry,
                             Subpoint = s.Subpoint,
                             LookAngles = s.LookAngles,
                             MotionHeadingDeg = s.MotionHeadingDeg,

@@ -906,7 +906,7 @@ public class WorldMapControl : ThemeAwareControl
             if (!TrackingPlotAccessibility.IsPlotSatelliteVisible(SoloFocusedSatellite, FocusedNoradId, state.NoradId))
                 continue;
 
-            var color = PlotColors.ForIndex(i);
+            var color = PlotColors.ForIndex(state.CatalogEntry?.EnabledSatelliteIndex ?? 0);
             var isFocused = state.NoradId == FocusedNoradId;
 
             if (isFocused)

@@ -110,7 +110,14 @@ public sealed class TleService : ITleService
     {
         var enabledIds = SatelliteCatalogMatching.CreateNoradIdSet(settings.EnabledSatelliteNoradIds);
         var enabledNames = new HashSet<string>(settings.EnabledSatelliteNames ?? [], StringComparer.OrdinalIgnoreCase);
-        return _catalog.Where(s => SatelliteCatalogMatching.IsEnabled(s, enabledIds, enabledNames)).ToList();
+        var enabled = _catalog.Where(s => SatelliteCatalogMatching.IsEnabled(s, enabledIds, enabledNames)).ToList();
+
+        // Assign the palette slot in list order so every view colours a satellite the same way.
+        // Entries are shared instances, so live tracking and pass prediction observe the same index.
+        for (var i = 0; i < enabled.Count; i++)
+            enabled[i].EnabledSatelliteIndex = i;
+
+        return enabled;
     }
 
     private TleSourceSettings EffectiveSettings =>

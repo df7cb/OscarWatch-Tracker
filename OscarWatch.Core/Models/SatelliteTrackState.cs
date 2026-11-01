@@ -4,6 +4,11 @@ public sealed class SatelliteTrackState
 {
     public required string Name { get; set; }
     public required string NoradId { get; init; }
+    /// <summary>
+    /// Catalogue entry this state was built from, so plots can read the shared palette index
+    /// (<see cref="SatelliteCatalogEntry.EnabledSatelliteIndex"/>). May be null for synthetic states.
+    /// </summary>
+    public SatelliteCatalogEntry? CatalogEntry { get; init; }
     public required GeoCoordinate Subpoint { get; init; }
     public LookAngles? LookAngles { get; init; }
     /// <summary>Compass azimuth ~1–2 s ahead (rotator east-side north-wrap lookahead).</summary>
